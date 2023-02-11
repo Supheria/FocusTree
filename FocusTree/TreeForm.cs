@@ -1,54 +1,47 @@
-﻿#region ==== 类型别称 ====
-// 测试点阵图类型
-using MapType = System.Collections.Generic.List<System.Collections.Generic.List<string>>;
-// 层级类型
-using LevelType = System.Collections.Generic.List<FocusTree.CNode>;
-// 层级合集类型
-using LevelPackType = System.Collections.Generic.List<System.Collections.Generic.List<FocusTree.CNode>>;
-// 分支包类型
-using BranchPackType = System.Collections.Generic.List<System.Collections.Generic.List<FocusTree.CNode>>;
-#endregion
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
+﻿using BranchPackType = System.Collections.Generic.List<System.Collections.Generic.List<FocusTree.CNode>>;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Formats.Asn1;
 using System.Text.RegularExpressions;
 using CSVFile;
-using System.Runtime.Serialization.Formatters.Binary;
+using System.Xml.Serialization;
+using System.Xml;
 
 namespace FocusTree
 {
+    /// <summary>
+    /// 树窗
+    /// </summary>
     public partial class TreeForm : Form
     {
-        private CFocusTree mTree;
+        private CFocusTree mTree = new CFocusTree();
         /// <summary>
         /// 节点信息窗口
         /// </summary>
-        private InfoDialog mInfoDlg;
+        private InfoDialog mInfoDlg = new InfoDialog();
         /// <summary>
         /// 画图开始的位置
         /// </summary>
-        private Point ImageStartLocation;
+        private Point ImageStartLocation = new Point(0, 0);
+        /// <summary>
+        /// 原始父文件夹路径
+        /// </summary>
+        private string rawParentFolderPath = string.Empty;
         #region  ==== 初始化窗体 ====
         /// <summary>
         /// 窗体初始化
         /// </summary>
         public TreeForm(string szPath)
         {
-            Match match = Regex.Match(szPath, "([^\\\\]*)(\\.\\w+)$");
+            Match match = Regex.Match(szPath, "(.*)(\\.\\w+)$");
+            rawParentFolderPath = match.Groups[1].Value;
+            // 从*.csv新建树
             if (match.Groups[2].Value == ".csv" || match.Groups[2].Value == ".CSV")
             {
                 mTree = new CFocusTree(szPath);
             }
+            // 从*.xml读取树
             else
             {
-                LoadFromFile(szPath);
+                DeserializeFromXml(szPath);
             }
             InitForm();
             SetImage();
@@ -61,11 +54,11 @@ namespace FocusTree
             InitializeComponent();
             mInfoDlg = new InfoDialog(this);
             ImageStartLocation = new Point(0, 0);
-            Name = Text = mTree.mName;
+            Name = Text = mTree.Name;
         }
         #endregion
         #region ==== 节点控件事件 ====
-        public void ClickNode(object sender, MouseEventArgs e)
+        public void ClickTreeNode(object sender, MouseEventArgs e)
         {
             // 隐藏信息窗口
             mInfoDlg.Hide();
@@ -78,144 +71,132 @@ namespace FocusTree
         #region ==== 窗体方法 ====
         public void SetImage()
         {
-            // 遍历至最大层级数
-            for (int nLevel = 0; nLevel < mTree.mLevels.Count; nLevel++)
+            foreach (var node in mTree.NodeChain)
             {
-                var currentLevel = mTree.mLevels[nLevel];
-                // 记录已经使用过的叶节点索引
-                int nIndex = 0;
-                // 新建一行，并在合适的位置插入ID值，空ID值用"|"代替
-                List<string> nList = new List<string>();
-                //
-                int columWidth = 50;
-                // 每个层级都有固定的列数，而列数就是分支数
-                for (int nColum = 0; ; nColum++)
-                {
-                    if (nColum >= mTree.mColumNum || nIndex >= currentLevel.Count)
-                    {
-                        break;
-                    }
-                    NodeControl nodeCtrl = new NodeControl(currentLevel[nIndex]);
-
-                    // 到达目标列
-                    if (nColum == nodeCtrl.ToSetColum)
-                    {
-
-                        nodeCtrl.Location = new Point(
-                            ImageStartLocation.X + nColum * nodeCtrl.Size.Height,
-                            ImageStartLocation.Y + nLevel * nodeCtrl.Size.Width);
-                        nodeCtrl.MouseClick += new MouseEventHandler(ClickNode);
-                        Controls.Add(nodeCtrl);
-                        nIndex++;
-                    }
-                }
+                NodeControl nodeCtrl = new NodeControl(node);
+                nodeCtrl.MouseClick += ClickTreeNode;
+                Controls.Add(nodeCtrl);
             }
         }
         #endregion
         #region ==== 文件方法 ====
         /// <summary>
-        /// 序列化并保存数据
+        /// 序列化成XML
         /// </summary>
-        /// <param name="szSave"></param>
-        /// <exception cref="Exception"></exception>
-        public void SaveToFile(string szSave)
+        /// <param name="fstream"></param>
+        public void SerializeToXml(string? szSave = null)
         {
-            BinaryWriter bw;
+            if (szSave == null)
+            {
+                szSave = string.Format($"{rawParentFolderPath}.xml");
+            }
+            #region ==== XmlWriterSettings ====
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+            settings.IndentChars = "\t";
+            settings.NewLineChars = Environment.NewLine;
+            settings.Encoding = Encoding.UTF8;
+            settings.OmitXmlDeclaration = true;  // 不生成声明头
+            #endregion
+            FileStream fileStream;
+            XmlWriter xmlWriter;
             try
             {
-                bw = new BinaryWriter(new FileStream(szSave,
-                                FileMode.Create));
+                fileStream = new FileStream(szSave, FileMode.Create);
+                xmlWriter = XmlWriter.Create(fileStream, settings);
             }
-            catch (IOException ex)
+            catch (Exception ex)
             {
                 throw new Exception($"{ex.Message}\n无法创建\"{szSave}。\"");
             }
-            // 写入文件
             try
             {
-                // 序列化 mTree
-                BinaryFormatter formatter = new BinaryFormatter();
-                MemoryStream stream = new MemoryStream();
-                formatter.Serialize(stream, mTree);
-                var buffer = stream.GetBuffer();
-                // 写入文件
-                bw.Write(buffer);
-                bw.Close();
+                // 强制指定命名空间，覆盖默认的命名空间
+                XmlSerializerNamespaces namespaces = new XmlSerializerNamespaces();
+                namespaces.Add(string.Empty, string.Empty);
+                XmlSerializer serializer = new XmlSerializer(mTree.GetType());
+                serializer.Serialize(new XmlWriterForceFullEnd(xmlWriter), mTree, namespaces);
+                xmlWriter.Close();
+                fileStream.Close();
             }
-            catch (IOException ex)
+            catch (Exception ex)
             {
-                bw.Close();
+                xmlWriter.Close();
+                fileStream.Close();
                 throw new Exception($"{ex.Message}\n无法写入\"{szSave}。\"");
             }
         }
         /// <summary>
-        /// 读取数据并反序列化
+        /// 从XML反序列化
         /// </summary>
-        /// <param name="szBinary"></param>
-        /// <exception cref="Exception"></exception>
-        private void LoadFromFile(string szBinary)
+        /// <param name="fstream"></param>
+        public void DeserializeFromXml(string szLoad)
         {
-            BinaryReader br;
-            FileStream fileStream = new FileStream(szBinary, FileMode.Open);
+            FileStream fileStream;
+            StreamReader streamReader;
             try
             {
-                br = new BinaryReader(fileStream);
+                fileStream = new FileStream(szLoad, FileMode.Open);
+                streamReader = new StreamReader(fileStream, Encoding.UTF8);
             }
-            catch (IOException ex)
+            catch (Exception ex)
             {
-                throw new Exception($"{ex.Message}\n无法打开\"{szBinary}。\"");
+                throw new Exception($"{ex.Message}\n无法打开\"{szLoad}。\"");
             }
             try
             {
-                //获取文件长度
-                byte[] buffer = new byte[fileStream.Length];
-                //读取文件中的内容并保存到字节数组中
-                br.Read(buffer, 0, buffer.Length);
-                br.Close();
-                // 反序列化
-                BinaryFormatter formatter = new BinaryFormatter();
-                MemoryStream stream = new MemoryStream(buffer);
-                mTree = (CFocusTree)formatter.Deserialize(stream);
-
+                XmlSerializer serializer = new XmlSerializer(mTree.GetType());
+                mTree = (CFocusTree)serializer.Deserialize(streamReader);
+                streamReader.Close();
+                fileStream.Close();
             }
-            catch (IOException ex)
+            catch (Exception ex)
             {
-                br.Close();
-                throw new Exception($"{ex.Message}\n无法读取\"{szBinary}。\"");
+                streamReader.Close();
+                fileStream.Close();
+                throw new Exception($"{ex.Message}\n无法读取\"{szLoad}。\"");
             }
-
         }
         #endregion
     }
-
-    [Serializable]
     /// <summary>
     /// 国策树类
     /// </summary>
+    [XmlRoot("focus-tree")]
     public class CFocusTree
     {
         #region ==== 树的属性 ====
         /// <summary>
-        /// 树的名称（CSV文件名）
+        /// 树的名称（文件名）
         /// </summary>
-        public string mName { get; init; }
+        string mName = string.Empty;
+        [XmlElement("tree-name")]
+        public string Name
+        {
+            get { return mName; }
+            set { mName = value; }
+        }
         /// <summary>
-        /// 按层级合并所有分支上的节点，
-        /// mLevels[层级数][节点序号]
+        /// 节点链
         /// </summary>
-        public LevelPackType mLevels { get; private set; }
-        /// <summary>
-        /// 树的列数（即分支数量）
-        /// </summary>
-        public int mColumNum { get; private set; }
+        List<CNode> mNodeChain = new List<CNode>();
+        [XmlElement("node")]
+        //[XmlIgnore]
+        public List<CNode> NodeChain
+        {
+            get { return mNodeChain; }
+            set { mNodeChain = value; }
+        }
         #endregion
         #region ==== 树的初始化 ====
         /// <summary>
         /// 将原始数据转化为节点树
         /// </summary>
         /// <param name="szCsv">csv文件路径</param>
+        public CFocusTree() { }
         public CFocusTree(string szCsv)
         {
+
             Match match = Regex.Match(szCsv, "([^\\\\]*)(\\.\\w+)$");
             mName = match.Groups[1].Value;
             try
@@ -230,8 +211,6 @@ namespace FocusTree
                 {
                     throw new Exception("未获得任何分支。");
                 }
-                // 分支总数
-                mColumNum = buffer.Count;
                 // 按层级合并所有分支上的节点（得到 mLevels）
                 CombineBranchNodes(buffer);
             }
@@ -289,30 +268,77 @@ namespace FocusTree
                 int level = row.TakeWhile(col =>
                     string.IsNullOrWhiteSpace(col)).Count();
                 // 获取原始字段
-                string text = row[level];
-                #region 转换方法
+                SFocusData focusData = GetFocusData(row[level]);
+                #region ==== 转换方法 =====
                 // 如果新节点与上一节点的右移距离大于1，则表示产生了断层
-                if (level > lastNode.mLevel + 1)
+                if (level > lastNode.Level + 1)
                     throw new Exception($"位于 {nRow} 行: 本行节点与上方节点的层级有断层。");
                 // 如果新节点与上一节点的右移距离等于1，则新节点是上一节点的子节点
-                if (level == lastNode.mLevel + 1)
+                if (level == lastNode.Level + 1)
                 {
-                    lastNode = new CNode(nRow, level, lastNode, text); // lastNode指向新的节点
+                    lastNode = new CNode(nRow, level, lastNode, focusData); // lastNode指向新的节点
                 }
                 // 如果新节点与上一节点在同列或更靠左，向上寻找新节点所在列的父节点
                 else
                 {
                     do
                     {
-                        if (lastNode.mParent == null)
+                        if (lastNode.Parent == null)
                             throw new Exception($"位于 {nRow} 行: 无法为节点找到对应的父节点。");
                         else
-                            lastNode = lastNode.mParent; // lastNode指向自己的父节点
+                            lastNode = lastNode.Parent; // lastNode指向自己的父节点
                     } // 当指向的父节点是新节点所在列的父节点时结束循环
-                    while (level - 1 != lastNode.mLevel);
-                    lastNode = new CNode(nRow, level, lastNode, text); // lastNode指向新的节点
+                    while (level - 1 != lastNode.Level);
+                    lastNode = new CNode(nRow, level, lastNode, focusData); // lastNode指向新的节点
                 }
                 #endregion
+            }
+        }
+        /// <summary>
+        /// 根据文本设置节点的国策数据
+        /// </summary>
+        /// <param name="text">原始国策字段</param>
+        private static SFocusData GetFocusData(string text)
+        {
+            // 在 C# 中的字符串，{ 需要转义，通过分割一对来避免歧义。 原 Regex: (.+?){(\d+)天}{(.+?)}(?:{(.+)})?(.+)?
+            var pattern = "(.+?){" + "(\\d+)天}{" + "(.+?)}(?:{" + "(.+)})?(.+)?";
+            try
+            {
+                var match = Regex.Match(text, pattern);
+                // Groups[0] 是匹配成功部分的文本，应当等同于 text。
+                // 从[1]开始才是括号匹配的数据
+                // 是否以 * 开头
+                var isBeginWithStar = match.Groups[1].Value.StartsWith("*");
+                // 名称
+                string name;
+                // 如果以 * 开头，则去掉 *
+                if (isBeginWithStar)
+                    name = match.Groups[1].Value.Substring(1);
+                else
+                    name = match.Groups[1].Value;
+                // 天数
+                int duration = int.Parse(match.Groups[2].Value);
+                // 效果
+                string effects = match.Groups[3].Value;
+                // 描述
+                string descript = match.Groups[4].Value;
+                // 备注
+                string ps = match.Groups[5].Value;
+                return new SFocusData(
+                    name,
+                    isBeginWithStar,
+                    duration,
+                    effects,
+                    descript,
+                    ps
+                    );
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    $"正则匹配时发生了异常。\n" +
+                    $"试图解析的内容: {text}\n" +
+                    $"异常信息: {ex.Message}");
             }
         }
         /// <summary>
@@ -322,7 +348,6 @@ namespace FocusTree
         /// <param name="rawBranches"></param>
         private void CombineBranchNodes(BranchPackType rawBranches)
         {
-            mLevels = new LevelPackType();
             // 遍历到的层级
             int level = 0;
             while (true)
@@ -333,7 +358,7 @@ namespace FocusTree
                     int a = 0;
                 }
                 // 枚举本层级的所有节点
-                LevelType combineList = new LevelType();
+                List<CNode> combineList = new List<CNode>();
                 // 遍历所有分支的本层级节点
                 for (int colum = 0; colum < rawBranches.Count; colum++)
                 {
@@ -342,19 +367,18 @@ namespace FocusTree
                     {
                         var node = rawBranches[colum][level];
                         // 查找节点在枚举里的索引
-                        int nIndex = combineList.FindIndex(x => x.mID == node.mID);
+                        int nIndex = combineList.FindIndex(x => x.ID == node.ID);
                         // 节点不存在于枚举里
                         if (nIndex == -1)
                         {
-                            // 节点的终止列和起始列设置为当前列
-                            node.mEndColum = node.mStartColum = colum;
+                            node.EndColum = node.StartColum = colum;
                             // 新增节点枚举
                             combineList.Add(node);
+                            mNodeChain.Add(node);
                         }
                         else
                         {
-                            // 节点的终止列设置为当前列
-                            combineList[nIndex].mEndColum = colum;
+                            combineList[nIndex].EndColum = colum;
                         }
                     }
                 }
@@ -364,8 +388,6 @@ namespace FocusTree
                 {
                     break;
                 }
-                // 将本层级的合并节点加入集合
-                mLevels.Add(combineList);
                 level++;
             }
         }
@@ -375,53 +397,53 @@ namespace FocusTree
         /// （，，，）获取所有效果加成
         /// </summary>
         /// <returns></returns>
-        public List<string[]> GetAllEffects()
-        {
-            List<string[]> effects = new List<string[]>();
-            // 遍历树的所有层级
-            for (int i = 0; i < mLevels.Count; i++)
-            {
-                var currentLevel = mLevels[i];
-                // 遍历每个层级上的所有节点
-                for (int nIndex = 0; nIndex < currentLevel.Count; nIndex++)
-                {
-                    var node = currentLevel[nIndex];
-                    var str = node.mFocusData.mEffects;
-                    if (str != null)
-                    {
-                        ////var reg = "\\W(\\w+)\\W([+|-]\\d+)((?:%)?)\\W"; // 原： \W(\w+)\W([+|-]\d+)((?:%)?)\W
-                        //var reg = "(\\w+)\\W?[+|-]\\d+%?"; // (\w+)\W?[+|-]\d+%?
-                        //var reg2 = "((增加)?(添加)?\\d+个\\w+)"; // ((?:增加)?\d+个\w+)
-                        //var reg3 = "(\\d+x\\d+%?\\w+：\\w+)"; // (\d+x\d+%?\w+：\w+)
-                        //var reg4 = "(减少\\d.?\\d\\w+\\d+%?\\w+)"; // (减少\d.?\d\w+\d+%?\w+)
-                        //var reg5 = "[\\u4e00-\\u9fa5]{1,})[（].+[）]"; // XX（）
-                        //var reg6 = "获得(.+)，.+[（].+[）]"; // 获得...，其效果为（...）
-                        //var reg7 = "以.+取代.+(?:，以|。以)"; // 以...取代...
-                        //var matches = Regex.Matches(str, reg).Union(
-                        //    Regex.Matches(str, reg2)).Union(
-                        //    Regex.Matches(str, reg3)).Union(
-                        //    Regex.Matches(str, reg4)).Union(
-                        //    Regex.Matches(str, reg5)).Union(
-                        //    Regex.Matches(str, reg6)).Union(
-                        //    Regex.Matches(str, reg7)).ToArray();
+        //public List<string[]> GetAllEffects()
+        //{
+        //    List<string[]> effects = new List<string[]>();
+        //    // 遍历树的所有层级
+        //    for (int i = 0; i < mLevels.Count; i++)
+        //    {
+        //        var currentLevel = mLevels[i];
+        //        // 遍历每个层级上的所有节点
+        //        for (int nIndex = 0; nIndex < currentLevel.Count; nIndex++)
+        //        {
+        //            var node = currentLevel[nIndex];
+        //            var str = node.FocusData.mEffects;
+        //            if (str != null)
+        //            {
+        //                //var reg = "\\W(\\w+)\\W([+|-]\\d+)((?:%)?)\\W"; // 原： \W(\w+)\W([+|-]\d+)((?:%)?)\W
+        //                var reg = "(\\w+)\\W?[+|-]\\d+%?"; // (\w+)\W?[+|-]\d+%?
+        //                var reg2 = "((增加)?(添加)?\\d+个\\w+)"; // ((?:增加)?\d+个\w+)
+        //                var reg3 = "(\\d+x\\d+%?\\w+：\\w+)"; // (\d+x\d+%?\w+：\w+)
+        //                var reg4 = "(减少\\d.?\\d\\w+\\d+%?\\w+)"; // (减少\d.?\d\w+\d+%?\w+)
+        //                var reg5 = "[\\u4e00-\\u9fa5]{1,})[（].+[）]"; // XX（）
+        //                var reg6 = "获得(.+)，.+[（].+[）]"; // 获得...，其效果为（...）
+        //                var reg7 = "以.+取代.+(?:，以|。以)"; // 以...取代...
+        //                var matches = Regex.Matches(str, reg).Union(
+        //                    Regex.Matches(str, reg2)).Union(
+        //                    Regex.Matches(str, reg3)).Union(
+        //                    Regex.Matches(str, reg4)).Union(
+        //                    Regex.Matches(str, reg5)).Union(
+        //                    Regex.Matches(str, reg6)).Union(
+        //                    Regex.Matches(str, reg7)).ToArray();
 
-                        //List<string> nodeEffects = new List<string>();
-                        //if (matches.Length > 0)
-                        //{
-                        //    foreach (Match match in matches)
-                        //    {
-                        //        if (match.Success)
-                        //        {
-                        //            nodeEffects.Add(match.Groups[1].Value);
-                        //        }
-                        //    }
-                        //}
-                        //effects.Add((nodeEffects.ToArray()));
-                    }
-                }
-            }
-            return effects;
-        }
+        //                List<string> nodeEffects = new List<string>();
+        //                if (matches.Length > 0)
+        //                {
+        //                    foreach (Match match in matches)
+        //                    {
+        //                        if (match.Success)
+        //                        {
+        //                            nodeEffects.Add(match.Groups[1].Value);
+        //                        }
+        //                    }
+        //                }
+        //                effects.Add((nodeEffects.ToArray()));
+        //            }
+        //        }
+        //    }
+        //    return effects;
+        //}
         /// <summary>
         /// 更新树
         /// </summary>

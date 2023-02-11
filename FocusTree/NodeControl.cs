@@ -7,16 +7,9 @@ using BranchPackType = System.Collections.Generic.List<System.Collections.Generi
 // List：记录从末节点到根节点的所有叶，作为一个分支（倒序分支）
 using BranchType = System.Collections.Generic.List<FocusTree.CNode>;
 #endregion
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+using System.Xml.Serialization;
+using System.Security.Cryptography;
 
 namespace FocusTree
 {
@@ -35,10 +28,6 @@ namespace FocusTree
         /// </summary>
         public int NODE_HIGHT;
         /// <summary>
-        /// 节点所在的目标列
-        /// </summary>
-        public int ToSetColum { get; private set; }
-        /// <summary>
         /// 节点转换成控件
         /// </summary>
         /// <param name="node">要转换成控件的节点</param>
@@ -46,54 +35,112 @@ namespace FocusTree
         {
             InitializeComponent();
             mNode = node;
-            // 节点名称、字段
-            lblTitle.Text = Text = Name = node.mFocusData.mName;
-            //NODE_WIDTH = Size.Width;
-            //NODE_HIGHT = Size.Height;
-            //Size = new Size(NODE_WIDTH, NODE_HIGHT);
+            lblTitle.Text = Text = Name = node.FocusData.Name;
             Location = new Point(0, 0);
-            ToSetColum = (mNode.mEndColum - mNode.mStartColum) / 2 + mNode.mStartColum;
+            int nColum = 
+                (mNode.EndColum - mNode.StartColum) / 2 + mNode.StartColum;
+            Location = new Point(
+                        nColum * Size.Height,
+                        mNode.Level * Size.Width
+                        );
         }
-
     }
-
-    [Serializable]
     /// <summary>
     /// 节点类
     /// </summary>
     public class CNode
     {
-        #region ==== 节点属性 ====
+        #region ==== 节点属性（序列化） ====
         /// <summary>
         /// 节点ID
         /// </summary>
-        public int mID { get; private set; }
+        int mID = 0;
+        [XmlElement("ID")]
+        public int ID
+        {
+            get { return mID; }
+            set { mID = value; }
+        }
         /// <summary>
-        /// // 层级
+        /// 依赖的节点ID
         /// </summary>
-        public int mLevel { get; private set; }
+        List<int> mReliedIDs = new List<int>();
+        [XmlElement("relied-ID")]
+        public List<int> ReliedIDs
+        {
+            get { return mReliedIDs; }
+            set { mReliedIDs = value; }
+        }
         /// <summary>
-        /// 父节点
+        /// 子节点ID
         /// </summary>
-        public CNode? mParent { get; private set; }
+        List<int> mChildrenIDs = new List<int>();
+        [XmlElement("child-ID")]
+        public List<int> ChildrenIDs
+        {
+            get { return mChildrenIDs; }
+            set { mChildrenIDs = value; }
+        }
         /// <summary>
-        /// 子节点
+        /// 层级
         /// </summary>
-        public List<CNode> mChildren { get; private set; }
-        /// <summary>
-        /// 国策数据
-        /// </summary>
-        public SFocusData mFocusData { get; private set; }
-        #endregion
-        #region ==== 节点在树中的属性 ====
-        /// <summary>
-        /// 节点在树中的终止列
-        /// </summary>
-        public int mEndColum;
+        int mLevel = -1;
+        [XmlElement("level")]
+        public int Level
+        {
+            get { return mLevel; }
+            set { mLevel = value; }
+        }
         /// <summary>
         /// 节点在树中的起始列
         /// </summary>
-        public int mStartColum;
+        int mStartColum = 0;
+        [XmlElement("start-colum")]
+        public int StartColum
+        {
+            get { return mStartColum; }
+            set { mStartColum = value; }
+        }
+        /// <summary>
+        /// 节点在树中的终止列
+        /// </summary>
+        int mEndColum = 0;
+        [XmlElement("end-colum")]
+        public int EndColum
+        {
+            get { return mEndColum; }
+            set { mEndColum = value; }
+        }
+        /// <summary>
+        /// 国策数据
+        /// </summary>
+        SFocusData mFocusData = new SFocusData();
+        [XmlElement("focus-data")]
+        public SFocusData FocusData
+        {
+            get { return mFocusData; }
+            set { mFocusData = value; }
+        }
+        #endregion
+        #region ==== 节点控制器 ====
+        /// <summary>
+        /// 父节点
+        /// </summary>
+        CNode? mParent = null;
+        [XmlIgnore]
+        public CNode? Parent
+        {
+            get { return mParent; }
+        }
+        /// <summary>
+        /// 子节点
+        /// </summary>
+        List<CNode> mChildren = new List<CNode>();
+        [XmlIgnore]
+        public List<CNode> Children
+        {
+            get { return mChildren; }
+        }
         #endregion
         #region ==== 初始化节点 ====
         /// <summary>
@@ -102,113 +149,24 @@ namespace FocusTree
         /// <param name="ID">节点ID</param>
         /// <param name="level">层级(所在的列数)</param>
         /// <param name="parent">父节点</param>
-        /// <param name="text">原始国策字段</param>
-        public CNode(
-            int ID,
-            int level,
-            CNode parent,
-            string text
-            )
-        {
-            InitNode(ID, level, parent);
-            // 把节点加入父节点的子集
-            mParent.mChildren.Add(this);
-            // 设置国策数据
-            try
-            {
-                SetFocusData(text);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"创建ID={ID}的节点失败。\n{ex.Message}");
-            }
-            // 起始列和终止列默认为0
-            mEndColum = mStartColum = 0;
-        }
-        /// <summary>
-        /// 创建节点，并作为子节点加入在父节点下
-        /// </summary>
-        /// <param name="ID">节点ID</param>
-        /// <param name="level">层级(所在的列数)</param>
-        /// <param name="parent">父节点</param>
         /// <param name="focusData">国策数据</param>
+        public CNode() { }
         public CNode(
-            int ID,
+            int id,
             int level,
             CNode parent,
             SFocusData focusData
             )
         {
-            InitNode(ID, level, parent);
-            // 把节点加入父节点的子集
-            mParent.mChildren.Add(this);
-            // 设置国策数据
-            mFocusData = focusData;
-            // 起始列和终止列默认为0
-            mEndColum = mStartColum = 0;
-        }
-        /// <summary>
-        /// 此构造函数专用于创建根节点
-        /// 根节点ID为0，层级为-1，没有父节点
-        /// </summary>
-        public CNode()
-        {
-            // 根节点ID为0，层级为-1，没有父节点
-            InitNode(0, -1);
-        }
-        private void InitNode(int ID, int level, CNode? parent = null)
-        {
-            mID = ID;
-            mLevel = level;
+            ID = id;
+            Level = level;
             mParent = parent;
-            mChildren = new List<CNode>();
-        }
-        /// <summary>
-        /// 根据文本设置节点的国策数据
-        /// </summary>
-        /// <param name="text">原始国策字段</param>
-        private void SetFocusData(string text)
-        {
-            // 在 C# 中的字符串，{ 需要转义，通过分割一对来避免歧义。 原 Regex: (.+?){(\d+)天}{(.+?)}(?:{(.+)})?(.+)?
-            var pattern = "(.+?){" + "(\\d+)天}{" + "(.+?)}(?:{" + "(.+)})?(.+)?";
-            try
-            {
-                var match = Regex.Match(text, pattern);
-                // Groups[0] 是匹配成功部分的文本，应当等同于 text。
-                // 从[1]开始才是括号匹配的数据
-                // 是否以 * 开头
-                var isBeginWithStar = match.Groups[1].Value.StartsWith("*");
-                // 名称
-                string name;
-                // 如果以 * 开头，则去掉 *
-                if (isBeginWithStar)
-                    name = match.Groups[1].Value.Substring(1);
-                else
-                    name = match.Groups[1].Value;
-                // 天数
-                int duration = int.Parse(match.Groups[2].Value);
-                // 效果
-                string effects = match.Groups[3].Value;
-                // 描述
-                string descript = match.Groups[4].Value;
-                // 备注
-                string ps = match.Groups[5].Value;
-                mFocusData = new SFocusData(
-                    name,
-                    isBeginWithStar,
-                    duration,
-                    effects,
-                    descript,
-                    ps
-                    );
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(
-                    $"正则匹配时发生了异常。\n" +
-                    $"试图解析的内容: {text}\n" +
-                    $"异常信息: {ex.Message}");
-            }
+            // 把节点加入父节点的子集
+            mParent.Children.Add(this);
+            mParent.ChildrenIDs.Add(ID);
+            ReliedIDs.Add(mParent.ID);
+            // 设置国策数据
+            FocusData = focusData;
         }
         #endregion
         #region ==== 节点方法 ====
@@ -219,7 +177,7 @@ namespace FocusTree
         /// <returns>所有分支打包成的分支包</returns>
         public BranchPackType GetBranches(int nExcludeLevel = -1)
         {
-            
+
             // 创建本节点的分支包
             BranchPackType branchPack = new BranchPackType();
             // 这是分支上最后一个节点
@@ -239,7 +197,7 @@ namespace FocusTree
                 for (int j = 0; j < buffer.Count; j++)
                 {
                     BranchType branch = buffer[j];
-                    if (mLevel != nExcludeLevel)
+                    if (Level != nExcludeLevel)
                     {
                         // 在分支上加入本节点
                         branch.Add(this);
@@ -256,43 +214,7 @@ namespace FocusTree
             return branchPack;
         }
         #endregion
-        #region ==== 运算符重载 ====
-        /// <summary>
-        /// 得到妹节点
-        /// </summary>
-        /// <param name="node">如果没有，则返回自身</param>
-        /// <returns></returns>
-        public static CNode operator ++(CNode node)
-        {
-            int nIndex = node.mParent.mChildren.IndexOf(node);
-            // 节点不是父节点的最后一个子节点
-            if (nIndex < node.mParent.mChildren.Count - 1)
-            {
-                return node.mParent.mChildren[nIndex + 1];
-            }
-            else
-                return node;
-        }
-        /// <summary>
-        /// 得到兄节点
-        /// </summary>
-        /// <param name="node">如果没有，则返回自身</param>
-        /// <returns></returns>
-        public static CNode operator --(CNode node)
-        {
-            int nIndex = node.mParent.mChildren.IndexOf(node);
-            // 节点不是父节点的第一个子节点
-            if (nIndex != 0)
-            {
-                return node.mParent.mChildren[nIndex - 1];
-            }
-            else
-                return node;
-        }
-        #endregion
     }
-
-    [Serializable]
     /// <summary>
     /// 国策数据
     /// </summary>
@@ -301,27 +223,33 @@ namespace FocusTree
         /// <summary>
         /// 国策名称
         /// </summary>
-        public string mName;
+        [XmlElement("name")]
+        public string Name = string.Empty;
         /// <summary>
         /// 字段是否以 * 开头
         /// </summary>
-        public bool nBeginWithStar;
+        [XmlElement("begin-with-star")]
+        public bool BeginWithStar = false;
         /// <summary>
         /// 实施天数
         /// </summary>
-        public int mDuration;
+        [XmlElement("duration")]
+        public int Duration = -1;
         /// <summary>
         /// 国策效果
         /// </summary>
-        public string mEffects;
+        [XmlElement("effects")]
+        public string Effects = string.Empty;
         /// <summary>
         /// 国策描述
         /// </summary>
-        public string mDescript;
+        [XmlElement("descript")]
+        public string Descript = string.Empty;
         /// <summary>
         /// 备注
         /// </summary>
-        public string mPs;
+        [XmlElement("ps.")]
+        public string Ps = string.Empty;
         /// <summary>
         /// 
         /// </summary>
@@ -331,6 +259,7 @@ namespace FocusTree
         /// <param name="effects">国策效果</param>
         /// <param name="descript">国策描述</param>
         /// <param name="ps">备注</param>
+        public SFocusData() { }
         public SFocusData(
             string name,
             bool isBeginWithstar,
@@ -340,12 +269,12 @@ namespace FocusTree
             string ps
             )
         {
-            mName = name;
-            nBeginWithStar = isBeginWithstar;
-            mDuration = duration;
-            mEffects = effects;
-            mDescript = descript;
-            mPs = ps;
+            Name = name;
+            BeginWithStar = isBeginWithstar;
+            Duration = duration;
+            Effects = effects;
+            Descript = descript;
+            Ps = ps;
         }
     }
 }

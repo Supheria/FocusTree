@@ -34,7 +34,7 @@ namespace FocusTree
             // 允许多选文件
             openFileDialog.Multiselect = true;
             //openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-            openFileDialog.Filter = "CSV文件(*.csv)|*.csv|国策树文件(*.focustree)|*.focustree";
+            openFileDialog.Filter = "CSV文件(*.csv)|*.csv|XML文件(*.xml)|*.xml|所有文件(*.*)|*.*";
             if (openFileDialog.ShowDialog(this) == DialogResult.Cancel)
             {
                 return;
@@ -70,7 +70,7 @@ namespace FocusTree
             // 打开的文件选择对话框上的标题
             saveFileDialog.Title = "保存为：";
             // 设置文件类型
-            saveFileDialog.Filter = "国策树文件(*.focustree)|*.focustree";
+            saveFileDialog.Filter = "国策树文件(*.xml)|*.xml";
             // 设置默认文件名
             saveFileDialog.FileName = form.Name;
             // 记忆上次打开的目录
@@ -83,7 +83,7 @@ namespace FocusTree
             #endregion
             try
             {
-                form.SaveToFile(saveFileDialog.FileName);
+                form.SerializeToXml(saveFileDialog.FileName);
             }
             catch (Exception ex)
             {
@@ -143,6 +143,21 @@ namespace FocusTree
             foreach (Form childForm in MdiChildren)
             {
                 childForm.Close();
+            }
+        }
+
+        private void SaveAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (TreeForm form in MdiChildren)
+            {
+                try
+                {
+                    form.SerializeToXml();
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
         }
     }

@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-namespace FocusTree
+﻿namespace FocusTree
 {
     public partial class InfoDialog : Form
     {
@@ -19,6 +9,7 @@ namespace FocusTree
         /// </summary>
         /// <param name="parent">父窗口</param>
         /// <param name="editDialog">是否修改信息并保存</param>
+        public InfoDialog() { }
         public InfoDialog(Control parent, bool editDialog = true)
         {
             InitializeComponent();
@@ -35,11 +26,11 @@ namespace FocusTree
         public void SetNode(NodeControl nodeCtrl)
         {
             mNode = nodeCtrl.mNode;
-            var focusData = mNode.mFocusData;
-            Text = focusData.mName;
-            txtDuration.Text = $"{focusData.mDuration}日";
-            txtDescript.Text = focusData.mDescript;
-            txtEffects.Text = focusData.mEffects;
+            var focusData = mNode.FocusData;
+            Text = focusData.Name;
+            txtDuration.Text = $"{focusData.Duration}日";
+            txtDescript.Text = focusData.Descript;
+            txtEffects.Text = focusData.Effects;
             //TxtRequire.Text = szRequire;
             // 设置窗口位置为节点控件右下角
             //（还要考虑越界情况）
