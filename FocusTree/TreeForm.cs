@@ -268,7 +268,15 @@ namespace FocusTree
                 int level = row.TakeWhile(col =>
                     string.IsNullOrWhiteSpace(col)).Count();
                 // 获取原始字段
-                SFocusData focusData = GetFocusData(row[level]);
+                SFocusData focusData;
+                try
+                {
+                    focusData = GetFocusData(row[level]);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"无法读取第{nRow}行原始字段，{ex.Message}");
+                }
                 #region ==== 转换方法 =====
                 // 如果新节点与上一节点的右移距离大于1，则表示产生了断层
                 if (level > lastNode.Level + 1)

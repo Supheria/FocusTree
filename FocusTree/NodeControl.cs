@@ -20,14 +20,6 @@ namespace FocusTree
     {
         public CNode mNode { get; private set; }
         /// <summary>
-        /// 每个节点的控件宽度
-        /// </summary>
-        public int NODE_WIDTH;
-        /// <summary>
-        /// 每个节点的控件高度
-        /// </summary>
-        public int NODE_HIGHT;
-        /// <summary>
         /// 节点转换成控件
         /// </summary>
         /// <param name="node">要转换成控件的节点</param>

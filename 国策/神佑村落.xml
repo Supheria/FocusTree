@@ -1149,8 +1149,8 @@
 			<begin-with-star>false</begin-with-star>
 			<duration>0</duration>
 			<effects>获得元气大伤，其效果为（建造速度：-50%，工厂产出：-50%）</effects>
-			<descript>我们尽到了对神明的所有义务，但是我们因此元气大伤}（注：随事件发展自动完成）</descript>
-			<ps.></ps.>
+			<descript>我们尽到了对神明的所有义务，但是我们因此元气大伤</descript>
+			<ps.>（注：随事件发展自动完成）</ps.>
 		</focus-data>
 	</node>
 	<node>
