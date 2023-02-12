@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using CSVFile;
 using System.Xml.Serialization;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace FocusTree
 {
@@ -74,7 +75,7 @@ namespace FocusTree
             foreach (var node in mTree.NodeChain)
             {
                 NodeControl nodeCtrl = new NodeControl(node);
-                nodeCtrl.MouseClick += ClickTreeNode;
+                nodeCtrl.TFMouseCilck += ClickTreeNode;
                 Controls.Add(nodeCtrl);
             }
         }
@@ -181,11 +182,27 @@ namespace FocusTree
         /// </summary>
         List<CNode> mNodeChain = new List<CNode>();
         [XmlElement("node")]
-        //[XmlIgnore]
         public List<CNode> NodeChain
         {
             get { return mNodeChain; }
             set { mNodeChain = value; }
+        }
+
+        Dictionary<int, CNode> mNodeChainKeyID = new Dictionary<int, CNode>();
+        [XmlIgnore]
+        public Dictionary<int, CNode> NodeChainKeyID
+        {
+            get
+            {
+                if (NodeChainKeyID.Count == 0)
+                {
+                    foreach (CNode node in mNodeChain)
+                    {
+                        mNodeChainKeyID.Add(node.ID, node);
+                    }
+                }
+                return mNodeChainKeyID;
+            }
         }
         #endregion
         #region ==== 树的初始化 ====
@@ -196,7 +213,6 @@ namespace FocusTree
         public CFocusTree() { }
         public CFocusTree(string szCsv)
         {
-
             Match match = Regex.Match(szCsv, "([^\\\\]*)(\\.\\w+)$");
             mName = match.Groups[1].Value;
             try
@@ -383,6 +399,7 @@ namespace FocusTree
                             // 新增节点枚举
                             combineList.Add(node);
                             mNodeChain.Add(node);
+                            mNodeChainKeyID.Add(node.ID, node);
                         }
                         else
                         {

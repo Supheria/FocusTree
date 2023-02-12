@@ -61,12 +61,12 @@ namespace FocusTree.Properties {
         }
         
         /// <summary>
-        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        ///   查找类似于 (图标) 的 System.Drawing.Icon 类型的本地化资源。
         /// </summary>
-        internal static System.Drawing.Bitmap Min {
+        internal static System.Drawing.Icon FocusTree {
             get {
-                object obj = ResourceManager.GetObject("Min", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                object obj = ResourceManager.GetObject("FocusTree", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
             }
         }
     }

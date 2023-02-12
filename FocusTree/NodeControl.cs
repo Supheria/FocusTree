@@ -10,6 +10,7 @@ using BranchType = System.Collections.Generic.List<FocusTree.CNode>;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 using System.Security.Cryptography;
+using System.ComponentModel;
 
 namespace FocusTree
 {
@@ -27,7 +28,7 @@ namespace FocusTree
         {
             InitializeComponent();
             mNode = node;
-            lblTitle.Text = Text = Name = node.FocusData.Name;
+            txtTitle.Text = Text = Name = node.FocusData.Name;
             Location = new Point(0, 0);
             int nColum = 
                 (mNode.EndColum - mNode.StartColum) / 2 + mNode.StartColum;
@@ -35,6 +36,29 @@ namespace FocusTree
                         nColum * Size.Height,
                         mNode.Level * Size.Width
                         );
+        }
+        /// <summary>
+        /// 鼠标单击事件
+        /// </summary>
+        [Description("单击控件时"), Category("FTControls")]
+        public event MouseEventHandler TFMouseCilck;
+
+        private void txtTitle_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (TFMouseCilck != null)
+            {
+                // 触发单击事件
+                TFMouseCilck(this, e);
+            }
+        }
+
+        private void NodeControl_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (TFMouseCilck != null)
+            {
+                // 触发单击事件
+                TFMouseCilck(sender, e);
+            }
         }
     }
     /// <summary>

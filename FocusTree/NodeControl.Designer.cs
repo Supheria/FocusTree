@@ -30,7 +30,7 @@
         {
             this.btnTop = new FTControls.FTButton();
             this.btnBottom = new FTControls.FTButton();
-            this.lblTitle = new System.Windows.Forms.Label();
+            this.txtTitle = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // btnTop
@@ -40,7 +40,7 @@
             this.btnTop.BackColorHover = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
             this.btnTop.BackColorLeave = System.Drawing.Color.Transparent;
             this.btnTop.IsPlus = true;
-            this.btnTop.Location = new System.Drawing.Point(32, 0);
+            this.btnTop.Location = new System.Drawing.Point(31, 7);
             this.btnTop.Margin = new System.Windows.Forms.Padding(4);
             this.btnTop.Name = "btnTop";
             this.btnTop.Size = new System.Drawing.Size(15, 15);
@@ -54,31 +54,33 @@
             this.btnBottom.BackColorHover = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
             this.btnBottom.BackColorLeave = System.Drawing.Color.Transparent;
             this.btnBottom.IsPlus = true;
-            this.btnBottom.Location = new System.Drawing.Point(32, 41);
+            this.btnBottom.Location = new System.Drawing.Point(31, 52);
             this.btnBottom.Margin = new System.Windows.Forms.Padding(4);
             this.btnBottom.Name = "btnBottom";
             this.btnBottom.Size = new System.Drawing.Size(15, 15);
             this.btnBottom.TabIndex = 2;
             this.btnBottom.TextColor = System.Drawing.Color.Black;
             // 
-            // lblTitle
+            // txtTitle
             // 
-            this.lblTitle.AutoSize = true;
-            this.lblTitle.Location = new System.Drawing.Point(18, 19);
-            this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(29, 17);
-            this.lblTitle.TabIndex = 4;
-            this.lblTitle.Text = "title";
+            this.txtTitle.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtTitle.Location = new System.Drawing.Point(-1, 29);
+            this.txtTitle.Name = "txtTitle";
+            this.txtTitle.Size = new System.Drawing.Size(78, 16);
+            this.txtTitle.TabIndex = 3;
+            this.txtTitle.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtTitle.MouseClick += new System.Windows.Forms.MouseEventHandler(this.txtTitle_MouseClick);
             // 
             // NodeControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.lblTitle);
+            this.Controls.Add(this.txtTitle);
             this.Controls.Add(this.btnBottom);
             this.Controls.Add(this.btnTop);
             this.Name = "NodeControl";
-            this.Size = new System.Drawing.Size(78, 60);
+            this.Size = new System.Drawing.Size(78, 78);
+            this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.NodeControl_MouseClick);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -88,6 +90,6 @@
 
         private FTControls.FTButton btnTop;
         private FTControls.FTButton btnBottom;
-        private Label lblTitle;
+        private TextBox txtTitle;
     }
 }

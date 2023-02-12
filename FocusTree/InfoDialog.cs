@@ -44,7 +44,7 @@
         {
             Location = new Point(
                 nodeCtrl.Location.X + nodeCtrl.Width,
-                nodeCtrl.Location.Y + nodeCtrl.Height);
+                nodeCtrl.Location.Y + nodeCtrl.Height / 2);
         }
         /// <summary>
         /// 将关闭窗体设置为隐藏窗体

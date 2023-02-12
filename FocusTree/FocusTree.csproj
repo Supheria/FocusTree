@@ -1,12 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  <UseWindowsForms>true</UseWindowsForms>
+    <UseWindowsForms>true</UseWindowsForms>
+    <PublishReadyToRun>true</PublishReadyToRun>
+    <SelfContained>true</SelfContained>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PackageOutputPath>$(OutputPath)0.1</PackageOutputPath>
+    <ApplicationIcon>Resources\FocusTree.ico</ApplicationIcon>
+    <Version>$(VersionPrefix)0.1</Version>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\FocusTree.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="CSVFile" Version="3.1.0" />

@@ -5,7 +5,9 @@ VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FocusTree", "FocusTree\FocusTree.csproj", "{6A9E1B42-AB70-47D8-909B-019BF42245FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FTControls", "FTControls\FTControls.csproj", "{18FB5DAB-BFA6-4FB3-9174-209FD7577889}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FTControls", "FTControls\FTControls.csproj", "{18FB5DAB-BFA6-4FB3-9174-209FD7577889}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvertIcon", "ConvertIcon\ConvertIcon.csproj", "{881782E0-BDDC-4AF3-8831-58EEEEF55F58}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{18FB5DAB-BFA6-4FB3-9174-209FD7577889}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18FB5DAB-BFA6-4FB3-9174-209FD7577889}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18FB5DAB-BFA6-4FB3-9174-209FD7577889}.Release|Any CPU.Build.0 = Release|Any CPU
+		{881782E0-BDDC-4AF3-8831-58EEEEF55F58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{881782E0-BDDC-4AF3-8831-58EEEEF55F58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{881782E0-BDDC-4AF3-8831-58EEEEF55F58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{881782E0-BDDC-4AF3-8831-58EEEEF55F58}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
