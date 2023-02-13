@@ -22,7 +22,7 @@ namespace FTControls
         /// 鼠标单击事件
         /// </summary>
         [Description("单击按钮时"), Category(category)]
-        public event EventHandler ButtonClick;
+        public event EventHandler TFClick;
         /// <summary>
         /// 背景颜色
         /// </summary>
@@ -138,10 +138,10 @@ namespace FTControls
             this.BorderStyle = BorderStyle.Fixed3D;
             // 设置背景颜色
             this.BackColor = mBackColorHover;
-            if (ButtonClick != null)
+            if (TFClick != null)
             {
                 // 触发单击事件
-                ButtonClick(sender, e);
+                TFClick(sender, e);
             }
             this.Update();
         }

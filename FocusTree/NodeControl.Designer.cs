@@ -46,6 +46,7 @@
             this.btnTop.Size = new System.Drawing.Size(15, 15);
             this.btnTop.TabIndex = 0;
             this.btnTop.TextColor = System.Drawing.Color.Black;
+            this.btnTop.TFClick += new System.EventHandler(this.btnTop_TFClick);
             // 
             // btnBottom
             // 
@@ -60,6 +61,7 @@
             this.btnBottom.Size = new System.Drawing.Size(15, 15);
             this.btnBottom.TabIndex = 2;
             this.btnBottom.TextColor = System.Drawing.Color.Black;
+            this.btnBottom.TFClick += new System.EventHandler(this.btnBottom_TFClick);
             // 
             // txtTitle
             // 

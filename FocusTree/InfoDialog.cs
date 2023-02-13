@@ -25,7 +25,7 @@
         /// <param name="node"></param>
         public void SetNode(NodeControl nodeCtrl)
         {
-            mNode = nodeCtrl.mNode;
+            mNode = nodeCtrl.Node;
             var focusData = mNode.FocusData;
             Text = focusData.Name;
             txtDuration.Text = $"{focusData.Duration}日";

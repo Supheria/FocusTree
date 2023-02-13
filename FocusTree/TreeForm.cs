@@ -13,11 +13,8 @@ namespace FocusTree
     /// </summary>
     public partial class TreeForm : Form
     {
-        private CFocusTree mTree = new CFocusTree();
-        /// <summary>
-        /// 节点信息窗口
-        /// </summary>
-        private InfoDialog mInfoDlg = new InfoDialog();
+        private TreeMap mTreeMap { get; init; }
+        
         /// <summary>
         /// 画图开始的位置
         /// </summary>
@@ -26,6 +23,8 @@ namespace FocusTree
         /// 原始父文件夹路径
         /// </summary>
         private string rawParentFolderPath = string.Empty;
+
+        
         #region  ==== 初始化窗体 ====
         /// <summary>
         /// 窗体初始化
@@ -37,15 +36,14 @@ namespace FocusTree
             // 从*.csv新建树
             if (match.Groups[2].Value == ".csv" || match.Groups[2].Value == ".CSV")
             {
-                mTree = new CFocusTree(szPath);
+                mTreeMap = new TreeMap(new CFocusTree(szPath));
             }
             // 从*.xml读取树
             else
             {
-                DeserializeFromXml(szPath);
+                mTreeMap = new TreeMap(DeserializeFromXml(szPath));
             }
             InitForm();
-            SetImage();
         }
         /// <summary>
         /// 初始化
@@ -53,32 +51,16 @@ namespace FocusTree
         private void InitForm()
         {
             InitializeComponent();
-            mInfoDlg = new InfoDialog(this);
+            this.Controls.Add(mTreeMap);
             ImageStartLocation = new Point(0, 0);
-            Name = Text = mTree.Name;
+            Name = Text = mTreeMap.Name;
         }
         #endregion
         #region ==== 节点控件事件 ====
-        public void ClickTreeNode(object sender, MouseEventArgs e)
-        {
-            // 隐藏信息窗口
-            mInfoDlg.Hide();
-            // 触发点击事件的节点
-            mInfoDlg.SetNode((NodeControl)sender);
-            // 非模态对话框
-            mInfoDlg.Show();
-        }
+        
         #endregion
         #region ==== 窗体方法 ====
-        public void SetImage()
-        {
-            foreach (var node in mTree.NodeChain)
-            {
-                NodeControl nodeCtrl = new NodeControl(node);
-                nodeCtrl.TFMouseCilck += ClickTreeNode;
-                Controls.Add(nodeCtrl);
-            }
-        }
+        
         #endregion
         #region ==== 文件方法 ====
         /// <summary>
@@ -115,8 +97,8 @@ namespace FocusTree
                 // 强制指定命名空间，覆盖默认的命名空间
                 XmlSerializerNamespaces namespaces = new XmlSerializerNamespaces();
                 namespaces.Add(string.Empty, string.Empty);
-                XmlSerializer serializer = new XmlSerializer(mTree.GetType());
-                serializer.Serialize(new XmlWriterForceFullEnd(xmlWriter), mTree, namespaces);
+                XmlSerializer serializer = new XmlSerializer(mTreeMap.Tree.GetType());
+                serializer.Serialize(new XmlWriterForceFullEnd(xmlWriter), mTreeMap.Tree, namespaces);
                 xmlWriter.Close();
                 fileStream.Close();
             }
@@ -131,7 +113,7 @@ namespace FocusTree
         /// 从XML反序列化
         /// </summary>
         /// <param name="fstream"></param>
-        public void DeserializeFromXml(string szLoad)
+        public CFocusTree DeserializeFromXml(string szLoad)
         {
             FileStream fileStream;
             StreamReader streamReader;
@@ -146,10 +128,11 @@ namespace FocusTree
             }
             try
             {
-                XmlSerializer serializer = new XmlSerializer(mTree.GetType());
-                mTree = (CFocusTree)serializer.Deserialize(streamReader);
+                XmlSerializer serializer = new XmlSerializer(typeof(CFocusTree));
+                CFocusTree tree = (CFocusTree)serializer.Deserialize(streamReader);
                 streamReader.Close();
                 fileStream.Close();
+                return tree;
             }
             catch (Exception ex)
             {
@@ -186,23 +169,6 @@ namespace FocusTree
         {
             get { return mNodeChain; }
             set { mNodeChain = value; }
-        }
-
-        Dictionary<int, CNode> mNodeChainKeyID = new Dictionary<int, CNode>();
-        [XmlIgnore]
-        public Dictionary<int, CNode> NodeChainKeyID
-        {
-            get
-            {
-                if (NodeChainKeyID.Count == 0)
-                {
-                    foreach (CNode node in mNodeChain)
-                    {
-                        mNodeChainKeyID.Add(node.ID, node);
-                    }
-                }
-                return mNodeChainKeyID;
-            }
         }
         #endregion
         #region ==== 树的初始化 ====
@@ -399,7 +365,6 @@ namespace FocusTree
                             // 新增节点枚举
                             combineList.Add(node);
                             mNodeChain.Add(node);
-                            mNodeChainKeyID.Add(node.ID, node);
                         }
                         else
                         {

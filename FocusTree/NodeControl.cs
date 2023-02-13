@@ -19,7 +19,12 @@ namespace FocusTree
     /// </summary>
     public partial class NodeControl : UserControl
     {
-        public CNode mNode { get; private set; }
+        CNode mNode = new CNode();
+        public CNode Node
+        {
+            get { return mNode; }
+            set { mNode = value; }
+        }
         /// <summary>
         /// 节点转换成控件
         /// </summary>
@@ -37,29 +42,51 @@ namespace FocusTree
                         mNode.Level * Size.Width
                         );
         }
+        const string category = "FTControls";
+        #region ==== 事件迁移 ====
         /// <summary>
         /// 鼠标单击事件
         /// </summary>
-        [Description("单击控件时"), Category("FTControls")]
-        public event MouseEventHandler TFMouseCilck;
+        [Description("单击控件时"), Category(category)]
+        public MouseEventHandler TFMouseCilck;
 
         private void txtTitle_MouseClick(object sender, MouseEventArgs e)
         {
-            if (TFMouseCilck != null)
-            {
-                // 触发单击事件
-                TFMouseCilck(this, e);
-            }
+            if (TFMouseCilck == null)
+                return;
+            // 触发单击事件
+            TFMouseCilck(this, e);
         }
 
         private void NodeControl_MouseClick(object sender, MouseEventArgs e)
         {
-            if (TFMouseCilck != null)
-            {
-                // 触发单击事件
-                TFMouseCilck(sender, e);
-            }
+            if (TFMouseCilck == null)
+                return;
+            // 触发单击事件
+            TFMouseCilck(sender, e);
         }
+        /// <summary>
+        /// 单击加号
+        /// </summary>
+        [Description("单击上加号时"), Category(category)]
+        public EventHandler ClickTopAddButton;
+        [Description("单击下加号时"), Category(category)]
+        public EventHandler ClickBottomAddButton;
+        
+        private void btnTop_TFClick(object sender, EventArgs e)
+        {
+            if (ClickTopAddButton == null)
+                return;
+            ClickTopAddButton(this, e);
+        }
+
+        private void btnBottom_TFClick(object sender, EventArgs e)
+        {
+            if (ClickBottomAddButton == null)
+                return;
+            ClickBottomAddButton(this, e);
+        }
+        #endregion
     }
     /// <summary>
     /// 节点类
@@ -92,7 +119,7 @@ namespace FocusTree
         /// </summary>
         List<int> mChildrenIDs = new List<int>();
         [XmlElement("child-ID")]
-        public List<int> ChildrenIDs
+        public List<int> ChildIDs
         {
             get { return mChildrenIDs; }
             set { mChildrenIDs = value; }
@@ -179,7 +206,7 @@ namespace FocusTree
             mParent = parent;
             // 把节点加入父节点的子集
             mParent.Children.Add(this);
-            mParent.ChildrenIDs.Add(ID);
+            mParent.ChildIDs.Add(ID);
             ReliedIDs.Add(mParent.ID);
             // 设置国策数据
             FocusData = focusData;
@@ -240,7 +267,7 @@ namespace FocusTree
         /// 国策名称
         /// </summary>
         [XmlElement("name")]
-        public string Name = string.Empty;
+        public string Name = "根节点";
         /// <summary>
         /// 字段是否以 * 开头
         /// </summary>
