@@ -15,23 +15,14 @@ namespace FocusTree.Tree
         /// <summary>
         /// 树的名称（文件名）
         /// </summary>
-        string mName = string.Empty;
         [XmlElement("tree-name")]
-        public string Name
-        {
-            get { return mName; }
-            set { mName = value; }
-        }
+        public string Name = string.Empty;
         /// <summary>
         /// 节点链
         /// </summary>
-        List<CNode> mNodeChain = new List<CNode>();
         [XmlElement("node")]
-        public List<CNode> NodeChain
-        {
-            get { return mNodeChain; }
-            set { mNodeChain = value; }
-        }
+        public List<CNode> NodeChain = new();
+        
         #endregion
         #region ==== 树的初始化 ====
         /// <summary>
@@ -43,7 +34,7 @@ namespace FocusTree.Tree
         {
 
             Match match = Regex.Match(szCsv, "([^\\\\]*)(\\.\\w+)$");
-            mName = match.Groups[1].Value;
+            Name = match.Groups[1].Value;
             try
             {
                 var data = IO.FtCsv.ReadCsv(szCsv);
@@ -151,7 +142,7 @@ namespace FocusTree.Tree
                             node.EndColum = node.StartColum = colum;
                             // 新增节点枚举
                             combineList.Add(node);
-                            mNodeChain.Add(node);
+                            NodeChain.Add(node);
                         }
                         else
                         {
