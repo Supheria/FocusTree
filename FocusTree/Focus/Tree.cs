@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.IO;
+using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 
 using NodeBranch = System.Collections.Generic.List<System.Collections.Generic.List<FocusTree.CNode>>;
@@ -26,18 +27,21 @@ namespace FocusTree.Tree
         #endregion
         #region ==== 树的初始化 ====
         /// <summary>
-        /// 将原始数据转化为节点树
+        /// 从csv中读取节点树
         /// </summary>
-        /// <param name="szCsv">csv文件路径</param>
-        public Tree() { }
-        public Tree(string szCsv)
+        /// <param name="path">csv文件路径</param>
+        public Tree(string path)
         {
+            // 文件信息
+            var fileinfo = new FileInfo(path);  
+            if (!fileinfo.Exists) { throw new FileNotFoundException($"[2302152115] 无法从文件生成树 - 文件不存在: {path}"); }
 
-            Match match = Regex.Match(szCsv, "([^\\\\]*)(\\.\\w+)$");
-            Name = match.Groups[1].Value;
+            // 不含扩展名的文件名
+            Name = Path.GetFileNameWithoutExtension(fileinfo.Name);
+
             try
             {
-                var data = IO.FtCsv.ReadCsv(szCsv);
+                var data = IO.FtCsv.ReadCsv(path);
                 var root = new CNode();
                 // 将数据转换为节点
                 GenerateNodes(data, root);
@@ -52,7 +56,7 @@ namespace FocusTree.Tree
             }
             catch (Exception ex)
             {
-                throw new Exception($"{ex.Message}\n生成\"{szCsv}\"的树失败！");
+                throw new Exception($"[2302152117] 生成树失败 - 文件: {path}\n{ex.Message}");
             }
         }
         /// <summary>
