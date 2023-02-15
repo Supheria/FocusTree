@@ -1,8 +1,7 @@
-﻿using System.IO;
-using System.Text.RegularExpressions;
+﻿using FocusTree.Focus;
 using System.Xml.Serialization;
 
-using NodeBranch = System.Collections.Generic.List<System.Collections.Generic.List<FocusTree.CNode>>;
+using NodeBranch = System.Collections.Generic.List<System.Collections.Generic.List<FocusTree.Focus.CNode>>;
 
 namespace FocusTree.Tree
 {
@@ -12,7 +11,7 @@ namespace FocusTree.Tree
     [XmlRoot("focus-tree")]
     public class Tree
     {
-        #region ==== 树的属性 ====
+        #region ==== 属性 ====
         /// <summary>
         /// 树的名称（文件名）
         /// </summary>
@@ -25,7 +24,7 @@ namespace FocusTree.Tree
         public List<CNode> NodeChain = new();
         
         #endregion
-        #region ==== 树的初始化 ====
+        #region ==== 构造 ====
         /// <summary>
         /// 从csv中读取节点树
         /// </summary>
@@ -42,9 +41,8 @@ namespace FocusTree.Tree
             try
             {
                 var data = IO.FtCsv.ReadCsv(path);
-                var root = new CNode();
                 // 将数据转换为节点
-                GenerateNodes(data, root);
+                var root = CNode.GenerateNodes(data);
                 // 生成所有分支
                 NodeBranch buffer = root.GetBranches();
                 if (buffer.Count == 0)
@@ -57,60 +55,6 @@ namespace FocusTree.Tree
             catch (Exception ex)
             {
                 throw new Exception($"[2302152117] 生成树失败 - 文件: {path}\n{ex.Message}");
-            }
-        }
-        /// <summary>
-        /// 根据二维原始字段数组生成所有节点
-        /// </summary>
-        /// <param name="data">二维原始字段数组</param>
-        private void GenerateNodes(string[][] data, CNode root)
-        {
-            // 上一次循环处理的节点
-            CNode lastNode = root;
-            // 循环处理到的行数
-            int nRow = 0;
-            // 遍历所有行
-            foreach (var row in data)
-            {
-                //行数从1开始
-                nRow++;
-                // 获取该行非空列的所在位置
-                // 从头循环匹配所有为空并统计总数，数量就是第一个非空的index
-                int level = row.TakeWhile(col =>
-                    string.IsNullOrWhiteSpace(col)).Count();
-                // 获取原始字段
-                FocusData focusData;
-                try
-                {
-                    focusData = new FocusData(row[level]);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception($"无法读取第{nRow}行原始字段，{ex.Message}");
-                }
-                #region ==== 转换方法 =====
-                // 如果新节点与上一节点的右移距离大于1，则表示产生了断层
-                if (level > lastNode.Level + 1)
-                    throw new Exception($"位于 {nRow} 行: 本行节点与上方节点的层级有断层。");
-                // 如果新节点与上一节点的右移距离等于1，则新节点是上一节点的子节点
-                if (level == lastNode.Level + 1)
-                {
-                    lastNode = new CNode(nRow, level, lastNode, focusData); // lastNode指向新的节点
-                }
-                // 如果新节点与上一节点在同列或更靠左，向上寻找新节点所在列的父节点
-                else
-                {
-                    do
-                    {
-                        if (lastNode.Parent == null)
-                            throw new Exception($"位于 {nRow} 行: 无法为节点找到对应的父节点。");
-                        else
-                            lastNode = lastNode.Parent; // lastNode指向自己的父节点
-                    } // 当指向的父节点是新节点所在列的父节点时结束循环
-                    while (level - 1 != lastNode.Level);
-                    lastNode = new CNode(nRow, level, lastNode, focusData); // lastNode指向新的节点
-                }
-                #endregion
             }
         }
         /// <summary>

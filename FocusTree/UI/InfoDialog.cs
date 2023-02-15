@@ -1,8 +1,10 @@
-﻿namespace FocusTree
+﻿using FocusTree.Focus;
+
+namespace FocusTree
 {
     public partial class InfoDialog : Form
     {
-        CNode? mNode;
+        CNode mNode;
         bool nEditDialog;
         /// <summary>
         /// 节点信息对话框

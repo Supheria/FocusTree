@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using FocusTree.Focus;
+using System.Xml.Serialization;
 
 namespace FocusTree
 {
