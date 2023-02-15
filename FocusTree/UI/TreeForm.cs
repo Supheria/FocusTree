@@ -47,7 +47,7 @@ namespace FocusTree
             {
                 // csv 文件
                 case ".csv":
-                    TreeMap = new TreeMap(new CFocusTree(fileinfo.FullName));
+                    TreeMap = new TreeMap(new Tree.Tree(fileinfo.FullName));
                     break;
                 // xml 文件
                 case ".xml":
@@ -130,7 +130,7 @@ namespace FocusTree
         /// 从XML反序列化
         /// </summary>
         /// <param name="fstream"></param>
-        public CFocusTree DeserializeFromXml(string szLoad)
+        public Tree.Tree DeserializeFromXml(string szLoad)
         {
             FileStream fileStream;
             StreamReader streamReader;
@@ -145,8 +145,8 @@ namespace FocusTree
             }
             try
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(CFocusTree));
-                CFocusTree tree = (CFocusTree)serializer.Deserialize(streamReader);
+                XmlSerializer serializer = new XmlSerializer(typeof(Tree.Tree));
+                Tree.Tree tree = (Tree.Tree)serializer.Deserialize(streamReader);
                 streamReader.Close();
                 fileStream.Close();
                 return tree;

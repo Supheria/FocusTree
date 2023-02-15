@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 
 using NodeBranch = System.Collections.Generic.List<System.Collections.Generic.List<FocusTree.CNode>>;
@@ -14,7 +9,7 @@ namespace FocusTree.Tree
     /// 国策树类
     /// </summary>
     [XmlRoot("focus-tree")]
-    public class CFocusTree
+    public class Tree
     {
         #region ==== 树的属性 ====
         /// <summary>
@@ -43,8 +38,8 @@ namespace FocusTree.Tree
         /// 将原始数据转化为节点树
         /// </summary>
         /// <param name="szCsv">csv文件路径</param>
-        public CFocusTree() { }
-        public CFocusTree(string szCsv)
+        public Tree() { }
+        public Tree(string szCsv)
         {
 
             Match match = Regex.Match(szCsv, "([^\\\\]*)(\\.\\w+)$");

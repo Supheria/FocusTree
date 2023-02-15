@@ -1,22 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Xml.Serialization;
-using FocusTree.Tree;
+﻿using System.Xml.Serialization;
 
 namespace FocusTree
 {
     public partial class TreeMap : UserControl
     {
-        CFocusTree mTree { get; init; }
-        public CFocusTree Tree
+        Tree.Tree mTree { get; init; }
+        public Tree.Tree Tree
         {
             get { return mTree; }
         }
@@ -34,7 +23,7 @@ namespace FocusTree
         /// </summary>
         private InfoDialog mInfoDlg = new InfoDialog();
 
-        public TreeMap(CFocusTree tree)
+        public TreeMap(Tree.Tree tree)
         {
             InitializeComponent();
             mTree = tree;
