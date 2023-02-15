@@ -183,7 +183,7 @@ namespace FocusTree
             mName = match.Groups[1].Value;
             try
             {
-                var data = ReadCsv(szCsv);
+                var data = IO.FtCsv.ReadCsv(szCsv);
                 var root = new CNode();
                 // 将数据转换为节点
                 GenerateNodes(data, root);
@@ -200,35 +200,6 @@ namespace FocusTree
             {
                 throw new Exception($"{ex.Message}\n生成\"{szCsv}\"的树失败！");
             }
-        }
-        /// <summary>
-        /// 读取CSV文件，获得二维原始字段数组
-        /// </summary>
-        /// <param name="szPath"></param>
-        /// <returns></returns>
-        private string[][] ReadCsv(string szPath)
-        {
-            string[][]? data = null;
-            // 读取设置
-            var settings = new CSVSettings
-            {
-                FieldDelimiter = ',', // 字段分隔符
-                TextQualifier = '\"', // 文本限定符
-                HeaderRowIncluded = false // 第一行不做标头
-            };
-            try
-            {
-                //从文件读取数据 (string[])
-                CSVReader csvData = CSVReader.FromFile(szPath, settings);
-                data = csvData.ToArray(); //作为二维数组返回
-                if (data == null)
-                    throw new Exception("未获得CSVReader指针。");
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"读取CSV文件失败：{ex.Message}");
-            }
-            return data;
         }
         /// <summary>
         /// 根据二维原始字段数组生成所有节点
