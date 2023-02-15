@@ -158,9 +158,9 @@ namespace FocusTree
         /// <summary>
         /// 国策数据
         /// </summary>
-        SFocusData mFocusData = new SFocusData();
+        FocusData mFocusData = new FocusData();
         [XmlElement("focus-data")]
-        public SFocusData FocusData
+        public FocusData FocusData
         {
             get { return mFocusData; }
             set { mFocusData = value; }
@@ -199,7 +199,7 @@ namespace FocusTree
             int id,
             int level,
             CNode parent,
-            SFocusData focusData
+            FocusData focusData
             )
         {
             ID = id;

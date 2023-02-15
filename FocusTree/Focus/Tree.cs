@@ -84,10 +84,10 @@ namespace FocusTree.Tree
                 int level = row.TakeWhile(col =>
                     string.IsNullOrWhiteSpace(col)).Count();
                 // 获取原始字段
-                SFocusData focusData;
+                FocusData focusData;
                 try
                 {
-                    focusData = GetFocusData(row[level]);
+                    focusData = new FocusData(row[level]);
                 }
                 catch (Exception ex)
                 {
@@ -116,53 +116,6 @@ namespace FocusTree.Tree
                     lastNode = new CNode(nRow, level, lastNode, focusData); // lastNode指向新的节点
                 }
                 #endregion
-            }
-        }
-        /// <summary>
-        /// 根据文本设置节点的国策数据
-        /// </summary>
-        /// <param name="text">原始国策字段</param>
-        private static SFocusData GetFocusData(string text)
-        {
-            // 在 C# 中的字符串，{ 需要转义，通过分割一对来避免歧义。 原 Regex: (.+?){(\d+)天}{(.+?)}(?:{(.+)})?(.+)?
-            var pattern = "(.+?){" + "(\\d+)天}{" + "(.+?)}(?:{" + "(.+)})?(.+)?";
-            try
-            {
-                var match = Regex.Match(text, pattern);
-                // Groups[0] 是匹配成功部分的文本，应当等同于 text。
-                // 从[1]开始才是括号匹配的数据
-                // 是否以 * 开头
-                var isBeginWithStar = match.Groups[1].Value.StartsWith("*");
-                // 名称
-                string name;
-                // 如果以 * 开头，则去掉 *
-                if (isBeginWithStar)
-                    name = match.Groups[1].Value.Substring(1);
-                else
-                    name = match.Groups[1].Value;
-                // 天数
-                int duration = int.Parse(match.Groups[2].Value);
-                // 效果
-                string effects = match.Groups[3].Value;
-                // 描述
-                string descript = match.Groups[4].Value;
-                // 备注
-                string ps = match.Groups[5].Value;
-                return new SFocusData(
-                    name,
-                    isBeginWithStar,
-                    duration,
-                    effects,
-                    descript,
-                    ps
-                    );
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(
-                    $"正则匹配时发生了异常。\n" +
-                    $"试图解析的内容: {text}\n" +
-                    $"异常信息: {ex.Message}");
             }
         }
         /// <summary>
