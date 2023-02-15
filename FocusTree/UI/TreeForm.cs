@@ -5,6 +5,7 @@ using CSVFile;
 using System.Xml.Serialization;
 using System.Xml;
 using System.Xml.Linq;
+using System.IO;
 
 namespace FocusTree
 {
@@ -13,7 +14,7 @@ namespace FocusTree
     /// </summary>
     public partial class TreeForm : Form
     {
-        private TreeMap mTreeMap { get; init; }
+        private TreeMap TreeMap { get; init; }
         
         /// <summary>
         /// 画图开始的位置
@@ -27,22 +28,36 @@ namespace FocusTree
         
         #region  ==== 初始化窗体 ====
         /// <summary>
-        /// 窗体初始化
+        /// 使用 .csv 文件或 .xml 文件 创建树实例
         /// </summary>
-        public TreeForm(string szPath)
+        /// <param name="path">文件路径</param>
+        public TreeForm(string path)
         {
-            Match match = Regex.Match(szPath, "(.*)(\\.\\w+)$");
-            rawParentFolderPath = match.Groups[1].Value;
-            // 从*.csv新建树
-            if (match.Groups[2].Value == ".csv" || match.Groups[2].Value == ".CSV")
+            var fileinfo = new FileInfo(path);  // 文件信息
+            // !!!! 需要修改的变量名 !!!!
+            // 不包含文件扩展名的完整路径
+            rawParentFolderPath = fileinfo.FullName.Substring(0, fileinfo.FullName.Length - fileinfo.Extension.Length);
+
+            // 文件不存在
+            if (!fileinfo.Exists) { throw new FileNotFoundException($"[2302151951] 无法从文件生成树 - 文件不存在: {path}"); }
+            // 根据扩展名决定读取方式
+            switch (fileinfo.Extension)
             {
-                mTreeMap = new TreeMap(new CFocusTree(szPath));
+                // csv 文件
+                case ".csv":
+                    TreeMap = new TreeMap(new CFocusTree(fileinfo.FullName));
+                    break;
+                // xml 文件
+                case ".xml":
+                    var focusTree = DeserializeFromXml(fileinfo.FullName);
+                    TreeMap = new TreeMap(focusTree);
+                    break;
+                // 不支持的文件类型
+                default:
+                    throw new FileNotFoundException($"[2302152008] 不支持的文件类型，需要 .csv 或 .xml 文件 - 文件: {path}");
             }
-            // 从*.xml读取树
-            else
-            {
-                mTreeMap = new TreeMap(DeserializeFromXml(szPath));
-            }
+
+            // 初始化窗体控件
             InitForm();
         }
         /// <summary>
@@ -51,9 +66,9 @@ namespace FocusTree
         private void InitForm()
         {
             InitializeComponent();
-            this.Controls.Add(mTreeMap);
+            this.Controls.Add(TreeMap);
             ImageStartLocation = new Point(0, 0);
-            Name = Text = mTreeMap.Name;
+            Name = Text = TreeMap.Name;
         }
         #endregion
         #region ==== 节点控件事件 ====
@@ -97,8 +112,8 @@ namespace FocusTree
                 // 强制指定命名空间，覆盖默认的命名空间
                 XmlSerializerNamespaces namespaces = new XmlSerializerNamespaces();
                 namespaces.Add(string.Empty, string.Empty);
-                XmlSerializer serializer = new XmlSerializer(mTreeMap.Tree.GetType());
-                serializer.Serialize(new XmlWriterForceFullEnd(xmlWriter), mTreeMap.Tree, namespaces);
+                XmlSerializer serializer = new XmlSerializer(TreeMap.Tree.GetType());
+                serializer.Serialize(new XmlWriterForceFullEnd(xmlWriter), TreeMap.Tree, namespaces);
                 xmlWriter.Close();
                 fileStream.Close();
             }
@@ -179,6 +194,7 @@ namespace FocusTree
         public CFocusTree() { }
         public CFocusTree(string szCsv)
         {
+            
             Match match = Regex.Match(szCsv, "([^\\\\]*)(\\.\\w+)$");
             mName = match.Groups[1].Value;
             try
