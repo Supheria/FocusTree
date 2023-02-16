@@ -6,46 +6,39 @@ namespace FocusTree.Focus
     /// <summary>
     /// 节点类
     /// </summary>
-    public class FNode
+    public class FNode: FMapNode
     {
+        #region ==== 重载 ====
+        public override int ID { get; set; }
+        public override int Level { get; set; }
+        public override FData FocusData { get; set; }
+        #endregion
         #region ==== 属性 ====
-        /// <summary>
-        /// 节点ID
-        /// </summary>
-        [XmlElement("ID")] public int ID { get; set; }
         /// <summary>
         /// 依赖的节点ID
         /// </summary>
-        [XmlElement("relied-ID")] public List<int> ReliedIDs { get; set; } = new();
+        public List<int> ReliedIDs { get; set; } = new();
         /// <summary>
         /// 子节点ID
         /// </summary>
-        [XmlElement("child-ID")] public List<int> ChildIDs { get; set; } = new();
-        /// <summary>
-        /// 层级
-        /// </summary>
-        [XmlElement("level")] public int Level { get; set; }
+        public List<int> ChildIDs { get; set; } = new();
         /// <summary>
         /// 节点在树中的起始列
         /// </summary>
-        [XmlElement("start-colum")] public int StartColum { get; set; } = 0;
+        public int StartColum { get; set; } = 0;
         /// <summary>
         /// 节点在树中的终止列
         /// </summary>
-        [XmlElement("end-colum")] public int EndColum { get; set; } = 0;
-        /// <summary>
-        /// 国策数据
-        /// </summary>
-        [XmlElement("focus-data")] public FData FocusData { get; set; }
+        public int EndColum { get; set; } = 0;
         //== 节点控制 ==//
         /// <summary>
         /// 父节点
         /// </summary>
-        [XmlIgnore] public FNode Parent { get; protected set; }
+        public FNode Parent { get; protected set; }
         /// <summary>
         /// 子节点
         /// </summary>
-        [XmlIgnore] public List<FNode> Children { get; protected set; } = new();
+        public List<FNode> Children { get; protected set; } = new();
         #endregion
         #region ==== 初始化节点 ====
         /// <summary>

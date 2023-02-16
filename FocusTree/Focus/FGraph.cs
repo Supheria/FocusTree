@@ -2,7 +2,7 @@
 
 namespace FocusTree.Focus
 {
-    public class FGraph
+    public class FGraph : FMap
     {
         /// <summary>
         /// 文件名
@@ -53,6 +53,12 @@ namespace FocusTree.Focus
                 }
             }
         }
+
+        public override List<FMapNode> GetAllNodes()
+        {
+            throw new NotImplementedException();
+        }
+
         private class NodeRelation
         {
             public NodeRelationType RelationType;
@@ -63,10 +69,14 @@ namespace FocusTree.Focus
                 IDs = iDs;
             }
         }
-        private enum NodeRelationType
-        {
-            Require,    // 这个节点依赖于某些节点
-            Linked      // 某些节点依赖于这个节点
-        }
+    }
+    public class GraphNode
+    {
+        public int ID;
+    }
+    enum NodeRelationType
+    {
+        Require,    // 这个节点依赖于某些节点
+        Linked      // 某些节点依赖于这个节点
     }
 }
