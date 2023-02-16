@@ -4,7 +4,7 @@ namespace FocusTree
 {
     public partial class InfoDialog : Form
     {
-        CNode mNode;
+        FNode mNode;
         bool nEditDialog;
         /// <summary>
         /// 节点信息对话框

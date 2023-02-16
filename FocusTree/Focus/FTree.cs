@@ -1,7 +1,7 @@
 ﻿using FocusTree.Focus;
 using System.Xml.Serialization;
 
-using NodeBranch = System.Collections.Generic.List<System.Collections.Generic.List<FocusTree.Focus.CNode>>;
+using NodeBranch = System.Collections.Generic.List<System.Collections.Generic.List<FocusTree.Focus.FNode>>;
 
 namespace FocusTree.Tree
 {
@@ -9,7 +9,7 @@ namespace FocusTree.Tree
     /// 国策树类
     /// </summary>
     [XmlRoot("focus-tree")]
-    public class Tree
+    public class FTree
     {
         #region ==== 属性 ====
         /// <summary>
@@ -21,7 +21,7 @@ namespace FocusTree.Tree
         /// 节点链
         /// </summary>
         [XmlElement("node")]
-        public List<CNode> NodeChain = new();
+        public List<FNode> NodeChain = new();
         
         #endregion
         #region ==== 构造 ====
@@ -29,7 +29,7 @@ namespace FocusTree.Tree
         /// 从csv中读取节点树
         /// </summary>
         /// <param name="path">csv文件路径</param>
-        public Tree(string path)
+        public FTree(string path)
         {
             // 文件信息
             var fileinfo = new FileInfo(path);  
@@ -40,9 +40,9 @@ namespace FocusTree.Tree
 
             try
             {
-                var data = IO.FtCsv.ReadCsv(path);
+                var data = IO.FCsv.ReadCsv(path);
                 // 将数据转换为节点
-                var root = CNode.GenerateNodes(data);
+                var root = FNode.GenerateNodes(data);
                 // 生成所有分支
                 NodeBranch buffer = root.GetBranches();
                 if (buffer.Count == 0)
@@ -74,7 +74,7 @@ namespace FocusTree.Tree
                     int a = 0;
                 }
                 // 枚举本层级的所有节点
-                List<CNode> combineList = new List<CNode>();
+                List<FNode> combineList = new List<FNode>();
                 // 遍历所有分支的本层级节点
                 for (int colum = 0; colum < rawBranches.Count; colum++)
                 {

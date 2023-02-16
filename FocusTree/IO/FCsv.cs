@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FocusTree.IO
 {
-    internal class FtCsv
+    internal class FCsv
     {
         /// <summary>
         /// 读取Csv文件，获得 string[][] 二维文本
