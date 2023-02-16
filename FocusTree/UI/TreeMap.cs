@@ -5,17 +5,17 @@ namespace FocusTree
 {
     public partial class TreeMap : UserControl
     {
-        Tree.Tree mTree { get; init; }
-        public Tree.Tree Tree
+        Tree.FTree mTree { get; init; }
+        public Tree.FTree Tree
         {
             get { return mTree; }
         }
         /// <summary>
         /// 节点字典
         /// </summary>
-        Dictionary<int, CNode> mNodeKeyID = new Dictionary<int, CNode> { { 0, new CNode() } };
+        Dictionary<int, FNode> mNodeKeyID = new ();
         [XmlIgnore]
-        public Dictionary<int, CNode> NodeKeyID
+        public Dictionary<int, FNode> NodeKeyID
         {
             get { return mNodeKeyID; }
         }
@@ -24,7 +24,7 @@ namespace FocusTree
         /// </summary>
         private InfoDialog mInfoDlg = new InfoDialog();
 
-        public TreeMap(Tree.Tree tree)
+        public TreeMap(Tree.FTree tree)
         {
             InitializeComponent();
             mTree = tree;

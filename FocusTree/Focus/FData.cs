@@ -11,7 +11,7 @@ namespace FocusTree.Tree
     /// <summary>
     /// 国策数据
     /// </summary>
-    public struct FocusData
+    public struct FData
     {
         /// <summary>
         /// 国策名称
@@ -53,7 +53,7 @@ namespace FocusTree.Tree
         /// <param name="effects">国策效果</param>
         /// <param name="descript">国策描述</param>
         /// <param name="ps">备注</param>
-        public FocusData(
+        public FData(
             string name,
             bool isBeginWithstar,
             int duration,
@@ -69,13 +69,24 @@ namespace FocusTree.Tree
             Descript = descript;
             Ps = ps;
         }
-
+        public FData(bool isRoot)
+        {
+            if (isRoot)
+            {
+                this = new FData();
+                Name = "根节点";
+            }
+            else
+            {
+                throw new Exception("[2302160957] 未定义的 FData数据类型");
+            }
+        }
         /// <summary>
         /// 从文本中解析 FocusData(国测数据)
         /// </summary>
         /// <param name="text">文本</param>
         /// <exception cref="Exception">正则匹配异常</exception>
-        public FocusData(string text)
+        public FData(string text)
         {
             // 在 C# 中的字符串，{ 需要转义，通过分割一对来避免歧义。 原 Regex: (.+?){(\d+)天}{(.+?)}(?:{(.+)})?(.+)?
             var pattern = "(.+?){" + "(\\d+)天}{" + "(.+?)}(?:{" + "(.+)})?(.+)?";
@@ -103,7 +114,7 @@ namespace FocusTree.Tree
                 string ps = match.Groups[5].Value;
 
                 // 使用数据创建实例
-                this = new FocusData(
+                this = new FData(
                     name,
                     isBeginWithStar,
                     duration,

@@ -8,27 +8,22 @@ namespace FocusTree
     /// </summary>
     public partial class NodeControl : UserControl
     {
-        CNode mNode = new CNode();
-        public CNode Node
-        {
-            get { return mNode; }
-            set { mNode = value; }
-        }
+        public FNodeBase Node;
         /// <summary>
         /// 节点转换成控件
         /// </summary>
         /// <param name="node">要转换成控件的节点</param>
-        public NodeControl(CNode node)
+        public NodeControl(FNodeBase node)
         {
             InitializeComponent();
-            mNode = node;
+            Node = node;
             txtTitle.Text = Text = Name = node.FocusData.Name;
             Location = new Point(0, 0);
             int nColum = 
-                (mNode.EndColum - mNode.StartColum) / 2 + mNode.StartColum;
+                (Node.EndColum - Node.StartColum) / 2 + Node.StartColum;
             Location = new Point(
                         nColum * Size.Height,
-                        mNode.Level * Size.Width
+                        Node.Level * Size.Width
                         );
         }
         const string category = "FTControls";
