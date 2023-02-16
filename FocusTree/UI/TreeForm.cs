@@ -8,6 +8,7 @@ using System.Xml.Linq;
 using System.IO;
 
 using FocusTree.Tree;
+using FocusTree.Focus;
 
 namespace FocusTree
 {
@@ -47,7 +48,9 @@ namespace FocusTree
             {
                 // csv 文件
                 case ".csv":
-                    TreeMap = new TreeMap(new Tree.FTree(fileinfo.FullName));
+                    var tree = new FTree(fileinfo.FullName);
+                    var graph = new FGraph(tree);
+                    TreeMap = new TreeMap(tree);
                     break;
                 // xml 文件
                 case ".xml":
@@ -112,12 +115,17 @@ namespace FocusTree
             try
             {
                 // 强制指定命名空间，覆盖默认的命名空间
+                throw new NotImplementedException();
+                /*
+
                 XmlSerializerNamespaces namespaces = new XmlSerializerNamespaces();
                 namespaces.Add(string.Empty, string.Empty);
                 XmlSerializer serializer = new XmlSerializer(TreeMap.Tree.GetType());
                 serializer.Serialize(new XmlWriterForceFullEnd(xmlWriter), TreeMap.Tree, namespaces);
                 xmlWriter.Close();
                 fileStream.Close();
+
+                */
             }
             catch (Exception ex)
             {

@@ -34,6 +34,8 @@ namespace FocusTree
         }
         public void SetMap()
         {
+            throw new NotImplementedException();
+            /* 
             foreach (var node in mTree.NodeChain)
             {
                 NodeKeyID.Add(node.ID, node);
@@ -43,6 +45,7 @@ namespace FocusTree
                 nodeCtrl.ClickBottomAddButton += ClickNodeBottomAdd;
                 Controls.Add(nodeCtrl);
             }
+            */
         }
         #region ==== 节点控件事件 ====
         public void MouseClickNode(object sender, MouseEventArgs e)
