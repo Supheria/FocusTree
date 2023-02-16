@@ -6,7 +6,7 @@ namespace FocusTree.Focus
     /// <summary>
     /// 节点类
     /// </summary>
-    public class FNode: FMapNode
+    public class FNode : FMapNode
     {
         #region ==== 重载 ====
         public override int ID { get; protected set; }
@@ -68,7 +68,7 @@ namespace FocusTree.Focus
         /// <summary>
         /// 给继承类专用的无参构造，如 FRootNode
         /// </summary>
-        protected FNode(){}
+        protected FNode() { }
         #endregion
     }
 }

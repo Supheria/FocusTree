@@ -1,6 +1,7 @@
 ﻿using FocusTree.Focus;
 using System.Collections.Generic;
 using System.Xml.Serialization;
+using static FocusTree.Focus.NodeRelation;
 
 namespace FocusTree.Tree
 {
@@ -111,15 +112,15 @@ namespace FocusTree.Tree
         }
         public override HashSet<FMapNode> GetSiblingNodes(int id)
         {
-            var node = GetNodeById(RootNode,id);
-            if(node.Parent == null) { return null; }
+            var node = GetNodeById(RootNode, id);
+            if (node.Parent == null) { return null; }
             var set = new HashSet<FMapNode>();
-            foreach(var sib in node.Parent.Children) {set.Add(sib);}
+            foreach (var sib in node.Parent.Children) { set.Add(sib); }
             return set;
         }
         public override int GetBranchWidth(int id)
         {
-            var node = GetNodeById(RootNode,id);
+            var node = GetNodeById(RootNode, id);
             int count = 0;
             GetBranchWdith(node, ref count);
             return count;
@@ -131,7 +132,7 @@ namespace FocusTree.Tree
         /// <param name="count">累加结果</param>
         private void GetBranchWdith(FNode current, ref int count)
         {
-            if(current.Children == null || current.Children.Count == 0) { count++; return; }
+            if (current.Children == null || current.Children.Count == 0) { count++; return; }
             foreach (var child in current.Children)
             {
                 GetBranchWdith(child, ref count);
@@ -223,6 +224,14 @@ namespace FocusTree.Tree
             {
                 AddSubNodesToList(child, ref nodes);
             }
+        }
+        public override List<NodeRelation> GetNodeRelations(int id)
+        {
+            var relations = new List<NodeRelation>();
+            var node = GetNodeById(RootNode, id);
+            relations.Add(new NodeRelation(FRelations.Require, new int[] { node.Parent.ID }));
+            relations.Add(new NodeRelation(FRelations.Linked, node.Children.Select(x => x.ID).ToArray()));
+            return relations;
         }
         #endregion
     }

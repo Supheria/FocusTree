@@ -58,7 +58,7 @@ namespace FocusTree.Focus
         public override HashSet<FMapNode> GetAllMapNodes()
         {
             var set = new HashSet<FMapNode>();
-            foreach(var node in Nodes.Values) { set.Add(node); }
+            foreach (var node in Nodes.Values) { set.Add(node); }
             return set;
         }
 
@@ -77,22 +77,22 @@ namespace FocusTree.Focus
         public override HashSet<FMapNode> GetSiblingNodes(int id)
         {
             var requires = Relations[id]
-                .Where(x=>x.Type == FRelations.Require)
-                .Select(x=>x.IDs);
+                .Where(x => x.Type == FRelations.Require)
+                .Select(x => x.IDs);
 
             var set = new HashSet<FMapNode>();
 
             // 看起来很多，其实不会循环很多次，比遍历所有对应关系快多了
             foreach (var require in requires)
             {
-                foreach(var required_id in require)
+                foreach (var required_id in require)
                 {
                     var sib_idss = Relations[required_id]
                         .Where(x => x.Type == FRelations.Linked)
                         .Select(x => x.IDs);
                     foreach (var sib_ids in sib_idss)
                     {
-                        foreach(var sib_id in sib_ids)
+                        foreach (var sib_id in sib_ids)
                         {
                             set.Add(Nodes[sib_id]);
                         }
@@ -121,12 +121,12 @@ namespace FocusTree.Focus
 
             var childs = Relations[current].Where(x => x.Type == FRelations.Linked);
             // 当前节点是叶节点，累加并退出
-            if (childs.Sum(x=>x.IDs.Length) == 0) { count++; }
+            if (childs.Sum(x => x.IDs.Length) == 0) { count++; }
             else
             {
-                foreach(var child_relations in childs)
+                foreach (var child_relations in childs)
                 {
-                    foreach(var child in child_relations.IDs)
+                    foreach (var child in child_relations.IDs)
                     {
                         // 已经走过这个节点，所以跳过，避免死循环
                         if (steps.Contains(child)) { continue; }
@@ -139,6 +139,10 @@ namespace FocusTree.Focus
             }
 
             steps.Dequeue();
+        }
+        public override List<NodeRelation> GetNodeRelations(int id)
+        {
+            return Relations[id];
         }
     }
 }

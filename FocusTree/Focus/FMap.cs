@@ -45,6 +45,12 @@ namespace FocusTree.Focus
         /// <param name="id">要查找的节点id</param>
         /// <returns>分支宽度</returns>
         abstract public int GetBranchWidth(int id);
+        /// <summary>
+        /// 获取节点与关联的节点的依赖关系列表
+        /// </summary>
+        /// <param name="id">节点id</param>
+        /// <returns>依赖关系列表</returns>
+        abstract public List<NodeRelation> GetNodeRelations(int id);
     }
     public abstract class FMapNode
     {

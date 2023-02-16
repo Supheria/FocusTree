@@ -43,6 +43,9 @@ class Test
         var treeWidth = tree.GetBranchWidth(81);
         var graphWidth = graph.GetBranchWidth(81);
 
+        var treeRelation = tree.GetNodeRelations(81);
+        var graphRelation = graph.GetNodeRelations(81);
+
         Console.WriteLine();
     }
 }
