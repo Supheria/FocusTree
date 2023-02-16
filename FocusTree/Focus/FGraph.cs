@@ -230,7 +230,7 @@ namespace FocusTree.Focus
                 writer.WriteStartElement("Node");
                 // <Node>
                 writer.WriteAttributeString("ID", node.ID.ToString());
-                writer.WriteAttributeString("Level", node.ID.ToString());
+                writer.WriteAttributeString("Level", node.Level.ToString());
                 // <Data> 序列化 FData (国策节点数据)
                 writer.WriteStartElement("Data");
                 FData_serial.Serialize(writer, node.FocusData, NullXmlNameSpace);
