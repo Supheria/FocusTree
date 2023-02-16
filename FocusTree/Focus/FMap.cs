@@ -51,6 +51,12 @@ namespace FocusTree.Focus
         /// <param name="id">节点id</param>
         /// <returns>依赖关系列表</returns>
         abstract public List<NodeRelation> GetNodeRelations(int id);
+        /// <summary>
+        /// 获取某个节点的所有叶节点
+        /// </summary>
+        /// <param name="id">节点 ID</param>
+        /// <returns>叶节点</returns>
+        abstract public HashSet<FMapNode> GetLeafNodes(int id);
     }
     public abstract class FMapNode
     {

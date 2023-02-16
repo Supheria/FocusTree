@@ -46,6 +46,11 @@ class Test
         var treeRelation = tree.GetNodeRelations(81);
         var graphRelation = graph.GetNodeRelations(81);
 
+        var treeLeaf = tree.GetLeafNodes(-1);
+        var graph_roots = graph.GetLevelNodes(0);
+        var graphLeaf = new HashSet<FMapNode>();
+        foreach(var g_root in graph_roots) { var set = graph.GetLeafNodes(g_root.ID); graphLeaf.UnionWith(set); }
+
         Console.WriteLine();
     }
 }

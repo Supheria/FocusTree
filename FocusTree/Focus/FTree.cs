@@ -233,6 +233,21 @@ namespace FocusTree.Tree
             relations.Add(new NodeRelation(FRelations.Linked, node.Children.Select(x => x.ID).ToArray()));
             return relations;
         }
+
+        public override HashSet<FMapNode> GetLeafNodes(int id)
+        {
+            var set = new HashSet<FNode>();
+            GetLeafNodes(GetNodeById(RootNode, id), ref set);
+            return set.Cast<FMapNode>().ToHashSet();
+        }
+        private void GetLeafNodes(FNode current, ref HashSet<FNode> nodes)
+        {
+            if(current.Children.Count == 0) { nodes.Add(current); return; }
+            foreach(var child in current.Children)
+            {
+                GetLeafNodes(child, ref nodes);
+            }
+        }
         #endregion
     }
 }

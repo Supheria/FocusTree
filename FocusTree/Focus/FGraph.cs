@@ -144,5 +144,37 @@ namespace FocusTree.Focus
         {
             return Relations[id];
         }
+        public override HashSet<FMapNode> GetLeafNodes(int id)
+        {
+            var nodes = new HashSet<FMapNode>();
+            var queue = new Queue<int>();
+            GetLeafNodes(id, ref nodes, ref queue);
+            return nodes;
+        }
+        private void GetLeafNodes(int current, ref HashSet<FMapNode> nodes, ref Queue<int> steps)
+        {
+            steps.Enqueue(current);
+
+            var childs = Relations[current].Where(x => x.Type == FRelations.Linked);
+            // 当前节点是叶节点，累加并退出
+            if (childs.Sum(x => x.IDs.Length) == 0) { nodes.Add(Nodes[current]); }
+            else
+            {
+                foreach (var child_relations in childs)
+                {
+                    foreach (var child in child_relations.IDs)
+                    {
+                        // 已经走过这个节点，所以跳过，避免死循环
+                        if (steps.Contains(child)) { continue; }
+                        else
+                        {
+                            GetLeafNodes(child, ref nodes, ref steps);
+                        }
+                    }
+                }
+            }
+
+            steps.Dequeue();
+        }
     }
 }
