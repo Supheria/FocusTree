@@ -8,6 +8,7 @@ using System.Xml.Linq;
 using System.IO;
 
 using FocusTree.Tree;
+using FocusTree.Focus;
 
 namespace FocusTree
 {
@@ -16,7 +17,7 @@ namespace FocusTree
     /// </summary>
     public partial class TreeForm : Form
     {
-        private TreeMap TreeMap { get; init; }
+        public GraphMap Map { get; init; }
         
         /// <summary>
         /// 画图开始的位置
@@ -47,13 +48,21 @@ namespace FocusTree
             {
                 // csv 文件
                 case ".csv":
-                    TreeMap = new TreeMap(new Tree.FTree(fileinfo.FullName));
+                    {
+                        var tree = new FTree(fileinfo.FullName);
+                        var graph = new FGraph(tree);
+                        Map = new GraphMap(graph);
+                    }
                     break;
                 // xml 文件
                 case ".xml":
-                    var focusTree = DeserializeFromXml(fileinfo.FullName);
-                    TreeMap = new TreeMap(focusTree);
+                    {
+                        throw new NotImplementedException();
+                        var tree = DeserializeFromXml(fileinfo.FullName);
+                        var graph = new FGraph(tree);
+                    }
                     break;
+
                 // 不支持的文件类型
                 default:
                     throw new FileNotFoundException($"[2302152008] 不支持的文件类型，需要 .csv 或 .xml 文件 - 文件: {path}");
@@ -68,9 +77,9 @@ namespace FocusTree
         private void InitForm()
         {
             InitializeComponent();
-            this.Controls.Add(TreeMap);
+            this.Controls.Add(Map);
             ImageStartLocation = new Point(0, 0);
-            Name = Text = TreeMap.Name;
+            Name = Text = Map.Name;
         }
         #endregion
         #region ==== 节点控件事件 ====
@@ -112,12 +121,17 @@ namespace FocusTree
             try
             {
                 // 强制指定命名空间，覆盖默认的命名空间
+                throw new NotImplementedException();
+                /*
+
                 XmlSerializerNamespaces namespaces = new XmlSerializerNamespaces();
                 namespaces.Add(string.Empty, string.Empty);
                 XmlSerializer serializer = new XmlSerializer(TreeMap.Tree.GetType());
                 serializer.Serialize(new XmlWriterForceFullEnd(xmlWriter), TreeMap.Tree, namespaces);
                 xmlWriter.Close();
                 fileStream.Close();
+
+                */
             }
             catch (Exception ex)
             {
