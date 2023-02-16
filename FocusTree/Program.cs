@@ -40,6 +40,9 @@ class Test
         var treeSibs = tree.GetSiblingNodes(3);
         var graphSibs = graph.GetSiblingNodes(3);
 
+        var treeWidth = tree.GetBranchWidth(81);
+        var graphWidth = graph.GetBranchWidth(81);
+
         Console.WriteLine();
     }
 }

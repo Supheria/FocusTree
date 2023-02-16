@@ -9,9 +9,9 @@ namespace FocusTree.Focus
     public class FNode: FMapNode
     {
         #region ==== 重载 ====
-        public override int ID { get; set; }
-        public override int Level { get; set; }
-        public override FData FocusData { get; set; }
+        public override int ID { get; protected set; }
+        public override int Level { get; protected set; }
+        public override FData FocusData { get; protected set; }
         #endregion
         #region ==== 属性 ====
         /// <summary>

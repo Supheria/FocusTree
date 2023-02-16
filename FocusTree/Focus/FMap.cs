@@ -39,20 +39,26 @@ namespace FocusTree.Focus
         /// <param name="id">根据 ID 查找</param>
         /// <returns>兄弟节点</returns>
         abstract public HashSet<FMapNode> GetSiblingNodes(int id);
+        /// <summary>
+        /// 获取以该节点为基础的叶节点数量 (宽度)
+        /// </summary>
+        /// <param name="id">要查找的节点id</param>
+        /// <returns>分支宽度</returns>
+        abstract public int GetBranchWidth(int id);
     }
     public abstract class FMapNode
     {
         /// <summary>
         /// 节点ID
         /// </summary>
-        public abstract int ID { get; set; }
+        public abstract int ID { get; protected set; }
         /// <summary>
         /// 层级
         /// </summary>
-        public abstract int Level { get; set; }
+        public abstract int Level { get; protected set; }
         /// <summary>
         /// 国策数据
         /// </summary>
-        public abstract FData FocusData { get; set; }
+        public abstract FData FocusData { get; protected set; }
     }
 }

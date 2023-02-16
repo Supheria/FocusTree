@@ -117,6 +117,26 @@ namespace FocusTree.Tree
             foreach(var sib in node.Parent.Children) {set.Add(sib);}
             return set;
         }
+        public override int GetBranchWidth(int id)
+        {
+            var node = GetNodeById(RootNode,id);
+            int count = 0;
+            GetBranchWdith(node, ref count);
+            return count;
+        }
+        /// <summary>
+        /// 获取叶节点数量
+        /// </summary>
+        /// <param name="current">递归节点</param>
+        /// <param name="count">累加结果</param>
+        private void GetBranchWdith(FNode current, ref int count)
+        {
+            if(current.Children == null || current.Children.Count == 0) { count++; return; }
+            foreach (var child in current.Children)
+            {
+                GetBranchWdith(child, ref count);
+            }
+        }
         /// <summary>
         /// 根据二维原始字段数组生成所有节点
         /// </summary>

@@ -101,6 +101,44 @@ namespace FocusTree.Focus
 
             return set;
         }
+        public override int GetBranchWidth(int id)
+        {
+            int count = 0;
+            var queue = new Queue<int>();
+            GetBranchWidth(id, ref count, ref queue);
+            return count;
+        }
+        /// <summary>
+        /// 获取当前节点下叶节点数量
+        /// </summary>
+        /// <param name="current">当前递归节点</param>
+        /// <param name="count">总数</param>
+        /// <param name="steps">已走路径，用于禁止走重复的节点，避免死循环</param>
+        private void GetBranchWidth(int current, ref int count, ref Queue<int> steps)
+        {
+            steps.Enqueue(current);
+
+            var childs = Relations[current].Where(x => x.RelationType == NodeRelationType.Linked);
+            // 当前节点是叶节点，累加并退出
+            if (childs.Sum(x=>x.IDs.Length) == 0) { count++; }
+            else
+            {
+                foreach(var child_relations in childs)
+                {
+                    foreach(var child in child_relations.IDs)
+                    {
+                        // 已经走过这个节点，所以跳过，避免死循环
+                        if (steps.Contains(child)) { continue; }
+                        else
+                        {
+                            GetBranchWidth(child, ref count, ref steps);
+                        }
+                    }
+                }
+            }
+
+            steps.Dequeue();
+        }
         private class NodeRelation
         {
             public NodeRelationType RelationType;
