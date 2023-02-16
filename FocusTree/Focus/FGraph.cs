@@ -205,8 +205,10 @@ namespace FocusTree.Focus
         }
 
         // -- 序列化工具 --
-        static XmlSerializer fdata_serial = new XmlSerializer(typeof(FData));
+        static XmlSerializer FData_serial = new (typeof(FData));
+        static XmlSerializerNamespaces NullXmlNameSpace = new (new XmlQualifiedName[] { new XmlQualifiedName("","")});
 
+        // -- 序列化方法 --
         public XmlSchema GetSchema()
         {
             return null;
@@ -231,7 +233,7 @@ namespace FocusTree.Focus
                 writer.WriteAttributeString("Level", node.ID.ToString());
                 // <Data> 序列化 FData (国策节点数据)
                 writer.WriteStartElement("Data");
-                fdata_serial.Serialize(writer, node.FocusData);
+                FData_serial.Serialize(writer, node.FocusData, NullXmlNameSpace);
                 writer.WriteEndElement();
                 // </Data>
                 writer.WriteEndElement();
