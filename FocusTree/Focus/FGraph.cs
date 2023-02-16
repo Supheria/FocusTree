@@ -1,4 +1,9 @@
 ﻿using FocusTree.Tree;
+using System.Text;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
+using static FocusTree.Focus.FGraphStruct;
 using static FocusTree.Focus.NodeRelation;
 
 namespace FocusTree.Focus
@@ -175,6 +180,115 @@ namespace FocusTree.Focus
             }
 
             steps.Dequeue();
+        }
+        public FGraphStruct GetStruct()
+        {
+            return new FGraphStruct(Nodes.Values.ToArray(), Relations, LevelNodeCount);
+        }
+    }
+    public struct FGraphStruct : IXmlSerializable
+    {
+        // -- 以下参数按序列化顺序排序 --
+        public FMapNode[] Nodes { get; init; }
+        public Dictionary<int, List<NodeRelation>> Relations { get; init; }
+        public Dictionary<int, int> LevelNodeCount { get; init; }
+        // -- 
+        public FGraphStruct(
+            FMapNode[] nodes,
+            Dictionary<int, List<NodeRelation>> relations,
+            Dictionary<int, int> levelNodeCount
+            )
+        {
+            Nodes = nodes;
+            Relations = relations;
+            LevelNodeCount = levelNodeCount;
+        }
+
+        // -- 序列化工具 --
+        static XmlSerializer fdata_serial = new XmlSerializer(typeof(FData));
+
+        public XmlSchema GetSchema()
+        {
+            return null;
+        }
+
+        public void ReadXml(XmlReader reader)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void WriteXml(XmlWriter writer)
+        {
+            //==== 序列化节点数据 ====//
+
+            // <Nodes> 序列化 Nodes (国策节点数据)
+            writer.WriteStartElement("Nodes");
+            foreach (var node in Nodes)
+            {
+                writer.WriteStartElement("Node");
+                // <Node>
+                writer.WriteAttributeString("ID", node.ID.ToString());
+                writer.WriteAttributeString("Level", node.ID.ToString());
+                // <Data> 序列化 FData (国策节点数据)
+                writer.WriteStartElement("Data");
+                fdata_serial.Serialize(writer, node.FocusData);
+                writer.WriteEndElement();
+                // </Data>
+                writer.WriteEndElement();
+                // </Node>
+            }
+            writer.WriteEndElement();
+            // </Nodes>
+
+            //==== 序列化节点关系 ====//
+
+            // <NodesRelations> 序列化节点关系字典
+            writer.WriteStartElement("NodesRelations");
+            foreach (var r_pair in Relations)
+            {
+                // <RNode> 当前节点
+                writer.WriteStartElement("RNode");
+                writer.WriteAttributeString("ID", r_pair.Key.ToString());
+
+                foreach (var relation in r_pair.Value.OrderBy(x => x.Type))
+                {
+                    // <[Relation类型]> 关系类型
+                    writer.WriteElementString(relation.Type.ToString(), IdArrayToString(relation.IDs));
+                    // </[Relation类型]>
+                }
+
+                writer.WriteEndElement();
+                // </RNode>
+            }
+            writer.WriteEndElement();
+            // </Relations>
+
+            //==== 序列化层级节点数量 ====//
+
+            // <LevelNodeCount> 序列化节点关系字典
+            writer.WriteStartElement("LevelNodeCount");
+            foreach (var r_pair in LevelNodeCount)
+            {
+                // <Level> 层级节点数
+                writer.WriteStartElement("Level");
+                writer.WriteAttributeString("Level", r_pair.Key.ToString());
+                writer.WriteAttributeString("Nodes", r_pair.Value.ToString());
+                writer.WriteEndElement();
+                // </Level>
+            }
+            writer.WriteEndElement();
+            // </LevelNodeCount>
+        }
+        public static string IdArrayToString(int[] ids)
+        {
+            var sb = new StringBuilder();
+            for (int i = 0; i < ids.Length; i++) { sb.Append(ids[i].ToString() + (i < ids.Length - 1 ? ", " : "")); }
+            return sb.ToString();
+        }
+        public static int[] IdArrayFromString(string ids)
+        {
+            var split = ids.Split(',').Where(x => !string.IsNullOrWhiteSpace(x));
+            return split.Select(x => int.Parse(x)).ToArray();
         }
     }
 }

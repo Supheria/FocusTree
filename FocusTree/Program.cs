@@ -4,6 +4,8 @@
 using FocusTree;
 using FocusTree.Focus;
 using FocusTree.Tree;
+using System.IO;
+using System.Xml.Serialization;
 
 internal static class Program
 {
@@ -13,11 +15,12 @@ internal static class Program
     [STAThread]
     static void Main()
     {
-        Test.FMapTest();
+        //Test.FMapTest();
+        Test.FGraphToXmlTest();
 
-        Application.EnableVisualStyles();
-        Application.SetCompatibleTextRenderingDefault(false);
-        Application.Run(new MainForm());
+        //Application.EnableVisualStyles();
+        //Application.SetCompatibleTextRenderingDefault(false);
+        //Application.Run(new MainForm());
     }
 }
 
@@ -52,5 +55,18 @@ class Test
         foreach(var g_root in graph_roots) { var set = graph.GetLeafNodes(g_root.ID); graphLeaf.UnionWith(set); }
 
         Console.WriteLine();
+    }
+    /// <summary>
+    /// 序列化测试
+    /// </summary>
+    public static void FGraphToXmlTest()
+    {
+        var tree = new FTree("人类财阀联合.csv");
+        var graph = new FGraph(tree);
+        var graphStruct = graph.GetStruct();
+        XmlSerializer writer = new XmlSerializer(typeof(FGraphStruct));
+        FileStream file = File.Create("人类财阀联合.Graph.xml");
+        writer.Serialize(file, graphStruct);
+        file.Close();
     }
 }
