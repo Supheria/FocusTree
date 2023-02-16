@@ -109,6 +109,14 @@ namespace FocusTree.Tree
             if (current.Level == level) { set.Add(current); return; }
             foreach (var child in current.Children) { GetLevelFNodes(child, level, ref set); }
         }
+        public override HashSet<FMapNode> GetSiblingNodes(int id)
+        {
+            var node = GetNodeById(RootNode,id);
+            if(node.Parent == null) { return null; }
+            var set = new HashSet<FMapNode>();
+            foreach(var sib in node.Parent.Children) {set.Add(sib);}
+            return set;
+        }
         /// <summary>
         /// 根据二维原始字段数组生成所有节点
         /// </summary>

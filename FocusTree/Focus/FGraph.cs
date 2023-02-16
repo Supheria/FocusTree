@@ -73,6 +73,34 @@ namespace FocusTree.Focus
         {
             return Nodes.Values.Where(x => x.Level == level).ToHashSet();
         }
+        public override HashSet<FMapNode> GetSiblingNodes(int id)
+        {
+            var requires = Relations[id]
+                .Where(x=>x.RelationType == NodeRelationType.Require)
+                .Select(x=>x.IDs);
+
+            var set = new HashSet<FMapNode>();
+
+            // 看起来很多，其实不会循环很多次，比遍历所有对应关系快多了
+            foreach (var require in requires)
+            {
+                foreach(var required_id in require)
+                {
+                    var sib_idss = Relations[required_id]
+                        .Where(x => x.RelationType == NodeRelationType.Linked)
+                        .Select(x => x.IDs);
+                    foreach (var sib_ids in sib_idss)
+                    {
+                        foreach(var sib_id in sib_ids)
+                        {
+                            set.Add(Nodes[sib_id]);
+                        }
+                    }
+                }
+            }
+
+            return set;
+        }
         private class NodeRelation
         {
             public NodeRelationType RelationType;

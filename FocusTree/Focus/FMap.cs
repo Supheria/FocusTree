@@ -32,6 +32,13 @@ namespace FocusTree.Focus
         /// <param name="level">层级</param>
         /// <returns>层级中所有节点</returns>
         abstract public HashSet<FMapNode> GetLevelNodes(int level);
+        /// <summary>
+        /// 返回兄弟节点 (具有 相似依赖 和 Level)<br/>
+        /// 相似依赖指如果本节点依赖多个节点，那么返回所有至少含有一个对节点依赖的节点
+        /// </summary>
+        /// <param name="id">根据 ID 查找</param>
+        /// <returns>兄弟节点</returns>
+        abstract public HashSet<FMapNode> GetSiblingNodes(int id);
     }
     public abstract class FMapNode
     {

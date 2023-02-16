@@ -37,6 +37,9 @@ class Test
         var treeLevelNodes = tree.GetLevelNodes(2);
         var graphLevelNodes = graph.GetLevelNodes(2);
 
+        var treeSibs = tree.GetSiblingNodes(3);
+        var graphSibs = graph.GetSiblingNodes(3);
+
         Console.WriteLine();
     }
 }
