@@ -1,6 +1,6 @@
 ﻿namespace FocusTree
 {
-    partial class TreeMap
+    partial class GraphMap
     {
         /// <summary> 
         /// 必需的设计器变量。

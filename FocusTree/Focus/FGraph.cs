@@ -2,8 +2,13 @@
 
 namespace FocusTree.Focus
 {
-    internal class FGraph
+    public class FGraph
     {
+        /// <summary>
+        /// 文件名
+        /// </summary>
+        public string Name;
+
         /// <summary>
         /// 以 ID 作为 Key 的所有节点
         /// </summary>
@@ -25,6 +30,8 @@ namespace FocusTree.Focus
         /// <param name="tree">国策树</param>
         public FGraph(FTree tree)
         {
+            Name = tree.Name;
+
             var nodes = tree.GetAllNodes();
             foreach (var node in nodes)
             {
@@ -37,29 +44,29 @@ namespace FocusTree.Focus
                 Relations[node.ID].Add(new NodeRelation(NodeRelationType.Linked, node.Children.Select(x => x.ID).ToArray())); // 添加子节点 ID 为 linked
             }
             // 已知 Linked 关系，指定 Require 关系
-            foreach(var relation in Relations)
+            foreach (var relation in Relations)
             {
                 int parent_id = relation.Key;
-                foreach(var child in relation.Value.First().IDs)
+                foreach (var child in relation.Value.First().IDs)
                 {
                     Relations[child].Add(new NodeRelation(NodeRelationType.Require, new int[] { parent_id }));
                 }
             }
         }
-    }
-    class NodeRelation
-    {
-        NodeRelationType RelationType;
-        public int[] IDs;
-        public NodeRelation(NodeRelationType relationType, int[] iDs)
+        private class NodeRelation
         {
-            RelationType = relationType;
-            IDs = iDs;
+            public NodeRelationType RelationType;
+            public int[] IDs;
+            public NodeRelation(NodeRelationType relationType, int[] iDs)
+            {
+                RelationType = relationType;
+                IDs = iDs;
+            }
         }
-    }
-    public enum NodeRelationType
-    {
-        Require,    // 这个节点依赖于某些节点
-        Linked      // 某些节点依赖于这个节点
+        private enum NodeRelationType
+        {
+            Require,    // 这个节点依赖于某些节点
+            Linked      // 某些节点依赖于这个节点
+        }
     }
 }

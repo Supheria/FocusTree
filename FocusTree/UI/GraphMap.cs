@@ -3,13 +3,9 @@ using System.Xml.Serialization;
 
 namespace FocusTree
 {
-    public partial class TreeMap : UserControl
+    public partial class GraphMap : UserControl
     {
-        Tree.FTree mTree { get; init; }
-        public Tree.FTree Tree
-        {
-            get { return mTree; }
-        }
+        FGraph Graph { get; init; }
         /// <summary>
         /// 节点字典
         /// </summary>
@@ -24,12 +20,12 @@ namespace FocusTree
         /// </summary>
         private InfoDialog mInfoDlg = new InfoDialog();
 
-        public TreeMap(Tree.FTree tree)
+        public GraphMap(FGraph graph)
         {
             InitializeComponent();
-            mTree = tree;
+            Graph = graph;
             mInfoDlg = new InfoDialog(this);
-            Name = Text = mTree.Name;
+            Name = Text = Graph.Name;
             SetMap();
         }
         public void SetMap()
