@@ -1,4 +1,5 @@
 ﻿using FocusTree.Tree;
+using static FocusTree.Focus.NodeRelation;
 
 namespace FocusTree.Focus
 {
@@ -41,7 +42,7 @@ namespace FocusTree.Focus
                 if (!LevelNodeCount.TryAdd(node.Level, 1)) { LevelNodeCount[node.Level]++; }
                 // 树中的数据关系是单向一一对应的，所以指定 Linked 关系并后续推定 Require
                 Relations.Add(node.ID, new List<NodeRelation>());
-                Relations[node.ID].Add(new NodeRelation(NodeRelationType.Linked, node.Children.Select(x => x.ID).ToArray())); // 添加子节点 ID 为 linked
+                Relations[node.ID].Add(new NodeRelation(FRelations.Linked, node.Children.Select(x => x.ID).ToArray())); // 添加子节点 ID 为 linked
             }
             // 已知 Linked 关系，指定 Require 关系
             foreach (var relation in Relations)
@@ -49,7 +50,7 @@ namespace FocusTree.Focus
                 int parent_id = relation.Key;
                 foreach (var child in relation.Value.First().IDs)
                 {
-                    Relations[child].Add(new NodeRelation(NodeRelationType.Require, new int[] { parent_id }));
+                    Relations[child].Add(new NodeRelation(FRelations.Require, new int[] { parent_id }));
                 }
             }
         }
@@ -76,7 +77,7 @@ namespace FocusTree.Focus
         public override HashSet<FMapNode> GetSiblingNodes(int id)
         {
             var requires = Relations[id]
-                .Where(x=>x.RelationType == NodeRelationType.Require)
+                .Where(x=>x.Type == FRelations.Require)
                 .Select(x=>x.IDs);
 
             var set = new HashSet<FMapNode>();
@@ -87,7 +88,7 @@ namespace FocusTree.Focus
                 foreach(var required_id in require)
                 {
                     var sib_idss = Relations[required_id]
-                        .Where(x => x.RelationType == NodeRelationType.Linked)
+                        .Where(x => x.Type == FRelations.Linked)
                         .Select(x => x.IDs);
                     foreach (var sib_ids in sib_idss)
                     {
@@ -118,7 +119,7 @@ namespace FocusTree.Focus
         {
             steps.Enqueue(current);
 
-            var childs = Relations[current].Where(x => x.RelationType == NodeRelationType.Linked);
+            var childs = Relations[current].Where(x => x.Type == FRelations.Linked);
             // 当前节点是叶节点，累加并退出
             if (childs.Sum(x=>x.IDs.Length) == 0) { count++; }
             else
@@ -139,20 +140,5 @@ namespace FocusTree.Focus
 
             steps.Dequeue();
         }
-        private class NodeRelation
-        {
-            public NodeRelationType RelationType;
-            public int[] IDs;
-            public NodeRelation(NodeRelationType relationType, int[] iDs)
-            {
-                RelationType = relationType;
-                IDs = iDs;
-            }
-        }
-    }
-    enum NodeRelationType
-    {
-        Require,    // 这个节点依赖于某些节点
-        Linked      // 某些节点依赖于这个节点
     }
 }

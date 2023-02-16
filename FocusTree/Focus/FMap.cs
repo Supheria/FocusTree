@@ -61,4 +61,19 @@ namespace FocusTree.Focus
         /// </summary>
         public abstract FData FocusData { get; protected set; }
     }
+    public class NodeRelation
+    {
+        public enum FRelations
+        {
+            Require,    // 这个节点依赖于某些节点
+            Linked      // 某些节点依赖于这个节点
+        }
+        public FRelations Type;
+        public int[] IDs;
+        public NodeRelation(FRelations relationType, int[] iDs)
+        {
+            Type = relationType;
+            IDs = iDs;
+        }
+    }
 }
