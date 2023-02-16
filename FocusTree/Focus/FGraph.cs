@@ -23,9 +23,28 @@ namespace FocusTree.Focus
         /// 将 FTree 转换为 FGraph
         /// </summary>
         /// <param name="tree">国策树</param>
-        public FGraph(FTree tree) 
-        { 
-            //tree.
+        public FGraph(FTree tree)
+        {
+            var nodes = tree.GetAllNodes();
+            foreach (var node in nodes)
+            {
+                // 添加节点到字典
+                Nodes.Add(node.ID, node);
+                // 层级节点计数
+                if (!LevelNodeCount.TryAdd(node.Level, 1)) { LevelNodeCount[node.Level]++; }
+                // 树中的数据关系是单向一一对应的，所以指定 Linked 关系并后续推定 Require
+                Relations.Add(node.ID, new List<NodeRelation>());
+                Relations[node.ID].Add(new NodeRelation(NodeRelationType.Linked, node.Children.Select(x => x.ID).ToArray())); // 添加子节点 ID 为 linked
+            }
+            // 已知 Linked 关系，指定 Require 关系
+            foreach(var relation in Relations)
+            {
+                int parent_id = relation.Key;
+                foreach(var child in relation.Value.First().IDs)
+                {
+                    Relations[child].Add(new NodeRelation(NodeRelationType.Require, new int[] { parent_id }));
+                }
+            }
         }
     }
     class NodeRelation

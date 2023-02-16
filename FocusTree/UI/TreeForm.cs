@@ -50,6 +50,7 @@ namespace FocusTree
                 case ".csv":
                     var tree = new FTree(fileinfo.FullName);
                     var graph = new FGraph(tree);
+                    Console.WriteLine(graph);
                     TreeMap = new TreeMap(tree);
                     break;
                 // xml 文件

@@ -45,6 +45,8 @@ namespace FocusTree.Tree
                 throw new Exception($"[2302152117] 生成树失败 - 文件: {path}\n{ex.Message}");
             }
         }
+        #endregion
+        #region ==== 方法 ====
         /// <summary>
         /// 根据二维原始字段数组生成所有节点
         /// </summary>
@@ -105,6 +107,32 @@ namespace FocusTree.Tree
                 //==
             }
             return root;
+        }
+        /// <summary>
+        /// 获取所有子节点 (不含根节点)
+        /// </summary>
+        /// <returns></returns>
+        public List<FNode> GetAllNodes()
+        {
+            List<FNode> nodes = new List<FNode>();
+            foreach(var child in RootNode.Children)
+            {
+                AddSubNodesToList(child, ref nodes);
+            }
+            return nodes;
+        }
+        /// <summary>
+        /// 将一个节点的所有子节点添加到 nodes
+        /// </summary>
+        /// <param name="current">当前递归节点</param>
+        /// <param name="nodes">添加节点到 nodes</param>
+        private void AddSubNodesToList(FNode current, ref List<FNode> nodes)
+        {
+            nodes.Add(current);
+            foreach (var child in current.Children)
+            {
+                AddSubNodesToList(child, ref nodes);
+            }
         }
         #endregion
     }
