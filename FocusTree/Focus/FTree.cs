@@ -81,6 +81,23 @@ namespace FocusTree.Tree
             }
             return null;
         }
+        public override int GetLevelNodeCount(int level)
+        {
+            int count = 0;
+            GetLevelFNodeCount(RootNode, level, ref count);
+            return count;
+        }
+        /// <summary>
+        /// 获取特定层级下含有的节点数量
+        /// </summary>
+        /// <param name="current">当前递归节点</param>
+        /// <param name="level">要查找的层级</param>
+        /// <param name="count">用于统计总数的结果，每找到一个自增1</param>
+        private void GetLevelFNodeCount(FNode current, int level, ref int count)
+        {
+            if(current.Level == level) { count++; return; }
+            foreach(var child in current.Children) { GetLevelFNodeCount(child, level, ref count); }
+        }
         /// <summary>
         /// 根据二维原始字段数组生成所有节点
         /// </summary>

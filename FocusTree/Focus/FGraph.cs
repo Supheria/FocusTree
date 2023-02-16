@@ -65,6 +65,10 @@ namespace FocusTree.Focus
         {
             return Nodes[id];
         }
+        public override int GetLevelNodeCount(int level)
+        {
+            return LevelNodeCount[level];
+        }
 
         private class NodeRelation
         {
