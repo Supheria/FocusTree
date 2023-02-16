@@ -8,7 +8,7 @@ namespace FocusTree.Tree
     /// 国策树类
     /// </summary>
     [XmlRoot("focus-tree")]
-    public class FTree:FMap
+    public class FTree : FMap
     {
         #region ==== 属性 ====
         /// <summary>
@@ -19,7 +19,7 @@ namespace FocusTree.Tree
         /// 根节点
         /// </summary>
         public FNode RootNode { get; private set; }
-        
+
         #endregion
         #region ==== 构造 ====
         /// <summary>
@@ -29,7 +29,7 @@ namespace FocusTree.Tree
         public FTree(string path)
         {
             // 文件信息
-            var fileinfo = new FileInfo(path);  
+            var fileinfo = new FileInfo(path);
             if (!fileinfo.Exists) { throw new FileNotFoundException($"[2302152115] 无法从文件生成树 - 文件不存在: {path}"); }
 
             // 不含扩展名的文件名
@@ -48,11 +48,11 @@ namespace FocusTree.Tree
         }
         #endregion
         #region ==== 方法 ====
-        public override HashSet<FMapNode> GetAllMapNodes() 
+        public override HashSet<FMapNode> GetAllMapNodes()
         {
             var fnodes = GetAllFNodes();
             var set = new HashSet<FMapNode>();
-            foreach ( var node in fnodes )
+            foreach (var node in fnodes)
             {
                 set.Add(node);
             }
@@ -60,7 +60,7 @@ namespace FocusTree.Tree
         }
         public override FMapNode GetMapNodeById(int id)
         {
-            return GetNodeById(RootNode,id);
+            return GetNodeById(RootNode, id);
         }
         /// <summary>
         /// 根据 ID 查找节点
@@ -71,12 +71,12 @@ namespace FocusTree.Tree
         private FNode GetNodeById(FNode current, int id)
         {
             if (current.ID == id) return current;
-            else 
+            else
             {
-                foreach(var child in current.Children)
+                foreach (var child in current.Children)
                 {
                     FNode result = GetNodeById(child, id);
-                    if(result != null) { return result; }
+                    if (result != null) { return result; }
                 }
             }
             return null;
@@ -95,8 +95,19 @@ namespace FocusTree.Tree
         /// <param name="count">用于统计总数的结果，每找到一个自增1</param>
         private void GetLevelFNodeCount(FNode current, int level, ref int count)
         {
-            if(current.Level == level) { count++; return; }
-            foreach(var child in current.Children) { GetLevelFNodeCount(child, level, ref count); }
+            if (current.Level == level) { count++; return; }
+            foreach (var child in current.Children) { GetLevelFNodeCount(child, level, ref count); }
+        }
+        public override HashSet<FMapNode> GetLevelNodes(int level)
+        {
+            var set = new HashSet<FNode>();
+            GetLevelFNodes(RootNode, level, ref set);
+            return set.Cast<FMapNode>().ToHashSet();
+        }
+        private void GetLevelFNodes(FNode current, int level, ref HashSet<FNode> set)
+        {
+            if (current.Level == level) { set.Add(current); return; }
+            foreach (var child in current.Children) { GetLevelFNodes(child, level, ref set); }
         }
         /// <summary>
         /// 根据二维原始字段数组生成所有节点
@@ -166,7 +177,7 @@ namespace FocusTree.Tree
         public List<FNode> GetAllFNodes()
         {
             var nodes = new List<FNode>();
-            foreach(var child in RootNode.Children)
+            foreach (var child in RootNode.Children)
             {
                 AddSubNodesToList(child, ref nodes);
             }

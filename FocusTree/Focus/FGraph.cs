@@ -12,7 +12,7 @@ namespace FocusTree.Focus
         /// <summary>
         /// 以 ID 作为 Key 的所有节点
         /// </summary>
-        private Dictionary<int, FNode> Nodes = new();
+        private Dictionary<int, FMapNode> Nodes = new();
 
         /// <summary>
         /// 节点与其它节点的关系
@@ -69,7 +69,10 @@ namespace FocusTree.Focus
         {
             return LevelNodeCount[level];
         }
-
+        public override HashSet<FMapNode> GetLevelNodes(int level)
+        {
+            return Nodes.Values.Where(x => x.Level == level).ToHashSet();
+        }
         private class NodeRelation
         {
             public NodeRelationType RelationType;
@@ -80,10 +83,6 @@ namespace FocusTree.Focus
                 IDs = iDs;
             }
         }
-    }
-    public class GraphNode
-    {
-        public int ID;
     }
     enum NodeRelationType
     {
