@@ -16,26 +16,47 @@ namespace FocusTree.Focus
     /// <summary>
     /// 节点类
     /// </summary>
-    public class FNode : FNodeBase
+    public class FNode
     {
-        #region ==== 重载 ====
-        public override int ID { get; set; }
-        public override List<int> ReliedIDs { get; set; }
-        public override List<int> ChildIDs { get; set; }
-        public override int Level { get; set; }
-        public override int StartColum { get; set; }
-        public override int EndColum { get; set; }
-        public override FData FocusData { get; set; }
+        #region ==== 属性 ====
+        /// <summary>
+        /// 节点ID
+        /// </summary>
+        [XmlElement("ID")] public int ID { get; set; }
+        /// <summary>
+        /// 依赖的节点ID
+        /// </summary>
+        [XmlElement("relied-ID")] public List<int> ReliedIDs { get; set; } = new();
+        /// <summary>
+        /// 子节点ID
+        /// </summary>
+        [XmlElement("child-ID")] public List<int> ChildIDs { get; set; } = new();
+        /// <summary>
+        /// 层级
+        /// </summary>
+        [XmlElement("level")] public int Level { get; set; }
+        /// <summary>
+        /// 节点在树中的起始列
+        /// </summary>
+        [XmlElement("start-colum")] public int StartColum { get; set; } = 0;
+        /// <summary>
+        /// 节点在树中的终止列
+        /// </summary>
+        [XmlElement("end-colum")] public int EndColum { get; set; } = 0;
+        /// <summary>
+        /// 国策数据
+        /// </summary>
+        [XmlElement("focus-data")] public FData FocusData { get; set; }
         #endregion
         #region ==== 节点控制器 ====
         /// <summary>
         /// 父节点
         /// </summary>
-        [XmlIgnore] public FNode Parent { get; private set; }
+        [XmlIgnore] public FNode Parent { get; protected set; }
         /// <summary>
         /// 子节点
         /// </summary>
-        [XmlIgnore] public List<FNode> Children { get; private set; }
+        [XmlIgnore] public List<FNode> Children { get; protected set; } = new();
         #endregion
         #region ==== 初始化节点 ====
         /// <summary>
@@ -55,13 +76,17 @@ namespace FocusTree.Focus
             ID = id;
             Level = level;
             Parent = parent;
-            // 把节点加入父节点的子集
+            // 把节点加入父节点的子集 (不含根节点)
             Parent.Children.Add(this);
             Parent.ChildIDs.Add(ID);
             ReliedIDs.Add(Parent.ID);
             // 设置国策数据
             FocusData = focusData;
         }
+        /// <summary>
+        /// 给继承类专用的无参构造，如 FRootNode
+        /// </summary>
+        protected FNode(){}
         #endregion
         #region ==== 节点方法 ====
         /// <summary>
@@ -73,7 +98,7 @@ namespace FocusTree.Focus
         public static FNode GenerateNodes(string[][] data, FNode root = null)
         {
             // 如果没有传入指定的 root，则创建新的 root
-            root ??= new FNode(-1, -1, null, new FData(true)); // 复合分配
+            root ??= new FRootNode(); // 复合分配
 
             // 上一次循环处理的节点
             FNode lastNode = root;

@@ -8,12 +8,12 @@ namespace FocusTree
     /// </summary>
     public partial class NodeControl : UserControl
     {
-        public FNodeBase Node;
+        public FNode Node;
         /// <summary>
         /// 节点转换成控件
         /// </summary>
         /// <param name="node">要转换成控件的节点</param>
-        public NodeControl(FNodeBase node)
+        public NodeControl(FNode node)
         {
             InitializeComponent();
             Node = node;

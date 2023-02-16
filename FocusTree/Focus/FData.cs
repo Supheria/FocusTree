@@ -69,6 +69,11 @@ namespace FocusTree.Tree
             Descript = descript;
             Ps = ps;
         }
+        /// <summary>
+        /// 根节点专用的 FData
+        /// </summary>
+        /// <param name="isRoot"></param>
+        /// <exception cref="Exception"></exception>
         public FData(bool isRoot)
         {
             if (isRoot)

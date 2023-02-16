@@ -7,14 +7,20 @@ using System.Threading.Tasks;
 
 namespace FocusTree.Focus
 {
-    internal class FRootNode : FNodeBase
+    internal class FRootNode : FNode
     {
-        public override int ID { get; set; } = -1;
-        public override List<int> ReliedIDs { get; set; } = null;
-        public override List<int> ChildIDs { get; set; } = new();
-        public override int Level { get; set; } = -1;
-        public override int StartColum { get; set; } = -1;
-        public override int EndColum { get; set; } = -1;
-        public override FData FocusData { get; set; } = new FData(true);
+        public FRootNode()
+        {
+            ID = -1;
+            ReliedIDs= new List<int>();
+            ChildIDs = new List<int>();
+            Level = -1;
+            StartColum = -1;
+            EndColum = -1;
+            FocusData = new FData(true);
+
+            Parent = null;
+            Children= new List<FNode>();
+        }
     }
 }
