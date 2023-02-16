@@ -264,22 +264,6 @@ namespace FocusTree.Focus
             }
             writer.WriteEndElement();
             // </Relations>
-
-            //==== 序列化层级节点数量 ====//
-
-            // <LevelNodeCount> 序列化节点关系字典
-            writer.WriteStartElement("LevelNodeCount");
-            foreach (var r_pair in LevelNodeCount)
-            {
-                // <Level> 层级节点数
-                writer.WriteStartElement("Level");
-                writer.WriteAttributeString("Level", r_pair.Key.ToString());
-                writer.WriteAttributeString("Nodes", r_pair.Value.ToString());
-                writer.WriteEndElement();
-                // </Level>
-            }
-            writer.WriteEndElement();
-            // </LevelNodeCount>
         }
         public static string IdArrayToString(int[] ids)
         {
