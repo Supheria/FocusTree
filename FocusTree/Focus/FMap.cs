@@ -13,8 +13,13 @@ namespace FocusTree.Focus
         /// <summary>
         /// 获取结构中所有节点的方法
         /// </summary>
-        /// <returns></returns>
-        abstract public List<FMapNode> GetAllNodes();
+        /// <returns>结构中的所有有效节点</returns>
+        abstract public HashSet<FMapNode> GetAllMapNodes();
+        /// <summary>
+        /// 使用 ID 获取特定节点
+        /// </summary>
+        /// <returns>获取的Node</returns>
+        abstract public FMapNode GetMapNodeById(int id);
     }
     public abstract class FMapNode
     {

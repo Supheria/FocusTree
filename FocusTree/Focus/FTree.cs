@@ -1,4 +1,5 @@
 ﻿using FocusTree.Focus;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 
 namespace FocusTree.Tree
@@ -7,7 +8,7 @@ namespace FocusTree.Tree
     /// 国策树类
     /// </summary>
     [XmlRoot("focus-tree")]
-    public class FTree
+    public class FTree:FMap
     {
         #region ==== 属性 ====
         /// <summary>
@@ -47,6 +48,39 @@ namespace FocusTree.Tree
         }
         #endregion
         #region ==== 方法 ====
+        public override HashSet<FMapNode> GetAllMapNodes() 
+        {
+            var fnodes = GetAllFNodes();
+            var set = new HashSet<FMapNode>();
+            foreach ( var node in fnodes )
+            {
+                set.Add(node);
+            }
+            return set;
+        }
+        public override FMapNode GetMapNodeById(int id)
+        {
+            return GetNodeById(RootNode,id);
+        }
+        /// <summary>
+        /// 根据 ID 查找节点
+        /// </summary>
+        /// <param name="current">递归起始节点</param>
+        /// <param name="id">要查找的 id</param>
+        /// <returns>找到的节点</returns>
+        private FNode GetNodeById(FNode current, int id)
+        {
+            if (current.ID == id) return current;
+            else 
+            {
+                foreach(var child in current.Children)
+                {
+                    FNode result = GetNodeById(child, id);
+                    if(result != null) { return result; }
+                }
+            }
+            return null;
+        }
         /// <summary>
         /// 根据二维原始字段数组生成所有节点
         /// </summary>
@@ -112,9 +146,9 @@ namespace FocusTree.Tree
         /// 获取所有子节点 (不含根节点)
         /// </summary>
         /// <returns></returns>
-        public List<FNode> GetAllNodes()
+        public List<FNode> GetAllFNodes()
         {
-            List<FNode> nodes = new List<FNode>();
+            var nodes = new List<FNode>();
             foreach(var child in RootNode.Children)
             {
                 AddSubNodesToList(child, ref nodes);

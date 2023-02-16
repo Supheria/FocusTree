@@ -32,7 +32,7 @@ namespace FocusTree.Focus
         {
             Name = tree.Name;
 
-            var nodes = tree.GetAllNodes();
+            var nodes = tree.GetAllFNodes();
             foreach (var node in nodes)
             {
                 // 添加节点到字典
@@ -54,9 +54,16 @@ namespace FocusTree.Focus
             }
         }
 
-        public override List<FMapNode> GetAllNodes()
+        public override HashSet<FMapNode> GetAllMapNodes()
         {
-            throw new NotImplementedException();
+            var set = new HashSet<FMapNode>();
+            foreach(var node in Nodes.Values) { set.Add(node); }
+            return set;
+        }
+
+        public override FMapNode GetMapNodeById(int id)
+        {
+            return Nodes[id];
         }
 
         private class NodeRelation
