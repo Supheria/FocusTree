@@ -22,6 +22,7 @@ namespace FocusTree
 
         public GraphMap(FGraph graph)
         {
+            throw new NotImplementedException();
             InitializeComponent();
             Graph = graph;
             mInfoDlg = new InfoDialog(this);

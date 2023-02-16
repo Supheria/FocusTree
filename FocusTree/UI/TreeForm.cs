@@ -9,6 +9,7 @@ using System.IO;
 
 using FocusTree.Tree;
 using FocusTree.Focus;
+using FocusTree.IO;
 
 namespace FocusTree
 {
@@ -57,9 +58,8 @@ namespace FocusTree
                 // xml 文件
                 case ".xml":
                     {
-                        throw new NotImplementedException();
-                        var tree = DeserializeFromXml(fileinfo.FullName);
-                        var graph = new FGraph(tree);
+                        var graph = FXml.LoadGraph(fileinfo.FullName);
+                        Map = new GraphMap(graph);
                     }
                     break;
 
@@ -87,91 +87,6 @@ namespace FocusTree
         #endregion
         #region ==== 窗体方法 ====
         
-        #endregion
-        #region ==== 文件方法 ====
-        /// <summary>
-        /// 序列化成XML
-        /// </summary>
-        /// <param name="fstream"></param>
-        public void SerializeToXml(string? szSave = null)
-        {
-            if (szSave == null)
-            {
-                szSave = string.Format($"{rawParentFolderPath}.xml");
-            }
-            #region ==== XmlWriterSettings ====
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Indent = true;
-            settings.IndentChars = "\t";
-            settings.NewLineChars = Environment.NewLine;
-            settings.Encoding = Encoding.UTF8;
-            settings.OmitXmlDeclaration = true;  // 不生成声明头
-            #endregion
-            FileStream fileStream;
-            XmlWriter xmlWriter;
-            try
-            {
-                fileStream = new FileStream(szSave, FileMode.Create);
-                xmlWriter = XmlWriter.Create(fileStream, settings);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"{ex.Message}\n无法创建\"{szSave}。\"");
-            }
-            try
-            {
-                // 强制指定命名空间，覆盖默认的命名空间
-                throw new NotImplementedException();
-                /*
-
-                XmlSerializerNamespaces namespaces = new XmlSerializerNamespaces();
-                namespaces.Add(string.Empty, string.Empty);
-                XmlSerializer serializer = new XmlSerializer(TreeMap.Tree.GetType());
-                serializer.Serialize(new XmlWriterForceFullEnd(xmlWriter), TreeMap.Tree, namespaces);
-                xmlWriter.Close();
-                fileStream.Close();
-
-                */
-            }
-            catch (Exception ex)
-            {
-                xmlWriter.Close();
-                fileStream.Close();
-                throw new Exception($"{ex.Message}\n无法写入\"{szSave}。\"");
-            }
-        }
-        /// <summary>
-        /// 从XML反序列化
-        /// </summary>
-        /// <param name="fstream"></param>
-        public Tree.FTree DeserializeFromXml(string szLoad)
-        {
-            FileStream fileStream;
-            StreamReader streamReader;
-            try
-            {
-                fileStream = new FileStream(szLoad, FileMode.Open);
-                streamReader = new StreamReader(fileStream, Encoding.UTF8);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"{ex.Message}\n无法打开\"{szLoad}。\"");
-            }
-            try
-            {
-                XmlSerializer serializer = new XmlSerializer(typeof(Tree.FTree));
-                Tree.FTree tree = (Tree.FTree)serializer.Deserialize(streamReader);
-                streamReader.Close();
-                fileStream.Close();
-                return tree;
-            }
-            catch (Exception ex)
-            {
-                streamReader.Close();
-                fileStream.Close();
-                throw new Exception($"{ex.Message}\n无法读取\"{szLoad}。\"");
-            }
-        }
         #endregion
     }
 }
