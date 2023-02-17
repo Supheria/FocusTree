@@ -225,7 +225,13 @@ class Test
 
         picbox.MouseDown += (sender, args) => {
             var point = GetInputLocation(args.Location, cam, picbox.Size, scale);
-            MessageBox.Show(point.ToString());
+            foreach(var node in nodes)
+            {
+                if (node.Value.Contains(point))
+                {
+                    MessageBox.Show($"你点击了 {node.Key.Name} 的方块");
+                }
+            }
         };
         form.KeyDown += (sender, args) => {
             // MessageBox.Show(args.KeyCode.ToString());
@@ -243,7 +249,9 @@ class Test
         };
 
         form.Controls.Add(picbox);
-        picbox.Update();
+        picbox.VisibleChanged += (sender, args) => {
+            ((PictureBox)sender).Invalidate();
+        };
 
         Application.EnableVisualStyles();
 
