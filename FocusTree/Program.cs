@@ -177,7 +177,7 @@ class Test
             {
                 var screen_loc = PToVec(screen_loc_p);
                 var control_size = SToVec(control_size_s);
-                return VToPoint((screen_loc + control_size / 2) / scale_factor - cam_center);
+                return VToPoint((screen_loc - control_size / 2) / scale_factor + cam_center);
             };
 
         Func<Rectangle, Size, bool> IsRectInScreen = (point, size) =>
@@ -223,7 +223,10 @@ class Test
             picbox.Update();
         };
 
-        picbox.Click += (sender, args) => { picbox.Invalidate(); };
+        picbox.MouseDown += (sender, args) => {
+            var point = GetInputLocation(args.Location, cam, picbox.Size, scale);
+            MessageBox.Show(point.ToString());
+        };
         form.KeyDown += (sender, args) => {
             // MessageBox.Show(args.KeyCode.ToString());
             switch (args.KeyCode)
