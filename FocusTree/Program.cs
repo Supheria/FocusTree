@@ -186,10 +186,11 @@ class Test
         };
 
         var form = new Form();
-        form.AutoSize = true;
+        form.ClientSize = new Size(500, 500);
 
         var picbox = new PictureBox();
-        picbox.Size = new Size(500, 500);
+        picbox.SizeMode = PictureBoxSizeMode.Zoom;
+        picbox.Size = form.ClientSize;
         picbox.Image = new Bitmap(picbox.Size.Width, picbox.Size.Height);
 
         // 测试数据
@@ -246,6 +247,13 @@ class Test
                 case Keys.OemMinus:
                 case Keys.Subtract: scale = scale < 0.1 ? scale : scale / 2; picbox.Invalidate(); break;
             }
+        };
+
+        form.SizeChanged += (sender, args) =>
+        {
+            picbox.Size = form.ClientSize;
+            picbox.Image = new Bitmap(picbox.Width, picbox.Height);
+            picbox.Invalidate();
         };
 
         form.Controls.Add(picbox);
