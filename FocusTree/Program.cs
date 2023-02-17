@@ -5,6 +5,7 @@ using FocusTree;
 using FocusTree.Focus;
 using FocusTree.Tree;
 using System.IO;
+using System.Net;
 using System.Xml.Serialization;
 
 internal static class Program
@@ -82,8 +83,18 @@ class Test
         var visited = new HashSet<int>();
         var width = branches.Count;
         var height = branches.Max(x => x.Length);
-        var map = new Dictionary<Point,int>();
-        for(int x=0; x<branches.Count; x++)
+        var map = new Dictionary<int, Point>();
+
+        var scale = new PointF(30,30);
+        Func<Point, PointF, Point> ScalePoint = (p, s) => {
+            return new Point((int)(p.X * s.X), (int)(p.Y * s.Y));
+        };
+        var shift = new Point((int)(scale.X/2.5f), (int)(scale.Y / 3.5f));
+        Func<Point, Point, Point> ShiftPoint = (p, s) => {
+            return new Point(p.X + s.X, p.Y + s.Y);
+        };
+
+        for (int x=0; x<branches.Count; x++)
         {
             var branch = branches[x];
             for(int y=0; y < branch.Length; y++)
@@ -91,22 +102,34 @@ class Test
                 var id = branch[y];
                 if (visited.Add(id))
                 {
-                    map[new Point(x,y)] = id;
+                    map[id] = ScalePoint(new Point(x, y), scale);
                 }
             }
         }
 
         // 绘图进行测试
-        var img = new Bitmap(width * 30, height * 30);
+        var img = new Bitmap((int)(width * scale.X), (int)(height * scale.Y));
         var g = Graphics.FromImage(img);
         g.Clear(Color.White);
         var font = new Font("Consolas", 12);
         var brush = new SolidBrush(Color.Black);
+        var pen = new Pen(Color.Blue);
         foreach(var loc_pair in map)
         {
-            var point = loc_pair.Key;
-            var id = loc_pair.Value;
-            g.DrawString(id.ToString().PadLeft(2), font, brush, point.X * 30, point.Y * 30 + 3);
+            var id = loc_pair.Key;
+            var point = loc_pair.Value;
+            g.DrawString(id.ToString().PadLeft(2), font, brush, point);
+            
+            var links = graph.GetNodeRelations(id);
+            foreach(var link in links)
+            {
+                foreach(var link_id in link.IDs)
+                {
+                    var startLoc = ShiftPoint(map[id], shift);
+                    var endLoc = ShiftPoint(map[link_id], shift);
+                    g.DrawLine(pen, startLoc, endLoc);
+                }
+            }
         }
         g.Flush();
         g.Dispose();
