@@ -228,10 +228,10 @@ class Test
             // MessageBox.Show(args.KeyCode.ToString());
             switch (args.KeyCode)
             {
-                case Keys.Left: cam += new Vector2(-50, 0); picbox.Invalidate(); break;
-                case Keys.Right: cam += new Vector2(+50, 0); picbox.Invalidate(); break;
-                case Keys.Up: cam += new Vector2(0, -50); picbox.Invalidate(); break;
-                case Keys.Down: cam += new Vector2(0, +50); picbox.Invalidate(); break;
+                case Keys.Left: cam += new Vector2(-50 / scale, 0); picbox.Invalidate(); break;
+                case Keys.Right: cam += new Vector2(+50 / scale, 0); picbox.Invalidate(); break;
+                case Keys.Up: cam += new Vector2(0, -50 / scale); picbox.Invalidate(); break;
+                case Keys.Down: cam += new Vector2(0, +50 / scale); picbox.Invalidate(); break;
                 case Keys.Oemplus:
                 case Keys.Add: scale = scale > 10 ? scale : scale * 2; picbox.Invalidate(); break;
                 case Keys.OemMinus:
