@@ -86,13 +86,9 @@ class Test
         var height = branches.Max(x => x.Length);
         var map = new Dictionary<int, Point>();
 
-        var scale = new PointF(120,50);
+        var scale = new PointF(200,150);
         Func<Point, PointF, Point> ScalePoint = (p, s) => {
             return new Point((int)(p.X * s.X), (int)(p.Y * s.Y));
-        };
-        var shift = new Point((int)(scale.X/3f), (int)(scale.Y / 3.5f));
-        Func<Point, Point, Point> ShiftPoint = (p, s) => {
-            return new Point(p.X + s.X, p.Y + s.Y);
         };
 
         for (int x=0; x<branches.Count; x++)
@@ -103,7 +99,9 @@ class Test
                 var id = branch[y];
                 if (visited.Add(id))
                 {
-                    map[id] = ScalePoint(new Point(x, y), scale);
+                    var p = ScalePoint(new Point(x, y), scale);
+                    p.Offset(30, 30);
+                    map[id] = p;
                 }
             }
         }
@@ -123,13 +121,16 @@ class Test
             var id = loc_pair.Key;
             var point = loc_pair.Value;
 
-            var links = graph.GetNodeRelations(id);
+            var links = graph.GetNodeRelations(id).Where(x=>x.Type==NodeRelation.FRelations.Linked);
             foreach (var link in links)
             {
                 foreach (var link_id in link.IDs)
                 {
-                    var startLoc = ShiftPoint(map[id], shift);
-                    var endLoc = ShiftPoint(map[link_id], shift);
+                    int spx = 80, spy = 32;
+                    int epx = 80, epy = -5;
+                    var startLoc = new Point(map[id].X + spx, map[id].Y + spy);
+                    var endLoc = new Point(map[link_id].X + epx, map[link_id].Y + epy);
+
                     g.DrawLine(pen, startLoc, endLoc);
                 }
             }
@@ -138,11 +139,11 @@ class Test
         {
             var id = loc_pair.Key;
             var point = loc_pair.Value;
-            g.FillRectangle(wgb, point.X + 0, point.Y - 5, scale.X - 40, scale.Y - 25);
-            g.FillRectangle(bgb, point.X + 0, point.Y - 5, scale.X - 40, scale.Y - 25);
+            g.FillRectangle(wgb, point.X - 5, point.Y - 12, scale.X - 35, scale.Y - 105);
+            g.FillRectangle(bgb, point.X - 5, point.Y - 12, scale.X - 35, scale.Y - 105);
 
             var node_str = graph.GetMapNodeById(id).FocusData.Name;
-            node_str = node_str.Length > 4 ? node_str.Substring(0, 4) : node_str;
+            node_str = node_str.Length > 8 ? node_str.Substring(0, 8) : node_str;
             g.DrawString(node_str.ToString().PadLeft(2), font, brush, point);
         }
        
