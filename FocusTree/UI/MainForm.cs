@@ -83,7 +83,8 @@ namespace FocusTree
             #endregion
             try
             {
-                form.SerializeToXml(saveFileDialog.FileName);
+                throw new NotImplementedException();
+                //form.SerializeToXml(saveFileDialog.FileName);
             }
             catch (Exception ex)
             {
@@ -152,7 +153,8 @@ namespace FocusTree
             {
                 try
                 {
-                    form.SerializeToXml();
+                    throw new NotImplementedException();
+                    //form.SerializeToXml();
                 }
                 catch(Exception ex)
                 {

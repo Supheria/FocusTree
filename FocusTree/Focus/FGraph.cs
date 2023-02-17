@@ -1,10 +1,11 @@
 ﻿using FocusTree.Tree;
 using System.Text;
 using System.Xml;
+using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using static FocusTree.Focus.FGraphStruct;
 using static FocusTree.Focus.NodeRelation;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TreeView;
 
 namespace FocusTree.Focus
 {
@@ -60,13 +61,13 @@ namespace FocusTree.Focus
             }
         }
 
+        #region ---- FMap 抽象函数功能 ----
         public override HashSet<FMapNode> GetAllMapNodes()
         {
             var set = new HashSet<FMapNode>();
             foreach (var node in Nodes.Values) { set.Add(node); }
             return set;
         }
-
         public override FMapNode GetMapNodeById(int id)
         {
             return Nodes[id];
@@ -110,8 +111,8 @@ namespace FocusTree.Focus
         public override int GetBranchWidth(int id)
         {
             int count = 0;
-            var queue = new Queue<int>();
-            GetBranchWidth(id, ref count, ref queue);
+            var stack = new Stack<int>();
+            GetBranchWidth(id, ref count, ref stack);
             return count;
         }
         /// <summary>
@@ -120,9 +121,9 @@ namespace FocusTree.Focus
         /// <param name="current">当前递归节点</param>
         /// <param name="count">总数</param>
         /// <param name="steps">已走路径，用于禁止走重复的节点，避免死循环</param>
-        private void GetBranchWidth(int current, ref int count, ref Queue<int> steps)
+        private void GetBranchWidth(int current, ref int count, ref Stack<int> steps)
         {
-            steps.Enqueue(current);
+            steps.Push(current);
 
             var childs = Relations[current].Where(x => x.Type == FRelations.Linked);
             // 当前节点是叶节点，累加并退出
@@ -143,7 +144,7 @@ namespace FocusTree.Focus
                 }
             }
 
-            steps.Dequeue();
+            steps.Pop();
         }
         public override List<NodeRelation> GetNodeRelations(int id)
         {
@@ -152,13 +153,13 @@ namespace FocusTree.Focus
         public override HashSet<FMapNode> GetLeafNodes(int id)
         {
             var nodes = new HashSet<FMapNode>();
-            var queue = new Queue<int>();
-            GetLeafNodes(id, ref nodes, ref queue);
+            var stack = new Stack<int>();
+            GetLeafNodes(id, ref nodes, ref stack);
             return nodes;
         }
-        private void GetLeafNodes(int current, ref HashSet<FMapNode> nodes, ref Queue<int> steps)
+        private void GetLeafNodes(int current, ref HashSet<FMapNode> nodes, ref Stack<int> steps)
         {
-            steps.Enqueue(current);
+            steps.Push(current);
 
             var childs = Relations[current].Where(x => x.Type == FRelations.Linked);
             // 当前节点是叶节点，累加并退出
@@ -178,9 +179,55 @@ namespace FocusTree.Focus
                     }
                 }
             }
-
-            steps.Dequeue();
+            steps.Pop();
         }
+        #endregion
+
+        #region ---- 特有方法 ----
+        public List<int[]> GetBranches(int id)
+        {
+            var branches = new List<int[]>();
+            var stack = new Stack<int>();
+            GetBranches(id, ref branches, ref stack);
+            return branches;
+        }
+        public List<int[]> GetBranches(int[] ids)
+        {
+            var branches = new List<int[]>();
+            var stack = new Stack<int>();
+            foreach (var id in ids)
+            {
+                GetBranches(id, ref branches, ref stack);
+            }
+            return branches;
+        }
+        private void GetBranches(int current, ref List<int[]> branches, ref Stack<int> steps)
+        {
+            steps.Push(current);
+
+            var childs = Relations[current].Where(x => x.Type == FRelations.Linked);
+            // 当前节点是叶节点，累加并退出
+            if (childs.Sum(x => x.IDs.Length) == 0) { branches.Add(steps.ToArray()); }
+            else
+            {
+                foreach (var child_relations in childs)
+                {
+                    foreach (var child in child_relations.IDs)
+                    {
+                        // 已经走过这个节点，所以跳过，避免死循环
+                        if (steps.Contains(child)) { continue; }
+                        else
+                        {
+                            GetBranches(child, ref branches, ref steps);
+                        }
+                    }
+                }
+            }
+
+            steps.Pop();
+        }
+        #endregion
+
         public FGraphStruct GetStruct()
         {
             return new FGraphStruct(Nodes.Values.ToArray(), Relations, LevelNodeCount);

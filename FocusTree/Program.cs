@@ -16,7 +16,7 @@ internal static class Program
     static void Main()
     {
         //Test.FMapTest();
-        Test.FGraphToXmlTest();
+        Test.BranchesTest();
 
         //Application.EnableVisualStyles();
         //Application.SetCompatibleTextRenderingDefault(false);
@@ -68,5 +68,13 @@ class Test
         FileStream file = File.Create("人类财阀联合.Graph.xml");
         writer.Serialize(file, graphStruct);
         file.Close();
+    }
+    public static void BranchesTest()
+    {
+        var tree = new FTree("人类财阀联合.csv");
+        var graph = new FGraph(tree);
+        //var branch = graph.GetBranches(1);
+        var branches = graph.GetBranches(graph.GetLevelNodes(0).Select(x=>x.ID).ToArray());
+        Console.WriteLine();
     }
 }
