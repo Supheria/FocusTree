@@ -184,41 +184,69 @@ namespace FocusTree.Focus
         #endregion
 
         #region ---- 特有方法 ----
-        public List<int[]> GetBranches(int id)
+        public List<int[]> GetBranches(int id, bool sort = false, bool reverse = false)
         {
             var branches = new List<int[]>();
             var stack = new Stack<int>();
-            GetBranches(id, ref branches, ref stack);
+            GetBranches(id, ref branches, ref stack, sort, reverse);
             return branches;
         }
-        public List<int[]> GetBranches(int[] ids)
+        public List<int[]> GetBranches(int[] ids, bool sort = false, bool reverse = false)
         {
             var branches = new List<int[]>();
             var stack = new Stack<int>();
             foreach (var id in ids)
             {
-                GetBranches(id, ref branches, ref stack);
+                GetBranches(id, ref branches, ref stack, sort, reverse);
             }
             return branches;
         }
-        private void GetBranches(int current, ref List<int[]> branches, ref Stack<int> steps)
+        private void GetBranches(int current, ref List<int[]> branches, ref Stack<int> steps, bool sort, bool reverse)
         {
             steps.Push(current);
 
             var childs = Relations[current].Where(x => x.Type == FRelations.Linked);
             // 当前节点是叶节点，累加并退出
-            if (childs.Sum(x => x.IDs.Length) == 0) { branches.Add(steps.ToArray()); }
+            if (childs.Sum(x => x.IDs.Length) == 0) 
+            {
+                if (reverse)
+                {
+                    branches.Add(steps.Reverse().ToArray());
+                }
+                else
+                {
+                    branches.Add(steps.ToArray());
+                }
+            }
             else
             {
-                foreach (var child_relations in childs)
+                // 是否按照 id 排序
+                if (!sort)
                 {
-                    foreach (var child in child_relations.IDs)
+                    foreach (var child_relations in childs)
                     {
-                        // 已经走过这个节点，所以跳过，避免死循环
-                        if (steps.Contains(child)) { continue; }
+                        foreach (var child in child_relations.IDs)
+                        {
+                            // 已经走过这个节点，所以跳过，避免死循环
+                            if (steps.Contains(child)) { continue; }
+                            else
+                            {
+                                GetBranches(child, ref branches, ref steps, sort, reverse);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    var relation_ids = new List<int>();
+                    foreach(var relation in childs) { relation_ids.AddRange(relation.IDs); }
+                    relation_ids.Sort();
+                    foreach(var id in relation_ids)
+                    {
+                        if (steps.Contains(id)) { continue; }
                         else
                         {
-                            GetBranches(child, ref branches, ref steps);
+                            GetBranches(id, ref branches, ref steps, sort, reverse);
                         }
                     }
                 }

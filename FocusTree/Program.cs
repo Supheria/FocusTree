@@ -74,7 +74,43 @@ class Test
         var tree = new FTree("人类财阀联合.csv");
         var graph = new FGraph(tree);
         //var branch = graph.GetBranches(1);
-        var branches = graph.GetBranches(graph.GetLevelNodes(0).Select(x=>x.ID).ToArray());
-        Console.WriteLine();
+        var branches = graph.GetBranches(graph.GetLevelNodes(0).Select(x=>x.ID).ToArray(),true,true);
+
+        // ---- 尝试对分支进行一些排序 ----
+
+        // 按已排序分支的顺序定位 x 和 y 的坐标
+        var visited = new HashSet<int>();
+        var width = branches.Count;
+        var height = branches.Max(x => x.Length);
+        var map = new Dictionary<Point,int>();
+        for(int x=0; x<branches.Count; x++)
+        {
+            var branch = branches[x];
+            for(int y=0; y < branch.Length; y++)
+            {
+                var id = branch[y];
+                if (visited.Add(id))
+                {
+                    map[new Point(x,y)] = id;
+                }
+            }
+        }
+
+        // 绘图进行测试
+        var img = new Bitmap(width * 30, height * 30);
+        var g = Graphics.FromImage(img);
+        g.Clear(Color.White);
+        var font = new Font("Consolas", 12);
+        var brush = new SolidBrush(Color.Black);
+        foreach(var loc_pair in map)
+        {
+            var point = loc_pair.Key;
+            var id = loc_pair.Value;
+            g.DrawString(id.ToString().PadLeft(2), font, brush, point.X * 30, point.Y * 30 + 3);
+        }
+        g.Flush();
+        g.Dispose();
+        img.Save("Test.png");
+        img.Dispose();
     }
 }
