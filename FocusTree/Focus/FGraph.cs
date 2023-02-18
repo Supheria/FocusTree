@@ -1,4 +1,5 @@
 ﻿using FocusTree.Tree;
+using System.Numerics;
 using System.Text;
 using System.Windows.Forms.Design.Behavior;
 using System.Xml;
@@ -209,6 +210,10 @@ namespace FocusTree.Focus
         /// <param name="index">节点ID</param>
         /// <returns>矩形信息</returns>
         public Point GetNodeMapElement(int index) { return NodeMap[index]; }
+        /// <summary>
+        /// 获取绘图用的已自动排序后的 NodeMap
+        /// </summary>
+        /// <returns></returns>
         private Dictionary<int, Point> GetNodeMap()
         {
             NodeMap = new Dictionary<int, Point>();
@@ -231,6 +236,31 @@ namespace FocusTree.Focus
                 }
             }
             return NodeMap;
+        }
+        /// <summary>
+        /// 获取 NodeMap 中心位置和尺寸
+        /// </summary>
+        /// <returns>Center + Size</returns>
+        public Vector4 GetNodeMapBounds()
+        {
+            bool first = true;
+            var bounds = new RectangleF();
+            var enumer = NodeMap.GetEnumerator();
+            while (enumer.MoveNext())
+            {
+                var p = enumer.Current.Value;
+                if (first) { bounds = new RectangleF(p.X,p.Y,p.X,p.Y); first = false; continue; }
+                if (p.X < bounds.X) { bounds.X = p.X; }
+                if (p.X > bounds.Width) { bounds.Width = p.X; }
+                if (p.Y < bounds.Y) { bounds.Y = p.Y; }
+                if (p.Y > bounds.Height) { bounds.Height = p.Y; }
+            }
+            return new Vector4(
+                (bounds.X + bounds.Width) / 2, 
+                (bounds.Y + bounds.Height) / 2, 
+                bounds.Width - bounds.X,
+                bounds.Height - bounds.Y
+                );
         }
 
         public List<int[]> GetBranches(int id, bool sort = false, bool reverse = false)
@@ -256,7 +286,7 @@ namespace FocusTree.Focus
 
             var childs = Relations[current].Where(x => x.Type == FRelations.Linked);
             // 当前节点是叶节点，累加并退出
-            if (childs.Sum(x => x.IDs.Length) == 0) 
+            if (childs.Sum(x => x.IDs.Length) == 0)
             {
                 if (reverse)
                 {
@@ -288,9 +318,9 @@ namespace FocusTree.Focus
                 else
                 {
                     var relation_ids = new List<int>();
-                    foreach(var relation in childs) { relation_ids.AddRange(relation.IDs); }
+                    foreach (var relation in childs) { relation_ids.AddRange(relation.IDs); }
                     relation_ids.Sort();
-                    foreach(var id in relation_ids)
+                    foreach (var id in relation_ids)
                     {
                         if (steps.Contains(id)) { continue; }
                         else
@@ -329,8 +359,8 @@ namespace FocusTree.Focus
         }
 
         // -- 序列化工具 --
-        static XmlSerializer FData_serial = new (typeof(FData));
-        static XmlSerializerNamespaces NullXmlNameSpace = new (new XmlQualifiedName[] { new XmlQualifiedName("","")});
+        static XmlSerializer FData_serial = new(typeof(FData));
+        static XmlSerializerNamespaces NullXmlNameSpace = new(new XmlQualifiedName[] { new XmlQualifiedName("", "") });
 
         // -- 序列化方法 --
         public XmlSchema GetSchema()

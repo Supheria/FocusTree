@@ -25,7 +25,8 @@ namespace FocusTree.UI
         /// <summary>
         /// 绘图缩放倍率
         /// </summary>
-        float GScale = 1f;
+        float GScale { get { return gscale; } set { gscale = value < 0.1f ? 0.1f : value > 10f ? 10f : value; } }
+        float gscale = 1f; // 不要调用这个，不安全，用上边的访问器，有缩放尺寸限制
         /// <summary>
         /// 默认的字体
         /// </summary>
@@ -49,7 +50,7 @@ namespace FocusTree.UI
         /// <summary>
         /// 节点间距 + 节点尺寸
         /// </summary>
-        Rectangle NodePaddingSize = new (65, 45, 55, 35);
+        Rectangle NodePaddingSize = new(65, 45, 55, 35);
         /// <summary>
         /// 默认相机位置（画面中心）
         /// </summary>
@@ -65,15 +66,28 @@ namespace FocusTree.UI
 
             Invalidated += OnInValidated;
             SizeChanged += OnSizeSize;
-            Click += (obj, arg) => { Invalidate(); };
+            MouseDown += (obj, arg) => { MessageBox.Show(ClickedLocation(arg.Location).ToString()); };
+        }
+        /// <summary>
+        /// 自动缩放居中
+        /// </summary>
+        public void RelocateCenter()
+        {
+            if(Graph == null) { return; }
+            var bounds = Graph.GetNodeMapBounds();
+            Camera = VectorToVisualVector(new Vector2(bounds.X, bounds.Y));
+            // 画幅尺寸
+            var visual_size = VectorToVisualVector(new Vector2(bounds.Z + 1, bounds.W + 1));
+            float px = Size.Width / visual_size.X, py = Size.Height / visual_size.Y;
 
-            //Invalidate();
+            // 我也不知道为什么这里要 *0.85，直接放结果缩放的尺寸会装不下，*0.85 能放下，而且边缘有空余
+            GScale = Math.Min(px, py) * 0.85f; 
         }
 
         private void OnInValidated(object sender, EventArgs args)
         {
             if (Graph == null) { return; }
-            if(Image == null) { Image = new Bitmap(Size.Width, Size.Height); }
+            Image ??= new Bitmap(Size.Width, Size.Height);
 
             var font = new Font(GFont, 10 * GScale, FontStyle.Bold, GraphicsUnit.Pixel);
 
@@ -93,7 +107,28 @@ namespace FocusTree.UI
                     g.DrawString(name, font, NodeFG, rect, GFontFormat);
                 }
             }
+            var mapEnumer = Graph.GetNodeMapEnumerator();
+            while (mapEnumer.MoveNext())
+            {
+                var id = mapEnumer.Current.Key;
+                var rect = RectOnScreenRect(NodeMapToVisualMap(mapEnumer.Current.Value));
+                var links = Graph.GetNodeRelations(id).Where(x => x.Type == NodeRelation.FRelations.Linked);
+                foreach (var link in links)
+                {
+                    foreach (var link_id in link.IDs)
+                    {
+                        var torect = RectOnScreenRect(NodeMapToVisualMap(Graph.GetNodeMapElement(link_id)));
 
+                        // 如果起始点和终点都不在画面里，就不需要绘制
+                        if (!(IsRectInScreen(rect) || IsRectInScreen(torect))) { continue; }
+
+                        var startLoc = new Point(rect.X + rect.Width / 2, rect.Y + rect.Height); // x -> 中间, y -> 下方
+                        var endLoc = new Point(torect.X + torect.Width / 2, torect.Y); // x -> 中间, y -> 上方
+
+                        g.DrawLine(NodeLink, startLoc, endLoc);
+                    }
+                }
+            }
             g.Flush(); g.Dispose();
             Update();
         }
@@ -139,7 +174,7 @@ namespace FocusTree.UI
         /// </summary>
         /// <param name="r">矩形</param>
         /// <returns>是否可见</returns>
-        private bool IsRectInScreen(Rectangle r) {return r.Right >= 0 && r.Left <= Size.Width && r.Bottom >= 0 && r.Top <= Size.Height;}
+        private bool IsRectInScreen(Rectangle r) { return r.Right >= 0 && r.Left <= Size.Width && r.Bottom >= 0 && r.Top <= Size.Height; }
         /// <summary>
         /// NodeMap 的位置信息转换为显示时的绘图信息<br/>
         /// </summary>
@@ -152,6 +187,13 @@ namespace FocusTree.UI
                 nodeMap.Y * NodePaddingSize.Y,
                 NodePaddingSize.Width,
                 NodePaddingSize.Height
+                );
+        }
+        private Vector2 VectorToVisualVector(Vector2 vec)
+        {
+            return new Vector2(
+                vec.X * NodePaddingSize.X,
+                vec.Y * NodePaddingSize.Y
                 );
         }
     }

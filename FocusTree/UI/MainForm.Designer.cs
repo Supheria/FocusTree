@@ -187,8 +187,9 @@
             // main_Menu_loc_camreset
             // 
             this.main_Menu_loc_camreset.Name = "main_Menu_loc_camreset";
-            this.main_Menu_loc_camreset.Size = new System.Drawing.Size(148, 22);
+            this.main_Menu_loc_camreset.Size = new System.Drawing.Size(180, 22);
             this.main_Menu_loc_camreset.Text = "重置相机位置";
+            this.main_Menu_loc_camreset.Click += new System.EventHandler(this.main_Menu_loc_camreset_Click);
             // 
             // main_contextMenu_node
             // 
