@@ -204,7 +204,16 @@ namespace FocusTree.UI
         }
         private void OnMouseWheel(object sender, MouseEventArgs args)
         {
-            GScale *= 1 + (args.Delta * 0.002f); // 对，这个数就是很小，不然鼠标一滚就飞了
+            var mulDelta = 1 + (args.Delta * 0.002f); // 对，这个数就是很小，不然鼠标一滚就飞了
+            
+            // 缩放前进行偏移
+            var cLoc = ClickedVec(args.Location);
+            var dif = cLoc - Camera;
+
+            Camera += dif * 0.2f; // 这个函数不是算出来的，只是目前恰好能用 ;p
+
+            // 缩放
+            GScale *= mulDelta;
             Invalidate();
         }
         /// <summary>
@@ -233,6 +242,13 @@ namespace FocusTree.UI
             return new Point(
                 (int)((click.X - Size.Width / 2f) / GScale + Camera.X),
                 (int)((click.Y - Size.Height / 2f) / GScale + Camera.Y)
+                );
+        }
+        private Vector2 ClickedVec(Point click)
+        {
+            return new Vector2(
+                (click.X - Size.Width / 2f) / GScale + Camera.X,
+                (click.Y - Size.Height / 2f) / GScale + Camera.Y
                 );
         }
         /// <summary>
