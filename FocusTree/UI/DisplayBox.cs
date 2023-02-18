@@ -65,7 +65,11 @@ namespace FocusTree.UI
         /// 默认相机位置（画面中心）
         /// </summary>
         Vector2 Camera = new(0, 0);
-
+        /// <summary>
+        /// 鼠标拖动时使用的定位参数
+        /// </summary>
+        Point DragMousePoint = new(0, 0);
+        bool DragMousePoint_Flag = false;
         public DisplayBox(MainForm parent)
         {
             ParentForm = parent;
@@ -76,7 +80,9 @@ namespace FocusTree.UI
 
             Invalidated += OnInValidated;
             SizeChanged += OnSizeSize;
-            MouseDown += (obj, arg) => { MessageBox.Show(ClickedLocation(arg.Location).ToString()); };
+            MouseDown += OnMouseDown;
+            MouseMove += OnMouseMove;
+            MouseUp += OnMouseUp;
         }
         /// <summary>
         /// 自动缩放居中
@@ -93,7 +99,11 @@ namespace FocusTree.UI
             // 我也不知道为什么这里要 *0.90，直接放结果缩放的尺寸会装不下，*0.90 能放下，而且边缘有空余
             GScale = Math.Min(px, py) * 0.90f; 
         }
-
+        /// <summary>
+        /// 要求重绘时更新画面
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         private void OnInValidated(object sender, EventArgs args)
         {
             if (Graph == null) { return; }
@@ -154,6 +164,42 @@ namespace FocusTree.UI
         private void OnSizeSize(object sender, EventArgs args)
         {
             Image = new Bitmap(Size.Width, Size.Height);
+        }
+        private void OnMouseDown(object sender, MouseEventArgs args)
+        {
+            // 用于拖动事件
+            if(args.Button == MouseButtons.Left)
+            {
+                DragMousePoint_Flag = true;
+                DragMousePoint = args.Location;
+            }
+        }
+        private void OnMouseMove(object sender, MouseEventArgs args)
+        {
+            // 用于拖动事件
+            if (args.Button == MouseButtons.Left && DragMousePoint_Flag)
+            {
+                var newPoint = args.Location;
+                var dif = new Point(newPoint.X - DragMousePoint.X, newPoint.Y - DragMousePoint.Y);
+                if(Math.Abs(dif.X) >= 1 || Math.Abs(dif.Y)>=1)
+                {
+                    var difvec = new Vector2(dif.X / GScale, dif.Y / GScale);
+
+                    // Console.WriteLine($"p:{newPoint}, drag:{DragMousePoint}, cam: {Camera}, dif: {dif}, vec: {difvec}");
+
+                    Camera -= difvec;
+                    DragMousePoint = newPoint;
+                    Invalidate();
+                }
+            }
+        }
+        private void OnMouseUp(object sender, MouseEventArgs args)
+        {
+            // 用于拖动事件
+            if (args.Button == MouseButtons.Left)
+            {
+                DragMousePoint_Flag = false;
+            }
         }
         /// <summary>
         /// 获取矩形真实坐标在控件显示空间的投影 (显示坐标)
