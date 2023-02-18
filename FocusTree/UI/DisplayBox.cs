@@ -32,7 +32,10 @@ namespace FocusTree.UI
         /// 默认的字体
         /// </summary>
         const string GFont = "黑体";
-
+        /// <summary>
+        /// 默认字体大小
+        /// </summary>
+        const float GFontSize = 10;
         /// <summary>
         /// 默认字体样式
         /// </summary>
@@ -126,7 +129,7 @@ namespace FocusTree.UI
             if (Graph == null) { return; }
             Image ??= new Bitmap(Size.Width, Size.Height);
 
-            var font = new Font(GFont, 10 * GScale, FontStyle.Bold, GraphicsUnit.Pixel);
+            var font = new Font(GFont, GFontSize * GScale, FontStyle.Bold, GraphicsUnit.Pixel);
 
             var g = Graphics.FromImage(Image);
             g.Clear(Color.White);
