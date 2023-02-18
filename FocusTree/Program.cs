@@ -186,37 +186,100 @@ class Test
         };
 
         var form = new Form();
-        form.ClientSize = new Size(500, 500);
+        form.ClientSize = new Size(1000, 1000);
 
         var picbox = new PictureBox();
         picbox.SizeMode = PictureBoxSizeMode.Zoom;
         picbox.Size = form.ClientSize;
         picbox.Image = new Bitmap(picbox.Size.Width, picbox.Size.Height);
 
+        // 节点尺寸
+        var node_size = new Size(55, 35);
+        var node_padding = new Point(65, 45);
+
         // 测试数据
-        var nodes = new Dictionary<Color, Rectangle>
+        var tree = new FTree("人类财阀联合.csv");
+        var graph = new FGraph(tree);
+        Func<Dictionary<int, Rectangle>> GetNodeMap = () =>
         {
-            { Color.Red, new Rectangle(0, 0, 50, 50)  },
-            { Color.Green, new Rectangle(450, 0, 50, 50)  },
-            { Color.Blue, new Rectangle(0, 450, 50, 50) },
-            { Color.Purple, new Rectangle(450, 450, 50, 50) }
+            var map = new Dictionary<int, Rectangle>();
+            var branches = graph.GetBranches(graph.GetLevelNodes(0).Select(x => x.ID).ToArray(), true, true);
+            var visited = new HashSet<int>();
+            var width = branches.Count;
+            var height = branches.Max(x => x.Length);
+
+            for (int x = 0; x < branches.Count; x++)
+            {
+                var branch = branches[x];
+                for (int y = 0; y < branch.Length; y++)
+                {
+                    var id = branch[y];
+                    if (visited.Add(id))
+                    {
+                        var rect = new Rectangle(
+                    x * node_padding.X,
+                    y * node_padding.Y,
+                    node_size.Width,
+                    node_size.Height
+                );
+                        map[id] = rect;
+                    }
+                }
+            }
+
+            return map;
         };
+        var map = GetNodeMap();
 
         var cam = new Vector2(picbox.Size.Width / 2, picbox.Size.Height / 2);
         var scale = 1f;
+
+        var background = new SolidBrush(Color.FromArgb(80, Color.Aqua));
+        var nameBrush = new SolidBrush(Color.Black);
+        var linkPen = new Pen(Color.FromArgb(100, Color.Cyan), 3f);
 
         picbox.Invalidated += (sender, args) =>
         {
             var g = Graphics.FromImage(picbox.Image);
             g.Clear(Color.White);
-            foreach (var node in nodes)
+
+            var nameFont = new Font("黑体", 10 * scale, FontStyle.Bold, GraphicsUnit.Pixel);
+            StringFormat stringFormat = new StringFormat();
+            stringFormat.Alignment = StringAlignment.Center;
+            stringFormat.LineAlignment = StringAlignment.Center;
+
+            //var textflags = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.WordBreak;
+
+            foreach (var node in graph.GetAllMapNodes())
             {
-                var color = node.Key;
-                var rect = node.Value;
+                var name = node.FocusData.Name;
+                var rect = map[node.ID];
+
                 var node_rect = GetNodeOnScreen(rect, cam, picbox.Size, scale);
                 if (IsRectInScreen(node_rect, picbox.Size))
                 {
-                    g.FillRectangle(new SolidBrush(color), node_rect);
+                    g.FillRectangle(background, node_rect);
+                    g.DrawString(name, nameFont, nameBrush, node_rect, stringFormat);
+                    //TextRenderer.DrawText(g, name, nameFont, node_rect, Color.Black, textflags);  // 这个有点丑，执行效率还低
+                }
+            }
+
+            foreach (var loc_pair in map)
+            {
+                var id = loc_pair.Key;
+                var rect = GetNodeOnScreen(loc_pair.Value, cam, picbox.Size, scale);
+
+                var links = graph.GetNodeRelations(id).Where(x => x.Type == NodeRelation.FRelations.Linked);
+                foreach (var link in links)
+                {
+                    foreach (var link_id in link.IDs)
+                    {
+                        var torect = GetNodeOnScreen(map[link_id], cam, picbox.Size, scale);
+                        var startLoc = new Point(rect.X + rect.Width / 2, rect.Y + rect.Height); // x -> 中间, y -> 下方
+                        var endLoc = new Point(torect.X + torect.Width / 2, torect.Y); // x -> 中间, y -> 上方
+
+                        g.DrawLine(linkPen, startLoc, endLoc);
+                    }
                 }
             }
             g.Flush();
@@ -224,17 +287,25 @@ class Test
             picbox.Update();
         };
 
-        picbox.MouseDown += (sender, args) => {
+        picbox.MouseDown += (sender, args) =>
+        {
             var point = GetInputLocation(args.Location, cam, picbox.Size, scale);
-            foreach(var node in nodes)
+            foreach (var node in map)
             {
-                if (node.Value.Contains(point))
+                var rect = node.Value;
+                if (rect.Contains(point))
                 {
-                    MessageBox.Show($"你点击了 {node.Key.Name} 的方块");
+                    var fnode = graph.GetMapNodeById(node.Key);
+                    MessageBox.Show($"{fnode.FocusData.Name}\n\n" +
+                        $"{fnode.FocusData.Effects}\n\n" +
+                        $"实施 {fnode.FocusData.Duration} 天\n\n" +
+                        $"{fnode.FocusData.Descript}\n\n" +
+                        $"{fnode.FocusData.Ps}");
                 }
             }
         };
-        form.KeyDown += (sender, args) => {
+        form.KeyDown += (sender, args) =>
+        {
             // MessageBox.Show(args.KeyCode.ToString());
             switch (args.KeyCode)
             {
@@ -257,7 +328,8 @@ class Test
         };
 
         form.Controls.Add(picbox);
-        picbox.VisibleChanged += (sender, args) => {
+        picbox.VisibleChanged += (sender, args) =>
+        {
             ((PictureBox)sender).Invalidate();
         };
 
