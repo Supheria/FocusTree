@@ -21,7 +21,8 @@ internal static class Program
     {
         //Test.FMapTest();
         //Test.FormInterationTest();
-        Application.Run(new MainForm());
+        Test.FGraphToXmlTest();
+        //Application.Run(new MainForm());
 
         //Application.EnableVisualStyles();
         //Application.SetCompatibleTextRenderingDefault(false);
@@ -70,11 +71,15 @@ class Test
     {
         var tree = new FTree("人类财阀联合.csv");
         var graph = new FGraph(tree);
-        var graphStruct = graph.GetStruct();
-        XmlSerializer writer = new XmlSerializer(typeof(FGraphStruct));
-        FileStream file = File.Create("人类财阀联合.Graph.xml");
-        writer.Serialize(file, graphStruct);
+
+        var serializer = new XmlSerializer(typeof(FGraph));
+        var file = File.Create("人类财阀联合.Graph.xml");
+        serializer.Serialize(file, graph);
         file.Close();
+
+        //var readfile = File.OpenRead("人类财阀联合.Graph.xml");
+        //var readgraph = (FGraphStruct)serializer.Deserialize(readfile);
+
     }
     public static void BranchesTest()
     {

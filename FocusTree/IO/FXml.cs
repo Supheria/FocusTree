@@ -17,10 +17,9 @@ namespace FocusTree.IO
         /// <param name="graph">FGraph</param>
         public static void SaveGraph(string path, FGraph graph)
         {
-            var graphStruct = graph.GetStruct();
-            var writer = new XmlSerializer(typeof(FGraphStruct));
+            var writer = new XmlSerializer(typeof(FGraph));
             var file = File.Create("人类财阀联合.Graph.xml");
-            writer.Serialize(file, graphStruct);
+            writer.Serialize(file, graph);
             file.Close();
         }
         /// <summary>
@@ -30,7 +29,7 @@ namespace FocusTree.IO
         /// <returns>FGraph</returns>
         public static FGraph LoadGraph(string path)
         {
-            var reader = new XmlSerializer(typeof(FGraphStruct));
+            var reader = new XmlSerializer(typeof(FGraph));
             var file = File.OpenRead(path);
             return reader.Deserialize(file) as FGraph;
         }

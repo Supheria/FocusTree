@@ -9,7 +9,7 @@ using static FocusTree.Focus.NodeRelation;
 
 namespace FocusTree.Focus
 {
-    public class FGraph : FMap
+    public class FGraph : FMap, IXmlSerializable
     {
         /// <summary>
         /// 文件名
@@ -40,7 +40,7 @@ namespace FocusTree.Focus
         /// 将 FTree 转换为 FGraph
         /// </summary>
         /// <param name="tree">国策树</param>
-        public FGraph(FTree tree)
+        public FGraph(FTree tree) 
         {
             Name = tree.Name;
 
@@ -67,6 +67,10 @@ namespace FocusTree.Focus
 
             GetNodeMap();
         }
+        /// <summary>
+        /// 用于序列化
+        /// </summary>
+        public FGraph() { throw new NotImplementedException(); }
 
         #region ---- FMap 抽象函数功能 ----
         [Obsolete]
@@ -333,34 +337,16 @@ namespace FocusTree.Focus
         }
         #endregion
 
-        public FGraphStruct GetStruct()
-        {
-            return new FGraphStruct(Nodes.Values.ToArray(), Relations, LevelNodeCount);
-        }
-    }
-    public struct FGraphStruct : IXmlSerializable
-    {
-        // -- 以下参数按序列化顺序排序 --
-        public FMapNode[] Nodes { get; init; }
-        public Dictionary<int, List<NodeRelation>> Relations { get; init; }
-        public Dictionary<int, int> LevelNodeCount { get; init; }
-        // -- 
-        public FGraphStruct(
-            FMapNode[] nodes,
-            Dictionary<int, List<NodeRelation>> relations,
-            Dictionary<int, int> levelNodeCount
-            )
-        {
-            Nodes = nodes;
-            Relations = relations;
-            LevelNodeCount = levelNodeCount;
-        }
-
+        #region ---- 序列化方法 ----
         // -- 序列化工具 --
         static XmlSerializer FData_serial = new(typeof(FData));
         static XmlSerializerNamespaces NullXmlNameSpace = new(new XmlQualifiedName[] { new XmlQualifiedName("", "") });
 
         // -- 序列化方法 --
+        /// <summary>
+        /// 序列化预留方法，默认返回 null
+        /// </summary>
+        /// <returns></returns>
         public XmlSchema GetSchema()
         {
             return null;
@@ -381,11 +367,11 @@ namespace FocusTree.Focus
             {
                 writer.WriteStartElement("Node");
                 // <Node>
-                writer.WriteAttributeString("ID", node.ID.ToString());
-                writer.WriteAttributeString("Level", node.Level.ToString());
+                writer.WriteAttributeString("ID", node.Key.ToString());
+                writer.WriteAttributeString("Level", node.Value.Level.ToString());
                 // <Data> 序列化 FData (国策节点数据)
                 writer.WriteStartElement("Data");
-                FData_serial.Serialize(writer, node.FocusData, NullXmlNameSpace);
+                FData_serial.Serialize(writer, node.Value.FocusData, NullXmlNameSpace);
                 writer.WriteEndElement();
                 // </Data>
                 writer.WriteEndElement();
@@ -404,7 +390,7 @@ namespace FocusTree.Focus
                 writer.WriteStartElement("RNode");
                 writer.WriteAttributeString("ID", r_pair.Key.ToString());
 
-                foreach (var relation in r_pair.Value.Where(x=>x.Type == FRelations.Require))
+                foreach (var relation in r_pair.Value.Where(x => x.Type == FRelations.Require))
                 {
                     // <[Relation类型]> 关系类型
                     writer.WriteElementString(relation.Type.ToString(), IdArrayToString(relation.IDs));
@@ -428,5 +414,6 @@ namespace FocusTree.Focus
             var split = ids.Split(',').Where(x => !string.IsNullOrWhiteSpace(x));
             return split.Select(x => int.Parse(x)).ToArray();
         }
+        #endregion
     }
 }
