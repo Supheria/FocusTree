@@ -83,6 +83,7 @@ namespace FocusTree.UI
             MouseDown += OnMouseDown;
             MouseMove += OnMouseMove;
             MouseUp += OnMouseUp;
+            MouseWheel+= OnMouseWheel;
         }
         /// <summary>
         /// 自动缩放居中
@@ -200,6 +201,11 @@ namespace FocusTree.UI
             {
                 DragMousePoint_Flag = false;
             }
+        }
+        private void OnMouseWheel(object sender, MouseEventArgs args)
+        {
+            GScale *= 1 + (args.Delta * 0.002f); // 对，这个数就是很小，不然鼠标一滚就飞了
+            Invalidate();
         }
         /// <summary>
         /// 获取矩形真实坐标在控件显示空间的投影 (显示坐标)
