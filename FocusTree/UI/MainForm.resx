@@ -67,9 +67,6 @@
     <value>286, 17</value>
   </metadata>
   <metadata name="main_contextMenu_blank.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>607, 17</value>
-  </metadata>
-  <metadata name="main_contextMenu_node.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>407, 19</value>
+    <value>409, 19</value>
   </metadata>
 </root>

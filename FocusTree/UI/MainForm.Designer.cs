@@ -49,14 +49,9 @@
             this.main_Menu_loc_camreset = new System.Windows.Forms.ToolStripMenuItem();
             this.main_contextMenu_blank = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.main_contextMenu_blank_add = new System.Windows.Forms.ToolStripMenuItem();
-            this.main_contextMenu_node_add = new System.Windows.Forms.ToolStripMenuItem();
-            this.main_contextMenu_node_edit = new System.Windows.Forms.ToolStripMenuItem();
-            this.main_contextMenu_node_remove = new System.Windows.Forms.ToolStripMenuItem();
-            this.main_contextMenu_node = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.main_StatusStrip.SuspendLayout();
             this.main_Menu.SuspendLayout();
             this.main_contextMenu_blank.SuspendLayout();
-            this.main_contextMenu_node.SuspendLayout();
             this.SuspendLayout();
             // 
             // main_StatusStrip
@@ -201,35 +196,8 @@
             // main_contextMenu_blank_add
             // 
             this.main_contextMenu_blank_add.Name = "main_contextMenu_blank_add";
-            this.main_contextMenu_blank_add.Size = new System.Drawing.Size(124, 22);
+            this.main_contextMenu_blank_add.Size = new System.Drawing.Size(180, 22);
             this.main_contextMenu_blank_add.Text = "添加国策";
-            // 
-            // main_contextMenu_node_add
-            // 
-            this.main_contextMenu_node_add.Name = "main_contextMenu_node_add";
-            this.main_contextMenu_node_add.Size = new System.Drawing.Size(180, 22);
-            this.main_contextMenu_node_add.Text = "添加国策";
-            // 
-            // main_contextMenu_node_edit
-            // 
-            this.main_contextMenu_node_edit.Name = "main_contextMenu_node_edit";
-            this.main_contextMenu_node_edit.Size = new System.Drawing.Size(180, 22);
-            this.main_contextMenu_node_edit.Text = "编辑国策";
-            // 
-            // main_contextMenu_node_remove
-            // 
-            this.main_contextMenu_node_remove.Name = "main_contextMenu_node_remove";
-            this.main_contextMenu_node_remove.Size = new System.Drawing.Size(180, 22);
-            this.main_contextMenu_node_remove.Text = "删除国策";
-            // 
-            // main_contextMenu_node
-            // 
-            this.main_contextMenu_node.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.main_contextMenu_node_add,
-            this.main_contextMenu_node_edit,
-            this.main_contextMenu_node_remove});
-            this.main_contextMenu_node.Name = "main_contextMenu_node";
-            this.main_contextMenu_node.Size = new System.Drawing.Size(181, 92);
             // 
             // MainForm
             // 
@@ -246,7 +214,6 @@
             this.main_Menu.ResumeLayout(false);
             this.main_Menu.PerformLayout();
             this.main_contextMenu_blank.ResumeLayout(false);
-            this.main_contextMenu_node.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -274,9 +241,5 @@
         private ToolStripMenuItem main_contextMenu_blank_add;
         private ToolStripMenuItem main_Menu_loc;
         private ToolStripMenuItem main_Menu_loc_camreset;
-        private ToolStripMenuItem main_contextMenu_node_add;
-        private ToolStripMenuItem main_contextMenu_node_edit;
-        private ToolStripMenuItem main_contextMenu_node_remove;
-        private ContextMenuStrip main_contextMenu_node;
     }
 }
