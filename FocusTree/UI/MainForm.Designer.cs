@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.main_StatusStrip = new System.Windows.Forms.StatusStrip();
             this.main_StatusStrip_filename = new System.Windows.Forms.ToolStripStatusLabel();
             this.main_ProgressBar = new System.Windows.Forms.ToolStripProgressBar();
@@ -47,11 +46,10 @@
             this.main_Menu_edit_redo = new System.Windows.Forms.ToolStripMenuItem();
             this.main_Menu_loc = new System.Windows.Forms.ToolStripMenuItem();
             this.main_Menu_loc_camreset = new System.Windows.Forms.ToolStripMenuItem();
-            this.main_contextMenu_blank = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.main_contextMenu_blank_add = new System.Windows.Forms.ToolStripMenuItem();
+            this.main_Menu_node = new System.Windows.Forms.ToolStripMenuItem();
+            this.main_Menu_node_add = new System.Windows.Forms.ToolStripMenuItem();
             this.main_StatusStrip.SuspendLayout();
             this.main_Menu.SuspendLayout();
-            this.main_contextMenu_blank.SuspendLayout();
             this.SuspendLayout();
             // 
             // main_StatusStrip
@@ -92,7 +90,8 @@
             this.main_Menu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.main_Menu_file,
             this.main_Menu_edit,
-            this.main_Menu_loc});
+            this.main_Menu_loc,
+            this.main_Menu_node});
             this.main_Menu.Location = new System.Drawing.Point(0, 0);
             this.main_Menu.Name = "main_Menu";
             this.main_Menu.Size = new System.Drawing.Size(784, 25);
@@ -186,18 +185,19 @@
             this.main_Menu_loc_camreset.Text = "重置相机位置";
             this.main_Menu_loc_camreset.Click += new System.EventHandler(this.main_Menu_loc_camreset_Click);
             // 
-            // main_contextMenu_blank
+            // main_Menu_node
             // 
-            this.main_contextMenu_blank.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.main_contextMenu_blank_add});
-            this.main_contextMenu_blank.Name = "main_contextMenu_blank";
-            this.main_contextMenu_blank.Size = new System.Drawing.Size(125, 26);
+            this.main_Menu_node.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.main_Menu_node_add});
+            this.main_Menu_node.Name = "main_Menu_node";
+            this.main_Menu_node.Size = new System.Drawing.Size(44, 21);
+            this.main_Menu_node.Text = "节点";
             // 
-            // main_contextMenu_blank_add
+            // main_Menu_node_add
             // 
-            this.main_contextMenu_blank_add.Name = "main_contextMenu_blank_add";
-            this.main_contextMenu_blank_add.Size = new System.Drawing.Size(180, 22);
-            this.main_contextMenu_blank_add.Text = "添加国策";
+            this.main_Menu_node_add.Name = "main_Menu_node_add";
+            this.main_Menu_node_add.Size = new System.Drawing.Size(180, 22);
+            this.main_Menu_node_add.Text = "添加新节点";
             // 
             // MainForm
             // 
@@ -213,7 +213,6 @@
             this.main_StatusStrip.PerformLayout();
             this.main_Menu.ResumeLayout(false);
             this.main_Menu.PerformLayout();
-            this.main_contextMenu_blank.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -237,9 +236,9 @@
         private ToolStripMenuItem main_Menu_edit_undo;
         private ToolStripMenuItem main_Menu_edit_redo;
         private ToolStripStatusLabel main_StatusStrip_status;
-        private ContextMenuStrip main_contextMenu_blank;
-        private ToolStripMenuItem main_contextMenu_blank_add;
         private ToolStripMenuItem main_Menu_loc;
         private ToolStripMenuItem main_Menu_loc_camreset;
+        private ToolStripMenuItem main_Menu_node;
+        private ToolStripMenuItem main_Menu_node_add;
     }
 }
