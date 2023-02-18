@@ -48,9 +48,15 @@ namespace FocusTree.UI
         readonly SolidBrush NodeBG = new(Color.FromArgb(80, Color.Aqua));
 
         /// <summary>
-        /// 节点连接线条
+        /// 节点连接线条（每个依赖组使用单独的颜色）
         /// </summary>
-        readonly Pen NodeLink = new(Color.FromArgb(100, Color.Cyan), 1.5f);
+        readonly Pen[] NodeRequire = new Pen[]{
+            new Pen(Color.FromArgb(100, Color.Cyan), 1.5f),
+            new Pen(Color.FromArgb(100, Color.Yellow), 1.5f),
+            new Pen(Color.FromArgb(100, Color.Green), 1.5f),
+            new Pen(Color.FromArgb(100, Color.Orange), 1.5f),
+            new Pen(Color.FromArgb(100, Color.Purple), 1.5f)
+        };
         /// <summary>
         /// 节点间距 + 节点尺寸
         /// </summary>
@@ -84,8 +90,8 @@ namespace FocusTree.UI
             var visual_size = VectorToVisualVector(new Vector2(bounds.Z + 1, bounds.W + 1));
             float px = Size.Width / visual_size.X, py = Size.Height / visual_size.Y;
 
-            // 我也不知道为什么这里要 *0.85，直接放结果缩放的尺寸会装不下，*0.85 能放下，而且边缘有空余
-            GScale = Math.Min(px, py) * 0.85f; 
+            // 我也不知道为什么这里要 *0.90，直接放结果缩放的尺寸会装不下，*0.90 能放下，而且边缘有空余
+            GScale = Math.Min(px, py) * 0.90f; 
         }
 
         private void OnInValidated(object sender, EventArgs args)
@@ -116,21 +122,25 @@ namespace FocusTree.UI
             {
                 var id = mapEnumer.Current.Key;
                 var rect = RectOnScreenRect(NodeMapToVisualMap(mapEnumer.Current.Value));
-                var links = Graph.GetNodeRelations(id).Where(x => x.Type == NodeRelation.FRelations.Linked);
-                foreach (var link in links)
+                // 这里应该去连接依赖的节点，而不是去对子节点连接
+                var requires = Graph.GetNodeRelations(id).Where(x => x.Type == NodeRelation.FRelations.Require);
+
+                int requireColor = 0; //不同需求要变色
+                foreach (var require in requires)
                 {
-                    foreach (var link_id in link.IDs)
+                    foreach (var require_id in require.IDs)
                     {
-                        var torect = RectOnScreenRect(NodeMapToVisualMap(Graph.GetNodeMapElement(link_id)));
+                        var torect = RectOnScreenRect(NodeMapToVisualMap(Graph.GetNodeMapElement(require_id)));
 
                         // 如果起始点和终点都不在画面里，就不需要绘制
                         if (!(IsRectInScreen(rect) || IsRectInScreen(torect))) { continue; }
 
-                        var startLoc = new Point(rect.X + rect.Width / 2, rect.Y + rect.Height); // x -> 中间, y -> 下方
-                        var endLoc = new Point(torect.X + torect.Width / 2, torect.Y); // x -> 中间, y -> 上方
+                        var startLoc = new Point(rect.X + rect.Width / 2, rect.Y); // x -> 中间, y -> 下方
+                        var endLoc = new Point(torect.X + torect.Width / 2, torect.Y + torect.Height); // x -> 中间, y -> 上方
 
-                        g.DrawLine(NodeLink, startLoc, endLoc);
+                        g.DrawLine(NodeRequire[requireColor], startLoc, endLoc);
                     }
+                    requireColor++;
                 }
             }
             g.Flush(); g.Dispose();

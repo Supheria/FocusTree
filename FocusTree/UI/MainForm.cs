@@ -20,6 +20,9 @@ namespace FocusTree.UI
             Display = new DisplayBox(this);
             InitializeComponent();
             Controls.Add(Display);
+            main_StatusStrip_filename.Text = "等待打开文件";
+            main_StatusStrip_status.Text = "";
+            main_Openfile.FileName = "";
         }
 
         private void main_Menu_file_open_csv_Click(object sender, EventArgs e)
@@ -31,6 +34,7 @@ namespace FocusTree.UI
                 Display.Graph = new FGraph(new FTree(main_Openfile.FileName));
                 Display.RelocateCenter();
                 Display.Invalidate();
+                main_StatusStrip_filename.Text = Path.GetFileNameWithoutExtension(main_Openfile.FileName);
             }
         }
 
