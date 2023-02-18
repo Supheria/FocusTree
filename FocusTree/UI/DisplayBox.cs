@@ -17,7 +17,7 @@ namespace FocusTree.UI
         /// <summary>
         /// 父窗体对象（用于定位自动尺寸的位置）
         /// </summary>
-        MainForm ParentForm;
+        readonly MainForm ParentForm;
         /// <summary>
         /// 数据存储结构
         /// </summary>
@@ -31,26 +31,30 @@ namespace FocusTree.UI
         /// 默认的字体
         /// </summary>
         const string GFont = "黑体";
+
         /// <summary>
         /// 默认字体样式
         /// </summary>
-        StringFormat GFontFormat = new();
+        readonly StringFormat GFontFormat = new();
+
         /// <summary>
         /// 节点文字颜色
         /// </summary>
-        SolidBrush NodeFG = new(Color.Black);
+        readonly SolidBrush NodeFG = new(Color.Black);
+
         /// <summary>
         /// 节点背景矩形颜色
         /// </summary>
-        SolidBrush NodeBG = new(Color.FromArgb(80, Color.Aqua));
+        readonly SolidBrush NodeBG = new(Color.FromArgb(80, Color.Aqua));
+
         /// <summary>
         /// 节点连接线条
         /// </summary>
-        Pen NodeLink = new(Color.FromArgb(100, Color.Cyan), 1.5f);
+        readonly Pen NodeLink = new(Color.FromArgb(100, Color.Cyan), 1.5f);
         /// <summary>
         /// 节点间距 + 节点尺寸
         /// </summary>
-        Rectangle NodePaddingSize = new(65, 45, 55, 35);
+        Rectangle NodePaddingSize = new(65, 65, 55, 35);
         /// <summary>
         /// 默认相机位置（画面中心）
         /// </summary>

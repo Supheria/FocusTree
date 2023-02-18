@@ -24,9 +24,14 @@ namespace FocusTree.UI
 
         private void main_Menu_file_open_csv_Click(object sender, EventArgs e)
         {
-            Display.Graph = new FGraph(new FTree("人类财阀联合.csv"));
-            Display.RelocateCenter(); 
-            Display.Invalidate();
+            main_Openfile.Filter = "csv files (.csv) |*.csv";
+            var result = main_Openfile.ShowDialog();
+            if(result == DialogResult.OK)
+            {
+                Display.Graph = new FGraph(new FTree(main_Openfile.FileName));
+                Display.RelocateCenter();
+                Display.Invalidate();
+            }
         }
 
         private void main_Menu_loc_camreset_Click(object sender, EventArgs e)
