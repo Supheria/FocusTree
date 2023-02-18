@@ -28,155 +28,218 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.文件ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.编辑ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.新建ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.打开ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.csv文件ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.xml文件ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.保存ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.另存为ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.撤回ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.重做ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.statusStrip1.SuspendLayout();
-            this.menuStrip1.SuspendLayout();
+            this.components = new System.ComponentModel.Container();
+            this.main_StatusStrip = new System.Windows.Forms.StatusStrip();
+            this.main_StatusStrip_filename = new System.Windows.Forms.ToolStripStatusLabel();
+            this.main_ProgressBar = new System.Windows.Forms.ToolStripProgressBar();
+            this.main_Openfile = new System.Windows.Forms.OpenFileDialog();
+            this.main_Menu = new System.Windows.Forms.MenuStrip();
+            this.main_Menu_file = new System.Windows.Forms.ToolStripMenuItem();
+            this.main_Menu_edit = new System.Windows.Forms.ToolStripMenuItem();
+            this.main_Menu_file_new = new System.Windows.Forms.ToolStripMenuItem();
+            this.main_Menu_file_open = new System.Windows.Forms.ToolStripMenuItem();
+            this.main_Menu_file_open_csv = new System.Windows.Forms.ToolStripMenuItem();
+            this.main_Menu_file_open_xml = new System.Windows.Forms.ToolStripMenuItem();
+            this.main_Menu_file_save = new System.Windows.Forms.ToolStripMenuItem();
+            this.main_Menu_file_saveas = new System.Windows.Forms.ToolStripMenuItem();
+            this.main_Menu_edit_undo = new System.Windows.Forms.ToolStripMenuItem();
+            this.main_Menu_edit_redo = new System.Windows.Forms.ToolStripMenuItem();
+            this.main_StatusStrip_status = new System.Windows.Forms.ToolStripStatusLabel();
+            this.main_contextMenu_node = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.main_contextMenu_node_add = new System.Windows.Forms.ToolStripMenuItem();
+            this.main_contextMenu_node_edit = new System.Windows.Forms.ToolStripMenuItem();
+            this.main_contextMenu_node_remove = new System.Windows.Forms.ToolStripMenuItem();
+            this.main_contextMenu_blank = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.main_contextMenu_blank_add = new System.Windows.Forms.ToolStripMenuItem();
+            this.main_picturebox = new System.Windows.Forms.PictureBox();
+            this.main_StatusStrip.SuspendLayout();
+            this.main_Menu.SuspendLayout();
+            this.main_contextMenu_node.SuspendLayout();
+            this.main_contextMenu_blank.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.main_picturebox)).BeginInit();
             this.SuspendLayout();
             // 
-            // statusStrip1
+            // main_StatusStrip
             // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabel1,
-            this.toolStripProgressBar1,
-            this.toolStripStatusLabel2});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 428);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(800, 22);
-            this.statusStrip1.TabIndex = 0;
-            this.statusStrip1.Text = "statusStrip1";
+            this.main_StatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.main_StatusStrip_filename,
+            this.main_ProgressBar,
+            this.main_StatusStrip_status});
+            this.main_StatusStrip.Location = new System.Drawing.Point(0, 539);
+            this.main_StatusStrip.Name = "main_StatusStrip";
+            this.main_StatusStrip.Size = new System.Drawing.Size(784, 22);
+            this.main_StatusStrip.TabIndex = 0;
+            this.main_StatusStrip.Text = "statusStrip1";
             // 
-            // toolStripStatusLabel1
+            // main_StatusStrip_filename
             // 
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(131, 17);
-            this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
+            this.main_StatusStrip_filename.Name = "main_StatusStrip_filename";
+            this.main_StatusStrip_filename.Size = new System.Drawing.Size(53, 17);
+            this.main_StatusStrip_filename.Text = "加载中...";
             // 
-            // toolStripProgressBar1
+            // main_ProgressBar
             // 
-            this.toolStripProgressBar1.Name = "toolStripProgressBar1";
-            this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 16);
+            this.main_ProgressBar.Name = "main_ProgressBar";
+            this.main_ProgressBar.Size = new System.Drawing.Size(100, 16);
             // 
-            // openFileDialog1
+            // main_Openfile
             // 
-            this.openFileDialog1.FileName = "openFileDialog1";
+            this.main_Openfile.FileName = "openFileDialog1";
             // 
-            // menuStrip1
+            // main_Menu
             // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.文件ToolStripMenuItem,
-            this.编辑ToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(800, 25);
-            this.menuStrip1.TabIndex = 1;
-            this.menuStrip1.Text = "menuStrip1";
+            this.main_Menu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.main_Menu_file,
+            this.main_Menu_edit});
+            this.main_Menu.Location = new System.Drawing.Point(0, 0);
+            this.main_Menu.Name = "main_Menu";
+            this.main_Menu.Size = new System.Drawing.Size(784, 25);
+            this.main_Menu.TabIndex = 1;
+            this.main_Menu.Text = "menuStrip1";
             // 
-            // 文件ToolStripMenuItem
+            // main_Menu_file
             // 
-            this.文件ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.新建ToolStripMenuItem,
-            this.打开ToolStripMenuItem,
-            this.保存ToolStripMenuItem,
-            this.另存为ToolStripMenuItem});
-            this.文件ToolStripMenuItem.Name = "文件ToolStripMenuItem";
-            this.文件ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
-            this.文件ToolStripMenuItem.Text = "文件";
+            this.main_Menu_file.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.main_Menu_file_new,
+            this.main_Menu_file_open,
+            this.main_Menu_file_save,
+            this.main_Menu_file_saveas});
+            this.main_Menu_file.Name = "main_Menu_file";
+            this.main_Menu_file.Size = new System.Drawing.Size(44, 21);
+            this.main_Menu_file.Text = "文件";
             // 
-            // 编辑ToolStripMenuItem
+            // main_Menu_edit
             // 
-            this.编辑ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.撤回ToolStripMenuItem,
-            this.重做ToolStripMenuItem});
-            this.编辑ToolStripMenuItem.Name = "编辑ToolStripMenuItem";
-            this.编辑ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
-            this.编辑ToolStripMenuItem.Text = "编辑";
+            this.main_Menu_edit.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.main_Menu_edit_undo,
+            this.main_Menu_edit_redo});
+            this.main_Menu_edit.Name = "main_Menu_edit";
+            this.main_Menu_edit.Size = new System.Drawing.Size(44, 21);
+            this.main_Menu_edit.Text = "编辑";
             // 
-            // 新建ToolStripMenuItem
+            // main_Menu_file_new
             // 
-            this.新建ToolStripMenuItem.Name = "新建ToolStripMenuItem";
-            this.新建ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.新建ToolStripMenuItem.Text = "新建";
+            this.main_Menu_file_new.Name = "main_Menu_file_new";
+            this.main_Menu_file_new.Size = new System.Drawing.Size(180, 22);
+            this.main_Menu_file_new.Text = "新建";
             // 
-            // 打开ToolStripMenuItem
+            // main_Menu_file_open
             // 
-            this.打开ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.csv文件ToolStripMenuItem,
-            this.xml文件ToolStripMenuItem});
-            this.打开ToolStripMenuItem.Name = "打开ToolStripMenuItem";
-            this.打开ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.打开ToolStripMenuItem.Text = "打开";
+            this.main_Menu_file_open.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.main_Menu_file_open_csv,
+            this.main_Menu_file_open_xml});
+            this.main_Menu_file_open.Name = "main_Menu_file_open";
+            this.main_Menu_file_open.Size = new System.Drawing.Size(180, 22);
+            this.main_Menu_file_open.Text = "打开";
             // 
-            // csv文件ToolStripMenuItem
+            // main_Menu_file_open_csv
             // 
-            this.csv文件ToolStripMenuItem.Name = "csv文件ToolStripMenuItem";
-            this.csv文件ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.csv文件ToolStripMenuItem.Text = ".csv 文件";
+            this.main_Menu_file_open_csv.Name = "main_Menu_file_open_csv";
+            this.main_Menu_file_open_csv.Size = new System.Drawing.Size(180, 22);
+            this.main_Menu_file_open_csv.Text = ".csv 文件";
             // 
-            // xml文件ToolStripMenuItem
+            // main_Menu_file_open_xml
             // 
-            this.xml文件ToolStripMenuItem.Name = "xml文件ToolStripMenuItem";
-            this.xml文件ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.xml文件ToolStripMenuItem.Text = ".xml 文件";
+            this.main_Menu_file_open_xml.Name = "main_Menu_file_open_xml";
+            this.main_Menu_file_open_xml.Size = new System.Drawing.Size(180, 22);
+            this.main_Menu_file_open_xml.Text = ".xml 文件";
             // 
-            // 保存ToolStripMenuItem
+            // main_Menu_file_save
             // 
-            this.保存ToolStripMenuItem.Name = "保存ToolStripMenuItem";
-            this.保存ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.保存ToolStripMenuItem.Text = "保存";
+            this.main_Menu_file_save.Name = "main_Menu_file_save";
+            this.main_Menu_file_save.Size = new System.Drawing.Size(180, 22);
+            this.main_Menu_file_save.Text = "保存";
             // 
-            // 另存为ToolStripMenuItem
+            // main_Menu_file_saveas
             // 
-            this.另存为ToolStripMenuItem.Name = "另存为ToolStripMenuItem";
-            this.另存为ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.另存为ToolStripMenuItem.Text = "另存为";
+            this.main_Menu_file_saveas.Name = "main_Menu_file_saveas";
+            this.main_Menu_file_saveas.Size = new System.Drawing.Size(180, 22);
+            this.main_Menu_file_saveas.Text = "另存为";
             // 
-            // 撤回ToolStripMenuItem
+            // main_Menu_edit_undo
             // 
-            this.撤回ToolStripMenuItem.Name = "撤回ToolStripMenuItem";
-            this.撤回ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.撤回ToolStripMenuItem.Text = "撤回";
+            this.main_Menu_edit_undo.Name = "main_Menu_edit_undo";
+            this.main_Menu_edit_undo.Size = new System.Drawing.Size(180, 22);
+            this.main_Menu_edit_undo.Text = "撤回";
             // 
-            // 重做ToolStripMenuItem
+            // main_Menu_edit_redo
             // 
-            this.重做ToolStripMenuItem.Name = "重做ToolStripMenuItem";
-            this.重做ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.重做ToolStripMenuItem.Text = "重做";
+            this.main_Menu_edit_redo.Name = "main_Menu_edit_redo";
+            this.main_Menu_edit_redo.Size = new System.Drawing.Size(180, 22);
+            this.main_Menu_edit_redo.Text = "重做";
             // 
-            // toolStripStatusLabel2
+            // main_StatusStrip_status
             // 
-            this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
-            this.toolStripStatusLabel2.Size = new System.Drawing.Size(131, 17);
-            this.toolStripStatusLabel2.Text = "toolStripStatusLabel2";
+            this.main_StatusStrip_status.Name = "main_StatusStrip_status";
+            this.main_StatusStrip_status.Size = new System.Drawing.Size(53, 17);
+            this.main_StatusStrip_status.Text = "加载中...";
+            // 
+            // main_contextMenu_node
+            // 
+            this.main_contextMenu_node.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.main_contextMenu_node_add,
+            this.main_contextMenu_node_edit,
+            this.main_contextMenu_node_remove});
+            this.main_contextMenu_node.Name = "main_contextMenu_node";
+            this.main_contextMenu_node.Size = new System.Drawing.Size(125, 70);
+            // 
+            // main_contextMenu_node_add
+            // 
+            this.main_contextMenu_node_add.Name = "main_contextMenu_node_add";
+            this.main_contextMenu_node_add.Size = new System.Drawing.Size(124, 22);
+            this.main_contextMenu_node_add.Text = "添加国策";
+            // 
+            // main_contextMenu_node_edit
+            // 
+            this.main_contextMenu_node_edit.Name = "main_contextMenu_node_edit";
+            this.main_contextMenu_node_edit.Size = new System.Drawing.Size(124, 22);
+            this.main_contextMenu_node_edit.Text = "编辑国策";
+            // 
+            // main_contextMenu_node_remove
+            // 
+            this.main_contextMenu_node_remove.Name = "main_contextMenu_node_remove";
+            this.main_contextMenu_node_remove.Size = new System.Drawing.Size(124, 22);
+            this.main_contextMenu_node_remove.Text = "删除国策";
+            // 
+            // main_contextMenu_blank
+            // 
+            this.main_contextMenu_blank.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.main_contextMenu_blank_add});
+            this.main_contextMenu_blank.Name = "main_contextMenu_blank";
+            this.main_contextMenu_blank.Size = new System.Drawing.Size(125, 26);
+            // 
+            // main_contextMenu_blank_add
+            // 
+            this.main_contextMenu_blank_add.Name = "main_contextMenu_blank_add";
+            this.main_contextMenu_blank_add.Size = new System.Drawing.Size(124, 22);
+            this.main_contextMenu_blank_add.Text = "添加国策";
+            // 
+            // main_picturebox
+            // 
+            this.main_picturebox.Location = new System.Drawing.Point(173, 163);
+            this.main_picturebox.Name = "main_picturebox";
+            this.main_picturebox.Size = new System.Drawing.Size(403, 222);
+            this.main_picturebox.TabIndex = 4;
+            this.main_picturebox.TabStop = false;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.statusStrip1);
-            this.Controls.Add(this.menuStrip1);
-            this.MainMenuStrip = this.menuStrip1;
+            this.ClientSize = new System.Drawing.Size(784, 561);
+            this.Controls.Add(this.main_picturebox);
+            this.Controls.Add(this.main_StatusStrip);
+            this.Controls.Add(this.main_Menu);
+            this.MainMenuStrip = this.main_Menu;
             this.Name = "MainForm";
             this.Text = "MainForm";
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
+            this.main_StatusStrip.ResumeLayout(false);
+            this.main_StatusStrip.PerformLayout();
+            this.main_Menu.ResumeLayout(false);
+            this.main_Menu.PerformLayout();
+            this.main_contextMenu_node.ResumeLayout(false);
+            this.main_contextMenu_blank.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.main_picturebox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -184,21 +247,28 @@
 
         #endregion
 
-        private StatusStrip statusStrip1;
-        private ToolStripStatusLabel toolStripStatusLabel1;
-        private ToolStripProgressBar toolStripProgressBar1;
-        private OpenFileDialog openFileDialog1;
-        private MenuStrip menuStrip1;
-        private ToolStripMenuItem 文件ToolStripMenuItem;
-        private ToolStripMenuItem 新建ToolStripMenuItem;
-        private ToolStripMenuItem 打开ToolStripMenuItem;
-        private ToolStripMenuItem csv文件ToolStripMenuItem;
-        private ToolStripMenuItem xml文件ToolStripMenuItem;
-        private ToolStripMenuItem 保存ToolStripMenuItem;
-        private ToolStripMenuItem 另存为ToolStripMenuItem;
-        private ToolStripMenuItem 编辑ToolStripMenuItem;
-        private ToolStripMenuItem 撤回ToolStripMenuItem;
-        private ToolStripMenuItem 重做ToolStripMenuItem;
-        private ToolStripStatusLabel toolStripStatusLabel2;
+        private StatusStrip main_StatusStrip;
+        private ToolStripStatusLabel main_StatusStrip_filename;
+        private ToolStripProgressBar main_ProgressBar;
+        private OpenFileDialog main_Openfile;
+        private MenuStrip main_Menu;
+        private ToolStripMenuItem main_Menu_file;
+        private ToolStripMenuItem main_Menu_file_new;
+        private ToolStripMenuItem main_Menu_file_open;
+        private ToolStripMenuItem main_Menu_file_open_csv;
+        private ToolStripMenuItem main_Menu_file_open_xml;
+        private ToolStripMenuItem main_Menu_file_save;
+        private ToolStripMenuItem main_Menu_file_saveas;
+        private ToolStripMenuItem main_Menu_edit;
+        private ToolStripMenuItem main_Menu_edit_undo;
+        private ToolStripMenuItem main_Menu_edit_redo;
+        private ToolStripStatusLabel main_StatusStrip_status;
+        private ContextMenuStrip main_contextMenu_node;
+        private ToolStripMenuItem main_contextMenu_node_add;
+        private ToolStripMenuItem main_contextMenu_node_edit;
+        private ToolStripMenuItem main_contextMenu_node_remove;
+        private ContextMenuStrip main_contextMenu_blank;
+        private ToolStripMenuItem main_contextMenu_blank_add;
+        private PictureBox main_picturebox;
     }
 }
