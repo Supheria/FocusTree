@@ -404,7 +404,7 @@ namespace FocusTree.Focus
                 writer.WriteStartElement("RNode");
                 writer.WriteAttributeString("ID", r_pair.Key.ToString());
 
-                foreach (var relation in r_pair.Value.OrderBy(x => x.Type))
+                foreach (var relation in r_pair.Value.Where(x=>x.Type == FRelations.Require))
                 {
                     // <[Relation类型]> 关系类型
                     writer.WriteElementString(relation.Type.ToString(), IdArrayToString(relation.IDs));
