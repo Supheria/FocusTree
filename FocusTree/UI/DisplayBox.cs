@@ -158,6 +158,19 @@ namespace FocusTree.UI
             Update();
         }
         /// <summary>
+        /// 当节点被右键时响应的事件
+        /// </summary>
+        /// <param name="id">被点击的节点ID</param>
+        private void NodeRightClicked(int id)
+        {
+            var fnode = Graph.GetMapNodeById(id);
+            MessageBox.Show($"{fnode.FocusData.Name}\n\n" +
+                $"{fnode.FocusData.Effects}\n\n" +
+                $"实施 {fnode.FocusData.Duration} 天\n\n" +
+                $"{fnode.FocusData.Descript}\n\n" +
+                $"{fnode.FocusData.Ps}");
+        }
+        /// <summary>
         /// 绘图区域尺寸变更时触发
         /// </summary>
         /// <param name="sender"></param>
@@ -174,6 +187,31 @@ namespace FocusTree.UI
                 DragMousePoint_Flag = true;
                 DragMousePoint = args.Location;
             }
+            // 对节点打开右键菜单
+            if((args.Button & MouseButtons.Right) == MouseButtons.Right)
+            {
+                var point = ClickedLocation(args.Location);
+                int? clickedNode = GetFirstNodeClicked(point);
+                if (clickedNode != null) { NodeRightClicked(clickedNode.Value); }
+            }
+        }
+        /// <summary>
+        /// 返回第一个被点击的节点ID，如果没有节点被点击则返回 null
+        /// </summary>
+        /// <param name="location">点击的真实坐标 (不是绘制坐标) </param>
+        /// <returns>节点ID 或 null</returns>
+        private int? GetFirstNodeClicked(Point location)
+        {
+            var mapEnumer = Graph.GetNodeMapEnumerator();
+            while (mapEnumer.MoveNext())
+            {
+                var rect = NodeMapToVisualMap(mapEnumer.Current.Value);
+                if (rect.Contains(location))
+                {
+                    return mapEnumer.Current.Key;
+                }
+            }
+            return null;
         }
         private void OnMouseMove(object sender, MouseEventArgs args)
         {
