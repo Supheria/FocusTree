@@ -4,6 +4,7 @@
 using FocusTree;
 using FocusTree.Focus;
 using FocusTree.Tree;
+using FocusTree.UI;
 using System.Drawing;
 using System.IO;
 using System.Net;
@@ -19,11 +20,14 @@ internal static class Program
     static void Main()
     {
         //Test.FMapTest();
-        Test.FormInterationTest();
+        //Test.FormInterationTest();
+        Application.Run(new MainForm());
 
         //Application.EnableVisualStyles();
         //Application.SetCompatibleTextRenderingDefault(false);
         //Application.Run(new MainForm());
+
+
     }
 }
 

@@ -1,5 +1,6 @@
 ﻿using FocusTree.Tree;
 using System.Text;
+using System.Windows.Forms.Design.Behavior;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
@@ -32,6 +33,11 @@ namespace FocusTree.Focus
         private Dictionary<int, int> LevelNodeCount = new();
 
         /// <summary>
+        /// 节点显示位置
+        /// </summary>
+        private Dictionary<int, Point> NodeMap;
+
+        /// <summary>
         /// 将 FTree 转换为 FGraph
         /// </summary>
         /// <param name="tree">国策树</param>
@@ -59,9 +65,12 @@ namespace FocusTree.Focus
                     Relations[child].Add(new NodeRelation(FRelations.Require, new int[] { parent_id }));
                 }
             }
+
+            GetNodeMap();
         }
 
         #region ---- FMap 抽象函数功能 ----
+        [Obsolete]
         public override HashSet<FMapNode> GetAllMapNodes()
         {
             var set = new HashSet<FMapNode>();
@@ -184,6 +193,46 @@ namespace FocusTree.Focus
         #endregion
 
         #region ---- 特有方法 ----
+        /// <summary>
+        /// 获取 Nodes 的迭代器
+        /// </summary>
+        /// <returns>Nodes 的迭代器</returns>
+        public IEnumerator<KeyValuePair<int, FMapNode>> GetNodesEnumerator() { return Nodes.GetEnumerator(); }
+        /// <summary>
+        /// 获取 NodeMap 的迭代器
+        /// </summary>
+        /// <returns>NodeMap 的迭代器</returns>
+        public IEnumerator<KeyValuePair<int, Point>> GetNodeMapEnumerator() { return NodeMap.GetEnumerator(); }
+        /// <summary>
+        /// 获取 NodeMap 中指定的节点矩形信息
+        /// </summary>
+        /// <param name="index">节点ID</param>
+        /// <returns>矩形信息</returns>
+        public Point GetNodeMapElement(int index) { return NodeMap[index]; }
+        private Dictionary<int, Point> GetNodeMap()
+        {
+            NodeMap = new Dictionary<int, Point>();
+            var branches = GetBranches(GetLevelNodes(0).Select(x => x.ID).ToArray(), true, true);
+            var visited = new HashSet<int>();
+            var width = branches.Count;
+            var height = branches.Max(x => x.Length);
+
+            for (int x = 0; x < branches.Count; x++)
+            {
+                var branch = branches[x];
+                for (int y = 0; y < branch.Length; y++)
+                {
+                    var id = branch[y];
+                    if (visited.Add(id))
+                    {
+                        var point = new Point(x, y);
+                        NodeMap[id] = point;
+                    }
+                }
+            }
+            return NodeMap;
+        }
+
         public List<int[]> GetBranches(int id, bool sort = false, bool reverse = false)
         {
             var branches = new List<int[]>();
