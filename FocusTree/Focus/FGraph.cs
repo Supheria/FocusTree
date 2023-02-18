@@ -1,13 +1,11 @@
 ﻿using FocusTree.Tree;
 using System.Numerics;
 using System.Text;
-using System.Windows.Forms.Design.Behavior;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using static FocusTree.Focus.NodeRelation;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TreeView;
 
 namespace FocusTree.Focus
 {
@@ -249,15 +247,15 @@ namespace FocusTree.Focus
             while (enumer.MoveNext())
             {
                 var p = enumer.Current.Value;
-                if (first) { bounds = new RectangleF(p.X,p.Y,p.X,p.Y); first = false; continue; }
+                if (first) { bounds = new RectangleF(p.X, p.Y, p.X, p.Y); first = false; continue; }
                 if (p.X < bounds.X) { bounds.X = p.X; }
                 if (p.X > bounds.Width) { bounds.Width = p.X; }
                 if (p.Y < bounds.Y) { bounds.Y = p.Y; }
                 if (p.Y > bounds.Height) { bounds.Height = p.Y; }
             }
             return new Vector4(
-                (bounds.X + bounds.Width) / 2, 
-                (bounds.Y + bounds.Height) / 2, 
+                (bounds.X + bounds.Width) / 2,
+                (bounds.Y + bounds.Height) / 2,
                 bounds.Width - bounds.X,
                 bounds.Height - bounds.Y
                 );

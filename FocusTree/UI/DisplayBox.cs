@@ -18,6 +18,7 @@ namespace FocusTree.UI
         /// 父窗体对象（用于定位自动尺寸的位置）
         /// </summary>
         readonly MainForm ParentForm;
+        readonly NodeContextMenu PicNodeContextMenu;
         /// <summary>
         /// 数据存储结构
         /// </summary>
@@ -73,6 +74,7 @@ namespace FocusTree.UI
         public DisplayBox(MainForm parent)
         {
             ParentForm = parent;
+            PicNodeContextMenu = new NodeContextMenu(this);
             GFontFormat.Alignment = StringAlignment.Center;
             GFontFormat.LineAlignment = StringAlignment.Center;
             SizeMode = PictureBoxSizeMode.Zoom;
@@ -84,6 +86,20 @@ namespace FocusTree.UI
             MouseMove += OnMouseMove;
             MouseUp += OnMouseUp;
             MouseWheel+= OnMouseWheel;
+        }
+        /// <summary>
+        /// 获取当前的 FGraph 给其它类使用
+        /// </summary>
+        /// <returns>FGraph</returns>
+        public FGraph GetFGraph() { return Graph; }
+        /// <summary>
+        /// 当节点被右键时响应的事件
+        /// </summary>
+        /// <param name="id">被点击的节点ID</param>
+        private void NodeRightClicked(int id)
+        {
+            PicNodeContextMenu.NodeId = id;
+            PicNodeContextMenu.Show(Cursor.Position);
         }
         /// <summary>
         /// 自动缩放居中
@@ -156,19 +172,6 @@ namespace FocusTree.UI
             }
             g.Flush(); g.Dispose();
             Update();
-        }
-        /// <summary>
-        /// 当节点被右键时响应的事件
-        /// </summary>
-        /// <param name="id">被点击的节点ID</param>
-        private void NodeRightClicked(int id)
-        {
-            var fnode = Graph.GetMapNodeById(id);
-            MessageBox.Show($"{fnode.FocusData.Name}\n\n" +
-                $"{fnode.FocusData.Effects}\n\n" +
-                $"实施 {fnode.FocusData.Duration} 天\n\n" +
-                $"{fnode.FocusData.Descript}\n\n" +
-                $"{fnode.FocusData.Ps}");
         }
         /// <summary>
         /// 绘图区域尺寸变更时触发
