@@ -84,10 +84,15 @@ namespace FocusTree.UI
         /// <summary>
         /// 更新撤回和重做按钮是否可用的状态
         /// </summary>
-        private void main_Menu_edit_status_check()
+        public void main_Menu_edit_status_check()
         {
             main_Menu_edit_undo.Enabled = FHistory.HasPrev();
             main_Menu_edit_redo.Enabled = FHistory.HasNext();
+        }
+
+        private void main_Menu_edit_Click(object sender, EventArgs e)
+        {
+            main_Menu_edit_status_check();
         }
     }
 }

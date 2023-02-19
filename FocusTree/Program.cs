@@ -20,9 +20,9 @@ internal static class Program
     [STAThread]
     static void Main()
     {
-        Test.FMapTest();
+        //Test.FMapTest();
         //Test.FGraphToXmlTest();
-        //Application.Run(new MainForm());
+        Application.Run(new MainForm());
 
         //Application.EnableVisualStyles();
         //Application.SetCompatibleTextRenderingDefault(false);

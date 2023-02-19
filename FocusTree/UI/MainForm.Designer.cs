@@ -160,9 +160,11 @@
             this.main_Menu_edit.Name = "main_Menu_edit";
             this.main_Menu_edit.Size = new System.Drawing.Size(44, 21);
             this.main_Menu_edit.Text = "编辑";
+            this.main_Menu_edit.Click += new System.EventHandler(this.main_Menu_edit_Click);
             // 
             // main_Menu_edit_undo
             // 
+            this.main_Menu_edit_undo.Enabled = false;
             this.main_Menu_edit_undo.Name = "main_Menu_edit_undo";
             this.main_Menu_edit_undo.Size = new System.Drawing.Size(180, 22);
             this.main_Menu_edit_undo.Text = "撤回";
@@ -170,6 +172,7 @@
             // 
             // main_Menu_edit_redo
             // 
+            this.main_Menu_edit_redo.Enabled = false;
             this.main_Menu_edit_redo.Name = "main_Menu_edit_redo";
             this.main_Menu_edit_redo.Size = new System.Drawing.Size(180, 22);
             this.main_Menu_edit_redo.Text = "重做";

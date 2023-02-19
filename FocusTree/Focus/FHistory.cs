@@ -26,7 +26,7 @@ namespace FocusTree.Focus
         /// <returns>是否有下一个历史记录</returns>
         public static bool HasNext()
         {
-            return Index >= Length;
+            return Index+1 < Length;
         }
         /// <summary>
         /// 判断是否有上一个历史记录

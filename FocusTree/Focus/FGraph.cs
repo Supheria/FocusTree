@@ -102,7 +102,7 @@ namespace FocusTree.Focus
             var result = new HashSet<int>();
             foreach (var id in Nodes.Keys)
             {
-                if (!Requires.ContainsKey(id)) { result.Add(id); }
+                if (!Requires.ContainsKey(id) || Requires[id].Sum(x=>x.Count) == 0) { result.Add(id); }
             }
             return result;
         }
