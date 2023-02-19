@@ -23,7 +23,7 @@ namespace FocusTree.Focus
         /// <summary>
         /// 节点依赖的节点 (子节点, 多组父节点)
         /// </summary>
-        private Dictionary<int, List<List<int>>> Requires;
+        private Dictionary<int, List<HashSet<int>>> Requires;
         /// <summary>
         /// 依赖于节点的节点 (自动生成) (父节点, 多个子节点)
         /// </summary>
@@ -38,6 +38,15 @@ namespace FocusTree.Focus
         #region ---- 节点操作 ----
 
         /// <summary>
+        /// 用ID读取节点 O(1)
+        /// </summary>
+        /// <param name="id">ID</param>
+        /// <returns>节点数据</returns>
+        public FData GetNode(int id)
+        {
+            return Nodes[id];
+        }
+        /// <summary>
         /// 添加节点 O(1)，绘图时记得重新调用 GetNodeMap
         /// </summary>
         /// <returns>是否添加成功</returns>
@@ -46,7 +55,7 @@ namespace FocusTree.Focus
             return Nodes.TryAdd(node.ID, node);
         }
         /// <summary>
-        /// 删除节点 O(n+)，绘图时记得重新调用 GetNodeMap
+        /// 删除节点 O(2n+)，绘图时记得重新调用 GetNodeMap
         /// </summary>
         /// <returns>是否成功删除</returns>
         public void RemoveNode(int id)
@@ -64,6 +73,53 @@ namespace FocusTree.Focus
             Nodes.Remove(id);
             // 重新创建节点连接
             CreateLinked();
+        }
+        /// <summary>
+        /// 编辑节点 O(1)，新数据的ID必须匹配
+        /// </summary>
+        /// <param name="id">节点ID</param>
+        /// <param name="newData">要替换的数据</param>
+        /// <returns>修改是否成功</returns>
+        public bool EditNode(int id, FData newData)
+        {
+            // 编辑的节点ID不匹配
+            if(id != newData.ID) { return false; }
+            Nodes[id] = newData;
+            return true;
+        }
+        /// <summary>
+        /// 获取所有根节点 (不依赖任何节点的节点)  O(n)
+        /// </summary>
+        /// <returns>根节点</returns>
+        public HashSet<int> GetRootNodes()
+        {
+            var result = new HashSet<int>();
+            foreach (var id in Nodes.Keys)
+            {
+                if (!Requires.ContainsKey(id)) { result.Add(id); }
+            }
+            return result;
+        }
+        /// <summary>
+        /// 获取节点所依赖的节点关系  O(1)
+        /// </summary>
+        /// <param name="id">节点id</param>
+        /// <returns>依赖关系列表</returns>
+        /// <summary>
+        public List<HashSet<int>> GetNodeRequires(int id)
+        {
+            Requires.TryGetValue(id, out List<HashSet<int>> requires);
+            return requires;
+        }
+        /// <summary>
+        /// 获取依赖于节点的节点（不含分组关系） O(1)
+        /// </summary>
+        /// <param name="id">节点id</param>
+        /// <returns>连接的节点</returns>
+        public HashSet<int> GetNodeLinks(int id)
+        {
+            Linked.TryGetValue(id, out HashSet<int> links);
+            return links;
         }
 
         #endregion
@@ -139,33 +195,9 @@ namespace FocusTree.Focus
 
         #region ---- 特有方法 ----
         /// <summary>
-        /// 获取节点与关联的节点的依赖关系列表
+        /// 获取节点 Linked 的迭代器（与子节点的连接）
         /// </summary>
-        /// <param name="id">节点id</param>
-        /// <returns>依赖关系列表</returns>
-        /// <summary>
-        public List<List<int>> GetNodeRequires(int id)
-        {
-            Requires.TryGetValue(id, out List<List<int>> requires);
-            return requires;
-        }
-        public FData GetNode(int id)
-        {
-            return Nodes[id];
-        }
-        /// <summary>
-        /// 获取所有根节点 (不依赖任何节点的节点)
-        /// </summary>
-        /// <returns>根节点</returns>
-        public HashSet<int> GetRootNodes()
-        {
-            var result = new HashSet<int>();
-            foreach (var id in Nodes.Keys)
-            {
-                if (!Requires.ContainsKey(id)) { result.Add(id); }
-            }
-            return result;
-        }
+        /// <returns>Linked 迭代器</returns>
         public IEnumerator<KeyValuePair<int, HashSet<int>>> GetLinkedEnumerator() { return Linked.GetEnumerator(); }
         /// <summary>
         /// 获取 Nodes 的迭代器
@@ -356,9 +388,9 @@ namespace FocusTree.Focus
         /// </summary>
         /// <param name="reader">读取到节点关系的流</param>
         /// <returns>当前节点关系</returns>
-        private List<List<int>> ReadRelation(XmlReader reader)
+        private List<HashSet<int>> ReadRelation(XmlReader reader)
         {
-            var relations = new List<List<int>>();
+            var relations = new List<HashSet<int>>();
             while (reader.Read())
             {
                 if (reader.NodeType == XmlNodeType.EndElement)
@@ -412,16 +444,17 @@ namespace FocusTree.Focus
             writer.WriteEndElement();
             // </Relations>
         }
-        public static string IdArrayToString(List<int> ids)
+        public static string IdArrayToString(HashSet<int> ids)
         {
             var sb = new StringBuilder();
-            for (int i = 0; i < ids.Count; i++) { sb.Append(ids[i].ToString() + (i < ids.Count - 1 ? ", " : "")); }
-            return sb.ToString();
+            foreach(var id in ids) { sb.Append(id.ToString() +  ", "); }
+            
+            return sb.ToString()[..2];
         }
-        public static List<int> IdArrayFromString(string ids)
+        public static HashSet<int> IdArrayFromString(string ids)
         {
             var split = ids.Split(',').Where(x => !string.IsNullOrWhiteSpace(x));
-            return split.Select(x => int.Parse(x)).ToList();
+            return split.Select(x => int.Parse(x)).ToHashSet();
         }
         #endregion
 

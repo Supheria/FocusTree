@@ -78,23 +78,6 @@ namespace FocusTree.Tree
             Ps = ps;
         }
         /// <summary>
-        /// 根节点专用的 FData
-        /// </summary>
-        /// <param name="isRoot"></param>
-        /// <exception cref="Exception"></exception>
-        public FData(bool isRoot)
-        {
-            if (isRoot)
-            {
-                this = new FData();
-                Name = "根节点";
-            }
-            else
-            {
-                throw new Exception("[2302160957] 未定义的 FData数据类型");
-            }
-        }
-        /// <summary>
         /// 从文本中解析 FocusData(国测数据)
         /// </summary>
         /// <param name="text">文本</param>
