@@ -38,8 +38,16 @@ class Test
     {
         var graph = new FGraph("人类财阀联合.csv");
 
+        FHistory.Enqueue(graph);
+
         var suc = graph.AddNode(new FData(99,"Test", false, 0, "测试", "测试2", "测试3"));
         graph.RemoveNode(1);
+
+        FHistory.Enqueue(graph);
+
+        FHistory.Undo(graph);
+
+        FHistory.Redo(graph);
 
         var graphRequire = graph.GetNodeRequires(81);
         var graphLink = graph.GetNodeLinks(81);

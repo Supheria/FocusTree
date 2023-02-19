@@ -5,6 +5,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using static FocusTree.Focus.FHistory;
 
 namespace FocusTree.Focus
 {
@@ -72,7 +73,7 @@ namespace FocusTree.Focus
             // 移除节点
             Nodes.Remove(id);
             // 重新创建节点连接
-            CreateLinked();
+            UpdateNodes();
         }
         /// <summary>
         /// 编辑节点 O(1)，新数据的ID必须匹配
@@ -83,7 +84,7 @@ namespace FocusTree.Focus
         public bool EditNode(int id, FData newData)
         {
             // 编辑的节点ID不匹配
-            if(id != newData.ID) { return false; }
+            if (id != newData.ID) { return false; }
             Nodes[id] = newData;
             return true;
         }
@@ -121,6 +122,14 @@ namespace FocusTree.Focus
             Linked.TryGetValue(id, out HashSet<int> links);
             return links;
         }
+        /// <summary>
+        /// 根据节点和依赖更新 Graph
+        /// </summary>
+        public void UpdateNodes()
+        {
+            CreateLinked();
+            NodeMap = GetNodeMap();
+        }
 
         #endregion
 
@@ -149,8 +158,7 @@ namespace FocusTree.Focus
                     {
                         FCsv.ReadGraphFromCsv(path, ref Nodes, ref Requires);
                         // 推断 Link 关系
-                        CreateLinked();
-                        NodeMap = GetNodeMap();
+                        UpdateNodes();
                         break;
                     }
                 // 不是 csv 文件时
@@ -380,8 +388,7 @@ namespace FocusTree.Focus
                     Requires[id] = relations;
                 }
             }
-            CreateLinked();
-            NodeMap = GetNodeMap();
+            UpdateNodes();
         }
         /// <summary>
         /// 反序列化时用于读取节点的关系
@@ -444,11 +451,16 @@ namespace FocusTree.Focus
             writer.WriteEndElement();
             // </Relations>
         }
+
+        #endregion
+
+        #region ---- 其它工具 ----
+
         public static string IdArrayToString(HashSet<int> ids)
         {
             var sb = new StringBuilder();
-            foreach(var id in ids) { sb.Append(id.ToString() +  ", "); }
-            
+            foreach (var id in ids) { sb.Append(id.ToString() + ", "); }
+
             return sb.ToString()[..2];
         }
         public static HashSet<int> IdArrayFromString(string ids)
@@ -456,11 +468,33 @@ namespace FocusTree.Focus
             var split = ids.Split(',').Where(x => !string.IsNullOrWhiteSpace(x));
             return split.Select(x => int.Parse(x)).ToHashSet();
         }
-        #endregion
 
-        #region ---- 其它工具 ----
-
-
+        /// <summary>
+        /// 仅允许被 FHistory 访问的节点指针
+        /// </summary>
+        /// <param name="accessClass">用于限制访问类的工具</param>
+        /// <returns>指针</returns>
+        internal Dictionary<int, FData> GraphDataNodes_Get()
+        {
+            return Nodes;
+        }
+        /// <summary>
+        /// 仅允许被 FHistory 访问的依赖指针
+        /// </summary>
+        /// <param name="accessClass">用于限制访问类的工具</param>
+        /// <returns>指针</returns>
+        internal Dictionary<int, List<HashSet<int>>> GraphDataRequires_Get()
+        {
+            return Requires;
+        }
+        internal void GraphDataNodes_Set(Dictionary<int, FData> nodes)
+        {
+            Nodes = nodes;
+        }
+        internal void GraphDataRequires_Set(Dictionary<int, List<HashSet<int>>> requires)
+        {
+            Requires = requires;
+        }
 
         #endregion
     }
