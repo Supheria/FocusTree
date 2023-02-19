@@ -2,6 +2,15 @@
 //Console.WriteLine("Hello, World!");
 
 using FocusTree;
+using FocusTree.Focus;
+using FocusTree.IO;
+using FocusTree.Tree;
+using FocusTree.UI;
+using System.Drawing;
+using System.IO;
+using System.Net;
+using System.Numerics;
+using System.Xml.Serialization;
 
 internal static class Program
 {
@@ -11,8 +20,54 @@ internal static class Program
     [STAThread]
     static void Main()
     {
-        Application.EnableVisualStyles();
-        Application.SetCompatibleTextRenderingDefault(false);
+        //Test.FMapTest();
+        //Test.FGraphToXmlTest();
         Application.Run(new MainForm());
+
+        //Application.EnableVisualStyles();
+        //Application.SetCompatibleTextRenderingDefault(false);
+        //Application.Run(new MainForm());
+
+
+    }
+}
+
+class Test
+{
+    public static void FMapTest()
+    {
+        var graph = new FGraph("人类财阀联合.csv");
+
+       // FHistory.Enqueue(graph);
+
+        //var suc = graph.AddNode(new FData(99,"Test", false, 0, "测试", "测试2", "测试3"));
+
+        graph.RemoveNode(1);
+
+        FHistory.Undo(graph);
+
+        
+
+        FHistory.Redo(graph);
+
+        var graphRequire = graph.GetNodeRequires(81);
+        var graphLink = graph.GetNodeLinks(81);
+
+        Console.WriteLine();
+    }
+    /// <summary>
+    /// 序列化测试
+    /// </summary>
+    public static void FGraphToXmlTest()
+    {
+        var serializer = new XmlSerializer(typeof(FGraph));
+
+        var graph = new FGraph("人类财阀联合.csv");
+
+        FXml.SaveGraph("人类财阀联合.Graph.xml", graph);
+
+        var readgraph = FXml.LoadGraph("人类财阀联合.Graph.xml");
+
+
     }
 }
