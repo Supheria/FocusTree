@@ -72,9 +72,10 @@ namespace FocusTree.IO
                 // 节点是其中一个根节点时 
                 if (last == null)
                 {
-                    last = new TreeNode<int>(rowCount++, 0);
+                    last = new TreeNode<int>(rowCount, 0);
                     nodes.Add(last.Value, focusData);
                     // 这里不需要添加它的 Require
+                    continue; // 这个要加的
                 }
                 // 如果新节点与上一节点的右移距离大于1，则表示产生了断层
                 if (level > last.Level + 1)
@@ -83,8 +84,8 @@ namespace FocusTree.IO
                 if (level == last.Level + 1)
                 {
                     var newNode = new TreeNode<int>(focusData.Id, last.Level + 1); // 新节点
-                    newNode.Parent = last;
-                    last.Children.Add(newNode);
+
+                    newNode.SetParent(last);
 
                     //添加新节点并创建依赖
                     nodes.Add(newNode.Value, focusData);
@@ -103,8 +104,20 @@ namespace FocusTree.IO
                         else
                             last = last.Parent; // lastNode指向自己的父节点
                     } // 当指向的父节点是新节点所在列的父节点时结束循环
-                    while (last!=null && level - 1 != last.Level);
-                    //last = new FNode(rowCount, level, lastNode, focusData); // lastNode指向新的节点
+                    while (last != null && level - 1 != last.Level);
+                    // 这个是同级节点
+                    var newNode = new TreeNode<int>(rowCount, level); // lastNode指向新的节点
+                    nodes.Add(newNode.Value, focusData);
+                    if (last == null) // 新节点是根节点时直接添加
+                    {
+                        last = newNode;
+                    }
+                    else // 新节点有父节点
+                    {
+                        newNode.SetParent(last);
+                        requires.Add(newNode.Value, new List<int[]> { new int[] { last.Value } });
+                        last = newNode;
+                    }
                 }
                 //==
             }
@@ -115,11 +128,16 @@ namespace FocusTree.IO
         public T Value;
         public int Level;
         public TreeNode<T> Parent { get; set; }
-        public HashSet<TreeNode<T>> Children { get; set; } = new();
+        public HashSet<TreeNode<T>> Children { get; private set; } = new();
         public TreeNode(T value, int level)
         {
             Value = value;
             Level = level;
+        }
+        public void SetParent(TreeNode<T> parent)
+        {
+            Parent = parent;
+            Parent.Children.Add(this);
         }
     }
 }

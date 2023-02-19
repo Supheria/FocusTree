@@ -39,7 +39,7 @@ class Test
     {
         var graph = new FGraph("人类财阀联合.csv");
 
-        var graphRelation = graph.GetNodeRequires(81);
+        var graphRequire = graph.GetNodeRequires(81);
 
         Console.WriteLine();
     }
