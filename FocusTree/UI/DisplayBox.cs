@@ -154,6 +154,8 @@ namespace FocusTree.UI
                 var rect = RectOnScreenRect(NodeMapToVisualMap(mapEnumer.Current.Value));
                 // 这里应该去连接依赖的节点，而不是去对子节点连接
                 var requires = Graph.GetNodeRequires(id);
+                // 对于根节点，requires 为 null
+                if(requires == null) { continue; }
 
                 int requireColor = 0; //不同需求要变色
                 foreach (var require_ids in requires)

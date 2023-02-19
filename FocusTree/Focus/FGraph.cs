@@ -102,7 +102,8 @@ namespace FocusTree.Focus
         /// <summary>
         public List<int[]> GetNodeRequires(int id)
         {
-            return Requires[id];
+            bool hasRequire = Requires.TryGetValue(id, out List<int[]> requires);
+            return requires;
         }
         public FData GetNode(int id)
         {
