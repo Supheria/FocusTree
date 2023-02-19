@@ -11,8 +11,14 @@ namespace FocusTree.Tree
     /// <summary>
     /// 国策数据
     /// </summary>
+    [XmlRoot("Node")]
     public struct FData
     {
+        /// <summary>
+        /// 节点ID
+        /// </summary>
+        [XmlElement("id")]
+        public int Id;
         /// <summary>
         /// 国策名称
         /// </summary>
@@ -54,6 +60,7 @@ namespace FocusTree.Tree
         /// <param name="descript">国策描述</param>
         /// <param name="ps">备注</param>
         public FData(
+            int id,
             string name,
             bool isBeginWithstar,
             int duration,
@@ -62,6 +69,7 @@ namespace FocusTree.Tree
             string ps
             )
         {
+            Id = id;
             Name = name;
             BeginWithStar = isBeginWithstar;
             Duration = duration;
@@ -91,7 +99,7 @@ namespace FocusTree.Tree
         /// </summary>
         /// <param name="text">文本</param>
         /// <exception cref="Exception">正则匹配异常</exception>
-        public FData(string text)
+        public FData(int id, string text)
         {
             // 在 C# 中的字符串，{ 需要转义，通过分割一对来避免歧义。 原 Regex: (.+?){(\d+)天}{(.+?)}(?:{(.+)})?(.+)?
             var pattern = "(.+?){" + "(\\d+)天}{" + "(.+?)}(?:{" + "(.+)})?(.+)?";
@@ -120,6 +128,7 @@ namespace FocusTree.Tree
 
                 // 使用数据创建实例
                 this = new FData(
+                    id,
                     name,
                     isBeginWithStar,
                     duration,

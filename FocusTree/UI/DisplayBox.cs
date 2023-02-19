@@ -138,7 +138,7 @@ namespace FocusTree.UI
             while (nodesEnumer.MoveNext())
             {
                 var node = nodesEnumer.Current;
-                var name = node.Value.FocusData.Name;
+                var name = node.Value.Name;
                 var rect = RectOnScreenRect(NodeMapToVisualMap(Graph.GetNodeMapElement(node.Key)));
 
                 if (IsRectInScreen(rect))

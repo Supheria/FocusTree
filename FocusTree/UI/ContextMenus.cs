@@ -53,12 +53,12 @@ namespace FocusTree.UI
         {
             if(NodeId != null)
             {
-                var fnode = Display.GetFGraph().GetMapNodeById(NodeId.Value);
-                MessageBox.Show($"{fnode.FocusData.Name}\n\n" +
-                    $"{fnode.FocusData.Effects}\n\n" +
-                    $"实施 {fnode.FocusData.Duration} 天\n\n" +
-                    $"{fnode.FocusData.Descript}\n\n" +
-                    $"{fnode.FocusData.Ps}");
+                var fnode = Display.GetFGraph().GetNode(NodeId.Value);
+                MessageBox.Show($"{fnode.Name}\n\n" +
+                    $"{fnode.Effects}\n\n" +
+                    $"实施 {fnode.Duration} 天\n\n" +
+                    $"{fnode.Descript}\n\n" +
+                    $"{fnode.Ps}");
             }
 
             NodeId = null;

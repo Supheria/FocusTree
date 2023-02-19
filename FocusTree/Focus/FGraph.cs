@@ -1,4 +1,5 @@
-﻿using FocusTree.Tree;
+﻿using FocusTree.IO;
+using FocusTree.Tree;
 using System.Numerics;
 using System.Text;
 using System.Xml;
@@ -9,7 +10,7 @@ using static System.Windows.Forms.LinkLabel;
 
 namespace FocusTree.Focus
 {
-    public class FGraph : FMap, IXmlSerializable
+    public class FGraph : IXmlSerializable
     {
         /// <summary>
         /// 文件名
@@ -19,7 +20,7 @@ namespace FocusTree.Focus
         /// <summary>
         /// 以 ID 作为 Key 的所有节点
         /// </summary>
-        private Dictionary<int, FMapNode> Nodes;
+        private Dictionary<int, FData> Nodes;
 
         /// <summary>
         /// 节点依赖的节点 (子节点, 多组父节点)
@@ -36,29 +37,23 @@ namespace FocusTree.Focus
         private Dictionary<int, Point> NodeMap;
 
         /// <summary>
-        /// 将 FTree 转换为 FGraph
+        /// 从文件中读取 Graph
         /// </summary>
-        /// <param name="tree">国策树</param>
-        [Obsolete] // 这个函数后续需要被优化掉
-        public FGraph(FTree tree)
+        /// <param name="path">国策树</param>
+        public FGraph(string path)
         {
-            Name = tree.Name;
+            if (!File.Exists(path))
+            {
+                throw new Exception("[2302191048] 文件不存在: " + path);
+            }
+
+            Name = Path.GetFileNameWithoutExtension(path);
             Nodes = new();
             Requires = new();
 
-            var nodes = tree.GetAllFNodes();
-            foreach (var node in nodes)
-            {
-                // 添加节点到字典
-                Nodes.Add(node.ID, node);
+            // 从 Csv 读取
+            FCsv.ReadGraphFromCsv(path, ref Nodes, ref Requires);
 
-                // 树中的数据关系是单向一一对应的，读取 Require 推断 Linked
-                if (node.Parent != null && node.Parent.ID >= 0)
-                {
-                    Requires.Add(node.ID, new List<int[]> { new int[] { node.Parent.ID } });
-                }
-
-            }
             // 推断 Link 关系
             CreateLinked();
 
@@ -89,7 +84,7 @@ namespace FocusTree.Focus
         /// <summary>
         /// 将 XML 转换为 FGraph
         /// </summary>
-        public FGraph(Dictionary<int, FMapNode> nodes, Dictionary<int, List<int[]>> requires)
+        public FGraph(Dictionary<int, FData> nodes, Dictionary<int, List<int[]>> requires)
         {
 
         }
@@ -97,108 +92,6 @@ namespace FocusTree.Focus
         /// 用于序列化
         /// </summary>
         private FGraph() { }
-
-        #region ---- FMap 抽象函数功能 ----
-        [Obsolete]
-        public override HashSet<FMapNode> GetAllMapNodes()
-        {
-            var set = new HashSet<FMapNode>();
-            foreach (var node in Nodes.Values) { set.Add(node); }
-            return set;
-        }
-        public override FMapNode GetMapNodeById(int id)
-        {
-            return Nodes[id];
-        }
-        public override HashSet<FMapNode> GetLevelNodes(int level)
-        {
-            return Nodes.Values.Where(x => x.Level == level).ToHashSet();
-        }
-        public override HashSet<FMapNode> GetSiblingNodes(int id)
-        {
-            var requires = Requires[id];
-
-            var set = new HashSet<FMapNode>();
-
-            // 看起来很多，其实不会循环很多次，比遍历所有对应关系快多了
-            foreach (var require in requires)
-            {
-                foreach (var required_id in require)
-                {
-                    var sib_ids = Linked[required_id];
-                    foreach (var sib_id in sib_ids)
-                    {
-                        set.Add(Nodes[sib_id]);
-                    }
-                }
-            }
-
-            return set;
-        }
-        public override int GetBranchWidth(int id)
-        {
-            int count = 0;
-            var stack = new Stack<int>();
-            GetBranchWidth(id, ref count, ref stack);
-            return count;
-        }
-        /// <summary>
-        /// 获取当前节点下叶节点数量
-        /// </summary>
-        /// <param name="current">当前递归节点</param>
-        /// <param name="count">总数</param>
-        /// <param name="steps">已走路径，用于禁止走重复的节点，避免死循环</param>
-        private void GetBranchWidth(int current, ref int count, ref Stack<int> steps)
-        {
-            steps.Push(current);
-
-            var hasChild = Linked.TryGetValue(current, out HashSet<int> childs);
-            // 当前节点是叶节点，累加并退出
-            if (!hasChild) { count++; }
-            else
-            {
-                foreach (var child in childs)
-                {
-                    // 已经走过这个节点，所以跳过，避免死循环
-                    if (steps.Contains(child)) { continue; }
-                    else
-                    {
-                        GetBranchWidth(child, ref count, ref steps);
-                    }
-                }
-            }
-
-            steps.Pop();
-        }
-        public override HashSet<FMapNode> GetLeafNodes(int id)
-        {
-            var nodes = new HashSet<FMapNode>();
-            var stack = new Stack<int>();
-            GetLeafNodes(id, ref nodes, ref stack);
-            return nodes;
-        }
-        private void GetLeafNodes(int current, ref HashSet<FMapNode> nodes, ref Stack<int> steps)
-        {
-            steps.Push(current);
-
-            var hasChild = Linked.TryGetValue(current, out HashSet<int> childs);
-            // 当前节点是叶节点，累加并退出
-            if (!hasChild) { nodes.Add(Nodes[current]); }
-            else
-            {
-                foreach (var child in childs)
-                {
-                    // 已经走过这个节点，所以跳过，避免死循环
-                    if (steps.Contains(child)) { continue; }
-                    else
-                    {
-                        GetLeafNodes(child, ref nodes, ref steps);
-                    }
-                }
-            }
-            steps.Pop();
-        }
-        #endregion
 
         #region ---- 特有方法 ----
         /// <summary>
@@ -211,12 +104,29 @@ namespace FocusTree.Focus
         {
             return Requires[id];
         }
+        public FData GetNode(int id)
+        {
+            return Nodes[id];
+        }
+        /// <summary>
+        /// 获取所有根节点 (不依赖任何节点的节点)
+        /// </summary>
+        /// <returns>根节点</returns>
+        public HashSet<int> GetRootNodes()
+        {
+            var result = new HashSet<int>();
+            foreach(var id in Nodes.Keys)
+            {
+                if (!Requires.ContainsKey(id)) { result.Add(id); }
+            }
+            return result;
+        }
         public IEnumerator<KeyValuePair<int, HashSet<int>>> GetLinkedEnumerator() { return Linked.GetEnumerator(); }
         /// <summary>
         /// 获取 Nodes 的迭代器
         /// </summary>
         /// <returns>Nodes 的迭代器</returns>
-        public IEnumerator<KeyValuePair<int, FMapNode>> GetNodesEnumerator() { return Nodes.GetEnumerator(); }
+        public IEnumerator<KeyValuePair<int, FData>> GetNodesEnumerator() { return Nodes.GetEnumerator(); }
         /// <summary>
         /// 获取 NodeMap 的迭代器
         /// </summary>
@@ -235,7 +145,7 @@ namespace FocusTree.Focus
         private Dictionary<int, Point> GetNodeMap()
         {
             NodeMap = new Dictionary<int, Point>();
-            var branches = GetBranches(GetLevelNodes(0).Select(x => x.ID).ToArray(), true, true);
+            var branches = GetBranches(GetRootNodes().ToArray(), true, true);
             var visited = new HashSet<int>();
             var width = branches.Count;
             var height = branches.Max(x => x.Length);
@@ -368,7 +278,7 @@ namespace FocusTree.Focus
         public async void ReadXml(XmlReader reader)
         {
             Nodes = new();
-            Requires = new ();
+            Requires = new();
 
             while (reader.Read())
             {
@@ -380,7 +290,7 @@ namespace FocusTree.Focus
                             case "Node":
                                 {
                                     var node = ReadNode(reader);
-                                    Nodes.Add(node.ID, node);
+                                    Nodes.Add(node.Id, node);
                                     break;
                                 }
                             case "Relation":
@@ -403,7 +313,7 @@ namespace FocusTree.Focus
         /// <param name="reader">读取到节点的流</param>
         /// <returns>节点</returns>
         /// <exception cref="Exception">节点中缺少FData的异常</exception>
-        private FNode ReadNode(XmlReader reader)
+        private FData ReadNode(XmlReader reader)
         {
             int id = int.Parse(reader["ID"]);
             int level = int.Parse(reader["Level"]);
@@ -411,8 +321,7 @@ namespace FocusTree.Focus
             {
                 if (reader.Name == "FData")
                 {
-                    FData fdata = (FData)FData_serial.Deserialize(reader);
-                    return new FNode(id, level, ref fdata, reader);
+                    return (FData)FData_serial.Deserialize(reader);
                 }
                 // 如果读取到了节点尾部
                 if (reader.NodeType == XmlNodeType.EndElement)
@@ -458,8 +367,7 @@ namespace FocusTree.Focus
                 writer.WriteStartElement("Node");
                 // <Node>
                 writer.WriteAttributeString("ID", node.Key.ToString());
-                writer.WriteAttributeString("Level", node.Value.Level.ToString());
-                FData_serial.Serialize(writer, node.Value.FocusData, NullXmlNameSpace);
+                FData_serial.Serialize(writer, node.Value, NullXmlNameSpace);
                 writer.WriteEndElement();
                 // </Node>
             }

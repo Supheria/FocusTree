@@ -31,7 +31,7 @@ namespace FocusTree.UI
             var result = main_Openfile.ShowDialog();
             if(result == DialogResult.OK)
             {
-                Display.Graph = new FGraph(new FTree(main_Openfile.FileName));
+                Display.Graph = new FGraph(main_Openfile.FileName);
                 Display.RelocateCenter();
                 Display.Invalidate();
                 main_StatusStrip_filename.Text = Path.GetFileNameWithoutExtension(main_Openfile.FileName);
