@@ -97,12 +97,24 @@ namespace FocusTree.Focus
         /// 获取所有根节点 (不依赖任何节点的节点)  O(n)
         /// </summary>
         /// <returns>根节点</returns>
+        [Obsolete("经常出BUG，用的时候要小心")]
         public HashSet<int> GetRootNodes()
         {
             var result = new HashSet<int>();
             foreach (var id in Nodes.Keys)
             {
-                if (!Requires.ContainsKey(id) || Requires[id].Sum(x => x.Count) == 0) { result.Add(id); }
+                if (Requires.ContainsKey(id))
+                {
+                    var list = Requires[id];
+                    if (list.Sum(x=>x.Count) == 0)
+                    {
+                        result.Add(id);
+                    }
+                }
+                else
+                {
+                    result.Add(id);
+                }
             }
             return result;
         }
@@ -236,7 +248,8 @@ namespace FocusTree.Focus
         private Dictionary<int, Point> GetNodeMap()
         {
             NodeMap = new Dictionary<int, Point>();
-            var branches = GetBranches(GetRootNodes().ToArray(), true, true);
+            var rootNodes = GetRootNodes().ToArray();
+            var branches = GetBranches(rootNodes, true, true);
             var visited = new HashSet<int>();
             var width = branches.Count;
             var height = branches.Max(x => x.Length);
@@ -391,7 +404,10 @@ namespace FocusTree.Focus
                 {
                     int id = int.Parse(reader["ID"]);
                     var relations = ReadRelation(reader);
-                    Requires[id] = relations;
+                    if(relations != null)
+                    {
+                        Requires[id] = relations;
+                    }
                 }
             }
             UpdateNodes(); FHistory.Clear(); FHistory.Enqueue(this);
@@ -413,6 +429,9 @@ namespace FocusTree.Focus
                 if (reader.NodeType == XmlNodeType.Element && reader.Name == "Require")
                 {
                     reader.Read();
+
+                    if (!reader.HasValue) { return null; }
+
                     var requir_str = reader.ReadContentAsString();
                     relations.Add(IdArrayFromString(requir_str));
                     // 如果顺序反过来这里需要 continue
