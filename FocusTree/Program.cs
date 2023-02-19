@@ -3,6 +3,7 @@
 
 using FocusTree;
 using FocusTree.Focus;
+using FocusTree.IO;
 using FocusTree.Tree;
 using FocusTree.UI;
 using System.Drawing;
@@ -54,8 +55,7 @@ class Test
         var treeWidth = tree.GetBranchWidth(81);
         var graphWidth = graph.GetBranchWidth(81);
 
-        var treeRelation = tree.GetNodeRelations(81);
-        var graphRelation = graph.GetNodeRelations(81);
+        var graphRelation = graph.GetNodeRequires(81);
 
         var treeLeaf = tree.GetLeafNodes(-1);
         var graph_roots = graph.GetLevelNodes(0);
@@ -69,17 +69,14 @@ class Test
     /// </summary>
     public static void FGraphToXmlTest()
     {
-        var tree = new FTree("人类财阀联合.csv");
-        var graph = new FGraph(tree);
-
         var serializer = new XmlSerializer(typeof(FGraph));
 
-        var file = File.Create("人类财阀联合.Graph.xml");
-        serializer.Serialize(file, graph);
-        file.Close();
+        var tree = new FTree("人类财阀联合.csv");
+        var graph = new FGraph(tree);
+        FXml.SaveGraph("人类财阀联合.Graph.xml", graph);
 
-        //var readfile = File.OpenRead("人类财阀联合.Graph.xml");
-        //var readgraph = (FGraph)serializer.Deserialize(readfile);
+        var readgraph = FXml.LoadGraph("人类财阀联合.Graph.xml");
+
 
     }
     public static void BranchesTest()
@@ -133,10 +130,10 @@ class Test
             var id = loc_pair.Key;
             var point = loc_pair.Value;
 
-            var links = graph.GetNodeRelations(id).Where(x => x.Type == NodeRelation.FRelations.Linked);
-            foreach (var link in links)
+            var links = graph.GetLinkedEnumerator();
+            while(links.MoveNext())
             {
-                foreach (var link_id in link.IDs)
+                foreach (var link_id in links.Current.Value)
                 {
                     int spx = 80, spy = 32;
                     int epx = 80, epy = -5;
@@ -279,10 +276,10 @@ class Test
                 var id = loc_pair.Key;
                 var rect = GetNodeOnScreen(loc_pair.Value, cam, picbox.Size, scale);
 
-                var links = graph.GetNodeRelations(id).Where(x => x.Type == NodeRelation.FRelations.Linked);
-                foreach (var link in links)
+                var links = graph.GetLinkedEnumerator();
+                while (links.MoveNext())
                 {
-                    foreach (var link_id in link.IDs)
+                    foreach (var link_id in links.Current.Value)
                     {
                         var torect = GetNodeOnScreen(map[link_id], cam, picbox.Size, scale);
                         var startLoc = new Point(rect.X + rect.Width / 2, rect.Y + rect.Height); // x -> 中间, y -> 下方

@@ -18,7 +18,7 @@ namespace FocusTree.IO
         public static void SaveGraph(string path, FGraph graph)
         {
             var writer = new XmlSerializer(typeof(FGraph));
-            var file = File.Create("人类财阀联合.Graph.xml");
+            var file = File.Create(path);
             writer.Serialize(file, graph);
             file.Close();
         }

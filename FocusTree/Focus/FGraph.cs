@@ -5,7 +5,6 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using static FocusTree.Focus.NodeRelation;
 
 namespace FocusTree.Focus
 {
@@ -22,9 +21,13 @@ namespace FocusTree.Focus
         private Dictionary<int, FMapNode> Nodes = new();
 
         /// <summary>
-        /// 节点与其它节点的关系
+        /// 节点依赖的节点 (子节点, 多组父节点)
         /// </summary>
-        private Dictionary<int, List<NodeRelation>> Relations = new();
+        private Dictionary<int, List<int[]>> Requires = new();
+        /// <summary>
+        /// 依赖于节点的节点 (自动生成) (父节点, 多个子节点)
+        /// </summary>
+        private Dictionary<int, HashSet<int>> Linked = null;
 
         /// <summary>
         /// 某个层级所包含的节点数量
@@ -40,7 +43,7 @@ namespace FocusTree.Focus
         /// 将 FTree 转换为 FGraph
         /// </summary>
         /// <param name="tree">国策树</param>
-        public FGraph(FTree tree) 
+        public FGraph(FTree tree)
         {
             Name = tree.Name;
 
@@ -51,26 +54,38 @@ namespace FocusTree.Focus
                 Nodes.Add(node.ID, node);
                 // 层级节点计数
                 if (!LevelNodeCount.TryAdd(node.Level, 1)) { LevelNodeCount[node.Level]++; }
-                // 树中的数据关系是单向一一对应的，所以指定 Linked 关系并后续推定 Require
-                Relations.Add(node.ID, new List<NodeRelation>());
-                Relations[node.ID].Add(new NodeRelation(FRelations.Linked, node.Children.Select(x => x.ID).ToArray())); // 添加子节点 ID 为 linked
+
+                // 树中的数据关系是单向一一对应的，读取 Require 推断 Linked
+                Requires.Add(node.ID, new List<int[]> { node.Parent != null ? new int[] { node.Parent.ID } : Array.Empty<int>() });
             }
-            // 已知 Linked 关系，指定 Require 关系
-            foreach (var relation in Relations)
+            // 推断 Link 关系
+            CreateLinked();
+
+            NodeMap = GetNodeMap();
+        }
+        /// <summary>
+        /// 使用 Requires 创建 Linked
+        /// </summary>
+        private void CreateLinked()
+        {
+            // 这里一定要重新初始化，因为是刷新
+            Linked = new Dictionary<int, HashSet<int>>();
+
+            foreach (var require in Requires)
             {
-                int parent_id = relation.Key;
-                foreach (var child in relation.Value.First().IDs)
+                foreach(var childs in require.Value)
                 {
-                    Relations[child].Add(new NodeRelation(FRelations.Require, new int[] { parent_id }));
+                    // 如果父节点没有创建 HashSet 就创建一个新的
+                    Linked.TryAdd(require.Key, new HashSet<int>());
+                    // 向 HashSet 里添加子节点（忽略重复项）
+                    Linked[require.Key].Union(childs);
                 }
             }
-
-            GetNodeMap();
         }
         /// <summary>
         /// 将 XML 转换为 FGraph
         /// </summary>
-        public FGraph(Dictionary<int, FMapNode> nodes, Dictionary<int, List<NodeRelation>> relations)
+        public FGraph(Dictionary<int, FMapNode> nodes, Dictionary<int, List<int[]>> requires)
         {
 
         }
@@ -101,9 +116,7 @@ namespace FocusTree.Focus
         }
         public override HashSet<FMapNode> GetSiblingNodes(int id)
         {
-            var requires = Relations[id]
-                .Where(x => x.Type == FRelations.Require)
-                .Select(x => x.IDs);
+            var requires = Requires[id];
 
             var set = new HashSet<FMapNode>();
 
@@ -112,15 +125,10 @@ namespace FocusTree.Focus
             {
                 foreach (var required_id in require)
                 {
-                    var sib_idss = Relations[required_id]
-                        .Where(x => x.Type == FRelations.Linked)
-                        .Select(x => x.IDs);
-                    foreach (var sib_ids in sib_idss)
+                    var sib_ids = Linked[required_id];
+                    foreach (var sib_id in sib_ids)
                     {
-                        foreach (var sib_id in sib_ids)
-                        {
-                            set.Add(Nodes[sib_id]);
-                        }
+                        set.Add(Nodes[sib_id]);
                     }
                 }
             }
@@ -144,30 +152,23 @@ namespace FocusTree.Focus
         {
             steps.Push(current);
 
-            var childs = Relations[current].Where(x => x.Type == FRelations.Linked);
+            var childs = Linked[current];
             // 当前节点是叶节点，累加并退出
-            if (childs.Sum(x => x.IDs.Length) == 0) { count++; }
+            if (childs.Count == 0) { count++; }
             else
             {
-                foreach (var child_relations in childs)
+                foreach (var child in childs)
                 {
-                    foreach (var child in child_relations.IDs)
+                    // 已经走过这个节点，所以跳过，避免死循环
+                    if (steps.Contains(child)) { continue; }
+                    else
                     {
-                        // 已经走过这个节点，所以跳过，避免死循环
-                        if (steps.Contains(child)) { continue; }
-                        else
-                        {
-                            GetBranchWidth(child, ref count, ref steps);
-                        }
+                        GetBranchWidth(child, ref count, ref steps);
                     }
                 }
             }
 
             steps.Pop();
-        }
-        public override List<NodeRelation> GetNodeRelations(int id)
-        {
-            return Relations[id];
         }
         public override HashSet<FMapNode> GetLeafNodes(int id)
         {
@@ -180,21 +181,18 @@ namespace FocusTree.Focus
         {
             steps.Push(current);
 
-            var childs = Relations[current].Where(x => x.Type == FRelations.Linked);
+            var childs = Linked[current];
             // 当前节点是叶节点，累加并退出
-            if (childs.Sum(x => x.IDs.Length) == 0) { nodes.Add(Nodes[current]); }
+            if (childs.Count == 0) { nodes.Add(Nodes[current]); }
             else
             {
-                foreach (var child_relations in childs)
+                foreach (var child in childs)
                 {
-                    foreach (var child in child_relations.IDs)
+                    // 已经走过这个节点，所以跳过，避免死循环
+                    if (steps.Contains(child)) { continue; }
+                    else
                     {
-                        // 已经走过这个节点，所以跳过，避免死循环
-                        if (steps.Contains(child)) { continue; }
-                        else
-                        {
-                            GetLeafNodes(child, ref nodes, ref steps);
-                        }
+                        GetLeafNodes(child, ref nodes, ref steps);
                     }
                 }
             }
@@ -203,6 +201,17 @@ namespace FocusTree.Focus
         #endregion
 
         #region ---- 特有方法 ----
+        /// <summary>
+        /// 获取节点与关联的节点的依赖关系列表
+        /// </summary>
+        /// <param name="id">节点id</param>
+        /// <returns>依赖关系列表</returns>
+        /// <summary>
+        public List<int[]> GetNodeRequires(int id)
+        {
+            return Requires[id];
+        }
+        public IEnumerator<KeyValuePair<int, HashSet<int>>> GetLinkedEnumerator(){ return Linked.GetEnumerator();}
         /// <summary>
         /// 获取 Nodes 的迭代器
         /// </summary>
@@ -293,9 +302,9 @@ namespace FocusTree.Focus
         {
             steps.Push(current);
 
-            var childs = Relations[current].Where(x => x.Type == FRelations.Linked);
+            var childs = Linked[current];
             // 当前节点是叶节点，累加并退出
-            if (childs.Sum(x => x.IDs.Length) == 0)
+            if (childs.Count == 0)
             {
                 if (reverse)
                 {
@@ -311,23 +320,20 @@ namespace FocusTree.Focus
                 // 是否按照 id 排序
                 if (!sort)
                 {
-                    foreach (var child_relations in childs)
+                    foreach (var child in childs)
                     {
-                        foreach (var child in child_relations.IDs)
+                        // 已经走过这个节点，所以跳过，避免死循环
+                        if (steps.Contains(child)) { continue; }
+                        else
                         {
-                            // 已经走过这个节点，所以跳过，避免死循环
-                            if (steps.Contains(child)) { continue; }
-                            else
-                            {
-                                GetBranches(child, ref branches, ref steps, sort, reverse);
-                            }
+                            GetBranches(child, ref branches, ref steps, sort, reverse);
                         }
                     }
                 }
                 else
                 {
                     var relation_ids = new List<int>();
-                    foreach (var relation in childs) { relation_ids.AddRange(relation.IDs); }
+                    foreach (var child in childs) { relation_ids.Add(child); }
                     relation_ids.Sort();
                     foreach (var id in relation_ids)
                     {
@@ -362,7 +368,7 @@ namespace FocusTree.Focus
         public async void ReadXml(XmlReader reader)
         {
             var nodes = new Dictionary<int, FMapNode>();
-            var relations = new Dictionary<int, List<NodeRelation>>();
+            var requires = new Dictionary<int, List<int[]>>();
 
             while (reader.Read())
             {
@@ -372,14 +378,40 @@ namespace FocusTree.Focus
                         switch (reader.Name)
                         {
                             case "Node":
-                                int id = int.Parse(reader["ID"]);
-                                int level = int.Parse(reader["Level"]);
-                                break;
+                                {
+                                    var node = ReadNode(reader);
+                                    nodes.Add(node.ID, node);
+                                    break;
+                                }
+                            case "Relation":
+                                {
+                                    int id = int.Parse(reader["ID"]);
+                                    break;
+                                }
                         }
                         break;
                 }
             }
 
+        }
+        private FNode ReadNode(XmlReader reader)
+        {
+            int id = int.Parse(reader["ID"]);
+            int level = int.Parse(reader["Level"]);
+            while (reader.Read())
+            {
+                if (reader.Name == "FData")
+                {
+                    FData fdata = (FData)FData_serial.Deserialize(reader);
+                    return new FNode(id, level, ref fdata, reader);
+                }
+                // 如果读取到了节点尾部
+                if (reader.NodeType == XmlNodeType.EndElement)
+                {
+                    throw new Exception("[2302190831] 读取XML文件的时候节点没有读取到 FData");
+                }
+            }
+            throw new Exception("[2302190819] 读取XML文件的时候节点没有读取到 FData");
         }
 
         public void WriteXml(XmlWriter writer)
@@ -405,17 +437,17 @@ namespace FocusTree.Focus
 
             // <NodesRelations> 序列化节点关系字典
             writer.WriteStartElement("NodesRelations");
-            foreach (var r_pair in Relations)
+            foreach (var r_pair in Requires)
             {
                 // <RNode> 当前节点
-                writer.WriteStartElement("RNode");
+                writer.WriteStartElement("Relation");
                 writer.WriteAttributeString("ID", r_pair.Key.ToString());
 
-                foreach (var relation in r_pair.Value.Where(x => x.Type == FRelations.Require))
+                foreach (var require in r_pair.Value)
                 {
-                    // <[Relation类型]> 关系类型
-                    writer.WriteElementString(relation.Type.ToString(), IdArrayToString(relation.IDs));
-                    // </[Relation类型]>
+                    // <Require> 关系类型
+                    writer.WriteElementString("Require", IdArrayToString(require));
+                    // </Require>
                 }
 
                 writer.WriteEndElement();

@@ -45,13 +45,6 @@ namespace FocusTree.Focus
         /// <param name="id">要查找的节点id</param>
         /// <returns>分支宽度</returns>
         abstract public int GetBranchWidth(int id);
-        /// <summary>
-        /// 获取节点与关联的节点的依赖关系列表
-        /// </summary>
-        /// <param name="id">节点id</param>
-        /// <returns>依赖关系列表</returns>
-        abstract public List<NodeRelation> GetNodeRelations(int id);
-        /// <summary>
         /// 获取某个节点的所有叶节点
         /// </summary>
         /// <param name="id">节点 ID</param>
@@ -72,20 +65,5 @@ namespace FocusTree.Focus
         /// 国策数据
         /// </summary>
         public abstract FData FocusData { get; protected set; }
-    }
-    public class NodeRelation
-    {
-        public enum FRelations
-        {
-            Require,    // 这个节点依赖于某些节点
-            Linked      // 某些节点依赖于这个节点
-        }
-        public FRelations Type;
-        public int[] IDs;
-        public NodeRelation(FRelations relationType, int[] iDs)
-        {
-            Type = relationType;
-            IDs = iDs;
-        }
     }
 }

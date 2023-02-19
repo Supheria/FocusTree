@@ -153,12 +153,12 @@ namespace FocusTree.UI
                 var id = mapEnumer.Current.Key;
                 var rect = RectOnScreenRect(NodeMapToVisualMap(mapEnumer.Current.Value));
                 // 这里应该去连接依赖的节点，而不是去对子节点连接
-                var requires = Graph.GetNodeRelations(id).Where(x => x.Type == NodeRelation.FRelations.Require);
+                var requires = Graph.GetNodeRequires(id);
 
                 int requireColor = 0; //不同需求要变色
-                foreach (var require in requires)
+                foreach (var require_ids in requires)
                 {
-                    foreach (var require_id in require.IDs)
+                    foreach (var require_id in require_ids)
                     {
                         var torect = RectOnScreenRect(NodeMapToVisualMap(Graph.GetNodeMapElement(require_id)));
 
