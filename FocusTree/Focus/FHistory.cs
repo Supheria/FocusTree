@@ -100,6 +100,12 @@ namespace FocusTree.Focus
                 History[i] = History[i+1];
             }
         }
+        public static void Clear()
+        {
+            History = new (byte[], byte[])[History.Length];
+            Index = 0;
+            Length = 0;
+        }
         /// <summary>
         /// 将 Graph 里的核心数据序列化为对象
         /// </summary>

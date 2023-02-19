@@ -112,7 +112,7 @@
             // main_Menu_file_new
             // 
             this.main_Menu_file_new.Name = "main_Menu_file_new";
-            this.main_Menu_file_new.Size = new System.Drawing.Size(180, 22);
+            this.main_Menu_file_new.Size = new System.Drawing.Size(112, 22);
             this.main_Menu_file_new.Text = "新建";
             // 
             // main_Menu_file_open
@@ -121,7 +121,7 @@
             this.main_Menu_file_open_csv,
             this.main_Menu_file_open_xml});
             this.main_Menu_file_open.Name = "main_Menu_file_open";
-            this.main_Menu_file_open.Size = new System.Drawing.Size(180, 22);
+            this.main_Menu_file_open.Size = new System.Drawing.Size(112, 22);
             this.main_Menu_file_open.Text = "打开";
             // 
             // main_Menu_file_open_csv
@@ -141,14 +141,14 @@
             // main_Menu_file_save
             // 
             this.main_Menu_file_save.Name = "main_Menu_file_save";
-            this.main_Menu_file_save.Size = new System.Drawing.Size(180, 22);
+            this.main_Menu_file_save.Size = new System.Drawing.Size(112, 22);
             this.main_Menu_file_save.Text = "保存";
             this.main_Menu_file_save.Click += new System.EventHandler(this.main_Menu_file_save_Click);
             // 
             // main_Menu_file_saveas
             // 
             this.main_Menu_file_saveas.Name = "main_Menu_file_saveas";
-            this.main_Menu_file_saveas.Size = new System.Drawing.Size(180, 22);
+            this.main_Menu_file_saveas.Size = new System.Drawing.Size(112, 22);
             this.main_Menu_file_saveas.Text = "另存为";
             this.main_Menu_file_saveas.Click += new System.EventHandler(this.main_Menu_file_saveas_Click);
             // 
@@ -164,14 +164,16 @@
             // main_Menu_edit_undo
             // 
             this.main_Menu_edit_undo.Name = "main_Menu_edit_undo";
-            this.main_Menu_edit_undo.Size = new System.Drawing.Size(100, 22);
+            this.main_Menu_edit_undo.Size = new System.Drawing.Size(180, 22);
             this.main_Menu_edit_undo.Text = "撤回";
+            this.main_Menu_edit_undo.Click += new System.EventHandler(this.main_Menu_edit_undo_Click);
             // 
             // main_Menu_edit_redo
             // 
             this.main_Menu_edit_redo.Name = "main_Menu_edit_redo";
-            this.main_Menu_edit_redo.Size = new System.Drawing.Size(100, 22);
+            this.main_Menu_edit_redo.Size = new System.Drawing.Size(180, 22);
             this.main_Menu_edit_redo.Text = "重做";
+            this.main_Menu_edit_redo.Click += new System.EventHandler(this.main_Menu_edit_redo_Click);
             // 
             // main_Menu_loc
             // 

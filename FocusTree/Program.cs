@@ -21,8 +21,8 @@ internal static class Program
     static void Main()
     {
         Test.FMapTest();
-        Test.FGraphToXmlTest();
-        Application.Run(new MainForm());
+        //Test.FGraphToXmlTest();
+        //Application.Run(new MainForm());
 
         //Application.EnableVisualStyles();
         //Application.SetCompatibleTextRenderingDefault(false);
@@ -38,14 +38,15 @@ class Test
     {
         var graph = new FGraph("人类财阀联合.csv");
 
-        FHistory.Enqueue(graph);
+       // FHistory.Enqueue(graph);
 
-        var suc = graph.AddNode(new FData(99,"Test", false, 0, "测试", "测试2", "测试3"));
+        //var suc = graph.AddNode(new FData(99,"Test", false, 0, "测试", "测试2", "测试3"));
+
         graph.RemoveNode(1);
 
-        FHistory.Enqueue(graph);
-
         FHistory.Undo(graph);
+
+        
 
         FHistory.Redo(graph);
 

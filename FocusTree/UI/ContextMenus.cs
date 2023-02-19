@@ -36,6 +36,7 @@ namespace FocusTree.UI
             pic_contextMenu_node_remove.Name = "main_contextMenu_node_remove";
             pic_contextMenu_node_remove.Size = new Size(180, 22);
             pic_contextMenu_node_remove.Text = "删除国策";
+            pic_contextMenu_node_remove.Click += NodeRemove;
             // 
             // main_contextMenu_node
             // 
@@ -61,6 +62,15 @@ namespace FocusTree.UI
                     $"{fnode.Ps}");
             }
 
+            NodeId = null;
+        }
+        private void NodeRemove(object sender, EventArgs args)
+        {
+            if (NodeId != null)
+            {
+                Display.GetFGraph().RemoveNode(NodeId.Value);
+                Display.Invalidate();
+            }
             NodeId = null;
         }
     }

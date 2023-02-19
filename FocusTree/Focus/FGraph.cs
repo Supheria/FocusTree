@@ -53,7 +53,9 @@ namespace FocusTree.Focus
         /// <returns>是否添加成功</returns>
         public bool AddNode(FData node)
         {
-            return Nodes.TryAdd(node.ID, node);
+            var suc = Nodes.TryAdd(node.ID, node);
+            UpdateNodes(); FHistory.Enqueue(this);
+            return suc;
         }
         /// <summary>
         /// 删除节点 O(2n+)，绘图时记得重新调用 GetNodeMap
@@ -73,7 +75,7 @@ namespace FocusTree.Focus
             // 移除节点
             Nodes.Remove(id);
             // 重新创建节点连接
-            UpdateNodes();
+            UpdateNodes(); FHistory.Enqueue(this);
         }
         /// <summary>
         /// 编辑节点 O(1)，新数据的ID必须匹配
@@ -86,6 +88,9 @@ namespace FocusTree.Focus
             // 编辑的节点ID不匹配
             if (id != newData.ID) { return false; }
             Nodes[id] = newData;
+
+            UpdateNodes(); FHistory.Enqueue(this);
+
             return true;
         }
         /// <summary>
@@ -159,6 +164,7 @@ namespace FocusTree.Focus
                         FCsv.ReadGraphFromCsv(path, ref Nodes, ref Requires);
                         // 推断 Link 关系
                         UpdateNodes();
+                        FHistory.Clear(); FHistory.Enqueue(this);
                         break;
                     }
                 // 不是 csv 文件时
@@ -388,7 +394,7 @@ namespace FocusTree.Focus
                     Requires[id] = relations;
                 }
             }
-            UpdateNodes();
+            UpdateNodes(); FHistory.Clear(); FHistory.Enqueue(this);
         }
         /// <summary>
         /// 反序列化时用于读取节点的关系
