@@ -81,12 +81,6 @@ namespace FocusTree.Tree
             }
             return null;
         }
-        public override int GetLevelNodeCount(int level)
-        {
-            int count = 0;
-            GetLevelFNodeCount(RootNode, level, ref count);
-            return count;
-        }
         /// <summary>
         /// 获取特定层级下含有的节点数量
         /// </summary>

@@ -43,9 +43,6 @@ class Test
         var allTreeNodes = tree.GetAllMapNodes();
         var allGraphNodes = graph.GetAllMapNodes();
 
-        var treeLevelCount = tree.GetLevelNodeCount(2);
-        var graphLevelCount = graph.GetLevelNodeCount(2);
-
         var treeLevelNodes = tree.GetLevelNodes(2);
         var graphLevelNodes = graph.GetLevelNodes(2);
 

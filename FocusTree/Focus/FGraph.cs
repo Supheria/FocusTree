@@ -5,6 +5,7 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using static System.Windows.Forms.LinkLabel;
 
 namespace FocusTree.Focus
 {
@@ -18,21 +19,16 @@ namespace FocusTree.Focus
         /// <summary>
         /// 以 ID 作为 Key 的所有节点
         /// </summary>
-        private Dictionary<int, FMapNode> Nodes = new();
+        private Dictionary<int, FMapNode> Nodes;
 
         /// <summary>
         /// 节点依赖的节点 (子节点, 多组父节点)
         /// </summary>
-        private Dictionary<int, List<int[]>> Requires = new();
+        private Dictionary<int, List<int[]>> Requires;
         /// <summary>
         /// 依赖于节点的节点 (自动生成) (父节点, 多个子节点)
         /// </summary>
-        private Dictionary<int, HashSet<int>> Linked = null;
-
-        /// <summary>
-        /// 某个层级所包含的节点数量
-        /// </summary>
-        private Dictionary<int, int> LevelNodeCount = new();
+        private Dictionary<int, HashSet<int>> Linked;
 
         /// <summary>
         /// 节点显示位置
@@ -47,14 +43,14 @@ namespace FocusTree.Focus
         public FGraph(FTree tree)
         {
             Name = tree.Name;
+            Nodes = new();
+            Requires = new();
 
             var nodes = tree.GetAllFNodes();
             foreach (var node in nodes)
             {
                 // 添加节点到字典
                 Nodes.Add(node.ID, node);
-                // 层级节点计数
-                if (!LevelNodeCount.TryAdd(node.Level, 1)) { LevelNodeCount[node.Level]++; }
 
                 // 树中的数据关系是单向一一对应的，读取 Require 推断 Linked
                 if (node.Parent != null && node.Parent.ID >= 0)
@@ -113,10 +109,6 @@ namespace FocusTree.Focus
         public override FMapNode GetMapNodeById(int id)
         {
             return Nodes[id];
-        }
-        public override int GetLevelNodeCount(int level)
-        {
-            return LevelNodeCount[level];
         }
         public override HashSet<FMapNode> GetLevelNodes(int level)
         {
@@ -375,8 +367,8 @@ namespace FocusTree.Focus
 
         public async void ReadXml(XmlReader reader)
         {
-            var nodes = new Dictionary<int, FMapNode>();
-            var requires = new Dictionary<int, List<int[]>>();
+            Nodes = new();
+            Requires = new ();
 
             while (reader.Read())
             {
@@ -388,20 +380,22 @@ namespace FocusTree.Focus
                             case "Node":
                                 {
                                     var node = ReadNode(reader);
-                                    nodes.Add(node.ID, node);
+                                    Nodes.Add(node.ID, node);
                                     break;
                                 }
                             case "Relation":
                                 {
                                     int id = int.Parse(reader["ID"]);
                                     var relations = ReadRelation(reader);
+                                    Requires[id] = relations;
                                     break;
                                 }
                         }
                         break;
                 }
             }
-
+            CreateLinked();
+            NodeMap = GetNodeMap();
         }
         /// <summary>
         /// 反序列化时用于读取节点的数据
@@ -436,7 +430,21 @@ namespace FocusTree.Focus
         private List<int[]> ReadRelation(XmlReader reader)
         {
             var relations = new List<int[]>();
-            return relations;
+            while (reader.Read())
+            {
+                if (reader.NodeType == XmlNodeType.EndElement)
+                {
+                    return relations;
+                }
+                if (reader.NodeType == XmlNodeType.Element && reader.Name == "Require")
+                {
+                    reader.Read();
+                    var requir_str = reader.ReadContentAsString();
+                    relations.Add(IdArrayFromString(requir_str));
+                    // 如果顺序反过来这里需要 continue
+                }
+            }
+            throw new Exception("[2302191020] 读取 Relation列表 时未能找到结束标签");
         }
 
         public void WriteXml(XmlWriter writer)

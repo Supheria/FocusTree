@@ -21,12 +21,6 @@ namespace FocusTree.Focus
         /// <returns>获取的Node</returns>
         abstract public FMapNode GetMapNodeById(int id);
         /// <summary>
-        /// 获取特定层有多少个节点
-        /// </summary>
-        /// <param name="level">层级</param>
-        /// <returns>层级节点数量</returns>
-        abstract public int GetLevelNodeCount(int level);
-        /// <summary>
         /// 获取某一层的所有节点
         /// </summary>
         /// <param name="level">层级</param>
