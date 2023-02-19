@@ -210,6 +210,7 @@ namespace FocusTree.UI
         /// <returns>节点ID 或 null</returns>
         private int? GetFirstNodeClicked(Point location)
         {
+            if (Graph == null) { return null; }
             var mapEnumer = Graph.GetNodeMapEnumerator();
             while (mapEnumer.MoveNext())
             {

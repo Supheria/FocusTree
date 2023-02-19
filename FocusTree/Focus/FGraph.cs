@@ -464,10 +464,14 @@ namespace FocusTree.Focus
 
         public static string IdArrayToString(HashSet<int> ids)
         {
+            var splitmark = ", ";
             var sb = new StringBuilder();
-            foreach (var id in ids) { sb.Append(id.ToString() + ", "); }
+            foreach (var id in ids) { sb.Append(id.ToString() + splitmark); }
 
-            return sb.ToString()[..2];
+            var str = sb.ToString().Trim();
+            if(str.EndsWith(",")) { str = str[..1]; }
+
+            return str;
         }
         public static HashSet<int> IdArrayFromString(string ids)
         {
