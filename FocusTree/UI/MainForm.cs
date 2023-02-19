@@ -72,19 +72,32 @@ namespace FocusTree.UI
 
         private void main_Menu_edit_undo_Click(object sender, EventArgs e)
         {
-            FHistory.Undo(Display.Graph);
+            if (FHistory.HasPrev())
+            {
+                FHistory.Undo(Display.Graph);
+            }
             main_Menu_edit_status_check();
+            Display.Invalidate();
         }
 
         private void main_Menu_edit_redo_Click(object sender, EventArgs e)
         {
-            FHistory.Redo(Display.Graph);
+            if (FHistory.HasNext())
+            {
+                FHistory.Redo(Display.Graph);
+            }
             main_Menu_edit_status_check();
+            Display.Invalidate();
         }
         /// <summary>
         /// 更新撤回和重做按钮是否可用的状态
         /// </summary>
         public void main_Menu_edit_status_check()
+        {
+            main_Menu_edit_undo.Enabled = FHistory.HasPrev();
+            main_Menu_edit_redo.Enabled = FHistory.HasNext();
+        }
+        private void main_Menu_edit_status_check(object sender, EventArgs e)
         {
             main_Menu_edit_undo.Enabled = FHistory.HasPrev();
             main_Menu_edit_redo.Enabled = FHistory.HasNext();

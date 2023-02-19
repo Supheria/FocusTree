@@ -1,9 +1,12 @@
 ﻿using FocusTree.Tree;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -14,7 +17,8 @@ namespace FocusTree.Focus
         /// <summary>
         /// 保留的历史记录数量（用于撤回和重做）
         /// </summary>
-        private static (byte[], byte[])[] History = new (byte[], byte[])[20];
+        private static (string, string)[] History 
+            = new (string, string)[20];
         /// <summary>
         /// 历史记录指针
         /// </summary>
@@ -102,7 +106,7 @@ namespace FocusTree.Focus
         }
         public static void Clear()
         {
-            History = new (byte[], byte[])[History.Length];
+            History = new (string, string)[History.Length];
             Index = 0;
             Length = 0;
         }
@@ -111,25 +115,27 @@ namespace FocusTree.Focus
         /// </summary>
         /// <param name="graph">Graph</param>
         /// <returns>序列化对象</returns>
-        private static (byte[], byte[]) SerializeGraphData(FGraph graph)
+        private static (string, string) SerializeGraphData(FGraph graph)
         {
             var nodes = graph.GraphDataNodes_Get();
             var requires = graph.GraphDataRequires_Get();
 
-            var nodeObj = JsonSerializer.SerializeToUtf8Bytes(nodes);
-            var requiresObj = JsonSerializer.SerializeToUtf8Bytes(requires);
+            var cnodes = JsonConvert.SerializeObject(nodes);
+            var crequires = JsonConvert.SerializeObject(requires);
 
-            return (nodeObj, requiresObj);
+            return (cnodes, crequires);
         }
         /// <summary>
         /// 反序列化 核心数据 到 Graph 里
         /// </summary>
         /// <param name="data">序列化的历史记录</param>
         /// <param name="graph">反序列化到目标</param>
-        private static void DeSerializeGraphData((byte[], byte[]) data, ref FGraph graph)
+        private static void DeSerializeGraphData((string,string) data, ref FGraph graph)
         {
-            graph.GraphDataNodes_Set(JsonSerializer.Deserialize<Dictionary<int, FData>>(data.Item1));
-            graph.GraphDataRequires_Set(JsonSerializer.Deserialize<Dictionary<int, List<HashSet<int>>>>(data.Item2));
+            var nodes = JsonConvert.DeserializeObject<Dictionary<int, FData>>(data.Item1);
+            var requires = JsonConvert.DeserializeObject<Dictionary<int, List<HashSet<int>>>>(data.Item2);
+            graph.GraphDataNodes_Set(nodes);
+            graph.GraphDataRequires_Set(requires);
         }
     }
 }

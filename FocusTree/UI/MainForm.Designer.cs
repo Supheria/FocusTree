@@ -160,6 +160,8 @@
             this.main_Menu_edit.Name = "main_Menu_edit";
             this.main_Menu_edit.Size = new System.Drawing.Size(44, 21);
             this.main_Menu_edit.Text = "编辑";
+            this.main_Menu_edit.DropDownClosed += new System.EventHandler(this.main_Menu_edit_status_check);
+            this.main_Menu_edit.DropDownOpening += new System.EventHandler(this.main_Menu_edit_status_check);
             this.main_Menu_edit.Click += new System.EventHandler(this.main_Menu_edit_Click);
             // 
             // main_Menu_edit_undo
