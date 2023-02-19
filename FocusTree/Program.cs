@@ -20,7 +20,7 @@ internal static class Program
     [STAThread]
     static void Main()
     {
-        //Test.FMapTest();
+        Test.FMapTest();
         //Test.FormInterationTest();
         Test.FGraphToXmlTest();
         //Application.Run(new MainForm());

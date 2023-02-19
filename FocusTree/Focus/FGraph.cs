@@ -43,6 +43,7 @@ namespace FocusTree.Focus
         /// 将 FTree 转换为 FGraph
         /// </summary>
         /// <param name="tree">国策树</param>
+        [Obsolete] // 这个函数后续需要被优化掉
         public FGraph(FTree tree)
         {
             Name = tree.Name;
@@ -56,7 +57,11 @@ namespace FocusTree.Focus
                 if (!LevelNodeCount.TryAdd(node.Level, 1)) { LevelNodeCount[node.Level]++; }
 
                 // 树中的数据关系是单向一一对应的，读取 Require 推断 Linked
-                Requires.Add(node.ID, new List<int[]> { node.Parent != null ? new int[] { node.Parent.ID } : Array.Empty<int>() });
+                if (node.Parent != null && node.Parent.ID >= 0)
+                {
+                    Requires.Add(node.ID, new List<int[]> { new int[] { node.Parent.ID } });
+                }
+
             }
             // 推断 Link 关系
             CreateLinked();
@@ -73,12 +78,15 @@ namespace FocusTree.Focus
 
             foreach (var require in Requires)
             {
-                foreach(var childs in require.Value)
+                foreach (var parents in require.Value)
                 {
-                    // 如果父节点没有创建 HashSet 就创建一个新的
-                    Linked.TryAdd(require.Key, new HashSet<int>());
-                    // 向 HashSet 里添加子节点（忽略重复项）
-                    Linked[require.Key].Union(childs);
+                    foreach (var parent in parents)
+                    {
+                        // 如果父节点没有创建 HashSet 就创建一个新的
+                        Linked.TryAdd(parent, new HashSet<int>());
+                        // 向 HashSet 里添加子节点（忽略重复项）
+                        Linked[parent].Add(require.Key);
+                    }
                 }
             }
         }
@@ -152,9 +160,9 @@ namespace FocusTree.Focus
         {
             steps.Push(current);
 
-            var childs = Linked[current];
+            var hasChild = Linked.TryGetValue(current, out HashSet<int> childs);
             // 当前节点是叶节点，累加并退出
-            if (childs.Count == 0) { count++; }
+            if (!hasChild) { count++; }
             else
             {
                 foreach (var child in childs)
@@ -181,9 +189,9 @@ namespace FocusTree.Focus
         {
             steps.Push(current);
 
-            var childs = Linked[current];
+            var hasChild = Linked.TryGetValue(current, out HashSet<int> childs);
             // 当前节点是叶节点，累加并退出
-            if (childs.Count == 0) { nodes.Add(Nodes[current]); }
+            if (!hasChild) { nodes.Add(Nodes[current]); }
             else
             {
                 foreach (var child in childs)
@@ -211,7 +219,7 @@ namespace FocusTree.Focus
         {
             return Requires[id];
         }
-        public IEnumerator<KeyValuePair<int, HashSet<int>>> GetLinkedEnumerator(){ return Linked.GetEnumerator();}
+        public IEnumerator<KeyValuePair<int, HashSet<int>>> GetLinkedEnumerator() { return Linked.GetEnumerator(); }
         /// <summary>
         /// 获取 Nodes 的迭代器
         /// </summary>
@@ -302,9 +310,9 @@ namespace FocusTree.Focus
         {
             steps.Push(current);
 
-            var childs = Linked[current];
+            var hasChild = Linked.TryGetValue(current, out HashSet<int> childs);
             // 当前节点是叶节点，累加并退出
-            if (childs.Count == 0)
+            if (!hasChild)
             {
                 if (reverse)
                 {
@@ -386,6 +394,7 @@ namespace FocusTree.Focus
                             case "Relation":
                                 {
                                     int id = int.Parse(reader["ID"]);
+                                    var relations = ReadRelation(reader);
                                     break;
                                 }
                         }
@@ -394,6 +403,12 @@ namespace FocusTree.Focus
             }
 
         }
+        /// <summary>
+        /// 反序列化时用于读取节点的数据
+        /// </summary>
+        /// <param name="reader">读取到节点的流</param>
+        /// <returns>节点</returns>
+        /// <exception cref="Exception">节点中缺少FData的异常</exception>
         private FNode ReadNode(XmlReader reader)
         {
             int id = int.Parse(reader["ID"]);
@@ -412,6 +427,16 @@ namespace FocusTree.Focus
                 }
             }
             throw new Exception("[2302190819] 读取XML文件的时候节点没有读取到 FData");
+        }
+        /// <summary>
+        /// 反序列化时用于读取节点的关系
+        /// </summary>
+        /// <param name="reader">读取到节点关系的流</param>
+        /// <returns>当前节点关系</returns>
+        private List<int[]> ReadRelation(XmlReader reader)
+        {
+            var relations = new List<int[]>();
+            return relations;
         }
 
         public void WriteXml(XmlWriter writer)
