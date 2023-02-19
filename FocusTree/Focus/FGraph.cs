@@ -90,7 +90,7 @@ namespace FocusTree.Focus
         /// <summary>
         /// 序列化时传递文件名
         /// </summary>
-        public void SetFileName(string filename, XmlSerializer reader)
+        public void SetFileName(string filename)
         {
             FilePath = filename;
         }

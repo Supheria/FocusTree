@@ -32,6 +32,7 @@ namespace FocusTree.IO
             {
                 CSVReader csvData = CSVReader.FromFile(filePath, settings);
                 data = csvData.ToArray(); //作为二维数组返回
+                csvData.Dispose();
             }
             catch (Exception ex)
             {
