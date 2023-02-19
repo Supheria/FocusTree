@@ -112,7 +112,7 @@
             // main_Menu_file_new
             // 
             this.main_Menu_file_new.Name = "main_Menu_file_new";
-            this.main_Menu_file_new.Size = new System.Drawing.Size(112, 22);
+            this.main_Menu_file_new.Size = new System.Drawing.Size(180, 22);
             this.main_Menu_file_new.Text = "新建";
             // 
             // main_Menu_file_open
@@ -121,32 +121,33 @@
             this.main_Menu_file_open_csv,
             this.main_Menu_file_open_xml});
             this.main_Menu_file_open.Name = "main_Menu_file_open";
-            this.main_Menu_file_open.Size = new System.Drawing.Size(112, 22);
+            this.main_Menu_file_open.Size = new System.Drawing.Size(180, 22);
             this.main_Menu_file_open.Text = "打开";
             // 
             // main_Menu_file_open_csv
             // 
             this.main_Menu_file_open_csv.Name = "main_Menu_file_open_csv";
-            this.main_Menu_file_open_csv.Size = new System.Drawing.Size(127, 22);
+            this.main_Menu_file_open_csv.Size = new System.Drawing.Size(180, 22);
             this.main_Menu_file_open_csv.Text = ".csv 文件";
             this.main_Menu_file_open_csv.Click += new System.EventHandler(this.main_Menu_file_open_csv_Click);
             // 
             // main_Menu_file_open_xml
             // 
             this.main_Menu_file_open_xml.Name = "main_Menu_file_open_xml";
-            this.main_Menu_file_open_xml.Size = new System.Drawing.Size(127, 22);
+            this.main_Menu_file_open_xml.Size = new System.Drawing.Size(180, 22);
             this.main_Menu_file_open_xml.Text = ".xml 文件";
+            this.main_Menu_file_open_xml.Click += new System.EventHandler(this.main_Menu_file_open_xml_Click);
             // 
             // main_Menu_file_save
             // 
             this.main_Menu_file_save.Name = "main_Menu_file_save";
-            this.main_Menu_file_save.Size = new System.Drawing.Size(112, 22);
+            this.main_Menu_file_save.Size = new System.Drawing.Size(180, 22);
             this.main_Menu_file_save.Text = "保存";
             // 
             // main_Menu_file_saveas
             // 
             this.main_Menu_file_saveas.Name = "main_Menu_file_saveas";
-            this.main_Menu_file_saveas.Size = new System.Drawing.Size(112, 22);
+            this.main_Menu_file_saveas.Size = new System.Drawing.Size(180, 22);
             this.main_Menu_file_saveas.Text = "另存为";
             // 
             // main_Menu_edit
@@ -196,7 +197,7 @@
             // main_Menu_node_add
             // 
             this.main_Menu_node_add.Name = "main_Menu_node_add";
-            this.main_Menu_node_add.Size = new System.Drawing.Size(180, 22);
+            this.main_Menu_node_add.Size = new System.Drawing.Size(136, 22);
             this.main_Menu_node_add.Text = "添加新节点";
             // 
             // MainForm

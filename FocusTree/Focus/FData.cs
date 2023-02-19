@@ -17,37 +17,37 @@ namespace FocusTree.Tree
         /// <summary>
         /// 节点ID
         /// </summary>
-        [XmlElement("id")]
-        public int Id;
+        [XmlAttribute("ID")]
+        public int ID;
         /// <summary>
         /// 国策名称
         /// </summary>
-        [XmlElement("name")]
+        [XmlElement("Name")]
         public string Name = "未定义";
         /// <summary>
         /// 字段是否以 * 开头
         /// </summary>
-        [XmlElement("begin-with-star")]
+        [XmlElement("Star")]
         public bool BeginWithStar = false;
         /// <summary>
         /// 实施天数
         /// </summary>
-        [XmlElement("duration")]
+        [XmlElement("Duration")]
         public int Duration = -1;
         /// <summary>
         /// 国策效果
         /// </summary>
-        [XmlElement("effects")]
+        [XmlElement("Effects")]
         public string Effects = string.Empty;
         /// <summary>
         /// 国策描述
         /// </summary>
-        [XmlElement("descript")]
+        [XmlElement("Descript")]
         public string Descript = string.Empty;
         /// <summary>
         /// 备注
         /// </summary>
-        [XmlElement("ps.")]
+        [XmlElement("Ps.")]
         public string Ps = string.Empty;
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace FocusTree.Tree
             string ps
             )
         {
-            Id = id;
+            ID = id;
             Name = name;
             BeginWithStar = isBeginWithstar;
             Duration = duration;
@@ -114,7 +114,7 @@ namespace FocusTree.Tree
                 string name;
                 // 如果以 * 开头，则去掉 *
                 if (isBeginWithStar)
-                    name = match.Groups[1].Value.Substring(1);
+                    name = match.Groups[1].Value[1..];
                 else
                     name = match.Groups[1].Value;
                 // 天数

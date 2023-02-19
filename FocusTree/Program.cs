@@ -21,7 +21,7 @@ internal static class Program
     static void Main()
     {
         Test.FMapTest();
-        //Test.FGraphToXmlTest();
+        Test.FGraphToXmlTest();
         Application.Run(new MainForm());
 
         //Application.EnableVisualStyles();

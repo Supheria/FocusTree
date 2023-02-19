@@ -31,7 +31,9 @@ namespace FocusTree.IO
         {
             var reader = new XmlSerializer(typeof(FGraph));
             var file = File.OpenRead(path);
-            return reader.Deserialize(file) as FGraph;
+            var graph = reader.Deserialize(file) as FGraph;
+            graph.SetFileName(path, reader);
+            return graph;
         }
     }
 }

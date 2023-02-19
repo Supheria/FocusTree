@@ -3,10 +3,8 @@ using FocusTree.Tree;
 using System.Numerics;
 using System.Text;
 using System.Xml;
-using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using static System.Windows.Forms.LinkLabel;
 
 namespace FocusTree.Focus
 {
@@ -15,7 +13,7 @@ namespace FocusTree.Focus
         /// <summary>
         /// 文件名
         /// </summary>
-        public string Name;
+        public string FilePath { get; private set; }
 
         /// <summary>
         /// 以 ID 作为 Key 的所有节点
@@ -37,9 +35,9 @@ namespace FocusTree.Focus
         private Dictionary<int, Point> NodeMap;
 
         /// <summary>
-        /// 从文件中读取 Graph
+        /// 从 csv 文件中读取 Graph
         /// </summary>
-        /// <param name="path">国策树</param>
+        /// <param name="path">国策树 .csv文件</param>
         public FGraph(string path)
         {
             if (!File.Exists(path))
@@ -47,17 +45,25 @@ namespace FocusTree.Focus
                 throw new Exception("[2302191048] 文件不存在: " + path);
             }
 
-            Name = Path.GetFileNameWithoutExtension(path);
+            FilePath = path;
             Nodes = new();
             Requires = new();
 
-            // 从 Csv 读取
-            FCsv.ReadGraphFromCsv(path, ref Nodes, ref Requires);
-
-            // 推断 Link 关系
-            CreateLinked();
-
-            NodeMap = GetNodeMap();
+            // 根据不同扩展名以对应方式加载
+            switch (Path.GetExtension(path).ToLower())
+            {
+                // 从 Csv 读取
+                case ".csv":
+                    {
+                        FCsv.ReadGraphFromCsv(path, ref Nodes, ref Requires);
+                        // 推断 Link 关系
+                        CreateLinked();
+                        NodeMap = GetNodeMap();
+                        break;
+                    }
+                // 不是 csv 文件时
+                default: throw new Exception("[2302191420] 不是有效的 csv 文件");
+            }
         }
         /// <summary>
         /// 使用 Requires 创建 Linked
@@ -82,11 +88,11 @@ namespace FocusTree.Focus
             }
         }
         /// <summary>
-        /// 将 XML 转换为 FGraph
+        /// 序列化时传递文件名
         /// </summary>
-        public FGraph(Dictionary<int, FData> nodes, Dictionary<int, List<int[]>> requires)
+        public void SetFileName(string filename, XmlSerializer reader)
         {
-
+            FilePath = filename;
         }
         /// <summary>
         /// 用于序列化
@@ -102,7 +108,7 @@ namespace FocusTree.Focus
         /// <summary>
         public List<int[]> GetNodeRequires(int id)
         {
-            bool hasRequire = Requires.TryGetValue(id, out List<int[]> requires);
+            Requires.TryGetValue(id, out List<int[]> requires);
             return requires;
         }
         public FData GetNode(int id)
@@ -116,7 +122,7 @@ namespace FocusTree.Focus
         public HashSet<int> GetRootNodes()
         {
             var result = new HashSet<int>();
-            foreach(var id in Nodes.Keys)
+            foreach (var id in Nodes.Keys)
             {
                 if (!Requires.ContainsKey(id)) { result.Add(id); }
             }
@@ -283,54 +289,29 @@ namespace FocusTree.Focus
 
             while (reader.Read())
             {
-                switch (reader.NodeType)
+                if (reader.NodeType != XmlNodeType.Element) { continue; }
+                if (reader.Name == "Nodes")
                 {
-                    case XmlNodeType.Element:
-                        switch (reader.Name)
+                    reader.Read();
+                    while (reader.NodeType != XmlNodeType.EndElement)
+                    {
+                        if (reader.NodeType == XmlNodeType.Element && reader.Name == "Node")
                         {
-                            case "Node":
-                                {
-                                    var node = ReadNode(reader);
-                                    Nodes.Add(node.Id, node);
-                                    break;
-                                }
-                            case "Relation":
-                                {
-                                    int id = int.Parse(reader["ID"]);
-                                    var relations = ReadRelation(reader);
-                                    Requires[id] = relations;
-                                    break;
-                                }
+                            var node = (FData)FData_serial.Deserialize(reader);
+                            Nodes.Add(node.ID, node);
                         }
-                        break;
+                        else { reader.Read(); }
+                    }
+                }
+                if (reader.Name == "Relation")
+                {
+                    int id = int.Parse(reader["ID"]);
+                    var relations = ReadRelation(reader);
+                    Requires[id] = relations;
                 }
             }
             CreateLinked();
             NodeMap = GetNodeMap();
-        }
-        /// <summary>
-        /// 反序列化时用于读取节点的数据
-        /// </summary>
-        /// <param name="reader">读取到节点的流</param>
-        /// <returns>节点</returns>
-        /// <exception cref="Exception">节点中缺少FData的异常</exception>
-        private FData ReadNode(XmlReader reader)
-        {
-            int id = int.Parse(reader["ID"]);
-            int level = int.Parse(reader["Level"]);
-            while (reader.Read())
-            {
-                if (reader.Name == "FData")
-                {
-                    return (FData)FData_serial.Deserialize(reader);
-                }
-                // 如果读取到了节点尾部
-                if (reader.NodeType == XmlNodeType.EndElement)
-                {
-                    throw new Exception("[2302190831] 读取XML文件的时候节点没有读取到 FData");
-                }
-            }
-            throw new Exception("[2302190819] 读取XML文件的时候节点没有读取到 FData");
         }
         /// <summary>
         /// 反序列化时用于读取节点的关系
@@ -365,12 +346,7 @@ namespace FocusTree.Focus
             writer.WriteStartElement("Nodes");
             foreach (var node in Nodes)
             {
-                writer.WriteStartElement("Node");
-                // <Node>
-                writer.WriteAttributeString("ID", node.Key.ToString());
                 FData_serial.Serialize(writer, node.Value, NullXmlNameSpace);
-                writer.WriteEndElement();
-                // </Node>
             }
             writer.WriteEndElement();
             // </Nodes>

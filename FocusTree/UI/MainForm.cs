@@ -1,4 +1,5 @@
 ﻿using FocusTree.Focus;
+using FocusTree.IO;
 using FocusTree.Tree;
 using System;
 using System.Collections.Generic;
@@ -42,6 +43,19 @@ namespace FocusTree.UI
         {
             Display.RelocateCenter();
             Display.Invalidate();
+        }
+
+        private void main_Menu_file_open_xml_Click(object sender, EventArgs e)
+        {
+            main_Openfile.Filter = "xml files (.xml) |*.xml";
+            var result = main_Openfile.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                Display.Graph = FXml.LoadGraph(main_Openfile.FileName);
+                Display.RelocateCenter();
+                Display.Invalidate();
+                main_StatusStrip_filename.Text = Path.GetFileNameWithoutExtension(main_Openfile.FileName);
+            }
         }
     }
 }
