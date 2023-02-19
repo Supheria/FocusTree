@@ -38,6 +38,8 @@ class Test
     {
         var graph = new FGraph("人类财阀联合.csv");
 
+        graph.RemoveNode(1);
+
         var graphRequire = graph.GetNodeRequires(81);
 
         Console.WriteLine();

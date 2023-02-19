@@ -40,7 +40,7 @@ namespace FocusTree.IO
             }
             return data;
         }
-        public static void ReadGraphFromCsv(string path, ref Dictionary<int, FData> nodes, ref Dictionary<int, List<int[]>> requires)
+        public static void ReadGraphFromCsv(string path, ref Dictionary<int, FData> nodes, ref Dictionary<int, List<List<int>>> requires)
         {
             var data = ReadCsv(path);
 
@@ -90,7 +90,7 @@ namespace FocusTree.IO
 
                     //添加新节点并创建依赖
                     nodes.Add(newNode.Value, focusData);
-                    requires.Add(newNode.Value, new List<int[]> { new int[] { last.Value } });
+                    requires.Add(newNode.Value, new List<List<int>> { new List<int> { last.Value } });
 
                     last = newNode;
                 }
@@ -116,7 +116,7 @@ namespace FocusTree.IO
                     else // 新节点有父节点
                     {
                         newNode.SetParent(last);
-                        requires.Add(newNode.Value, new List<int[]> { new int[] { last.Value } });
+                        requires.Add(newNode.Value, new List<List<int>> { new List<int> { last.Value } });
                         last = newNode;
                     }
                 }

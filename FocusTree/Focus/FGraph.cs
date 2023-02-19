@@ -10,29 +10,65 @@ namespace FocusTree.Focus
 {
     public class FGraph : IXmlSerializable
     {
+        #region ---- 基本变量 ----
+
         /// <summary>
         /// 文件名
         /// </summary>
         public string FilePath { get; private set; }
-
         /// <summary>
         /// 以 ID 作为 Key 的所有节点
         /// </summary>
         private Dictionary<int, FData> Nodes;
-
         /// <summary>
         /// 节点依赖的节点 (子节点, 多组父节点)
         /// </summary>
-        private Dictionary<int, List<int[]>> Requires;
+        private Dictionary<int, List<List<int>>> Requires;
         /// <summary>
         /// 依赖于节点的节点 (自动生成) (父节点, 多个子节点)
         /// </summary>
         private Dictionary<int, HashSet<int>> Linked;
-
         /// <summary>
         /// 节点显示位置
         /// </summary>
         private Dictionary<int, Point> NodeMap;
+
+        #endregion
+
+        #region ---- 节点操作 ----
+
+        /// <summary>
+        /// 添加节点 O(1)，绘图时记得重新调用 GetNodeMap
+        /// </summary>
+        /// <returns>是否添加成功</returns>
+        public bool AddNode(FData node)
+        {
+            return Nodes.TryAdd(node.ID, node);
+        }
+        /// <summary>
+        /// 删除节点 O(n+)，绘图时记得重新调用 GetNodeMap
+        /// </summary>
+        /// <returns>是否成功删除</returns>
+        public void RemoveNode(int id)
+        {
+            // 移除节点依赖项 (因为都是传递引用，所以可以直接操作)
+            Requires.Remove(id);
+            foreach (var requires in Requires.Values)
+            {
+                foreach (var requireGroup in requires)
+                {
+                    requireGroup.Remove(id);
+                }
+            }
+            // 移除节点
+            Nodes.Remove(id);
+            // 重新创建节点连接
+            CreateLinked();
+        }
+
+        #endregion
+
+        #region ---- 读写与重载 ---
 
         /// <summary>
         /// 从 csv 文件中读取 Graph
@@ -99,6 +135,8 @@ namespace FocusTree.Focus
         /// </summary>
         private FGraph() { }
 
+        #endregion
+
         #region ---- 特有方法 ----
         /// <summary>
         /// 获取节点与关联的节点的依赖关系列表
@@ -106,9 +144,9 @@ namespace FocusTree.Focus
         /// <param name="id">节点id</param>
         /// <returns>依赖关系列表</returns>
         /// <summary>
-        public List<int[]> GetNodeRequires(int id)
+        public List<List<int>> GetNodeRequires(int id)
         {
-            Requires.TryGetValue(id, out List<int[]> requires);
+            Requires.TryGetValue(id, out List<List<int>> requires);
             return requires;
         }
         public FData GetNode(int id)
@@ -282,7 +320,7 @@ namespace FocusTree.Focus
             return null;
         }
 
-        public async void ReadXml(XmlReader reader)
+        public void ReadXml(XmlReader reader)
         {
             Nodes = new();
             Requires = new();
@@ -318,9 +356,9 @@ namespace FocusTree.Focus
         /// </summary>
         /// <param name="reader">读取到节点关系的流</param>
         /// <returns>当前节点关系</returns>
-        private List<int[]> ReadRelation(XmlReader reader)
+        private List<List<int>> ReadRelation(XmlReader reader)
         {
-            var relations = new List<int[]>();
+            var relations = new List<List<int>>();
             while (reader.Read())
             {
                 if (reader.NodeType == XmlNodeType.EndElement)
@@ -374,17 +412,23 @@ namespace FocusTree.Focus
             writer.WriteEndElement();
             // </Relations>
         }
-        public static string IdArrayToString(int[] ids)
+        public static string IdArrayToString(List<int> ids)
         {
             var sb = new StringBuilder();
-            for (int i = 0; i < ids.Length; i++) { sb.Append(ids[i].ToString() + (i < ids.Length - 1 ? ", " : "")); }
+            for (int i = 0; i < ids.Count; i++) { sb.Append(ids[i].ToString() + (i < ids.Count - 1 ? ", " : "")); }
             return sb.ToString();
         }
-        public static int[] IdArrayFromString(string ids)
+        public static List<int> IdArrayFromString(string ids)
         {
             var split = ids.Split(',').Where(x => !string.IsNullOrWhiteSpace(x));
-            return split.Select(x => int.Parse(x)).ToArray();
+            return split.Select(x => int.Parse(x)).ToList();
         }
+        #endregion
+
+        #region ---- 其它工具 ----
+
+
+
         #endregion
     }
 }
