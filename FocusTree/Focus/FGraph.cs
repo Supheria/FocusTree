@@ -102,7 +102,7 @@ namespace FocusTree.Focus
             var result = new HashSet<int>();
             foreach (var id in Nodes.Keys)
             {
-                if (!Requires.ContainsKey(id) || Requires[id].Sum(x=>x.Count) == 0) { result.Add(id); }
+                if (!Requires.ContainsKey(id) || Requires[id].Sum(x => x.Count) == 0) { result.Add(id); }
             }
             return result;
         }
@@ -469,7 +469,7 @@ namespace FocusTree.Focus
             foreach (var id in ids) { sb.Append(id.ToString() + splitmark); }
 
             var str = sb.ToString().Trim();
-            if(str.EndsWith(",")) { str = str[..1]; }
+            if (str.EndsWith(",")) { str = str.Substring(0, str.Length - 1); }
 
             return str;
         }
