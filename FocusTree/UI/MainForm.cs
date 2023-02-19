@@ -58,8 +58,15 @@ namespace FocusTree.UI
             var path = Display.Graph.FilePath;
             var savepath = Path.Combine(dir.FullName, DateTime.Now.ToString("yyyyMMddHHmmss ") + Path.GetFileName(path));
             // 备份文件
-            File.Copy(path, savepath, true);
             var path_xml = Path.ChangeExtension(path, ".xml");
+            if (File.Exists(path_xml))
+            {
+                File.Copy(path_xml, Path.ChangeExtension(savepath,".xml"), true);
+            }
+            else
+            {
+                File.Copy(path, savepath, true);
+            }
             // 保存
             FXml.SaveGraph(path_xml, Display.Graph);
             Display.Graph.SetFileName(path_xml);
