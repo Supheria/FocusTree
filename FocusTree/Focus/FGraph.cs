@@ -68,9 +68,16 @@ namespace FocusTree.Focus
             GetNodeMap();
         }
         /// <summary>
+        /// 将 XML 转换为 FGraph
+        /// </summary>
+        public FGraph(Dictionary<int, FMapNode> nodes, Dictionary<int, List<NodeRelation>> relations)
+        {
+
+        }
+        /// <summary>
         /// 用于序列化
         /// </summary>
-        public FGraph() { throw new NotImplementedException(); }
+        private FGraph() { }
 
         #region ---- FMap 抽象函数功能 ----
         [Obsolete]
@@ -352,9 +359,27 @@ namespace FocusTree.Focus
             return null;
         }
 
-        public void ReadXml(XmlReader reader)
+        public async void ReadXml(XmlReader reader)
         {
-            throw new NotImplementedException();
+            var nodes = new Dictionary<int, FMapNode>();
+            var relations = new Dictionary<int, List<NodeRelation>>();
+
+            while (reader.Read())
+            {
+                switch (reader.NodeType)
+                {
+                    case XmlNodeType.Element:
+                        switch (reader.Name)
+                        {
+                            case "Node":
+                                int id = int.Parse(reader["ID"]);
+                                int level = int.Parse(reader["Level"]);
+                                break;
+                        }
+                        break;
+                }
+            }
+
         }
 
         public void WriteXml(XmlWriter writer)
@@ -369,11 +394,7 @@ namespace FocusTree.Focus
                 // <Node>
                 writer.WriteAttributeString("ID", node.Key.ToString());
                 writer.WriteAttributeString("Level", node.Value.Level.ToString());
-                // <Data> 序列化 FData (国策节点数据)
-                writer.WriteStartElement("Data");
                 FData_serial.Serialize(writer, node.Value.FocusData, NullXmlNameSpace);
-                writer.WriteEndElement();
-                // </Data>
                 writer.WriteEndElement();
                 // </Node>
             }

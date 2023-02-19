@@ -73,12 +73,13 @@ class Test
         var graph = new FGraph(tree);
 
         var serializer = new XmlSerializer(typeof(FGraph));
+
         var file = File.Create("人类财阀联合.Graph.xml");
         serializer.Serialize(file, graph);
         file.Close();
 
         //var readfile = File.OpenRead("人类财阀联合.Graph.xml");
-        //var readgraph = (FGraphStruct)serializer.Deserialize(readfile);
+        //var readgraph = (FGraph)serializer.Deserialize(readfile);
 
     }
     public static void BranchesTest()
