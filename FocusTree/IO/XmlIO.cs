@@ -1,23 +1,18 @@
-﻿using FocusTree.Focus;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
+using FocusTree.Data;
 
 namespace FocusTree.IO
 {
-    internal class FXml
+    internal class XmlIO
     {
         /// <summary>
         /// 将 FGraph 序列化成 xml
         /// </summary>
         /// <param name="path">保存路径</param>
         /// <param name="graph">FGraph</param>
-        public static void SaveGraph(string path, FGraph graph)
+        public static void SaveGraph(string path, FocusGraph graph)
         {
-            var writer = new XmlSerializer(typeof(FGraph));
+            var writer = new XmlSerializer(typeof(FocusGraph));
             var file = File.Create(path);
             writer.Serialize(file, graph);
             file.Close();
@@ -27,11 +22,11 @@ namespace FocusTree.IO
         /// </summary>
         /// <param name="path">xml文件路径</param>
         /// <returns>FGraph</returns>
-        public static FGraph LoadGraph(string path)
+        public static FocusGraph LoadGraph(string path)
         {
-            var reader = new XmlSerializer(typeof(FGraph));
+            var reader = new XmlSerializer(typeof(FocusGraph));
             var file = File.OpenRead(path);
-            var graph = reader.Deserialize(file) as FGraph;
+            var graph = reader.Deserialize(file) as FocusGraph;
             graph.SetFileName(path);
             file.Close();
             return graph;

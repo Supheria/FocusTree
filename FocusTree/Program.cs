@@ -1,15 +1,9 @@
 ﻿// See https://aka.ms/new-console-template for more information
 //Console.WriteLine("Hello, World!");
 
-using FocusTree;
-using FocusTree.Focus;
+using FocusTree.Data;
 using FocusTree.IO;
-using FocusTree.Tree;
 using FocusTree.UI;
-using System.Drawing;
-using System.IO;
-using System.Net;
-using System.Numerics;
 using System.Xml.Serialization;
 
 internal static class Program
@@ -36,19 +30,19 @@ class Test
 {
     public static void FMapTest()
     {
-        var graph = new FGraph("人类财阀联合.csv");
+        var graph = new FocusGraph("人类财阀联合.csv");
 
-       // FHistory.Enqueue(graph);
+        // FHistory.Enqueue(graph);
 
         //var suc = graph.AddNode(new FData(99,"Test", false, 0, "测试", "测试2", "测试3"));
 
         graph.RemoveNode(1);
 
-        FHistory.Undo(graph);
+        DataHistory.Undo(graph);
 
-        
 
-        FHistory.Redo(graph);
+
+        DataHistory.Redo(graph);
 
         var graphRequire = graph.GetNodeRequires(81);
         var graphLink = graph.GetNodeLinks(81);
@@ -60,13 +54,13 @@ class Test
     /// </summary>
     public static void FGraphToXmlTest()
     {
-        var serializer = new XmlSerializer(typeof(FGraph));
+        var serializer = new XmlSerializer(typeof(FocusGraph));
 
-        var graph = new FGraph("人类财阀联合.csv");
+        var graph = new FocusGraph("人类财阀联合.csv");
 
-        FXml.SaveGraph("人类财阀联合.Graph.xml", graph);
+        XmlIO.SaveGraph("人类财阀联合.Graph.xml", graph);
 
-        var readgraph = FXml.LoadGraph("人类财阀联合.Graph.xml");
+        var readgraph = XmlIO.LoadGraph("人类财阀联合.Graph.xml");
 
 
     }

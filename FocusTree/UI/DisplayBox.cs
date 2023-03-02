@@ -1,14 +1,5 @@
-﻿using FocusTree.Focus;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Numerics;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
+﻿using System.Numerics;
+using FocusTree.Data;
 
 namespace FocusTree.UI
 {
@@ -22,7 +13,7 @@ namespace FocusTree.UI
         /// <summary>
         /// 数据存储结构
         /// </summary>
-        public FGraph Graph;
+        public FocusGraph Graph;
         /// <summary>
         /// 绘图缩放倍率
         /// </summary>
@@ -88,13 +79,13 @@ namespace FocusTree.UI
             MouseDown += OnMouseDown;
             MouseMove += OnMouseMove;
             MouseUp += OnMouseUp;
-            MouseWheel+= OnMouseWheel;
+            MouseWheel += OnMouseWheel;
         }
         /// <summary>
         /// 获取当前的 FGraph 给其它类使用
         /// </summary>
         /// <returns>FGraph</returns>
-        public FGraph GetFGraph() { return Graph; }
+        public FocusGraph GetFGraph() { return Graph; }
         /// <summary>
         /// 当节点被右键时响应的事件
         /// </summary>
@@ -109,7 +100,7 @@ namespace FocusTree.UI
         /// </summary>
         public void RelocateCenter()
         {
-            if(Graph == null) { return; }
+            if (Graph == null) { return; }
             var bounds = Graph.GetNodeMapBounds();
             Camera = VectorToVisualVector(new Vector2(bounds.X, bounds.Y));
             // 画幅尺寸
@@ -117,7 +108,7 @@ namespace FocusTree.UI
             float px = Size.Width / visual_size.X, py = Size.Height / visual_size.Y;
 
             // 我也不知道为什么这里要 *0.90，直接放结果缩放的尺寸会装不下，*0.90 能放下，而且边缘有空余
-            GScale = Math.Min(px, py) * 0.90f; 
+            GScale = Math.Min(px, py) * 0.90f;
         }
         /// <summary>
         /// 要求重绘时更新画面
@@ -155,7 +146,7 @@ namespace FocusTree.UI
                 // 这里应该去连接依赖的节点，而不是去对子节点连接
                 var requires = Graph.GetNodeRequires(id);
                 // 对于根节点，requires 为 null
-                if(requires == null) { continue; }
+                if (requires == null) { continue; }
 
                 int requireColor = 0; //不同需求要变色
                 foreach (var require_ids in requires)
@@ -190,13 +181,13 @@ namespace FocusTree.UI
         private void OnMouseDown(object sender, MouseEventArgs args)
         {
             // 用于拖动事件
-            if(args.Button == MouseButtons.Left)
+            if (args.Button == MouseButtons.Left)
             {
                 DragMousePoint_Flag = true;
                 DragMousePoint = args.Location;
             }
             // 对节点打开右键菜单
-            if((args.Button & MouseButtons.Right) == MouseButtons.Right)
+            if ((args.Button & MouseButtons.Right) == MouseButtons.Right)
             {
                 var point = ClickedLocation(args.Location);
                 int? clickedNode = GetFirstNodeClicked(point);
@@ -229,7 +220,7 @@ namespace FocusTree.UI
             {
                 var newPoint = args.Location;
                 var dif = new Point(newPoint.X - DragMousePoint.X, newPoint.Y - DragMousePoint.Y);
-                if(Math.Abs(dif.X) >= 1 || Math.Abs(dif.Y)>=1)
+                if (Math.Abs(dif.X) >= 1 || Math.Abs(dif.Y) >= 1)
                 {
                     var difvec = new Vector2(dif.X / GScale, dif.Y / GScale);
 
@@ -252,7 +243,7 @@ namespace FocusTree.UI
         private void OnMouseWheel(object sender, MouseEventArgs args)
         {
             var mulDelta = 1 + (args.Delta * 0.002f); // 对，这个数就是很小，不然鼠标一滚就飞了
-            
+
             // 缩放前进行偏移
             var cLoc = ClickedVec(args.Location);
             var dif = cLoc - Camera;

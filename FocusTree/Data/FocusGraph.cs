@@ -1,15 +1,13 @@
 ﻿using FocusTree.IO;
-using FocusTree.Tree;
 using System.Numerics;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using static FocusTree.Focus.FHistory;
 
-namespace FocusTree.Focus
+namespace FocusTree.Data
 {
-    public class FGraph : IXmlSerializable
+    public class FocusGraph : IXmlSerializable
     {
         #region ---- 基本变量 ----
 
@@ -20,7 +18,7 @@ namespace FocusTree.Focus
         /// <summary>
         /// 以 ID 作为 Key 的所有节点
         /// </summary>
-        private Dictionary<int, FData> Nodes;
+        private Dictionary<int, FocusData> Nodes;
         /// <summary>
         /// 节点依赖的节点 (子节点, 多组父节点)
         /// </summary>
@@ -43,7 +41,7 @@ namespace FocusTree.Focus
         /// </summary>
         /// <param name="id">ID</param>
         /// <returns>节点数据</returns>
-        public FData GetNode(int id)
+        public FocusData GetNode(int id)
         {
             return Nodes[id];
         }
@@ -51,11 +49,14 @@ namespace FocusTree.Focus
         /// 添加节点 O(1)，绘图时记得重新调用 GetNodeMap
         /// </summary>
         /// <returns>是否添加成功</returns>
-        public bool AddNode(FData node)
+        public void AddNode(FocusData node)
         {
+            if (Nodes.TryAdd(node.ID, node) == false) 
+            {
+                throw new Exception("添加节点失败 - 无法添加字典。");
+            }
             var suc = Nodes.TryAdd(node.ID, node);
-            UpdateNodes(); FHistory.Enqueue(this);
-            return suc;
+            UpdateGraph();
         }
         /// <summary>
         /// 删除节点 O(2n+)，绘图时记得重新调用 GetNodeMap
@@ -75,7 +76,7 @@ namespace FocusTree.Focus
             // 移除节点
             Nodes.Remove(id);
             // 重新创建节点连接
-            UpdateNodes(); FHistory.Enqueue(this);
+            UpdateGraph();
         }
         /// <summary>
         /// 编辑节点 O(1)，新数据的ID必须匹配
@@ -83,15 +84,15 @@ namespace FocusTree.Focus
         /// <param name="id">节点ID</param>
         /// <param name="newData">要替换的数据</param>
         /// <returns>修改是否成功</returns>
-        public bool EditNode(int id, FData newData)
+        public void EditNode(int id, FocusData newData)
         {
             // 编辑的节点ID不匹配
-            if (id != newData.ID) { return false; }
+            if (id != newData.ID)
+            {
+                throw new Exception("编辑节点失败 - ID不匹配。");
+            }
             Nodes[id] = newData;
-
-            UpdateNodes(); FHistory.Enqueue(this);
-
-            return true;
+            UpdateGraph();
         }
         /// <summary>
         /// 获取所有根节点 (不依赖任何节点的节点)  O(n)
@@ -106,7 +107,7 @@ namespace FocusTree.Focus
                 if (Requires.ContainsKey(id))
                 {
                     var list = Requires[id];
-                    if (list.Sum(x=>x.Count) == 0)
+                    if (list.Sum(x => x.Count) == 0)
                     {
                         result.Add(id);
                     }
@@ -142,10 +143,11 @@ namespace FocusTree.Focus
         /// <summary>
         /// 根据节点和依赖更新 Graph
         /// </summary>
-        public void UpdateNodes()
+        public void UpdateGraph()
         {
             CreateLinked();
             NodeMap = GetNodeMap();
+            DataHistory.Enqueue(this);
         }
 
         #endregion
@@ -156,7 +158,7 @@ namespace FocusTree.Focus
         /// 从 csv 文件中读取 Graph
         /// </summary>
         /// <param name="path">国策树 .csv文件</param>
-        public FGraph(string path)
+        public FocusGraph(string path)
         {
             if (!File.Exists(path))
             {
@@ -173,10 +175,10 @@ namespace FocusTree.Focus
                 // 从 Csv 读取
                 case ".csv":
                     {
-                        FCsv.ReadGraphFromCsv(path, ref Nodes, ref Requires);
+                        CsvReader.ReadGraphFromCsv(path, ref Nodes, ref Requires);
                         // 推断 Link 关系
-                        UpdateNodes();
-                        FHistory.Clear(); FHistory.Enqueue(this);
+                        UpdateGraph();
+                        DataHistory.Clear(); DataHistory.Enqueue(this);
                         break;
                     }
                 // 不是 csv 文件时
@@ -215,7 +217,7 @@ namespace FocusTree.Focus
         /// <summary>
         /// 用于序列化
         /// </summary>
-        private FGraph() { }
+        private FocusGraph() { }
 
         #endregion
 
@@ -229,7 +231,7 @@ namespace FocusTree.Focus
         /// 获取 Nodes 的迭代器
         /// </summary>
         /// <returns>Nodes 的迭代器</returns>
-        public IEnumerator<KeyValuePair<int, FData>> GetNodesEnumerator() { return Nodes.GetEnumerator(); }
+        public IEnumerator<KeyValuePair<int, FocusData>> GetNodesEnumerator() { return Nodes.GetEnumerator(); }
         /// <summary>
         /// 获取 NodeMap 的迭代器
         /// </summary>
@@ -366,7 +368,7 @@ namespace FocusTree.Focus
 
         #region ---- 序列化方法 ----
         // -- 序列化工具 --
-        static XmlSerializer FData_serial = new(typeof(FData));
+        static XmlSerializer FData_serial = new(typeof(FocusData));
         static XmlSerializerNamespaces NullXmlNameSpace = new(new XmlQualifiedName[] { new XmlQualifiedName("", "") });
 
         // -- 序列化方法 --
@@ -394,7 +396,7 @@ namespace FocusTree.Focus
                     {
                         if (reader.NodeType == XmlNodeType.Element && reader.Name == "Node")
                         {
-                            var node = (FData)FData_serial.Deserialize(reader);
+                            var node = (FocusData)FData_serial.Deserialize(reader);
                             Nodes.Add(node.ID, node);
                         }
                         else { reader.Read(); }
@@ -404,13 +406,13 @@ namespace FocusTree.Focus
                 {
                     int id = int.Parse(reader["ID"]);
                     var relations = ReadRelation(reader);
-                    if(relations != null)
+                    if (relations != null)
                     {
                         Requires[id] = relations;
                     }
                 }
             }
-            UpdateNodes(); FHistory.Clear(); FHistory.Enqueue(this);
+            UpdateGraph(); DataHistory.Clear(); DataHistory.Enqueue(this);
         }
         /// <summary>
         /// 反序列化时用于读取节点的关系
@@ -503,7 +505,7 @@ namespace FocusTree.Focus
         /// </summary>
         /// <param name="accessClass">用于限制访问类的工具</param>
         /// <returns>指针</returns>
-        internal Dictionary<int, FData> GraphDataNodes_Get()
+        internal Dictionary<int, FocusData> GraphDataNodes_Get()
         {
             return Nodes;
         }
@@ -516,7 +518,7 @@ namespace FocusTree.Focus
         {
             return Requires;
         }
-        internal void GraphDataNodes_Set(Dictionary<int, FData> nodes)
+        internal void GraphDataNodes_Set(Dictionary<int, FocusData> nodes)
         {
             Nodes = nodes;
         }

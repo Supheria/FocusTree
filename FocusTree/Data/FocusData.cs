@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 
-namespace FocusTree.Tree
+namespace FocusTree.Data
 {
     /// <summary>
     /// 国策数据
     /// </summary>
     [XmlRoot("Node")]
-    public struct FData
+    public struct FocusData
     {
         /// <summary>
         /// 节点ID
@@ -59,7 +54,7 @@ namespace FocusTree.Tree
         /// <param name="effects">国策效果</param>
         /// <param name="descript">国策描述</param>
         /// <param name="ps">备注</param>
-        public FData(
+        public FocusData(
             int id,
             string name,
             bool isBeginWithstar,
@@ -82,7 +77,7 @@ namespace FocusTree.Tree
         /// </summary>
         /// <param name="text">文本</param>
         /// <exception cref="Exception">正则匹配异常</exception>
-        public FData(int id, string text)
+        public FocusData(int id, string text)
         {
             // 在 C# 中的字符串，{ 需要转义，通过分割一对来避免歧义。 原 Regex: (.+?){(\d+)天}{(.+?)}(?:{(.+)})?(.+)?
             var pattern = "(.+?){" + "(\\d+)天}{" + "(.+?)}(?:{" + "(.+)})?(.+)?";
@@ -110,7 +105,7 @@ namespace FocusTree.Tree
                 string ps = match.Groups[5].Value;
 
                 // 使用数据创建实例
-                this = new FData(
+                this = new FocusData(
                     id,
                     name,
                     isBeginWithStar,

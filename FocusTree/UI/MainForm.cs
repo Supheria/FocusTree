@@ -1,5 +1,5 @@
-﻿using FocusTree.Focus;
-using FocusTree.IO;
+﻿using FocusTree.IO;
+using FocusTree.Data;
 
 namespace FocusTree.UI
 {
@@ -22,7 +22,7 @@ namespace FocusTree.UI
             var result = main_Openfile.ShowDialog();
             if (result == DialogResult.OK)
             {
-                Display.Graph = new FGraph(main_Openfile.FileName);
+                Display.Graph = new FocusGraph(main_Openfile.FileName);
                 Display.RelocateCenter();
                 Display.Invalidate();
                 main_StatusStrip_filename.Text = Path.GetFileNameWithoutExtension(main_Openfile.FileName);
@@ -41,7 +41,7 @@ namespace FocusTree.UI
             var result = main_Openfile.ShowDialog();
             if (result == DialogResult.OK)
             {
-                Display.Graph = FXml.LoadGraph(main_Openfile.FileName);
+                Display.Graph = XmlIO.LoadGraph(main_Openfile.FileName);
                 Display.RelocateCenter();
                 Display.Invalidate();
                 main_StatusStrip_filename.Text = Path.GetFileNameWithoutExtension(main_Openfile.FileName);
@@ -61,14 +61,14 @@ namespace FocusTree.UI
             var path_xml = Path.ChangeExtension(path, ".xml");
             if (File.Exists(path_xml))
             {
-                File.Copy(path_xml, Path.ChangeExtension(savepath,".xml"), true);
+                File.Copy(path_xml, Path.ChangeExtension(savepath, ".xml"), true);
             }
             else
             {
                 File.Copy(path, savepath, true);
             }
             // 保存
-            FXml.SaveGraph(path_xml, Display.Graph);
+            XmlIO.SaveGraph(path_xml, Display.Graph);
             Display.Graph.SetFileName(path_xml);
         }
         [Obsolete("这个功能还没写完")]
@@ -79,9 +79,9 @@ namespace FocusTree.UI
 
         private void main_Menu_edit_undo_Click(object sender, EventArgs e)
         {
-            if (FHistory.HasPrev())
+            if (DataHistory.HasPrev())
             {
-                FHistory.Undo(Display.Graph);
+                DataHistory.Undo(Display.Graph);
             }
             main_Menu_edit_status_check();
             Display.Invalidate();
@@ -89,9 +89,9 @@ namespace FocusTree.UI
 
         private void main_Menu_edit_redo_Click(object sender, EventArgs e)
         {
-            if (FHistory.HasNext())
+            if (DataHistory.HasNext())
             {
-                FHistory.Redo(Display.Graph);
+                DataHistory.Redo(Display.Graph);
             }
             main_Menu_edit_status_check();
             Display.Invalidate();
@@ -101,13 +101,13 @@ namespace FocusTree.UI
         /// </summary>
         public void main_Menu_edit_status_check()
         {
-            main_Menu_edit_undo.Enabled = FHistory.HasPrev();
-            main_Menu_edit_redo.Enabled = FHistory.HasNext();
+            main_Menu_edit_undo.Enabled = DataHistory.HasPrev();
+            main_Menu_edit_redo.Enabled = DataHistory.HasNext();
         }
         private void main_Menu_edit_status_check(object sender, EventArgs e)
         {
-            main_Menu_edit_undo.Enabled = FHistory.HasPrev();
-            main_Menu_edit_redo.Enabled = FHistory.HasNext();
+            main_Menu_edit_undo.Enabled = DataHistory.HasPrev();
+            main_Menu_edit_redo.Enabled = DataHistory.HasNext();
         }
 
         private void main_Menu_edit_Click(object sender, EventArgs e)

@@ -1,19 +1,12 @@
-﻿using FocusTree.Focus;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FocusTree.UI
+﻿namespace FocusTree.UI
 {
     class NodeContextMenu : ContextMenuStrip
     {
         public int? NodeId;
         private DisplayBox Display;
-        private ToolStripMenuItem pic_contextMenu_node_add = new ();
-        private ToolStripMenuItem pic_contextMenu_node_edit = new ();
-        private ToolStripMenuItem pic_contextMenu_node_remove = new ();
+        private ToolStripMenuItem pic_contextMenu_node_add = new();
+        private ToolStripMenuItem pic_contextMenu_node_edit = new();
+        private ToolStripMenuItem pic_contextMenu_node_remove = new();
         public NodeContextMenu(DisplayBox display)
         {
             Display = display;
@@ -48,11 +41,11 @@ namespace FocusTree.UI
 
             Name = "main_contextMenu_node";
             Size = new Size(181, 92);
-            
+
         }
         private void NodeEdit(object sender, EventArgs args)
         {
-            if(NodeId != null)
+            if (NodeId != null)
             {
                 var fnode = Display.GetFGraph().GetNode(NodeId.Value);
                 MessageBox.Show($"{fnode.Name}\n\n" +
