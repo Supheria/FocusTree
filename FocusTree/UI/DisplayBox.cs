@@ -125,12 +125,12 @@ namespace FocusTree.UI
             var g = Graphics.FromImage(Image);
             g.Clear(Color.White);
 
-            var nodesEnumer = Graph.GetNodesEnumerator();
+            var nodesEnumer = Graph.GetNodesCatalogEnumerator();
             while (nodesEnumer.MoveNext())
             {
                 var node = nodesEnumer.Current;
                 var name = node.Value.Name;
-                var rect = RectOnScreenRect(NodeMapToVisualMap(Graph.GetNodeMapElement(node.Key)));
+                var rect = RectOnScreenRect(NodeMapToVisualMap(Graph.GetNodePointsElement(node.Key)));
 
                 if (IsRectInScreen(rect))
                 {
@@ -138,13 +138,13 @@ namespace FocusTree.UI
                     g.DrawString(name, font, NodeFG, rect, GFontFormat);
                 }
             }
-            var mapEnumer = Graph.GetNodeMapEnumerator();
+            var mapEnumer = Graph.GetNodePointsEnumerator();
             while (mapEnumer.MoveNext())
             {
                 var id = mapEnumer.Current.Key;
                 var rect = RectOnScreenRect(NodeMapToVisualMap(mapEnumer.Current.Value));
                 // 这里应该去连接依赖的节点，而不是去对子节点连接
-                var requires = Graph.GetNodeRequires(id);
+                var requires = Graph.GetNodeRequireGroups(id);
                 // 对于根节点，requires 为 null
                 if (requires == null) { continue; }
 
@@ -153,7 +153,7 @@ namespace FocusTree.UI
                 {
                     foreach (var require_id in require_ids)
                     {
-                        var torect = RectOnScreenRect(NodeMapToVisualMap(Graph.GetNodeMapElement(require_id)));
+                        var torect = RectOnScreenRect(NodeMapToVisualMap(Graph.GetNodePointsElement(require_id)));
 
                         // 如果起始点和终点都不在画面里，就不需要绘制
                         if (!(IsRectInScreen(rect) || IsRectInScreen(torect))) { continue; }
@@ -202,7 +202,7 @@ namespace FocusTree.UI
         private int? GetFirstNodeClicked(Point location)
         {
             if (Graph == null) { return null; }
-            var mapEnumer = Graph.GetNodeMapEnumerator();
+            var mapEnumer = Graph.GetNodePointsEnumerator();
             while (mapEnumer.MoveNext())
             {
                 var rect = NodeMapToVisualMap(mapEnumer.Current.Value);

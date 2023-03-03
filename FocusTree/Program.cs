@@ -44,8 +44,8 @@ class Test
 
         DataHistory.Redo(graph);
 
-        var graphRequire = graph.GetNodeRequires(81);
-        var graphLink = graph.GetNodeLinks(81);
+        var graphRequire = graph.GetNodeRequireGroups(81);
+        var graphLink = graph.GetNodeLinkedNodes(81);
 
         Console.WriteLine();
     }

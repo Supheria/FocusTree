@@ -2,8 +2,10 @@
 using System.Numerics;
 using System.Text;
 using System.Xml;
+using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using static System.Windows.Forms.LinkLabel;
 
 namespace FocusTree.Data
 {
@@ -18,19 +20,19 @@ namespace FocusTree.Data
         /// <summary>
         /// 以 ID 作为 Key 的所有节点
         /// </summary>
-        private Dictionary<int, FocusData> Nodes;
+        private Dictionary<int, FocusData> NodesCatalog;
         /// <summary>
-        /// 节点依赖的节点 (子节点, 多组父节点)
+        /// 节点依赖的节点组合
         /// </summary>
-        private Dictionary<int, List<HashSet<int>>> Requires;
+        private Dictionary<int, List<HashSet<int>>> RequireGroups;
         /// <summary>
         /// 依赖于节点的节点 (自动生成) (父节点, 多个子节点)
         /// </summary>
-        private Dictionary<int, HashSet<int>> Linked;
+        private Dictionary<int, HashSet<int>> LinkedNodes;
         /// <summary>
         /// 节点显示位置
         /// </summary>
-        private Dictionary<int, Point> NodeMap;
+        private Dictionary<int, Point> NodePoints;
 
         #endregion
 
@@ -43,40 +45,51 @@ namespace FocusTree.Data
         /// <returns>节点数据</returns>
         public FocusData GetNode(int id)
         {
-            return Nodes[id];
+            if (NodesCatalog.TryGetValue(id, out FocusData focusData) == false)
+            {
+                throw new Exception($"异常：无法获取节点 - NodesCatalog 未包含 ID = {id} 的节点。");
+            }
+            return focusData;
         }
         /// <summary>
         /// 添加节点 O(1)，绘图时记得重新调用 GetNodeMap
         /// </summary>
         /// <returns>是否添加成功</returns>
-        public void AddNode(FocusData node)
+        public bool AddNode(FocusData node)
         {
-            if (Nodes.TryAdd(node.ID, node) == false) 
+            if (NodesCatalog.TryAdd(node.ID, node) == false) 
             {
-                throw new Exception("添加节点失败 - 无法添加字典。");
+                MessageBox.Show("提示：无法添加节点 - 无法加入字典。");
+                return false;
             }
-            var suc = Nodes.TryAdd(node.ID, node);
             UpdateGraph();
+            return true;
         }
         /// <summary>
         /// 删除节点 O(2n+)，绘图时记得重新调用 GetNodeMap
         /// </summary>
         /// <returns>是否成功删除</returns>
-        public void RemoveNode(int id)
+        public bool RemoveNode(int id)
         {
-            // 移除节点依赖项 (因为都是传递引用，所以可以直接操作)
-            Requires.Remove(id);
-            foreach (var requires in Requires.Values)
+            if (NodesCatalog.ContainsKey(id) == false)
             {
-                foreach (var requireGroup in requires)
+                MessageBox.Show($"提示：无法移除节点 - NodesCatalog 未包含 ID = {id} 的节点。");
+                return false;
+            }
+            // 删除此节点所依赖的节点组合
+            RequireGroups.Remove(id);
+            // 在所有的节点依赖组合中删除此节点
+            foreach (var requireGruops in RequireGroups.Values)
+            {
+                foreach (var requireGroup in requireGruops)
                 {
                     requireGroup.Remove(id);
                 }
             }
-            // 移除节点
-            Nodes.Remove(id);
-            // 重新创建节点连接
+            // 从节点表中删除此节点
+            NodesCatalog.Remove(id);
             UpdateGraph();
+            return true;
         }
         /// <summary>
         /// 编辑节点 O(1)，新数据的ID必须匹配
@@ -84,30 +97,31 @@ namespace FocusTree.Data
         /// <param name="id">节点ID</param>
         /// <param name="newData">要替换的数据</param>
         /// <returns>修改是否成功</returns>
-        public void EditNode(int id, FocusData newData)
+        public bool EditNode(FocusData newData)
         {
-            // 编辑的节点ID不匹配
-            if (id != newData.ID)
+            var id = newData.ID;
+            if (NodesCatalog.ContainsKey(id) == false)
             {
-                throw new Exception("编辑节点失败 - ID不匹配。");
+                MessageBox.Show($"提示：无法编辑节点 - 新节点数据的 ID({id}) 不存在于 NodesCatalog。");
+                return false;
             }
-            Nodes[id] = newData;
+            NodesCatalog[id] = newData;
             UpdateGraph();
+            return true;
         }
         /// <summary>
-        /// 获取所有根节点 (不依赖任何节点的节点)  O(n)
+        /// 获取所有无任何依赖的节点（根节点）  O(n)
         /// </summary>
         /// <returns>根节点</returns>
-        [Obsolete("经常出BUG，用的时候要小心")]
+        //[Obsolete("经常出BUG，用的时候要小心")]
         public HashSet<int> GetRootNodes()
         {
             var result = new HashSet<int>();
-            foreach (var id in Nodes.Keys)
+            foreach (var id in NodesCatalog.Keys)
             {
-                if (Requires.ContainsKey(id))
+                if (RequireGroups.TryGetValue(id, out List<HashSet<int>> requireGroups))
                 {
-                    var list = Requires[id];
-                    if (list.Sum(x => x.Count) == 0)
+                    if (requireGroups.Sum(x => x.Count) == 0)
                     {
                         result.Add(id);
                     }
@@ -115,39 +129,209 @@ namespace FocusTree.Data
                 else
                 {
                     result.Add(id);
+                    MessageBox.Show($"提示：RequireGroups 未包含 ID = {id} 对应的条目，\n已自动添加空条目。");
+                    RequireGroups.Add(id, new List<HashSet<int>>());
                 }
             }
             return result;
         }
         /// <summary>
-        /// 获取节点所依赖的节点关系  O(1)
+        /// 获取节点所依赖的节点组合  O(1)
         /// </summary>
         /// <param name="id">节点id</param>
         /// <returns>依赖关系列表</returns>
         /// <summary>
-        public List<HashSet<int>> GetNodeRequires(int id)
+        public List<HashSet<int>> GetNodeRequireGroups(int id)
         {
-            Requires.TryGetValue(id, out List<HashSet<int>> requires);
-            return requires;
+            if (RequireGroups.TryGetValue(id, out List<HashSet<int>> requireGroups) == false)
+            {
+                throw new Exception($"异常：无法获取此节点所依赖的节点组合 - \nRequireGroups 未包含 ID = {id} 对应的条目");
+            }
+            return requireGroups;
         }
         /// <summary>
         /// 获取依赖于节点的节点（不含分组关系） O(1)
         /// </summary>
         /// <param name="id">节点id</param>
         /// <returns>连接的节点</returns>
-        public HashSet<int> GetNodeLinks(int id)
+        public HashSet<int> GetNodeLinkedNodes(int id)
         {
-            Linked.TryGetValue(id, out HashSet<int> links);
-            return links;
+            if (LinkedNodes.TryGetValue(id, out HashSet<int> linkedNodes) == false)
+            {
+                throw new Exception($"异常：无法获依赖此节点的节点 - \nLinkedNodes 未包含 ID = {id} 对应的条目");
+            }
+            return linkedNodes;
         }
+
+        #endregion
+
+        #region ---- 图像操作 ----
+
         /// <summary>
-        /// 根据节点和依赖更新 Graph
+        /// 根据节点和依赖更新 Graph，重建依赖关系和节点位置图
         /// </summary>
         public void UpdateGraph()
         {
             CreateLinked();
-            NodeMap = GetNodeMap();
+            NodePoints = GetNodePoints();
             DataHistory.Enqueue(this);
+        }
+        /// <summary>
+        /// 获取节点 LinkedNodes 的迭代器（与子节点的连接）
+        /// </summary>
+        /// <returns>LinkedNodes 迭代器</returns>
+        public IEnumerator<KeyValuePair<int, HashSet<int>>> GetLinkedNodesEnumerator() 
+        { 
+            return LinkedNodes.GetEnumerator(); 
+        }
+        /// <summary>
+        /// 获取 NodesCatalog 的迭代器
+        /// </summary>
+        /// <returns>NodesCatalog 的迭代器</returns>
+        public IEnumerator<KeyValuePair<int, FocusData>> GetNodesCatalogEnumerator() 
+        { 
+            return NodesCatalog.GetEnumerator(); 
+        }
+        /// <summary>
+        /// 获取 NodePoints 的迭代器
+        /// </summary>
+        /// <returns>NodePoints 的迭代器</returns>
+        public IEnumerator<KeyValuePair<int, Point>> GetNodePointsEnumerator() 
+        { 
+            return NodePoints.GetEnumerator(); 
+        }
+        /// <summary>
+        /// 获取 NodePoints 中指定节点的Point
+        /// </summary>
+        /// <param name="index">节点ID</param>
+        /// <returns>节点的Point</returns>
+        public Point GetNodePointsElement(int id) 
+        { 
+            if (NodePoints.TryGetValue(id, out Point point) == false)
+            {
+                throw new Exception($"异常：无法获取节点的Point - NodePoints 未包含 ID = {id} 对应的条目。");
+            }
+            return point; 
+        }
+        /// <summary>
+        /// 获取绘图用的已自动排序后的 NodeMap
+        /// </summary>
+        /// <returns></returns>
+        private Dictionary<int, Point> GetNodePoints()
+        {
+            NodePoints = new Dictionary<int, Point>();
+            var rootNodes = GetRootNodes().ToArray();
+            var branches = GetBranches(rootNodes, true, true);
+            var visited = new HashSet<int>();
+            var width = branches.Count;
+            var height = branches.Max(x => x.Length);
+
+            for (int x = 0; x < branches.Count; x++)
+            {
+                var branch = branches[x];
+                for (int y = 0; y < branch.Length; y++)
+                {
+                    var id = branch[y];
+                    if (visited.Add(id))
+                    {
+                        var point = new Point(x, y);
+                        NodePoints[id] = point;
+                    }
+                }
+            }
+            return NodePoints;
+        }
+        /// <summary>
+        /// 获取 NodeMap 中心位置和尺寸
+        /// </summary>
+        /// <returns>Center + Size</returns>
+        public Vector4 GetNodeMapBounds()
+        {
+            bool first = true;
+            var bounds = new RectangleF();
+            var enumer = NodePoints.GetEnumerator();
+            while (enumer.MoveNext())
+            {
+                var p = enumer.Current.Value;
+                if (first) 
+                { 
+                    bounds = new RectangleF(p.X, p.Y, p.X, p.Y); 
+                    first = false; 
+                    continue; 
+                }
+                if (p.X < bounds.X) { bounds.X = p.X; }
+                if (p.X > bounds.Width) { bounds.Width = p.X; }
+                if (p.Y < bounds.Y) { bounds.Y = p.Y; }
+                if (p.Y > bounds.Height) { bounds.Height = p.Y; }
+            }
+            return new Vector4(
+                (bounds.X + bounds.Width) / 2,
+                (bounds.Y + bounds.Height) / 2,
+                bounds.Width - bounds.X,
+                bounds.Height - bounds.Y
+                );
+        }
+        /// <summary>
+        /// 获取某个节点的所有分支
+        /// </summary>
+        /// <param name="node">节点ID</param>
+        /// <param name="sort">是否按照节点ID排序</param>
+        /// <param name="reverse">是否从根节点向末节点排序</param>
+        /// <returns></returns>
+        public List<int[]> GetBranches(int node, bool sort, bool reverse)
+        {
+            var branches = new List<int[]>();
+            var steps = new Stack<int>();
+            GetBranches(node, ref branches, ref steps, sort, reverse);
+            return branches;
+        }
+        public List<int[]> GetBranches(int[] nodes, bool sort, bool reverse)
+        {
+            var branches = new List<int[]>();
+            var steps = new Stack<int>();
+            foreach (var id in nodes)
+            {
+                GetBranches(id, ref branches, ref steps, sort, reverse);
+            }
+            return branches;
+        }
+        private void GetBranches(int currentNode, ref List<int[]> branches, ref Stack<int> steps, bool sort, bool reverse)
+        {
+            steps.Push(currentNode);
+            // 当前节点是末节点
+            if (LinkedNodes.TryGetValue(currentNode, out HashSet<int> linkedNodes) == false || linkedNodes.Count == 0)
+            {
+                if (reverse)
+                {
+                    branches.Add(steps.Reverse().ToArray());
+                }
+                else
+                {
+                    branches.Add(steps.ToArray());
+                }
+            }
+            else
+            {
+                var linkedNodesList = linkedNodes.ToList();
+                if (sort == true)
+                {
+                    linkedNodesList.Sort();
+                }
+                foreach (var node in linkedNodesList)
+                {
+                    if (steps.Contains(node))
+                    {
+                        // 已经走过这个节点，跳过，避免死循环
+                        continue;
+                    }
+                    else
+                    {
+                        GetBranches(node, ref branches, ref steps, sort, reverse);
+                    }
+                }
+            }
+
+            steps.Pop();
         }
 
         #endregion
@@ -166,8 +350,8 @@ namespace FocusTree.Data
             }
 
             FilePath = path;
-            Nodes = new();
-            Requires = new();
+            NodesCatalog = new();
+            RequireGroups = new();
 
             // 根据不同扩展名以对应方式加载
             switch (Path.GetExtension(path).ToLower())
@@ -175,10 +359,10 @@ namespace FocusTree.Data
                 // 从 Csv 读取
                 case ".csv":
                     {
-                        CsvReader.ReadGraphFromCsv(path, ref Nodes, ref Requires);
+                        CsvReader.ReadGraphFromCsv(path, ref NodesCatalog, ref RequireGroups);
+                        DataHistory.Clear();
                         // 推断 Link 关系
                         UpdateGraph();
-                        DataHistory.Clear(); DataHistory.Enqueue(this);
                         break;
                     }
                 // 不是 csv 文件时
@@ -191,18 +375,18 @@ namespace FocusTree.Data
         private void CreateLinked()
         {
             // 这里一定要重新初始化，因为是刷新
-            Linked = new Dictionary<int, HashSet<int>>();
+            LinkedNodes = new();
 
-            foreach (var require in Requires)
+            foreach (var requireGroups in RequireGroups)
             {
-                foreach (var parents in require.Value)
+                foreach (var requireGroup in requireGroups.Value)
                 {
-                    foreach (var parent in parents)
+                    foreach (var requireNode in requireGroup)
                     {
                         // 如果父节点没有创建 HashSet 就创建一个新的
-                        Linked.TryAdd(parent, new HashSet<int>());
-                        // 向 HashSet 里添加子节点（忽略重复项）
-                        Linked[parent].Add(require.Key);
+                        LinkedNodes.TryAdd(requireNode, new HashSet<int>());
+                        // 向 LinkedNodes 里父节点的对应条目里添加当前节点（HashSet自动忽略重复项）
+                        LinkedNodes[requireNode].Add(requireGroups.Key);
                     }
                 }
             }
@@ -219,151 +403,6 @@ namespace FocusTree.Data
         /// </summary>
         private FocusGraph() { }
 
-        #endregion
-
-        #region ---- 特有方法 ----
-        /// <summary>
-        /// 获取节点 Linked 的迭代器（与子节点的连接）
-        /// </summary>
-        /// <returns>Linked 迭代器</returns>
-        public IEnumerator<KeyValuePair<int, HashSet<int>>> GetLinkedEnumerator() { return Linked.GetEnumerator(); }
-        /// <summary>
-        /// 获取 Nodes 的迭代器
-        /// </summary>
-        /// <returns>Nodes 的迭代器</returns>
-        public IEnumerator<KeyValuePair<int, FocusData>> GetNodesEnumerator() { return Nodes.GetEnumerator(); }
-        /// <summary>
-        /// 获取 NodeMap 的迭代器
-        /// </summary>
-        /// <returns>NodeMap 的迭代器</returns>
-        public IEnumerator<KeyValuePair<int, Point>> GetNodeMapEnumerator() { return NodeMap.GetEnumerator(); }
-        /// <summary>
-        /// 获取 NodeMap 中指定的节点矩形信息
-        /// </summary>
-        /// <param name="index">节点ID</param>
-        /// <returns>矩形信息</returns>
-        public Point GetNodeMapElement(int index) { return NodeMap[index]; }
-        /// <summary>
-        /// 获取绘图用的已自动排序后的 NodeMap
-        /// </summary>
-        /// <returns></returns>
-        private Dictionary<int, Point> GetNodeMap()
-        {
-            NodeMap = new Dictionary<int, Point>();
-            var rootNodes = GetRootNodes().ToArray();
-            var branches = GetBranches(rootNodes, true, true);
-            var visited = new HashSet<int>();
-            var width = branches.Count;
-            var height = branches.Max(x => x.Length);
-
-            for (int x = 0; x < branches.Count; x++)
-            {
-                var branch = branches[x];
-                for (int y = 0; y < branch.Length; y++)
-                {
-                    var id = branch[y];
-                    if (visited.Add(id))
-                    {
-                        var point = new Point(x, y);
-                        NodeMap[id] = point;
-                    }
-                }
-            }
-            return NodeMap;
-        }
-        /// <summary>
-        /// 获取 NodeMap 中心位置和尺寸
-        /// </summary>
-        /// <returns>Center + Size</returns>
-        public Vector4 GetNodeMapBounds()
-        {
-            bool first = true;
-            var bounds = new RectangleF();
-            var enumer = NodeMap.GetEnumerator();
-            while (enumer.MoveNext())
-            {
-                var p = enumer.Current.Value;
-                if (first) { bounds = new RectangleF(p.X, p.Y, p.X, p.Y); first = false; continue; }
-                if (p.X < bounds.X) { bounds.X = p.X; }
-                if (p.X > bounds.Width) { bounds.Width = p.X; }
-                if (p.Y < bounds.Y) { bounds.Y = p.Y; }
-                if (p.Y > bounds.Height) { bounds.Height = p.Y; }
-            }
-            return new Vector4(
-                (bounds.X + bounds.Width) / 2,
-                (bounds.Y + bounds.Height) / 2,
-                bounds.Width - bounds.X,
-                bounds.Height - bounds.Y
-                );
-        }
-
-        public List<int[]> GetBranches(int id, bool sort = false, bool reverse = false)
-        {
-            var branches = new List<int[]>();
-            var stack = new Stack<int>();
-            GetBranches(id, ref branches, ref stack, sort, reverse);
-            return branches;
-        }
-        public List<int[]> GetBranches(int[] ids, bool sort = false, bool reverse = false)
-        {
-            var branches = new List<int[]>();
-            var stack = new Stack<int>();
-            foreach (var id in ids)
-            {
-                GetBranches(id, ref branches, ref stack, sort, reverse);
-            }
-            return branches;
-        }
-        private void GetBranches(int current, ref List<int[]> branches, ref Stack<int> steps, bool sort, bool reverse)
-        {
-            steps.Push(current);
-
-            var hasChild = Linked.TryGetValue(current, out HashSet<int> childs);
-            // 当前节点是叶节点，累加并退出
-            if (!hasChild)
-            {
-                if (reverse)
-                {
-                    branches.Add(steps.Reverse().ToArray());
-                }
-                else
-                {
-                    branches.Add(steps.ToArray());
-                }
-            }
-            else
-            {
-                // 是否按照 id 排序
-                if (!sort)
-                {
-                    foreach (var child in childs)
-                    {
-                        // 已经走过这个节点，所以跳过，避免死循环
-                        if (steps.Contains(child)) { continue; }
-                        else
-                        {
-                            GetBranches(child, ref branches, ref steps, sort, reverse);
-                        }
-                    }
-                }
-                else
-                {
-                    var relation_ids = new List<int>();
-                    foreach (var child in childs) { relation_ids.Add(child); }
-                    relation_ids.Sort();
-                    foreach (var id in relation_ids)
-                    {
-                        if (steps.Contains(id)) { continue; }
-                        else
-                        {
-                            GetBranches(id, ref branches, ref steps, sort, reverse);
-                        }
-                    }
-                }
-            }
-
-            steps.Pop();
-        }
         #endregion
 
         #region ---- 序列化方法 ----
@@ -383,8 +422,8 @@ namespace FocusTree.Data
 
         public void ReadXml(XmlReader reader)
         {
-            Nodes = new();
-            Requires = new();
+            NodesCatalog = new();
+            RequireGroups = new();
 
             while (reader.Read())
             {
@@ -397,7 +436,7 @@ namespace FocusTree.Data
                         if (reader.NodeType == XmlNodeType.Element && reader.Name == "Node")
                         {
                             var node = (FocusData)FData_serial.Deserialize(reader);
-                            Nodes.Add(node.ID, node);
+                            NodesCatalog.Add(node.ID, node);
                         }
                         else { reader.Read(); }
                     }
@@ -408,7 +447,7 @@ namespace FocusTree.Data
                     var relations = ReadRelation(reader);
                     if (relations != null)
                     {
-                        Requires[id] = relations;
+                        RequireGroups[id] = relations;
                     }
                 }
             }
@@ -448,7 +487,7 @@ namespace FocusTree.Data
 
             // <Nodes> 序列化 Nodes (国策节点数据)
             writer.WriteStartElement("Nodes");
-            foreach (var node in Nodes)
+            foreach (var node in NodesCatalog)
             {
                 FData_serial.Serialize(writer, node.Value, NullXmlNameSpace);
             }
@@ -459,7 +498,7 @@ namespace FocusTree.Data
 
             // <NodesRelations> 序列化节点关系字典
             writer.WriteStartElement("NodesRelations");
-            foreach (var r_pair in Requires)
+            foreach (var r_pair in RequireGroups)
             {
                 // <RNode> 当前节点
                 writer.WriteStartElement("Relation");
@@ -507,7 +546,7 @@ namespace FocusTree.Data
         /// <returns>指针</returns>
         internal Dictionary<int, FocusData> GraphDataNodes_Get()
         {
-            return Nodes;
+            return NodesCatalog;
         }
         /// <summary>
         /// 仅允许被 FHistory 访问的依赖指针
@@ -516,15 +555,15 @@ namespace FocusTree.Data
         /// <returns>指针</returns>
         internal Dictionary<int, List<HashSet<int>>> GraphDataRequires_Get()
         {
-            return Requires;
+            return RequireGroups;
         }
         internal void GraphDataNodes_Set(Dictionary<int, FocusData> nodes)
         {
-            Nodes = nodes;
+            NodesCatalog = nodes;
         }
         internal void GraphDataRequires_Set(Dictionary<int, List<HashSet<int>>> requires)
         {
-            Requires = requires;
+            RequireGroups = requires;
         }
 
         #endregion
