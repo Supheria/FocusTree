@@ -3,7 +3,7 @@ using FocusTree.Data;
 
 namespace FocusTree.UI
 {
-    internal class DisplayBox : PictureBox
+    internal class GraphBox : PictureBox
     {
         /// <summary>
         /// 父窗体对象（用于定位自动尺寸的位置）
@@ -17,7 +17,11 @@ namespace FocusTree.UI
         /// <summary>
         /// 绘图缩放倍率
         /// </summary>
-        float GScale { get { return gscale; } set { gscale = value < 0.1f ? 0.1f : value > 10f ? 10f : value; } }
+        float GScale 
+        { 
+            get { return gscale; } 
+            set { gscale = value < 0.1f ? 0.1f : value > 10f ? 10f : value; } 
+        }
         float gscale = 1f; // 不要调用这个，不安全，用上边的访问器，有缩放尺寸限制
         /// <summary>
         /// 默认的字体
@@ -65,7 +69,7 @@ namespace FocusTree.UI
         /// </summary>
         Point DragMousePoint = new(0, 0);
         bool DragMousePoint_Flag = false;
-        public DisplayBox(MainForm parent)
+        public GraphBox(MainForm parent)
         {
             ParentForm = parent;
             PicNodeContextMenu = new NodeContextMenu(this);
@@ -81,11 +85,6 @@ namespace FocusTree.UI
             MouseUp += OnMouseUp;
             MouseWheel += OnMouseWheel;
         }
-        /// <summary>
-        /// 获取当前的 FGraph 给其它类使用
-        /// </summary>
-        /// <returns>FGraph</returns>
-        public FocusGraph GetFGraph() { return Graph; }
         /// <summary>
         /// 当节点被右键时响应的事件
         /// </summary>

@@ -173,7 +173,7 @@ namespace FocusTree.Data
         public void UpdateGraph()
         {
             CreateLinked();
-            NodePoints = GetNodePoints();
+            SetNodePoints();
             DataHistory.Enqueue(this);
         }
         /// <summary>
@@ -217,29 +217,58 @@ namespace FocusTree.Data
         /// 获取绘图用的已自动排序后的 NodeMap
         /// </summary>
         /// <returns></returns>
-        private Dictionary<int, Point> GetNodePoints()
+        private void SetNodePoints()
         {
             NodePoints = new Dictionary<int, Point>();
             var rootNodes = GetRootNodes().ToArray();
             var branches = GetBranches(rootNodes, true, true);
-            var visited = new HashSet<int>();
+            var nodeCoordinates = CombineBranchNodes(branches);
             var width = branches.Count;
             var height = branches.Max(x => x.Length);
 
-            for (int x = 0; x < branches.Count; x++)
+            foreach(var coordinate in nodeCoordinates)
             {
-                var branch = branches[x];
-                for (int y = 0; y < branch.Length; y++)
+                var x = coordinate.Value[0] + (coordinate.Value[1] - coordinate.Value[0]) / 2;
+                var point = new Point(x, coordinate.Value[2]);
+                NodePoints[coordinate.Key] = point;
+            }
+        }
+        private Dictionary<int, List<int>> CombineBranchNodes(List<int[]> branches)
+        {
+            Dictionary<int, List<int>> nodeCoordinates = new();
+            int y = 0;
+            while (true)
+            {
+                HashSet<int> combined = new();
+                for (int x = 0; x < branches.Count; x++)
                 {
-                    var id = branch[y];
-                    if (visited.Add(id))
+                    if (y < branches[x].Length)
                     {
-                        var point = new Point(x, y);
-                        NodePoints[id] = point;
+                        var node = branches[x][y];
+                        if (combined.Add(node))
+                        {
+                            
+                            nodeCoordinates.Add(node, new List<int>());
+                            // 起始x, [0]
+                            nodeCoordinates[node].Add(x);
+                            // 终止x, [1]
+                            nodeCoordinates[node].Add(x);
+                            // y, [2]
+                            nodeCoordinates[node].Add(y);
+                        }
+                        else
+                        {
+                            nodeCoordinates[node][1] = x;
+                        }
                     }
                 }
+                if (combined.Count == 0)
+                {
+                    break;
+                }
+                y++;
             }
-            return NodePoints;
+            return nodeCoordinates;
         }
         /// <summary>
         /// 获取 NodeMap 中心位置和尺寸

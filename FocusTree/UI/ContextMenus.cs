@@ -3,11 +3,11 @@
     class NodeContextMenu : ContextMenuStrip
     {
         public int? NodeId;
-        private DisplayBox Display;
+        private GraphBox Display;
         private ToolStripMenuItem pic_contextMenu_node_add = new();
         private ToolStripMenuItem pic_contextMenu_node_edit = new();
         private ToolStripMenuItem pic_contextMenu_node_remove = new();
-        public NodeContextMenu(DisplayBox display)
+        public NodeContextMenu(GraphBox display)
         {
             Display = display;
             // 
@@ -47,7 +47,7 @@
         {
             if (NodeId != null)
             {
-                var fnode = Display.GetFGraph().GetNode(NodeId.Value);
+                var fnode = Display.Graph.GetNode(NodeId.Value);
                 MessageBox.Show($"{fnode.Name}\n\n" +
                     $"{fnode.Effects}\n\n" +
                     $"实施 {fnode.Duration} 天\n\n" +
@@ -61,7 +61,7 @@
         {
             if (NodeId != null)
             {
-                Display.GetFGraph().RemoveNode(NodeId.Value);
+                Display.Graph.RemoveNode(NodeId.Value);
                 Display.Invalidate();
             }
             NodeId = null;

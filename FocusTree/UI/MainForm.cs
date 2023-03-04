@@ -5,10 +5,10 @@ namespace FocusTree.UI
 {
     public partial class MainForm : Form
     {
-        DisplayBox Display;
+        GraphBox Display;
         public MainForm()
         {
-            Display = new DisplayBox(this);
+            Display = new GraphBox(this);
             InitializeComponent();
             Controls.Add(Display);
             main_StatusStrip_filename.Text = "等待打开文件";
