@@ -10,7 +10,6 @@ namespace FocusTree.UI
         {
             Display = new GraphBox(this);
             InitializeComponent();
-            Controls.Add(Display);
             main_StatusStrip_filename.Text = "等待打开文件";
             main_StatusStrip_status.Text = "";
             main_Openfile.FileName = "";

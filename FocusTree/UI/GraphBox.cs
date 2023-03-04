@@ -5,9 +5,6 @@ namespace FocusTree.UI
 {
     internal class GraphBox : PictureBox
     {
-        /// <summary>
-        /// 父窗体对象（用于定位自动尺寸的位置）
-        /// </summary>
         readonly MainForm ParentForm;
         readonly NodeContextMenu PicNodeContextMenu;
         /// <summary>
@@ -69,9 +66,9 @@ namespace FocusTree.UI
         /// </summary>
         Point DragMousePoint = new(0, 0);
         bool DragMousePoint_Flag = false;
-        public GraphBox(MainForm parent)
+        public GraphBox(MainForm mainForm)
         {
-            ParentForm = parent;
+            Parent = ParentForm = mainForm;
             PicNodeContextMenu = new NodeContextMenu(this);
             GFontFormat.Alignment = StringAlignment.Center;
             GFontFormat.LineAlignment = StringAlignment.Center;
@@ -175,6 +172,10 @@ namespace FocusTree.UI
         /// <param name="args"></param>
         private void OnSizeSize(object sender, EventArgs args)
         {
+            if (ParentForm.WindowState == FormWindowState.Minimized)
+            {
+                return;
+            }
             Image = new Bitmap(Size.Width, Size.Height);
         }
         private void OnMouseDown(object sender, MouseEventArgs args)
