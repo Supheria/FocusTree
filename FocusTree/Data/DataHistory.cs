@@ -13,7 +13,12 @@ namespace FocusTree.Data
         /// 历史记录指针
         /// </summary>
         private static int Index = 0;
-        private static int Length = 0;
+        public static int Length
+        {
+            get { return length; }
+            private set { length = value; }
+        }
+        static int length = 0;
         /// <summary>
         /// 判断是否有下一个历史记录
         /// </summary>
@@ -37,7 +42,7 @@ namespace FocusTree.Data
         [Obsolete("我不确定这东西有没有Bug，看起来很玄乎")]
         public static void Enqueue(FocusGraph graph)
         {
-            var data = SerializeGraphData(graph);
+            var data = JsGraph.SerializeGraph(graph);
 
             // 第一个历史记录
             if (Length == 0)
@@ -71,7 +76,7 @@ namespace FocusTree.Data
         public static void Undo(FocusGraph graph)
         {
             Index--;
-            DeSerializeGraphData(History[Index], ref graph);
+            JsGraph.DeSerializeGraph(History[Index], ref graph);
             graph.Update();
         }
         /// <summary>
@@ -83,7 +88,7 @@ namespace FocusTree.Data
         {
             Index++;
             if (Index >= Length) { throw new IndexOutOfRangeException("[2302191735] 历史记录越界"); }
-            DeSerializeGraphData(History[Index], ref graph);
+            JsGraph.DeSerializeGraph(History[Index], ref graph);
             graph.Update();
         }
         /// <summary>
@@ -101,33 +106,6 @@ namespace FocusTree.Data
             History = new (string, string)[History.Length];
             Index = 0;
             Length = 0;
-        }
-        /// <summary>
-        /// 将 Graph 里的核心数据序列化为对象
-        /// </summary>
-        /// <param name="graph">Graph</param>
-        /// <returns>序列化对象</returns>
-        private static (string, string) SerializeGraphData(FocusGraph graph)
-        {
-            var nodes = graph.GraphDataNodes_Get();
-            var requires = graph.GraphDataRequires_Get();
-
-            var cnodes = JsonConvert.SerializeObject(nodes);
-            var crequires = JsonConvert.SerializeObject(requires);
-
-            return (cnodes, crequires);
-        }
-        /// <summary>
-        /// 反序列化 核心数据 到 Graph 里
-        /// </summary>
-        /// <param name="data">序列化的历史记录</param>
-        /// <param name="graph">反序列化到目标</param>
-        private static void DeSerializeGraphData((string, string) data, ref FocusGraph graph)
-        {
-            var nodes = JsonConvert.DeserializeObject<Dictionary<int, FocusData>>(data.Item1);
-            var requires = JsonConvert.DeserializeObject<Dictionary<int, List<HashSet<int>>>>(data.Item2);
-            graph.GraphDataNodes_Set(nodes);
-            graph.GraphDataRequires_Set(requires);
         }
     }
 }

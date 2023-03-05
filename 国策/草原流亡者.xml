@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FocusGraph>
+  <FilePath>D:\Non_E\documents\GitHub\FocusTree\FocusTree\国策\草原流亡者.xml</FilePath>
   <Nodes>
     <Node ID="1">
       <Name>流浪啊流浪</Name>
@@ -15,14 +16,6 @@
       <Duration>5</Duration>
       <Effects>获得科技：147季无线电。触发事件“再看幻想乡”。</Effects>
       <Descript>不管我们怎么认为，人类的确失败了，但至少现在我们不需要再次白手起家</Descript>
-      <Ps. />
-    </Node>
-    <Node ID="3">
-      <Name>在我们的兄弟当中</Name>
-      <Star>false</Star>
-      <Duration>5</Duration>
-      <Effects>获得8个编制为人类流亡编制的部队，450单位的竹林流亡者产步枪，450单位的草原流亡者产步枪，54单位的竹林流亡者产迫击炮，54单位的草原流亡者产迫击炮，150单位的竹林流亡者产近战武器，150单位的草原流亡者产近战武器添加进国家储备。触发事件“流亡者归来”。获得志愿军，其效果为（志愿军部队数上限：+6，派遣志愿军需要的部队数量：-100%）</Effects>
-      <Descript>很巧的是，我们都选择了互帮互助，虽然这批援助不知道是否来自哪个土作坊</Descript>
       <Ps. />
     </Node>
     <Node ID="4">
@@ -55,14 +48,6 @@
       <Duration>55</Duration>
       <Effects>政治点数：-100，（妖精乐园）获得连横（和草原流亡者的关系+500）（和幻想风洞的关系-500）</Effects>
       <Descript>我们向妖精乐园供奉重礼，请求她们帮助我们击败幻想风洞，而我们只需要幻想风洞的北部</Descript>
-      <Ps. />
-    </Node>
-    <Node ID="8">
-      <Name>裹挟借地</Name>
-      <Star>false</Star>
-      <Duration>55</Duration>
-      <Effects>（妖精乐园）通过草原流亡者的提供军事通行权，触发事件：“借地？”。成为地底走私通道、花丛东侧、妖精丘陵的所有者</Effects>
-      <Descript>妖精的智力显然没法突破孩童，我们只需要派遣说客便能“借”下安身之地</Descript>
       <Ps. />
     </Node>
     <Node ID="9">
@@ -182,12 +167,6 @@
     <Relation ID="2">
       <Require>1</Require>
     </Relation>
-    <Relation ID="3">
-      <Require>2</Require>
-    </Relation>
-    <Relation ID="4">
-      <Require>3</Require>
-    </Relation>
     <Relation ID="5">
       <Require>4</Require>
     </Relation>
@@ -196,12 +175,6 @@
     </Relation>
     <Relation ID="7">
       <Require>6</Require>
-    </Relation>
-    <Relation ID="8">
-      <Require>7</Require>
-    </Relation>
-    <Relation ID="9">
-      <Require>8</Require>
     </Relation>
     <Relation ID="10">
       <Require>9</Require>

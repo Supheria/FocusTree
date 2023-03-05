@@ -26,42 +26,42 @@ internal static class Program
     }
 }
 
-class Test
-{
-    public static void FMapTest()
-    {
-        var graph = new FocusGraph("人类财阀联合.csv");
+//class Test
+//{
+//    public static void FMapTest()
+//    {
+//        var graph = new FocusGraph("人类财阀联合.csv");
 
-        // FHistory.Enqueue(graph);
+//        // FHistory.Enqueue(graph);
 
-        //var suc = graph.AddNode(new FData(99,"Test", false, 0, "测试", "测试2", "测试3"));
+//        //var suc = graph.AddNode(new FData(99,"Test", false, 0, "测试", "测试2", "测试3"));
 
-        graph.RemoveNode(1);
+//        graph.RemoveNode(1);
 
-        DataHistory.Undo(graph);
-
-
-
-        DataHistory.Redo(graph);
-
-        var graphRequire = graph.GetNodeRequireGroups(81);
-        var graphLink = graph.GetNodeLinkedNodes(81);
-
-        Console.WriteLine();
-    }
-    /// <summary>
-    /// 序列化测试
-    /// </summary>
-    public static void FGraphToXmlTest()
-    {
-        var serializer = new XmlSerializer(typeof(FocusGraph));
-
-        var graph = new FocusGraph("人类财阀联合.csv");
-
-        XmlIO.SaveGraph("人类财阀联合.Graph.xml", graph);
-
-        //var readgraph = XmlIO.LoadGraph("人类财阀联合.Graph.xml");
+//        DataHistory.Undo(graph);
 
 
-    }
-}
+
+//        DataHistory.Redo(graph);
+
+//        var graphRequire = graph.GetNodeRequireGroups(81);
+//        var graphLink = graph.GetNodeLinkedNodes(81);
+
+//        Console.WriteLine();
+//    }
+//    /// <summary>
+//    /// 序列化测试
+//    /// </summary>
+//    public static void FGraphToXmlTest()
+//    {
+//        var serializer = new XmlSerializer(typeof(FocusGraph));
+
+//        var graph = new FocusGraph("人类财阀联合.csv");
+
+//        XmlIO.SaveGraph("人类财阀联合.Graph.xml", graph);
+
+//        //var readgraph = XmlIO.LoadGraph("人类财阀联合.Graph.xml");
+
+
+//    }
+//}

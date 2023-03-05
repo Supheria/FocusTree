@@ -6,12 +6,6 @@ namespace FocusTree.UI
     public partial class MainForm : Form
     {
         GraphBox Display;
-        private void InitDisplay(string path)
-        {
-            Display.Graph = XmlIO.LoadGraph(path);
-            Display.RelocateCenter();
-            Display.Invalidate();
-        }
         public MainForm()
         {
             Display = new GraphBox(this);
@@ -25,37 +19,62 @@ namespace FocusTree.UI
             Display.RelocateCenter();
             Display.Invalidate();
         }
+        /// <summary>
+        /// 打开
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void main_Menu_file_open_Click(object sender, EventArgs e)
         {
+            Display.SaveGraph();
+            main_Openfile.Filter = "xml文件|*.xml";
             if (main_Openfile.ShowDialog() == DialogResult.Cancel)
             {
                 return;
             }
             main_Openfile.InitialDirectory = Path.GetDirectoryName(main_Openfile.FileName);
-            InitDisplay(main_Openfile.FileName);
-            main_StatusStrip_filename.Text = Path.GetFileNameWithoutExtension(main_Openfile.FileName);
+            Display.LoadGraph(main_Openfile.FileName);
         }
+        /// <summary>
+        /// 打开备份
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void main_Menu_file_backup_open_Click(object sender, EventArgs e)
+        {
+            main_Openfile.Filter = "全部文件|*.*";
+            var oldInitDir = main_Openfile.InitialDirectory;
+            main_Openfile.InitialDirectory = Backup.DirectoryName;
+            if (main_Openfile.ShowDialog() == DialogResult.OK)
+            {
+                Display.LoadGraph(main_Openfile.FileName);
+            }
+            main_Openfile.InitialDirectory = oldInitDir;
+
+        }
+        /// <summary>
+        /// 保存
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void main_Menu_file_save_Click(object sender, EventArgs e)
         {
             if (Display.Graph == null)
             {
-                MessageBox.Show("[2302191440]没有可以保存的图像"); 
-                return;
+                MessageBox.Show("[2302191440]没有可以保存的图像");
             }
-            if (Path.GetDirectoryName(Display.Graph.FilePath) != Backup.DirectoryName)
+            else
             {
-                Backup.BackupFile(Display.Graph.FilePath);
-                XmlIO.SaveGraph(Display.Graph.FilePath, Display.Graph);
-                return;
+                Display.SaveGraph();
             }
-            main_Savefile.FileName = Path.GetFileNameWithoutExtension(Display.Graph.FilePath) + "_new.xml";
-            if (main_Savefile.ShowDialog() == DialogResult.OK)
-            {
-                XmlIO.SaveGraph(main_Savefile.FileName, Display.Graph);
-                main_StatusStrip_filename.Text = Path.GetFileNameWithoutExtension(main_Savefile.FileName);
-            }
+            
         }
-        [Obsolete("这个功能还没完善")]
+        /// <summary>
+        /// 另存为
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        //[Obsolete("这个功能还没完善")]
         private void main_Menu_file_saveas_Click(object sender, EventArgs e)
         {
             if (Display.Graph == null)
@@ -63,45 +82,52 @@ namespace FocusTree.UI
                 MessageBox.Show("[2303051524]没有可以保存的图像");
                 return;
             }
-            main_Savefile.InitialDirectory = Path.GetDirectoryName(Display.Graph.FilePath);
-            main_Savefile.FileName = Path.GetFileNameWithoutExtension(Display.Graph.FilePath) + "_new.xml";
-            if (main_Savefile.ShowDialog() == DialogResult.Cancel)
+            main_Savefile.InitialDirectory = Path.GetDirectoryName(Display.FilePath);
+            main_Savefile.FileName = Path.GetFileNameWithoutExtension(Display.FilePath) + "_new.xml";
+            if (main_Savefile.ShowDialog() == DialogResult.OK)
             {
-                return;
+                Display.SaveAsNew(main_Savefile.FileName);
             }
-            XmlIO.SaveGraph(main_Savefile.FileName, Display.Graph);
-            main_StatusStrip_filename.Text = Path.GetFileNameWithoutExtension(main_Savefile.FileName);
         }
-        private void main_Menu_file_backup_open_Click(object sender, EventArgs e)
+        /// <summary>
+        /// 清空备份
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void main_Menu_file_backup_clear_Click(object sender, EventArgs e)
         {
-            var oldInitDir = main_Openfile.InitialDirectory;
-            main_Openfile.InitialDirectory = Backup.DirectoryName;
-            if (main_Openfile.ShowDialog() == DialogResult.Cancel)
-            {
-                main_Openfile.InitialDirectory = oldInitDir;
-                return;
-            }
-            main_Openfile.InitialDirectory = oldInitDir;
-            InitDisplay(main_Openfile.FileName);
-            main_StatusStrip_filename.Text = Path.GetFileNameWithoutExtension(main_Openfile.FileName);
+            Backup.Clear();
         }
+        /// <summary>
+        /// 批量转存
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void main_Menu_file_batch_saveas_Click(object sender, EventArgs e)
         {
-            
+            main_Openfile_batch.Filter = "csv文件 (.csv) |*.csv";
             if (main_Openfile_batch.ShowDialog() == DialogResult.Cancel)
             {
                 return;
             }
             var fileNames = main_Openfile_batch.FileNames;
             main_Openfile_batch.InitialDirectory = Path.GetDirectoryName(fileNames[0]);
+            var suc = main_Openfile_batch.FileNames.Length;
             foreach (var fileName in fileNames)
             {
-                var graph = new FocusGraph(fileName);
-                var xmlPath = Path.ChangeExtension(fileName, ".xml");
-                Backup.BackupFile(xmlPath);
-                XmlIO.SaveGraph(xmlPath, graph);
+                try
+                {
+                    var graph = CsvReader.LoadGraph(fileName);
+                    Backup.BackupFile(graph);
+                    XmlIO.SaveGraph(graph.FilePath, graph);
+                }
+                catch(Exception ex)
+                {
+                    suc--;
+                    MessageBox.Show($"{fileName}转存失败。\n{ex.Message}");
+                }
             }
-            MessageBox.Show($"成功转存{main_Openfile_batch.FileNames.Length}个文件。");
+            MessageBox.Show($"成功转存{suc}个文件。");
         }
 
         private void main_Menu_edit_undo_Click(object sender, EventArgs e)
@@ -141,10 +167,9 @@ namespace FocusTree.UI
         {
             main_Menu_edit_status_check();
         }
-
-        private void main_Menu_file_backup_clear_Click(object sender, EventArgs e)
+        public void UpdateText()
         {
-            Backup.Clear();
+            Text = main_StatusStrip_filename.Text = Display.FileName;
         }
     }
 }

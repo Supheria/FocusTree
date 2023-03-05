@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FocusGraph>
-  <FilePath>D:\Non_E\documents\GitHub\FocusTree\FocusTree\国策\隐居村落.xml</FilePath>
+  <FilePath>D:\Non_E\documents\GitHub\FocusTree\FocusTree\国策\隐居村落_new.xml</FilePath>
   <Nodes>
     <Node ID="1">
       <Name>入梦</Name>
@@ -82,13 +82,13 @@
       <Descript>道常无为，而无不为</Descript>
       <Ps. />
     </Node>
-    <Node ID="12">
-      <Name>万民自化</Name>
+    <Node ID="11">
+      <Name>无为而治</Name>
       <Star>false</Star>
       <Duration>60</Duration>
-      <Effects>获得万民自化，其效果为（每周稳定度：+0.1%，每周战争支持度：-0.1%，战争支持度：+100%）</Effects>
-      <Descript>圣人之言曰：“我无为，而民自化；我好静，而民自正；我无事，而民自富；我无欲，而民自朴。”</Descript>
-      <Ps. />
+      <Effects>获得无为而治，其效果为(每周人口：+1，每月人口：+15%)</Effects>
+      <Descript>多言数穷，不如守中</Descript>
+      <Ps.>（注：守矢神社选择无为而治后的民族精神要和隐居村落相同）</Ps.>
     </Node>
     <Node ID="13">
       <Name>福祸相依</Name>
@@ -274,6 +274,14 @@
       <Descript>彼窃钩者诛，窃国者为诸侯。圣人不死，大盗不止</Descript>
       <Ps.>（注：需要拥有“强大的威望”）</Ps.>
     </Node>
+    <Node ID="36">
+      <Name>兵者不详</Name>
+      <Star>true</Star>
+      <Duration>30</Duration>
+      <Effects>获得不详之器，效果为：部队组织度：+20%，部队组织度恢复：-5% 向鹰派发展一级，以鸽派2取代鸽派3，效果变化 生活消费品：+2% 战争支持度：+5% 改善关系持续花费：+10% 地区最大工业值：-10% 贸易协定修正：-20% 正当化战争目标所需时间：-10% 敌国对我国正当化目标所需时间：-20% 边界开放法则切换花费：+10% 灵力使用法案切换花费：+10%</Effects>
+      <Descript>夫唯兵者，不详之器，物或恶之……</Descript>
+      <Ps.>（注：要求神灵庙意识形态为孤立）</Ps.>
+    </Node>
     <Node ID="37">
       <Name>函谷关</Name>
       <Star>false</Star>
@@ -306,14 +314,6 @@
       <Descript>虽有拱壁以先驷马，不如坐进此道</Descript>
       <Ps. />
     </Node>
-    <Node ID="41">
-      <Name>用人配天</Name>
-      <Star>false</Star>
-      <Duration>30</Duration>
-      <Effects>获得发现幻想乡的矛盾点，其效果为（步兵部队攻击：+4%，步兵部队防御：+4%）</Effects>
-      <Descript>是谓用人，是谓配天，古之极也</Descript>
-      <Ps. />
-    </Node>
     <Node ID="42">
       <Name>无兵无敌</Name>
       <Star>false</Star>
@@ -336,6 +336,14 @@
       <Duration>30</Duration>
       <Effects>获得为期365天的“无败事”，其效果为（工厂产出：+50%，生产效率增长：+50%）</Effects>
       <Descript>民之从事，常于几成而败之。慎终如始，则无败事</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="45">
+      <Name>兵强则灭</Name>
+      <Star>false</Star>
+      <Duration>30</Duration>
+      <Effects>获得对守矢神社的吞并战争目标，获得针对天狗共和国的吞并战争目标，触发事件“模糊不清的梦”</Effects>
+      <Descript>****，****。****，****</Descript>
       <Ps. />
     </Node>
     <Node ID="46">
@@ -409,6 +417,14 @@
       <Effects>从居民生活区移除1个民用工厂增加1个军用工厂，从山中鸡场移除1个民用工厂增加一个军用工厂，触发事件“天之正者不可逆之”。</Effects>
       <Descript>服文……厌饮食，财货有余，是为盗贼夸。非道也哉</Descript>
       <Ps. />
+    </Node>
+    <Node ID="55">
+      <Name>天怒人怨</Name>
+      <Star>false</Star>
+      <Duration>0</Duration>
+      <Effects>获得五弊三缺</Effects>
+      <Descript>兵强则灭，木强则折。强大处下，柔弱处上</Descript>
+      <Ps.>（注1：随事件的发展自动完成）（注2：要守矢神社和天狗共和国不存在之后才会触发）（注3：以下debuff随国力发展自动添加）</Ps.>
     </Node>
     <Node ID="56">
       <Name>鳏</Name>
@@ -1335,8 +1351,8 @@
     <Relation ID="10">
       <Require>9</Require>
     </Relation>
-    <Relation ID="13">
-      <Require>12</Require>
+    <Relation ID="11">
+      <Require>10</Require>
     </Relation>
     <Relation ID="14">
       <Require>13</Require>
@@ -1404,6 +1420,9 @@
     <Relation ID="35">
       <Require>34</Require>
     </Relation>
+    <Relation ID="37">
+      <Require>36</Require>
+    </Relation>
     <Relation ID="38">
       <Require>37</Require>
     </Relation>
@@ -1413,17 +1432,20 @@
     <Relation ID="40">
       <Require>39</Require>
     </Relation>
-    <Relation ID="41">
-      <Require>40</Require>
-    </Relation>
     <Relation ID="42">
-      <Require>41</Require>
+      <Require />
     </Relation>
     <Relation ID="43">
       <Require>42</Require>
     </Relation>
     <Relation ID="44">
       <Require>43</Require>
+    </Relation>
+    <Relation ID="45">
+      <Require>44</Require>
+    </Relation>
+    <Relation ID="46">
+      <Require>45</Require>
     </Relation>
     <Relation ID="47">
       <Require>46</Require>
@@ -1448,6 +1470,33 @@
     </Relation>
     <Relation ID="54">
       <Require>53</Require>
+    </Relation>
+    <Relation ID="55">
+      <Require>54</Require>
+    </Relation>
+    <Relation ID="56">
+      <Require>55</Require>
+    </Relation>
+    <Relation ID="57">
+      <Require>55</Require>
+    </Relation>
+    <Relation ID="58">
+      <Require>55</Require>
+    </Relation>
+    <Relation ID="59">
+      <Require>55</Require>
+    </Relation>
+    <Relation ID="60">
+      <Require>55</Require>
+    </Relation>
+    <Relation ID="61">
+      <Require>55</Require>
+    </Relation>
+    <Relation ID="62">
+      <Require>55</Require>
+    </Relation>
+    <Relation ID="63">
+      <Require>55</Require>
     </Relation>
     <Relation ID="64">
       <Require>63</Require>

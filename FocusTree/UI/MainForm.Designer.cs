@@ -90,19 +90,16 @@ namespace FocusTree.UI
             // 
             // main_Openfile
             // 
-            this.main_Openfile.Filter = "xml文件 (.xml) |*.xml";
             this.main_Openfile.Title = "打开单个文件";
             // 
             // main_Openfile_batch
             // 
-            this.main_Openfile_batch.Filter = "csv文件 (.csv) |*.csv";
             this.main_Openfile_batch.Multiselect = true;
             this.main_Openfile_batch.Title = "打开一个或多个文件";
             // 
             // main_Savefile
             // 
             this.main_Savefile.Filter = "xml文件 (.xml) |*.xml";
-            this.main_Savefile.InitialDirectory = Backup.DirectoryName;
             this.main_Savefile.Title = "另存为";
             // 
             // main_Menu

@@ -1,16 +1,54 @@
 ﻿using System.Numerics;
 using FocusTree.Data;
+using FocusTree.IO;
 
 namespace FocusTree.UI
 {
     internal class GraphBox : PictureBox
     {
+        public string FilePath;
+        public string FileName
+        {
+            get 
+            {
+                if (ReadOnly) { return Path.GetFileNameWithoutExtension(Graph.FilePath) + "_备份（只读）"; }
+                if (GraphEdited) { return Path.GetFileNameWithoutExtension(FilePath) + "（未保存）"; }
+                else { return Path.GetFileNameWithoutExtension(FilePath); }
+            }
+        }
+        public bool GraphEdited
+        {
+            get
+            {
+                if (OriginalGraph != JsGraph.SerializeGraph(Graph)) { return true; }
+                else { return false; }
+            }
+        }
+        public bool ReadOnly
+        {
+            get
+            {
+                if (Path.GetDirectoryName(Path.GetDirectoryName(FilePath)) == Backup.DirectoryName) { return true; }
+                else { return false; }
+            }
+        }
         readonly MainForm ParentForm;
-        readonly NodeContextMenu PicNodeContextMenu;
+        NodeContextMenu PicNodeContextMenu;
+        GraphContextMenu PicGraphContextMenu;
         /// <summary>
         /// 数据存储结构
         /// </summary>
-        public FocusGraph Graph;
+        public FocusGraph Graph
+        {
+            get { return graph; }
+            set
+            {
+                graph = value;
+                OriginalGraph = JsGraph.SerializeGraph(value);
+            }
+        }
+        FocusGraph graph;
+        (string, string) OriginalGraph;
         /// <summary>
         /// 绘图缩放倍率
         /// </summary>
@@ -69,7 +107,6 @@ namespace FocusTree.UI
         public GraphBox(MainForm mainForm)
         {
             Parent = ParentForm = mainForm;
-            PicNodeContextMenu = new NodeContextMenu(this);
             GFontFormat.Alignment = StringAlignment.Center;
             GFontFormat.LineAlignment = StringAlignment.Center;
             SizeMode = PictureBoxSizeMode.Zoom;
@@ -114,6 +151,7 @@ namespace FocusTree.UI
         private void OnInValidated(object sender, EventArgs args)
         {
             if (Graph == null) { return; }
+            ParentForm.UpdateText();
             Image ??= new Bitmap(Size.Width, Size.Height);
 
             var font = new Font(GFont, GFontSize * GScale, FontStyle.Bold, GraphicsUnit.Pixel);
@@ -180,6 +218,10 @@ namespace FocusTree.UI
         }
         private void OnMouseDown(object sender, MouseEventArgs args)
         {
+            if (Graph == null)
+            {
+                return;
+            }
             // 用于拖动事件
             if (args.Button == MouseButtons.Left)
             {
@@ -192,6 +234,35 @@ namespace FocusTree.UI
                 var point = ClickedLocation(args.Location);
                 int? clickedNode = GetFirstNodeClicked(point);
                 if (clickedNode != null) { NodeRightClicked(clickedNode.Value); }
+                else
+                {
+                    if (PicGraphContextMenu == null || PicGraphContextMenu.ButtonTag != MouseButtons.Right)
+                    {
+                        PicGraphContextMenu = new GraphContextMenu(this, MouseButtons.Right);
+                    }
+                    PicGraphContextMenu.Show(Cursor.Position);
+                }
+            }
+            else if ((args.Button & MouseButtons.Middle) == MouseButtons.Middle)
+            {
+                if (ReadOnly)
+                {
+                    if (MessageBox.Show("[202303052340]是否恢复并删除备份？", "提示", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        Graph = Backup.Restore(FilePath);
+                        FilePath = Graph.FilePath;
+                        ParentForm.UpdateText();
+                        PicNodeContextMenu = new NodeContextMenu(this);
+                    }
+                }
+                else
+                {
+                    if (PicGraphContextMenu == null || PicGraphContextMenu.ButtonTag != MouseButtons.Middle)
+                    {
+                        PicGraphContextMenu = new GraphContextMenu(this, MouseButtons.Middle);
+                    }
+                    PicGraphContextMenu.Show(Cursor.Position);
+                }
             }
         }
         /// <summary>
@@ -315,6 +386,31 @@ namespace FocusTree.UI
                 vec.X * NodePaddingSize.X,
                 vec.Y * NodePaddingSize.Y
                 );
+        }
+        public void SaveGraph()
+        {
+            if (GraphEdited)
+            {
+                Backup.BackupFile(FilePath);
+                XmlIO.SaveGraph(FilePath, Graph);
+                OriginalGraph = JsGraph.SerializeGraph(Graph);
+                ParentForm.UpdateText();
+            }
+        }
+        public void SaveAsNew(string path)
+        {
+            FilePath = path;
+            XmlIO.SaveGraph(path, Graph);
+            OriginalGraph = JsGraph.SerializeGraph(Graph);
+            ParentForm.UpdateText();
+        }
+        public void LoadGraph(string path)
+        {
+            FilePath = path;
+            Graph = XmlIO.LoadGraph(path);
+            RelocateCenter();
+            Invalidate();
+            PicNodeContextMenu = new NodeContextMenu(this);
         }
     }
 }

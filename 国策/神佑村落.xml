@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FocusGraph>
+  <FilePath>D:\Non_E\documents\GitHub\FocusTree\FocusTree\国策\神佑村落.xml</FilePath>
   <Nodes>
     <Node ID="1">
       <Name>准备西南战争</Name>
@@ -311,14 +312,6 @@
       <Duration>60</Duration>
       <Effects>政治点数：-200，神明信仰联盟的忠犬追加效果：（太阳花田）我国对其进攻修正：+10%，我国对其防御修正：+10%</Effects>
       <Descript>我们的神明好像对那片花田有想法，我们当然愿意为此努力，但是毕竟师出无名</Descript>
-      <Ps. />
-    </Node>
-    <Node ID="40">
-      <Name>做好对佛教的战争准备</Name>
-      <Star>false</Star>
-      <Duration>60</Duration>
-      <Effects>政治点数：-100，神明信仰联盟的忠犬追加效果：（命莲寺）我国对其进攻修正：+10%，我国对其防御修正：+10%</Effects>
-      <Descript>我们的神明才是最伟大的，什么佛都要靠边站</Descript>
       <Ps. />
     </Node>
     <Node ID="41">
@@ -995,9 +988,6 @@
       <Require>37</Require>
     </Relation>
     <Relation ID="39">
-      <Require>38</Require>
-    </Relation>
-    <Relation ID="40">
       <Require>38</Require>
     </Relation>
     <Relation ID="41">

@@ -11,25 +11,22 @@ namespace FocusTree.Data
 {
     public class FocusGraph : IXmlSerializable
     {
+        #region ---- 文件名 ----
+
+        internal string FilePath { get; private set; }
+
+        #endregion
+
         #region ---- 基本变量 ----
 
         /// <summary>
-        /// 文件路径
-        /// </summary>
-        public string FilePath 
-        {
-            get { return filePath == null ? throw new Exception("[2303051255]异常：没有相关联的文件。") : filePath; }
-            set { filePath = File.Exists(value) ? value : throw new Exception($"[2303051236]异常：{value}文件不存在。"); }
-        }
-        string filePath;
-        /// <summary>
         /// 以 ID 作为 Key 的所有节点
         /// </summary>
-        private Dictionary<int, FocusData> NodesCatalog;
+        internal Dictionary<int, FocusData> NodesCatalog;
         /// <summary>
         /// 节点依赖的节点组合
         /// </summary>
-        private Dictionary<int, List<HashSet<int>>> RequireGroups;
+        internal Dictionary<int, List<HashSet<int>>> RequireGroups;
         /// <summary>
         /// 依赖于节点的节点 (自动生成) (父节点, 多个子节点)
         /// </summary>
@@ -67,7 +64,7 @@ namespace FocusTree.Data
                 MessageBox.Show("[2303031210]提示：无法添加节点 - 无法加入字典。");
                 return false;
             }
-            UpdateGraph();
+            UpdateEdited();
             return true;
         }
         /// <summary>
@@ -93,7 +90,7 @@ namespace FocusTree.Data
             }
             // 从节点表中删除此节点
             NodesCatalog.Remove(id);
-            UpdateGraph();
+            UpdateEdited();
             return true;
         }
         /// <summary>
@@ -111,7 +108,7 @@ namespace FocusTree.Data
                 return false;
             }
             NodesCatalog[id] = newData;
-            UpdateGraph();
+            UpdateEdited();
             return true;
         }
         /// <summary>
@@ -161,18 +158,15 @@ namespace FocusTree.Data
         /// <summary>
         /// 编辑节点后，更新连接关系和节点位置
         /// </summary>
-        private void UpdateGraph()
+        private void UpdateEdited()
         {
-            CreateLinked();
+            CreateLinkes();
             SetNodePoints();
             DataHistory.Enqueue(this);
         }
-        /// <summary>
-        /// 更新连接关系和节点位置
-        /// </summary>
         public void Update()
         {
-            CreateLinked();
+            CreateLinkes();
             SetNodePoints();
         }
         /// <summary>
@@ -270,6 +264,28 @@ namespace FocusTree.Data
             return nodeCoordinates;
         }
         /// <summary>
+        /// 使用 Requires 创建 Linked
+        /// </summary>
+        private void CreateLinkes()
+        {
+            // 这里一定要重新初始化，因为是刷新
+            LinkedNodes = new();
+
+            foreach (var requireGroups in RequireGroups)
+            {
+                foreach (var requireGroup in requireGroups.Value)
+                {
+                    foreach (var requireNode in requireGroup)
+                    {
+                        // 如果父节点没有创建 HashSet 就创建一个新的
+                        LinkedNodes.TryAdd(requireNode, new HashSet<int>());
+                        // 向 LinkedNodes 里父节点的对应条目里添加当前节点（HashSet自动忽略重复项）
+                        LinkedNodes[requireNode].Add(requireGroups.Key);
+                    }
+                }
+            }
+        }
+        /// <summary>
         /// 获取 NodeMap 中心位置和尺寸
         /// </summary>
         /// <returns>Center + Size</returns>
@@ -364,66 +380,37 @@ namespace FocusTree.Data
 
         #endregion
 
-        #region ---- 读写与重载 ---
-
+        #region ---- 构造函数 ----
         /// <summary>
-        /// 从 csv 文件中读取 Graph
+        /// 用节点列表和依赖组合列表生成FocusGraph
         /// </summary>
-        /// <param name="path">国策树 .csv文件</param>
-        public FocusGraph(string path)
+        /// <param name="nodesCatalog">节点列表</param>
+        /// <param name="requireGroups">依赖组合列表</param>
+        internal FocusGraph(string path, Dictionary<int, FocusData> nodesCatalog, Dictionary<int, List<HashSet<int>>> requireGroups)
         {
-            if (!File.Exists(path))
-            {
-                throw new Exception("[2302191048] 文件不存在: " + path);
-            }
-
             FilePath = path;
-            NodesCatalog = new();
-            RequireGroups = new();
-
-            // 根据不同扩展名以对应方式加载
-            switch (Path.GetExtension(path).ToLower())
-            {
-                // 从 Csv 读取
-                case ".csv":
-                    {
-                        CsvReader.ReadGraphFromCsv(path, ref NodesCatalog, ref RequireGroups);
-                        DataHistory.Clear();
-                        // 推断 Link 关系
-                        UpdateGraph();
-                        break;
-                    }
-                // 不是 csv 文件时
-                default: throw new Exception("[2302191420] 不是有效的 csv 文件");
-            }
-        }
-        /// <summary>
-        /// 使用 Requires 创建 Linked
-        /// </summary>
-        private void CreateLinked()
-        {
-            // 这里一定要重新初始化，因为是刷新
-            LinkedNodes = new();
-
-            foreach (var requireGroups in RequireGroups)
-            {
-                foreach (var requireGroup in requireGroups.Value)
-                {
-                    foreach (var requireNode in requireGroup)
-                    {
-                        // 如果父节点没有创建 HashSet 就创建一个新的
-                        LinkedNodes.TryAdd(requireNode, new HashSet<int>());
-                        // 向 LinkedNodes 里父节点的对应条目里添加当前节点（HashSet自动忽略重复项）
-                        LinkedNodes[requireNode].Add(requireGroups.Key);
-                    }
-                }
-            }
+            NodesCatalog = nodesCatalog;
+            RequireGroups = requireGroups;
+            DataHistory.Clear();
+            UpdateEdited();
         }
         /// <summary>
         /// 用于序列化
         /// </summary>
         private FocusGraph() { }
-
+        /// <summary>
+        /// 更新文件路径和历史记录
+        /// </summary>
+        /// <param name="path">新的文件路径</param>
+        /// <param name="graph">原来的graph</param>
+        public FocusGraph(string path, FocusGraph graph)
+        {
+            FilePath = path;
+            NodesCatalog = graph.NodesCatalog;
+            RequireGroups = graph.RequireGroups;
+            DataHistory.Clear();
+            UpdateEdited();
+        }
         #endregion
 
         #region ---- 序列化方法 ----
@@ -449,6 +436,11 @@ namespace FocusTree.Data
             while (reader.Read())
             {
                 if (reader.NodeType != XmlNodeType.Element) { continue; }
+                if (reader.Name == "FilePath")
+                {
+                    reader.Read();
+                    FilePath = reader.ReadContentAsString();
+                }
                 if (reader.Name == "Nodes")
                 {
                     reader.Read();
@@ -457,7 +449,7 @@ namespace FocusTree.Data
                         if (reader.NodeType == XmlNodeType.Element && reader.Name == "Node")
                         {
                             var node = (FocusData)FData_serial.Deserialize(reader);
-                            NodesCatalog.Add(node.ID, node);
+                            NodesCatalog[node.ID] =  node;
                         }
                         else { reader.Read(); }
                     }
@@ -473,7 +465,7 @@ namespace FocusTree.Data
                 }
             }
             DataHistory.Clear();
-            UpdateGraph();
+            UpdateEdited();
         }
         /// <summary>
         /// 反序列化时用于读取节点的关系
@@ -505,6 +497,8 @@ namespace FocusTree.Data
 
         public void WriteXml(XmlWriter writer)
         {
+            writer.WriteElementString("FilePath", FilePath);
+
             //==== 序列化节点数据 ====//
 
             // <Nodes> 序列化 Nodes (国策节点数据)
@@ -560,34 +554,6 @@ namespace FocusTree.Data
             var split = ids.Split(',').Where(x => !string.IsNullOrWhiteSpace(x));
             return split.Select(x => int.Parse(x)).ToHashSet();
         }
-
-        /// <summary>
-        /// 仅允许被 FHistory 访问的节点指针
-        /// </summary>
-        /// <param name="accessClass">用于限制访问类的工具</param>
-        /// <returns>指针</returns>
-        internal Dictionary<int, FocusData> GraphDataNodes_Get()
-        {
-            return NodesCatalog;
-        }
-        /// <summary>
-        /// 仅允许被 FHistory 访问的依赖指针
-        /// </summary>
-        /// <param name="accessClass">用于限制访问类的工具</param>
-        /// <returns>指针</returns>
-        internal Dictionary<int, List<HashSet<int>>> GraphDataRequires_Get()
-        {
-            return RequireGroups;
-        }
-        internal void GraphDataNodes_Set(Dictionary<int, FocusData> nodes)
-        {
-            NodesCatalog = nodes;
-        }
-        internal void GraphDataRequires_Set(Dictionary<int, List<HashSet<int>>> requires)
-        {
-            RequireGroups = requires;
-        }
-
         #endregion
     }
 }
