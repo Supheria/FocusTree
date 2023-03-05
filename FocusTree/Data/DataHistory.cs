@@ -72,7 +72,7 @@ namespace FocusTree.Data
         {
             Index--;
             DeSerializeGraphData(History[Index], ref graph);
-            graph.UpdateGraph();
+            graph.Update();
         }
         /// <summary>
         /// 重做 (调用前需要检查 HasNext())
@@ -84,7 +84,7 @@ namespace FocusTree.Data
             Index++;
             if (Index >= Length) { throw new IndexOutOfRangeException("[2302191735] 历史记录越界"); }
             DeSerializeGraphData(History[Index], ref graph);
-            graph.UpdateGraph();
+            graph.Update();
         }
         /// <summary>
         /// 将所有历史记录向左移动一位（不删除当前位）

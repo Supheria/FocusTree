@@ -60,7 +60,7 @@ class Test
 
         XmlIO.SaveGraph("人类财阀联合.Graph.xml", graph);
 
-        var readgraph = XmlIO.LoadGraph("人类财阀联合.Graph.xml");
+        //var readgraph = XmlIO.LoadGraph("人类财阀联合.Graph.xml");
 
 
     }

@@ -1,354 +1,246 @@
-﻿<focus-tree>
-	<tree-name>竹林流亡者</tree-name>
-	<node>
-		<ID>1</ID>
-		<relied-ID>0</relied-ID>
-		<child-ID>2</child-ID>
-		<level>0</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>流浪啊流浪</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>5</duration>
-			<effects>触发事件“曾经的约定”。</effects>
-			<descript>人类复权运动失败之后，我们看似四散而逃，实则在为人类保留火种……</descript>
-			<ps.></ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>2</ID>
-		<relied-ID>1</relied-ID>
-		<child-ID>3</child-ID>
-		<level>1</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>再次联络</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>5</duration>
-			<effects>获得科技：147季无线电。触发事件“再看幻想乡”。</effects>
-			<descript>不管我们怎么认为，人类的确失败了，但至少现在我们不需要再次白手起家</descript>
-			<ps.></ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>3</ID>
-		<relied-ID>2</relied-ID>
-		<child-ID>4</child-ID>
-		<level>2</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>在我们的兄弟当中</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>5</duration>
-			<effects>获得2个编制为人类流亡编制的部队，1800单位的竹林流亡者产步枪，1800单位的草原流亡者产步枪，216单位的竹林流亡者产迫击炮，216单位的草原流亡者产迫击炮，600单位的竹林流亡者产近战武器，600单位的草原流亡者产近战武器添加进国家储备。触发事件“流亡者归来”。获得志愿军，其效果为（志愿军部队数上限：+6，派遣志愿军需要的部队数量：-100%）</effects>
-			<descript>很巧的是，我们都选择了互帮互助，虽然这批援助不知道是否来自哪个土作坊</descript>
-			<ps.></ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>4</ID>
-		<relied-ID>3</relied-ID>
-		<child-ID>5</child-ID>
-		<level>3</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>慷慨解囊</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>5</duration>
-			<effects>获得2个地图外民用工厂</effects>
-			<descript>我们谁也不会说出去这是慷慧音政府之慨的</descript>
-			<ps.></ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>5</ID>
-		<relied-ID>4</relied-ID>
-		<child-ID>6</child-ID>
-		<level>4</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>私通财阀</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>55</duration>
-			<effects>获得人类财阀投资，其效果为（生活消费品工厂：-5%）</effects>
-			<descript>我们是在其他流亡者中离人类村落最近的，原因就是我们知道本居小铃隐藏的想法，她一定会帮助我们</descript>
-			<ps.></ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>6</ID>
-		<relied-ID>5</relied-ID>
-		<child-ID>7</child-ID>
-		<level>5</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>科教兴国</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>55</duration>
-			<effects>增加2个科研槽</effects>
-			<descript>前人类村落的技术当然是我们的筹码，而且我们可以决定将他赠与谁</descript>
-			<ps.></ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>7</ID>
-		<relied-ID>6</relied-ID>
-		<child-ID>8</child-ID>
-		<level>6</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>蒙蔽天狗</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>55</duration>
-			<effects>（天狗共和国）移除被转移的人类科学家，获得向往天狗（与竹林流亡者的关系+80），（竹林流亡者）获得暗怀杀机（与天狗共和国的关系-80），获得家国，其效果为（数学类研究速度：+4%）</effects>
-			<descript>我们怎么可能忘记天狗对我们的伤害呢，但远交近攻对我们并没有害处，尤其是对某些还有人类认同的科学家而言</descript>
-			<ps.></ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>8</ID>
-		<relied-ID>7</relied-ID>
-		<child-ID>9</child-ID>
-		<level>7</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>软化付丧神</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>55</duration>
-			<effects>（九十九工业）移除成妖的道具们，获得起源呼唤（与竹林流亡者的关系+80），（竹林流亡者）获得隐忍背叛（与九十九工业的关系-80），获得故土，其效果为（迫击炮：对人员杀伤：+10%，步枪：对人员杀伤：+5%，对装甲杀伤：+5%，生产效率上限：+10%）</effects>
-			<descript>付丧神的背叛如芒在背，但我们如果使用怀柔政策，还能得到少部分付丧神的支持</descript>
-			<ps.>（注：如果多多良小伞不是九十九工业的领导人，那么多多良小伞会成为将领）</ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>9</ID>
-		<relied-ID>8</relied-ID>
-		<child-ID>10</child-ID>
-		<level>8</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>鸷鸟卑飞</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>55</duration>
-			<effects>开启决议对周边国家进行边境冲突</effects>
-			<descript>鸷鸟将击，卑飞敛翼；猛兽将搏，弭耳俯伏</descript>
-			<ps.></ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>10</ID>
-		<relied-ID>9</relied-ID>
-		<child-ID>11</child-ID>
-		<level>9</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>待敌可胜</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>55</duration>
-			<effects>获得庙算，其效果为（补给消耗：-20%，工厂产出：+20%，堑壕上限：+10）</effects>
-			<descript>昔之善战者，先为不可胜，以待敌之可胜</descript>
-			<ps.></ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>11</ID>
-		<relied-ID>10</relied-ID>
-		<child-ID>12</child-ID>
-		<level>10</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>奇正相生</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>55</duration>
-			<effects>庙算追击效果：部队速度：-5%，加密：-5，堑壕速度：+20%，部队攻击：+20%</effects>
-			<descript>故善动敌者，形之，敌必从之；予之，敌必取之。以利动之，以卒待之</descript>
-			<ps.></ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>12</ID>
-		<relied-ID>11</relied-ID>
-		<child-ID>13</child-ID>
-		<level>11</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>避实击虚</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>55</duration>
-			<effects>庙算追击效果：增援率：+15%，解密：+15</effects>
-			<descript>夫兵形象水，水之形，避高而趋下，兵之形，避实而击虚</descript>
-			<ps.></ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>13</ID>
-		<relied-ID>12</relied-ID>
-		<child-ID>14</child-ID>
-		<level>12</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>火攻</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>55</duration>
-			<effects>获得火攻，其效果为（侦察：+5，地形惩罚降低：-50%，林地游侠特质经验增长速度：+50%），（竹林妖怪联盟）（月兔年糕厂）获得溃逃，其效果为（部队组织度：-10%，堑壕上限：-10）</effects>
-			<descript>兵有奇变，不在众寡……依草结营，易为风火……因夜纵烧，必大惊乱</descript>
-			<ps.></ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>14</ID>
-		<relied-ID>13</relied-ID>
-		<child-ID>15</child-ID>
-		<level>13</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>坐忘道</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>55</duration>
-			<effects>（人类村落）成为竹林流亡者的四级附庸（势力范围），释放人类财阀联合</effects>
-			<descript>堕肢体，黜聪明，离形去知，同于大通，此谓坐忘</descript>
-			<ps.>（注：需要人类村落存在且意识形态为孤立）</ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>15</ID>
-		<relied-ID>14</relied-ID>
-		<child-ID>16</child-ID>
-		<level>14</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>昭然若揭</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>55</duration>
-			<effects>创建阵营：第二次人类复权运动——南线，（人类财阀联合）触发事件：“无心插柳”。</effects>
-			<descript>吾心昭昭，又何惧天下之口}（注：需要竹林妖怪联盟、月兔年糕厂不存在</descript>
-			<ps.></ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>16</ID>
-		<relied-ID>15</relied-ID>
-		<child-ID>17</child-ID>
-		<level>15</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>一顾茅庐</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>55</duration>
-			<effects>（藤原卫队）触发事件：“戏谑的诗句”。获得第一次拜访（与竹林流亡者的关系+30）</effects>
-			<descript>人类复权运动失败之后许多曾经帮助我们一方的重要人物都被软禁或流放到其他地方，但我们拥有了改变的机会</descript>
-			<ps.></ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>17</ID>
-		<relied-ID>16</relied-ID>
-		<child-ID>18</child-ID>
-		<level>16</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>二顾茅庐</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>55</duration>
-			<effects>获得军乐队，其效果为（部队组织度：+10%），（藤原卫队）触发事件：“熟悉的音乐”。获得第二次拜访（与竹林流亡者的关系+60）</effects>
-			<descript>人类复权路上，我们能付出的只有真挚与坚持</descript>
-			<ps.></ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>18</ID>
-		<relied-ID>17</relied-ID>
-		<child-ID>19</child-ID>
-		<level>17</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>三顾茅庐</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>55</duration>
-			<effects>（藤原卫队）触发事件：“承认人类身份”。如果他们同意，则（藤原卫队）成为竹林流亡者的四级附庸（势力范围）</effects>
-			<descript>文王拉车八百步，周朝天下八百年</descript>
-			<ps.></ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>19</ID>
-		<relied-ID>18</relied-ID>
-		<child-ID>20</child-ID>
-		<level>18</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>家仇国恨</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>55</duration>
-			<effects>竹林流亡者对永远亭宣战</effects>
-			<descript>经过我们的开导，藤原妹红明白了父亲和自己的悲剧并不是源于自身，而是源于妖怪操控的社会</descript>
-			<ps.>（注：需要永远亭存在，需要藤原卫队是我们的盟友）</ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>20</ID>
-		<relied-ID>19</relied-ID>
-		<child-ID>21</child-ID>
-		<level>19</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>软禁辉夜</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>55</duration>
-			<effects>获得强大的威望，其效果为（每日获得的政治点数：+0.25，部队组织度：+15%，稳定度：+20%，战争支持度：+20%，建造速度：+10%，部队攻击：+5%，部队防御：+5%，科研速度：+10%，工厂产出：+10%），竹林流亡者吞并藤原卫队</effects>
-			<descript>此战之后藤原妹红再无挂念，差人建造一座金屋后就将藤原卫队全权交给我们</descript>
-			<ps.>（注：需要永远亭不存在）</ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>21</ID>
-		<relied-ID>20</relied-ID>
-		<child-ID>22</child-ID>
-		<level>20</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>威霸一方</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>55</duration>
-			<effects>获得外交中立，其效果为（稳定度：+35%，训练时间：+5%，ai修正：加入或扩大一个阵营的意愿：-250，ai修正：专注防御：+50%，ai修正：专注进攻：-30%，ai修正：专注和平：+40%，ai修正：部署部队数量修正：-20%）</effects>
-			<descript>威名一方，霸业安稳</descript>
-			<ps.></ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>22</ID>
-		<relied-ID>21</relied-ID>
-		<level>21</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>人类复权运动的未来</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>110</duration>
-			<effects>触发事件：“人类复权运动的未来”。</effects>
-			<descript>当初为人类保留火种的任务我们已经超额完成了，我们又一次站在人类的岔路口上</descript>
-			<ps.></ps.>
-		</focus-data>
-	</node>
-</focus-tree>
+<?xml version="1.0" encoding="utf-8"?>
+<FocusGraph>
+  <Nodes>
+    <Node ID="1">
+      <Name>流浪啊流浪</Name>
+      <Star>false</Star>
+      <Duration>5</Duration>
+      <Effects>触发事件“曾经的约定”。</Effects>
+      <Descript>人类复权运动失败之后，我们看似四散而逃，实则在为人类保留火种……</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="2">
+      <Name>再次联络</Name>
+      <Star>false</Star>
+      <Duration>5</Duration>
+      <Effects>获得科技：147季无线电。触发事件“再看幻想乡”。</Effects>
+      <Descript>不管我们怎么认为，人类的确失败了，但至少现在我们不需要再次白手起家</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="3">
+      <Name>在我们的兄弟当中</Name>
+      <Star>false</Star>
+      <Duration>5</Duration>
+      <Effects>获得2个编制为人类流亡编制的部队，1800单位的竹林流亡者产步枪，1800单位的草原流亡者产步枪，216单位的竹林流亡者产迫击炮，216单位的草原流亡者产迫击炮，600单位的竹林流亡者产近战武器，600单位的草原流亡者产近战武器添加进国家储备。触发事件“流亡者归来”。获得志愿军，其效果为（志愿军部队数上限：+6，派遣志愿军需要的部队数量：-100%）</Effects>
+      <Descript>很巧的是，我们都选择了互帮互助，虽然这批援助不知道是否来自哪个土作坊</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="4">
+      <Name>慷慨解囊</Name>
+      <Star>false</Star>
+      <Duration>5</Duration>
+      <Effects>获得2个地图外民用工厂</Effects>
+      <Descript>我们谁也不会说出去这是慷慧音政府之慨的</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="5">
+      <Name>私通财阀</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effects>获得人类财阀投资，其效果为（生活消费品工厂：-5%）</Effects>
+      <Descript>我们是在其他流亡者中离人类村落最近的，原因就是我们知道本居小铃隐藏的想法，她一定会帮助我们</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="6">
+      <Name>科教兴国</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effects>增加2个科研槽</Effects>
+      <Descript>前人类村落的技术当然是我们的筹码，而且我们可以决定将他赠与谁</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="7">
+      <Name>蒙蔽天狗</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effects>（天狗共和国）移除被转移的人类科学家，获得向往天狗（与竹林流亡者的关系+80），（竹林流亡者）获得暗怀杀机（与天狗共和国的关系-80），获得家国，其效果为（数学类研究速度：+4%）</Effects>
+      <Descript>我们怎么可能忘记天狗对我们的伤害呢，但远交近攻对我们并没有害处，尤其是对某些还有人类认同的科学家而言</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="8">
+      <Name>软化付丧神</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effects>（九十九工业）移除成妖的道具们，获得起源呼唤（与竹林流亡者的关系+80），（竹林流亡者）获得隐忍背叛（与九十九工业的关系-80），获得故土，其效果为（迫击炮：对人员杀伤：+10%，步枪：对人员杀伤：+5%，对装甲杀伤：+5%，生产效率上限：+10%）</Effects>
+      <Descript>付丧神的背叛如芒在背，但我们如果使用怀柔政策，还能得到少部分付丧神的支持</Descript>
+      <Ps.>（注：如果多多良小伞不是九十九工业的领导人，那么多多良小伞会成为将领）</Ps.>
+    </Node>
+    <Node ID="9">
+      <Name>鸷鸟卑飞</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effects>开启决议对周边国家进行边境冲突</Effects>
+      <Descript>鸷鸟将击，卑飞敛翼；猛兽将搏，弭耳俯伏</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="10">
+      <Name>待敌可胜</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effects>获得庙算，其效果为（补给消耗：-20%，工厂产出：+20%，堑壕上限：+10）</Effects>
+      <Descript>昔之善战者，先为不可胜，以待敌之可胜</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="11">
+      <Name>奇正相生</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effects>庙算追击效果：部队速度：-5%，加密：-5，堑壕速度：+20%，部队攻击：+20%</Effects>
+      <Descript>故善动敌者，形之，敌必从之；予之，敌必取之。以利动之，以卒待之</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="12">
+      <Name>避实击虚</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effects>庙算追击效果：增援率：+15%，解密：+15</Effects>
+      <Descript>夫兵形象水，水之形，避高而趋下，兵之形，避实而击虚</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="13">
+      <Name>火攻</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effects>获得火攻，其效果为（侦察：+5，地形惩罚降低：-50%，林地游侠特质经验增长速度：+50%），（竹林妖怪联盟）（月兔年糕厂）获得溃逃，其效果为（部队组织度：-10%，堑壕上限：-10）</Effects>
+      <Descript>兵有奇变，不在众寡……依草结营，易为风火……因夜纵烧，必大惊乱</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="14">
+      <Name>坐忘道</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effects>（人类村落）成为竹林流亡者的四级附庸（势力范围），释放人类财阀联合</Effects>
+      <Descript>堕肢体，黜聪明，离形去知，同于大通，此谓坐忘</Descript>
+      <Ps.>（注：需要人类村落存在且意识形态为孤立）</Ps.>
+    </Node>
+    <Node ID="15">
+      <Name>昭然若揭</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effects>创建阵营：第二次人类复权运动——南线，（人类财阀联合）触发事件：“无心插柳”。</Effects>
+      <Descript>吾心昭昭，又何惧天下之口}（注：需要竹林妖怪联盟、月兔年糕厂不存在</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="16">
+      <Name>一顾茅庐</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effects>（藤原卫队）触发事件：“戏谑的诗句”。获得第一次拜访（与竹林流亡者的关系+30）</Effects>
+      <Descript>人类复权运动失败之后许多曾经帮助我们一方的重要人物都被软禁或流放到其他地方，但我们拥有了改变的机会</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="17">
+      <Name>二顾茅庐</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effects>获得军乐队，其效果为（部队组织度：+10%），（藤原卫队）触发事件：“熟悉的音乐”。获得第二次拜访（与竹林流亡者的关系+60）</Effects>
+      <Descript>人类复权路上，我们能付出的只有真挚与坚持</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="18">
+      <Name>三顾茅庐</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effects>（藤原卫队）触发事件：“承认人类身份”。如果他们同意，则（藤原卫队）成为竹林流亡者的四级附庸（势力范围）</Effects>
+      <Descript>文王拉车八百步，周朝天下八百年</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="19">
+      <Name>家仇国恨</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effects>竹林流亡者对永远亭宣战</Effects>
+      <Descript>经过我们的开导，藤原妹红明白了父亲和自己的悲剧并不是源于自身，而是源于妖怪操控的社会</Descript>
+      <Ps.>（注：需要永远亭存在，需要藤原卫队是我们的盟友）</Ps.>
+    </Node>
+    <Node ID="20">
+      <Name>软禁辉夜</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effects>获得强大的威望，其效果为（每日获得的政治点数：+0.25，部队组织度：+15%，稳定度：+20%，战争支持度：+20%，建造速度：+10%，部队攻击：+5%，部队防御：+5%，科研速度：+10%，工厂产出：+10%），竹林流亡者吞并藤原卫队</Effects>
+      <Descript>此战之后藤原妹红再无挂念，差人建造一座金屋后就将藤原卫队全权交给我们</Descript>
+      <Ps.>（注：需要永远亭不存在）</Ps.>
+    </Node>
+    <Node ID="21">
+      <Name>威霸一方</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effects>获得外交中立，其效果为（稳定度：+35%，训练时间：+5%，ai修正：加入或扩大一个阵营的意愿：-250，ai修正：专注防御：+50%，ai修正：专注进攻：-30%，ai修正：专注和平：+40%，ai修正：部署部队数量修正：-20%）</Effects>
+      <Descript>威名一方，霸业安稳</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="22">
+      <Name>人类复权运动的未来</Name>
+      <Star>false</Star>
+      <Duration>110</Duration>
+      <Effects>触发事件：“人类复权运动的未来”。</Effects>
+      <Descript>当初为人类保留火种的任务我们已经超额完成了，我们又一次站在人类的岔路口上</Descript>
+      <Ps. />
+    </Node>
+  </Nodes>
+  <NodesRelations>
+    <Relation ID="2">
+      <Require>1</Require>
+    </Relation>
+    <Relation ID="3">
+      <Require>2</Require>
+    </Relation>
+    <Relation ID="4">
+      <Require>3</Require>
+    </Relation>
+    <Relation ID="5">
+      <Require>4</Require>
+    </Relation>
+    <Relation ID="6">
+      <Require>5</Require>
+    </Relation>
+    <Relation ID="7">
+      <Require>6</Require>
+    </Relation>
+    <Relation ID="8">
+      <Require>7</Require>
+    </Relation>
+    <Relation ID="9">
+      <Require>8</Require>
+    </Relation>
+    <Relation ID="10">
+      <Require>9</Require>
+    </Relation>
+    <Relation ID="11">
+      <Require>10</Require>
+    </Relation>
+    <Relation ID="12">
+      <Require>11</Require>
+    </Relation>
+    <Relation ID="13">
+      <Require>12</Require>
+    </Relation>
+    <Relation ID="14">
+      <Require>13</Require>
+    </Relation>
+    <Relation ID="15">
+      <Require>14</Require>
+    </Relation>
+    <Relation ID="16">
+      <Require>15</Require>
+    </Relation>
+    <Relation ID="17">
+      <Require>16</Require>
+    </Relation>
+    <Relation ID="18">
+      <Require>17</Require>
+    </Relation>
+    <Relation ID="19">
+      <Require>18</Require>
+    </Relation>
+    <Relation ID="20">
+      <Require>19</Require>
+    </Relation>
+    <Relation ID="21">
+      <Require>20</Require>
+    </Relation>
+    <Relation ID="22">
+      <Require>21</Require>
+    </Relation>
+  </NodesRelations>
+</FocusGraph>

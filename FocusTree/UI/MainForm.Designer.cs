@@ -1,4 +1,6 @@
-﻿namespace FocusTree.UI
+﻿using FocusTree.IO;
+
+namespace FocusTree.UI
 {
     partial class MainForm
     {
@@ -33,14 +35,19 @@
             this.main_ProgressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.main_StatusStrip_status = new System.Windows.Forms.ToolStripStatusLabel();
             this.main_Openfile = new System.Windows.Forms.OpenFileDialog();
+            this.main_Openfile_batch = new System.Windows.Forms.OpenFileDialog();
+            this.main_Savefile = new System.Windows.Forms.SaveFileDialog();
             this.main_Menu = new System.Windows.Forms.MenuStrip();
             this.main_Menu_file = new System.Windows.Forms.ToolStripMenuItem();
             this.main_Menu_file_new = new System.Windows.Forms.ToolStripMenuItem();
             this.main_Menu_file_open = new System.Windows.Forms.ToolStripMenuItem();
-            this.main_Menu_file_open_csv = new System.Windows.Forms.ToolStripMenuItem();
-            this.main_Menu_file_open_xml = new System.Windows.Forms.ToolStripMenuItem();
             this.main_Menu_file_save = new System.Windows.Forms.ToolStripMenuItem();
             this.main_Menu_file_saveas = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.main_Menu_file_backup = new System.Windows.Forms.ToolStripMenuItem();
+            this.main_Menu_file_backup_open = new System.Windows.Forms.ToolStripMenuItem();
+            this.main_Menu_file_backup_clear = new System.Windows.Forms.ToolStripMenuItem();
+            this.main_Menu_file_batch_saveas = new System.Windows.Forms.ToolStripMenuItem();
             this.main_Menu_edit = new System.Windows.Forms.ToolStripMenuItem();
             this.main_Menu_edit_undo = new System.Windows.Forms.ToolStripMenuItem();
             this.main_Menu_edit_redo = new System.Windows.Forms.ToolStripMenuItem();
@@ -83,7 +90,20 @@
             // 
             // main_Openfile
             // 
-            this.main_Openfile.FileName = "openFileDialog1";
+            this.main_Openfile.Filter = "xml文件 (.xml) |*.xml";
+            this.main_Openfile.Title = "打开单个文件";
+            // 
+            // main_Openfile_batch
+            // 
+            this.main_Openfile_batch.Filter = "csv文件 (.csv) |*.csv";
+            this.main_Openfile_batch.Multiselect = true;
+            this.main_Openfile_batch.Title = "打开一个或多个文件";
+            // 
+            // main_Savefile
+            // 
+            this.main_Savefile.Filter = "xml文件 (.xml) |*.xml";
+            this.main_Savefile.InitialDirectory = Backup.DirectoryName;
+            this.main_Savefile.Title = "另存为";
             // 
             // main_Menu
             // 
@@ -104,7 +124,10 @@
             this.main_Menu_file_new,
             this.main_Menu_file_open,
             this.main_Menu_file_save,
-            this.main_Menu_file_saveas});
+            this.main_Menu_file_saveas,
+            this.toolStripSeparator1,
+            this.main_Menu_file_backup,
+            this.main_Menu_file_batch_saveas});
             this.main_Menu_file.Name = "main_Menu_file";
             this.main_Menu_file.Size = new System.Drawing.Size(44, 21);
             this.main_Menu_file.Text = "文件";
@@ -112,45 +135,64 @@
             // main_Menu_file_new
             // 
             this.main_Menu_file_new.Name = "main_Menu_file_new";
-            this.main_Menu_file_new.Size = new System.Drawing.Size(112, 22);
+            this.main_Menu_file_new.Size = new System.Drawing.Size(180, 22);
             this.main_Menu_file_new.Text = "新建";
             // 
             // main_Menu_file_open
             // 
-            this.main_Menu_file_open.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.main_Menu_file_open_csv,
-            this.main_Menu_file_open_xml});
             this.main_Menu_file_open.Name = "main_Menu_file_open";
-            this.main_Menu_file_open.Size = new System.Drawing.Size(112, 22);
+            this.main_Menu_file_open.Size = new System.Drawing.Size(180, 22);
             this.main_Menu_file_open.Text = "打开";
-            // 
-            // main_Menu_file_open_csv
-            // 
-            this.main_Menu_file_open_csv.Name = "main_Menu_file_open_csv";
-            this.main_Menu_file_open_csv.Size = new System.Drawing.Size(127, 22);
-            this.main_Menu_file_open_csv.Text = ".csv 文件";
-            this.main_Menu_file_open_csv.Click += new System.EventHandler(this.main_Menu_file_open_csv_Click);
-            // 
-            // main_Menu_file_open_xml
-            // 
-            this.main_Menu_file_open_xml.Name = "main_Menu_file_open_xml";
-            this.main_Menu_file_open_xml.Size = new System.Drawing.Size(127, 22);
-            this.main_Menu_file_open_xml.Text = ".xml 文件";
-            this.main_Menu_file_open_xml.Click += new System.EventHandler(this.main_Menu_file_open_xml_Click);
+            this.main_Menu_file_open.Click += new System.EventHandler(this.main_Menu_file_open_Click);
             // 
             // main_Menu_file_save
             // 
             this.main_Menu_file_save.Name = "main_Menu_file_save";
-            this.main_Menu_file_save.Size = new System.Drawing.Size(112, 22);
+            this.main_Menu_file_save.Size = new System.Drawing.Size(180, 22);
             this.main_Menu_file_save.Text = "保存";
             this.main_Menu_file_save.Click += new System.EventHandler(this.main_Menu_file_save_Click);
             // 
             // main_Menu_file_saveas
             // 
             this.main_Menu_file_saveas.Name = "main_Menu_file_saveas";
-            this.main_Menu_file_saveas.Size = new System.Drawing.Size(112, 22);
+            this.main_Menu_file_saveas.Size = new System.Drawing.Size(180, 22);
             this.main_Menu_file_saveas.Text = "另存为";
             this.main_Menu_file_saveas.Click += new System.EventHandler(this.main_Menu_file_saveas_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            // 
+            // main_Menu_file_backup
+            // 
+            this.main_Menu_file_backup.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.main_Menu_file_backup_open,
+            this.main_Menu_file_backup_clear});
+            this.main_Menu_file_backup.Name = "main_Menu_file_backup";
+            this.main_Menu_file_backup.Size = new System.Drawing.Size(180, 22);
+            this.main_Menu_file_backup.Text = "备份";
+            // 
+            // main_Menu_file_backup_open
+            // 
+            this.main_Menu_file_backup_open.Name = "main_Menu_file_backup_open";
+            this.main_Menu_file_backup_open.Size = new System.Drawing.Size(180, 22);
+            this.main_Menu_file_backup_open.Text = "打开";
+            this.main_Menu_file_backup_open.Click += new System.EventHandler(this.main_Menu_file_backup_open_Click);
+            // 
+            // main_Menu_file_backup_clear
+            // 
+            this.main_Menu_file_backup_clear.Name = "main_Menu_file_backup_clear";
+            this.main_Menu_file_backup_clear.Size = new System.Drawing.Size(180, 22);
+            this.main_Menu_file_backup_clear.Text = "清空";
+            this.main_Menu_file_backup_clear.Click += new System.EventHandler(this.main_Menu_file_backup_clear_Click);
+            // 
+            // main_Menu_file_batch_saveas
+            // 
+            this.main_Menu_file_batch_saveas.Name = "main_Menu_file_batch_saveas";
+            this.main_Menu_file_batch_saveas.Size = new System.Drawing.Size(180, 22);
+            this.main_Menu_file_batch_saveas.Text = "批量转存";
+            this.main_Menu_file_batch_saveas.Click += new System.EventHandler(this.main_Menu_file_batch_saveas_Click);
             // 
             // main_Menu_edit
             // 
@@ -168,7 +210,7 @@
             // 
             this.main_Menu_edit_undo.Enabled = false;
             this.main_Menu_edit_undo.Name = "main_Menu_edit_undo";
-            this.main_Menu_edit_undo.Size = new System.Drawing.Size(180, 22);
+            this.main_Menu_edit_undo.Size = new System.Drawing.Size(100, 22);
             this.main_Menu_edit_undo.Text = "撤回";
             this.main_Menu_edit_undo.Click += new System.EventHandler(this.main_Menu_edit_undo_Click);
             // 
@@ -176,7 +218,7 @@
             // 
             this.main_Menu_edit_redo.Enabled = false;
             this.main_Menu_edit_redo.Name = "main_Menu_edit_redo";
-            this.main_Menu_edit_redo.Size = new System.Drawing.Size(180, 22);
+            this.main_Menu_edit_redo.Size = new System.Drawing.Size(100, 22);
             this.main_Menu_edit_redo.Text = "重做";
             this.main_Menu_edit_redo.Click += new System.EventHandler(this.main_Menu_edit_redo_Click);
             // 
@@ -234,12 +276,12 @@
         private ToolStripStatusLabel main_StatusStrip_filename;
         private ToolStripProgressBar main_ProgressBar;
         private OpenFileDialog main_Openfile;
+        private OpenFileDialog main_Openfile_batch;
+        private SaveFileDialog main_Savefile;
         private MenuStrip main_Menu;
         private ToolStripMenuItem main_Menu_file;
         private ToolStripMenuItem main_Menu_file_new;
         private ToolStripMenuItem main_Menu_file_open;
-        private ToolStripMenuItem main_Menu_file_open_csv;
-        private ToolStripMenuItem main_Menu_file_open_xml;
         private ToolStripMenuItem main_Menu_file_save;
         private ToolStripMenuItem main_Menu_file_saveas;
         private ToolStripMenuItem main_Menu_edit;
@@ -250,5 +292,10 @@
         private ToolStripMenuItem main_Menu_loc_camreset;
         private ToolStripMenuItem main_Menu_node;
         private ToolStripMenuItem main_Menu_node_add;
+        private ToolStripSeparator toolStripSeparator1;
+        private ToolStripMenuItem main_Menu_file_batch_saveas;
+        private ToolStripMenuItem main_Menu_file_backup;
+        private ToolStripMenuItem main_Menu_file_backup_open;
+        private ToolStripMenuItem main_Menu_file_backup_clear;
     }
 }

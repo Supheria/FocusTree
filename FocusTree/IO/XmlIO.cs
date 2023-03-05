@@ -12,10 +12,18 @@ namespace FocusTree.IO
         /// <param name="graph">FGraph</param>
         public static void SaveGraph(string path, FocusGraph graph)
         {
-            var writer = new XmlSerializer(typeof(FocusGraph));
-            var file = File.Create(path);
-            writer.Serialize(file, graph);
-            file.Close();
+            try
+            {
+                var file = File.Create(path);
+                var writer = new XmlSerializer(typeof(FocusGraph));
+                writer.Serialize(file, graph);
+                graph.FilePath = path;
+                file.Close();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show($"[2303051316]无法保存文件。\n{ex.Message}");
+            }
         }
         /// <summary>
         /// 从 xml 文件中反序列化 FGraph
@@ -24,12 +32,20 @@ namespace FocusTree.IO
         /// <returns>FGraph</returns>
         public static FocusGraph LoadGraph(string path)
         {
-            var reader = new XmlSerializer(typeof(FocusGraph));
-            var file = File.OpenRead(path);
-            var graph = reader.Deserialize(file) as FocusGraph;
-            graph.SetFileName(path);
-            file.Close();
-            return graph;
+            try
+            {
+                var file = File.OpenRead(path);
+                var reader = new XmlSerializer(typeof(FocusGraph));
+                var graph = reader.Deserialize(file) as FocusGraph;
+                graph.FilePath = path;
+                file.Close();
+                return graph;
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show($"[2303051302]不受支持的xml文件。\n{ex.Message}");
+                return null;
+            }
         }
     }
 }

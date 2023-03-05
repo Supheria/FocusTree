@@ -14,9 +14,14 @@ namespace FocusTree.Data
         #region ---- 基本变量 ----
 
         /// <summary>
-        /// 文件名
+        /// 文件路径
         /// </summary>
-        public string FilePath { get; private set; }
+        public string FilePath 
+        {
+            get { return filePath == null ? throw new Exception("[2303051255]异常：没有相关联的文件。") : filePath; }
+            set { filePath = File.Exists(value) ? value : throw new Exception($"[2303051236]异常：{value}文件不存在。"); }
+        }
+        string filePath;
         /// <summary>
         /// 以 ID 作为 Key 的所有节点
         /// </summary>
@@ -47,7 +52,7 @@ namespace FocusTree.Data
         {
             if (NodesCatalog.TryGetValue(id, out FocusData focusData) == false)
             {
-                throw new Exception($"异常：无法获取节点 - NodesCatalog 未包含 ID = {id} 的节点。");
+                throw new Exception($"[2303031200]异常：无法获取节点 - NodesCatalog 未包含 ID = {id} 的节点。");
             }
             return focusData;
         }
@@ -59,7 +64,7 @@ namespace FocusTree.Data
         {
             if (NodesCatalog.TryAdd(node.ID, node) == false) 
             {
-                MessageBox.Show("提示：无法添加节点 - 无法加入字典。");
+                MessageBox.Show("[2303031210]提示：无法添加节点 - 无法加入字典。");
                 return false;
             }
             UpdateGraph();
@@ -73,7 +78,7 @@ namespace FocusTree.Data
         {
             if (NodesCatalog.ContainsKey(id) == false)
             {
-                MessageBox.Show($"提示：无法移除节点 - NodesCatalog 未包含 ID = {id} 的节点。");
+                MessageBox.Show($"[2303031221]提示：无法移除节点 - NodesCatalog 未包含 ID = {id} 的节点。");
                 return false;
             }
             // 删除此节点所依赖的节点组合
@@ -102,7 +107,7 @@ namespace FocusTree.Data
             var id = newData.ID;
             if (NodesCatalog.ContainsKey(id) == false)
             {
-                MessageBox.Show($"提示：无法编辑节点 - 新节点数据的 ID({id}) 不存在于 NodesCatalog。");
+                MessageBox.Show($"[2303031232]提示：无法编辑节点 - 新节点数据的 ID({id}) 不存在于 NodesCatalog。");
                 return false;
             }
             NodesCatalog[id] = newData;
@@ -119,18 +124,10 @@ namespace FocusTree.Data
             var result = new HashSet<int>();
             foreach (var id in NodesCatalog.Keys)
             {
-                if (RequireGroups.TryGetValue(id, out List<HashSet<int>> requireGroups))
-                {
-                    if (requireGroups.Sum(x => x.Count) == 0)
-                    {
-                        result.Add(id);
-                    }
-                }
-                else
+                if (RequireGroups.TryGetValue(id, out List<HashSet<int>> requireGroups) == false || 
+                    requireGroups.Sum(x => x.Count) == 0)
                 {
                     result.Add(id);
-                    MessageBox.Show($"提示：RequireGroups 未包含 ID = {id} 对应的条目，\n已自动添加空条目。");
-                    RequireGroups.Add(id, new List<HashSet<int>>());
                 }
             }
             return result;
@@ -143,10 +140,7 @@ namespace FocusTree.Data
         /// <summary>
         public List<HashSet<int>> GetNodeRequireGroups(int id)
         {
-            if (RequireGroups.TryGetValue(id, out List<HashSet<int>> requireGroups) == false)
-            {
-                throw new Exception($"异常：无法获取此节点所依赖的节点组合 - \nRequireGroups 未包含 ID = {id} 对应的条目");
-            }
+            RequireGroups.TryGetValue(id, out List<HashSet<int>> requireGroups);
             return requireGroups;
         }
         /// <summary>
@@ -156,10 +150,7 @@ namespace FocusTree.Data
         /// <returns>连接的节点</returns>
         public HashSet<int> GetNodeLinkedNodes(int id)
         {
-            if (LinkedNodes.TryGetValue(id, out HashSet<int> linkedNodes) == false)
-            {
-                throw new Exception($"异常：无法获依赖此节点的节点 - \nLinkedNodes 未包含 ID = {id} 对应的条目");
-            }
+            LinkedNodes.TryGetValue(id, out HashSet<int> linkedNodes);
             return linkedNodes;
         }
 
@@ -168,13 +159,21 @@ namespace FocusTree.Data
         #region ---- 图像操作 ----
 
         /// <summary>
-        /// 根据节点和依赖更新 Graph，重建依赖关系和节点位置图
+        /// 编辑节点后，更新连接关系和节点位置
         /// </summary>
-        public void UpdateGraph()
+        private void UpdateGraph()
         {
             CreateLinked();
             SetNodePoints();
             DataHistory.Enqueue(this);
+        }
+        /// <summary>
+        /// 更新连接关系和节点位置
+        /// </summary>
+        public void Update()
+        {
+            CreateLinked();
+            SetNodePoints();
         }
         /// <summary>
         /// 获取节点 LinkedNodes 的迭代器（与子节点的连接）
@@ -209,7 +208,7 @@ namespace FocusTree.Data
         { 
             if (NodePoints.TryGetValue(id, out Point point) == false)
             {
-                throw new Exception($"异常：无法获取节点的Point - NodePoints 未包含 ID = {id} 对应的条目。");
+                throw new Exception($"[2303031337]异常：无法获取节点的Point - NodePoints 未包含 ID = {id} 对应的条目。");
             }
             return point; 
         }
@@ -421,13 +420,6 @@ namespace FocusTree.Data
             }
         }
         /// <summary>
-        /// 序列化时传递文件名
-        /// </summary>
-        public void SetFileName(string filename)
-        {
-            FilePath = filename;
-        }
-        /// <summary>
         /// 用于序列化
         /// </summary>
         private FocusGraph() { }
@@ -480,7 +472,8 @@ namespace FocusTree.Data
                     }
                 }
             }
-            UpdateGraph(); DataHistory.Clear(); DataHistory.Enqueue(this);
+            DataHistory.Clear();
+            UpdateGraph();
         }
         /// <summary>
         /// 反序列化时用于读取节点的关系
