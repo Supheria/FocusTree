@@ -1,10 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 //Console.WriteLine("Hello, World!");
 
-using FocusTree.Data;
-using FocusTree.IO;
 using FocusTree.UI;
-using System.Xml.Serialization;
 
 internal static class Program
 {

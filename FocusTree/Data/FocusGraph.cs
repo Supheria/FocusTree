@@ -1,11 +1,8 @@
-﻿using FocusTree.IO;
-using System.Numerics;
+﻿using System.Numerics;
 using System.Text;
 using System.Xml;
-using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using static System.Windows.Forms.LinkLabel;
 
 namespace FocusTree.Data
 {
@@ -59,7 +56,7 @@ namespace FocusTree.Data
         /// <returns>是否添加成功</returns>
         public bool AddNode(FocusData node)
         {
-            if (NodesCatalog.TryAdd(node.ID, node) == false) 
+            if (NodesCatalog.TryAdd(node.ID, node) == false)
             {
                 MessageBox.Show("[2303031210]提示：无法添加节点 - 无法加入字典。");
                 return false;
@@ -121,7 +118,7 @@ namespace FocusTree.Data
             var result = new HashSet<int>();
             foreach (var id in NodesCatalog.Keys)
             {
-                if (RequireGroups.TryGetValue(id, out List<HashSet<int>> requireGroups) == false || 
+                if (RequireGroups.TryGetValue(id, out List<HashSet<int>> requireGroups) == false ||
                     requireGroups.Sum(x => x.Count) == 0)
                 {
                     result.Add(id);
@@ -173,38 +170,38 @@ namespace FocusTree.Data
         /// 获取节点 LinkedNodes 的迭代器（与子节点的连接）
         /// </summary>
         /// <returns>LinkedNodes 迭代器</returns>
-        public IEnumerator<KeyValuePair<int, HashSet<int>>> GetLinkedNodesEnumerator() 
-        { 
-            return LinkedNodes.GetEnumerator(); 
+        public IEnumerator<KeyValuePair<int, HashSet<int>>> GetLinkedNodesEnumerator()
+        {
+            return LinkedNodes.GetEnumerator();
         }
         /// <summary>
         /// 获取 NodesCatalog 的迭代器
         /// </summary>
         /// <returns>NodesCatalog 的迭代器</returns>
-        public IEnumerator<KeyValuePair<int, FocusData>> GetNodesCatalogEnumerator() 
-        { 
-            return NodesCatalog.GetEnumerator(); 
+        public IEnumerator<KeyValuePair<int, FocusData>> GetNodesCatalogEnumerator()
+        {
+            return NodesCatalog.GetEnumerator();
         }
         /// <summary>
         /// 获取 NodePoints 的迭代器
         /// </summary>
         /// <returns>NodePoints 的迭代器</returns>
-        public IEnumerator<KeyValuePair<int, Point>> GetNodePointsEnumerator() 
-        { 
-            return NodePoints.GetEnumerator(); 
+        public IEnumerator<KeyValuePair<int, Point>> GetNodePointsEnumerator()
+        {
+            return NodePoints.GetEnumerator();
         }
         /// <summary>
         /// 获取 NodePoints 中指定节点的Point
         /// </summary>
         /// <param name="index">节点ID</param>
         /// <returns>节点的Point</returns>
-        public Point GetNodePointsElement(int id) 
-        { 
+        public Point GetNodePoint(int id)
+        {
             if (NodePoints.TryGetValue(id, out Point point) == false)
             {
-                throw new Exception($"[2303031337]异常：无法获取节点的Point - NodePoints 未包含 ID = {id} 对应的条目。");
+                MessageBox.Show($"[2303031337]提示：无法获取节点的Point - NodePoints 未包含 ID = {id} 对应的条目。");
             }
-            return point; 
+            return point;
         }
         /// <summary>
         /// 获取绘图用的已自动排序后的 NodeMap
@@ -219,7 +216,7 @@ namespace FocusTree.Data
             var width = branches.Count;
             var height = branches.Max(x => x.Length);
 
-            foreach(var coordinate in nodeCoordinates)
+            foreach (var coordinate in nodeCoordinates)
             {
                 var x = coordinate.Value[0] + (coordinate.Value[1] - coordinate.Value[0]) / 2;
                 var point = new Point(x, coordinate.Value[2]);
@@ -240,7 +237,7 @@ namespace FocusTree.Data
                         var node = branches[x][y];
                         if (combined.Add(node))
                         {
-                            
+
                             nodeCoordinates.Add(node, new List<int>());
                             // 起始x, [0]
                             nodeCoordinates[node].Add(x);
@@ -297,11 +294,11 @@ namespace FocusTree.Data
             while (enumer.MoveNext())
             {
                 var p = enumer.Current.Value;
-                if (first) 
-                { 
-                    bounds = new RectangleF(p.X, p.Y, p.X, p.Y); 
-                    first = false; 
-                    continue; 
+                if (first)
+                {
+                    bounds = new RectangleF(p.X, p.Y, p.X, p.Y);
+                    first = false;
+                    continue;
                 }
                 if (p.X < bounds.X) { bounds.X = p.X; }
                 if (p.X > bounds.Width) { bounds.Width = p.X; }
@@ -397,7 +394,9 @@ namespace FocusTree.Data
         /// <summary>
         /// 用于序列化
         /// </summary>
-        private FocusGraph() { }
+        private FocusGraph()
+        {
+        }
         /// <summary>
         /// 更新文件路径和历史记录
         /// </summary>
@@ -449,7 +448,7 @@ namespace FocusTree.Data
                         if (reader.NodeType == XmlNodeType.Element && reader.Name == "Node")
                         {
                             var node = (FocusData)FData_serial.Deserialize(reader);
-                            NodesCatalog[node.ID] =  node;
+                            NodesCatalog[node.ID] = node;
                         }
                         else { reader.Read(); }
                     }

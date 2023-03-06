@@ -1,5 +1,5 @@
-﻿using FocusTree.IO;
-using FocusTree.Data;
+﻿using FocusTree.Data;
+using FocusTree.IO;
 
 namespace FocusTree.UI
 {
@@ -67,7 +67,7 @@ namespace FocusTree.UI
             {
                 Display.SaveGraph();
             }
-            
+
         }
         /// <summary>
         /// 另存为
@@ -82,8 +82,8 @@ namespace FocusTree.UI
                 MessageBox.Show("[2303051524]没有可以保存的图像");
                 return;
             }
-            main_Savefile.InitialDirectory = Path.GetDirectoryName(Display.FilePath);
-            main_Savefile.FileName = Path.GetFileNameWithoutExtension(Display.FilePath) + "_new.xml";
+            main_Savefile.InitialDirectory = Path.GetDirectoryName(Display.Graph.FilePath);
+            main_Savefile.FileName = Path.GetFileNameWithoutExtension(Display.Graph.FilePath) + "_new.xml";
             if (main_Savefile.ShowDialog() == DialogResult.OK)
             {
                 Display.SaveAsNew(main_Savefile.FileName);
@@ -121,7 +121,7 @@ namespace FocusTree.UI
                     Backup.BackupFile(graph);
                     XmlIO.SaveGraph(graph.FilePath, graph);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     suc--;
                     MessageBox.Show($"{fileName}转存失败。\n{ex.Message}");
@@ -161,6 +161,7 @@ namespace FocusTree.UI
         {
             main_Menu_edit_undo.Enabled = DataHistory.HasPrev();
             main_Menu_edit_redo.Enabled = DataHistory.HasNext();
+            main_Menu_file_save.Enabled = Display.ReadOnly ? false : true;
         }
 
         private void main_Menu_edit_Click(object sender, EventArgs e)
@@ -170,6 +171,11 @@ namespace FocusTree.UI
         public void UpdateText()
         {
             Text = main_StatusStrip_filename.Text = Display.FileName;
+        }
+
+        private void MainForm_Move(object sender, EventArgs e)
+        {
+            Display.Invalidate();
         }
     }
 }

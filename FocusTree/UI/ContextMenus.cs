@@ -2,7 +2,6 @@
 {
     class NodeContextMenu : ContextMenuStrip
     {
-        public int? NodeId;
         private GraphBox Display;
         private ToolStripMenuItem pic_contextMenu_node_add = new();
         private ToolStripMenuItem pic_contextMenu_node_edit = new();
@@ -56,40 +55,18 @@
                 });
             }
         }
+
         private void NodeEdit(object sender, EventArgs args)
         {
-            if (NodeId != null)
-            {
-                var fnode = Display.Graph.GetNode(NodeId.Value);
-                MessageBox.Show($"{fnode.Name}\n\n" +
-                    $"{fnode.Effects}\n\n" +
-                    $"实施 {fnode.Duration} 天\n\n" +
-                    $"{fnode.Descript}\n\n" +
-                    $"{fnode.Ps}");
-            }
-            NodeId = null;
+            Display.ShowNodeInfo();
         }
         private void NodeRemove(object sender, EventArgs args)
         {
-            if (NodeId != null)
-            {
-                Display.Graph.RemoveNode(NodeId.Value);
-                Display.Invalidate();
-            }
-            NodeId = null;
+            Display.RemoveNode();
         }
         private void NodeCheckOut(object sender, EventArgs args)
         {
-            if (NodeId != null)
-            {
-                var fnode = Display.Graph.GetNode(NodeId.Value);
-                MessageBox.Show($"{fnode.Name}\n\n" +
-                    $"{fnode.Effects}\n\n" +
-                    $"实施 {fnode.Duration} 天\n\n" +
-                    $"{fnode.Descript}\n\n" +
-                    $"{fnode.Ps}");
-            }
-            NodeId = null;
+            Display.ShowNodeInfo();
         }
     }
 }

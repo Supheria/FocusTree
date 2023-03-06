@@ -162,14 +162,6 @@
       <Descript>经过不懈努力，我们荡平了西南，整合完成后我们必须考虑自己和神明信仰联盟的关系了</Descript>
       <Ps.>（注：需要铃兰部落、妖精汗国、幽灵维权运动、幽灵自治运动不存在）</Ps.>
     </Node>
-    <Node ID="21">
-      <Name>庇护的回报</Name>
-      <Star>true</Star>
-      <Duration>30</Duration>
-      <Effects>(神明信仰联盟）通过与神佑村落的互不侵犯条约，获得强烈的战略同盟（与神佑村落的关系+100），（神佑村落）获得强烈的战略同盟（与神佑村落的关系+100）</Effects>
-      <Descript>我们的神明永远是我们最坚实的后盾，是时候履行要求他们帮助的回报了</Descript>
-      <Ps.>（注：需要神明信仰联盟没有拒绝过支援）</Ps.>
-    </Node>
     <Node ID="22">
       <Name>重回战前</Name>
       <Star>false</Star>
@@ -933,11 +925,8 @@
     <Relation ID="20">
       <Require>14</Require>
     </Relation>
-    <Relation ID="21">
-      <Require>20</Require>
-    </Relation>
     <Relation ID="22">
-      <Require>21</Require>
+      <Require />
     </Relation>
     <Relation ID="23">
       <Require>22</Require>

@@ -26,36 +26,12 @@
       <Descript>我们谁也不会说出去这是慷慧音政府之慨的</Descript>
       <Ps. />
     </Node>
-    <Node ID="5">
-      <Name>生存之道</Name>
-      <Star>false</Star>
-      <Duration>55</Duration>
-      <Effects>获得争取复权生机，其效果为（投降界限：+10%，战争支持度：+15%，科研速度：-5%，正当化战争目标所需时间：-30%，征兵法案花费：-25%（幻想风洞）我国对其进攻修正：+10%（妖精乐园）我国对其防御修正：+10%</Effects>
-      <Descript>我们用战争和牺牲换来了这一小片土地，但如果我们不想面临围歼的风险，我们总得突破一个口子</Descript>
-      <Ps. />
-    </Node>
     <Node ID="6">
       <Name>合纵之道</Name>
       <Star>false</Star>
       <Duration>55</Duration>
       <Effects>政治点数：-100，（幻想风洞）获得合纵（和草原流亡者的关系+500）（和妖精乐园的关系-500）</Effects>
       <Descript>我们向幻想风洞供奉重礼，请求她们帮助我们击败妖精乐园，而我们可以将妖精乐园的南部赠与她们</Descript>
-      <Ps. />
-    </Node>
-    <Node ID="7">
-      <Name>连横之道</Name>
-      <Star>false</Star>
-      <Duration>55</Duration>
-      <Effects>政治点数：-100，（妖精乐园）获得连横（和草原流亡者的关系+500）（和幻想风洞的关系-500）</Effects>
-      <Descript>我们向妖精乐园供奉重礼，请求她们帮助我们击败幻想风洞，而我们只需要幻想风洞的北部</Descript>
-      <Ps. />
-    </Node>
-    <Node ID="9">
-      <Name>胁迫让地</Name>
-      <Star>false</Star>
-      <Duration>55</Duration>
-      <Effects>（幻想风洞）触发事件“上当了！”。如果他们同意，则成为风洞南侧的所有者</Effects>
-      <Descript>先前虽然幻想风洞和妖精乐园也并不对头，但如果面临人类复权的扩张可能，还是会联合起来对我们进行绞杀，但现在他们已经彻底决裂，如果幻想风洞不愿意让出土地，他就要面临两国的同时进攻</Descript>
       <Ps. />
     </Node>
     <Node ID="10">
@@ -167,17 +143,8 @@
     <Relation ID="2">
       <Require>1</Require>
     </Relation>
-    <Relation ID="5">
-      <Require>4</Require>
-    </Relation>
-    <Relation ID="6">
-      <Require>5</Require>
-    </Relation>
-    <Relation ID="7">
-      <Require>6</Require>
-    </Relation>
     <Relation ID="10">
-      <Require>9</Require>
+      <Require />
     </Relation>
     <Relation ID="11">
       <Require>10</Require>

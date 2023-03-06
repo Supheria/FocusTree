@@ -10,14 +10,6 @@
       <Descript>人类复权运动虽然失败，但人类还能屈身守分，以待天时</Descript>
       <Ps. />
     </Node>
-    <Node ID="2">
-      <Name>静观其变</Name>
-      <Star>false</Star>
-      <Duration>30</Duration>
-      <Effects>获得前人类村落正规战斗编制，获得2个编制为正规战斗编制的部队</Effects>
-      <Descript>人类村落在慧音政府上台之后走向了绥靖政策，但我们还不清楚内部人类的想法</Descript>
-      <Ps. />
-    </Node>
     <Node ID="3">
       <Name>顺水推舟</Name>
       <Star>true</Star>
@@ -756,11 +748,8 @@
     </Node>
   </Nodes>
   <NodesRelations>
-    <Relation ID="2">
-      <Require>1</Require>
-    </Relation>
     <Relation ID="3">
-      <Require>2</Require>
+      <Require />
     </Relation>
     <Relation ID="4">
       <Require>3</Require>
@@ -814,7 +803,7 @@
       <Require>19</Require>
     </Relation>
     <Relation ID="21">
-      <Require>2</Require>
+      <Require />
     </Relation>
     <Relation ID="22">
       <Require>21</Require>

@@ -402,14 +402,6 @@
       <Descript>这不是结束，这甚至不是结束的开始，但这可能是开始的结束</Descript>
       <Ps. />
     </Node>
-    <Node ID="54">
-      <Name> 重走旧路</Name>
-      <Star>true</Star>
-      <Duration>60</Duration>
-      <Effects>获得人民阵线，其效果为（激进倾向：-0.1，投降界限：+10%，（九十九工业）我国对其防御修正：+5%，我国对其进攻修正：+5%），获得统一战线，其效果为（政治点数：+25%，稳定度：+10%，战争支持度：+10%，厌战上涨周期：+33%）</Effects>
-      <Descript>雄关漫道真如铁，而今迈步从头越</Descript>
-      <Ps. />
-    </Node>
     <Node ID="55">
       <Name>沉冤昭雪</Name>
       <Star>false</Star>
@@ -806,9 +798,6 @@
     <Relation ID="15">
       <Require>13</Require>
     </Relation>
-    <Relation ID="18">
-      <Require />
-    </Relation>
     <Relation ID="19">
       <Require>18</Require>
     </Relation>
@@ -908,11 +897,8 @@
     <Relation ID="53">
       <Require>2</Require>
     </Relation>
-    <Relation ID="54">
-      <Require>53</Require>
-    </Relation>
     <Relation ID="55">
-      <Require>54</Require>
+      <Require />
     </Relation>
     <Relation ID="56">
       <Require>55</Require>

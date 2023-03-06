@@ -1,13 +1,5 @@
 ﻿using FocusTree.Data;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
+using System.IO.Compression;
 
 namespace FocusTree.IO
 {
@@ -20,7 +12,8 @@ namespace FocusTree.IO
         {
             get { return DirectoryInfo.FullName; }
         }
-        static DirectoryInfo DirectoryInfo = Directory.CreateDirectory("backups");
+        static string FolderPath = "backup\\backups";
+        static DirectoryInfo DirectoryInfo = Directory.CreateDirectory(FolderPath);
         /// <summary>
         /// 按文件路径备份
         /// </summary>
@@ -125,8 +118,9 @@ namespace FocusTree.IO
             {
                 MessageBox.Show("已删除所有备份。");
             }
+            ZipFile.CreateFromDirectory(DirectoryName, Path.Combine(Path.GetDirectoryName(DirectoryName), DateTime.Now.ToString("yyyy年MM月dd日 HH时mm分") + ".zip"));
             Directory.Delete(DirectoryName, true);
-            DirectoryInfo = Directory.CreateDirectory("backups");
+            DirectoryInfo = Directory.CreateDirectory(FolderPath);
         }
     }
 }

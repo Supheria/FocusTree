@@ -1,10 +1,5 @@
 ﻿using FocusTree.Data;
 using FocusTree.IO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FocusTree.UI
 {
@@ -44,7 +39,7 @@ namespace FocusTree.UI
             }
             if (Display.GraphEdited || DataHistory.Length > 1)
             {
-                if (MessageBox.Show("要放弃当前的所有更改切换到备份吗？", "提示 " , MessageBoxButtons.YesNo) == DialogResult.No)
+                if (MessageBox.Show("要放弃当前的所有更改切换到备份吗？", "提示 ", MessageBoxButtons.YesNo) == DialogResult.No)
                 {
                     return;
                 }
@@ -106,14 +101,16 @@ namespace FocusTree.UI
         {
             pic_contextMenu_graph_undo.Enabled = DataHistory.HasPrev();
             pic_contextMenu_graph_redo.Enabled = DataHistory.HasNext();
+            pic_contextMenu_graph_save.Enabled = Display.ReadOnly ? true : false;
         }
         private void main_Menu_edit_status_check(object sender, EventArgs e)
         {
             pic_contextMenu_graph_undo.Enabled = DataHistory.HasPrev();
             pic_contextMenu_graph_redo.Enabled = DataHistory.HasNext();
+            pic_contextMenu_graph_save.Enabled = Display.ReadOnly ? false : true;
         }
 
-        private void MouseButtonRight()
+        private void MouseButtonMiddle()
         {
             ToolStripMenuItem item = new();
             item.Tag = Display.Graph.FilePath;
@@ -132,7 +129,7 @@ namespace FocusTree.UI
                 Items.Add(item);
             }
         }
-        private void MouseButtonMiddle()
+        private void MouseButtonRight()
         {
             // 
             // pic_contextMenu_graph_save

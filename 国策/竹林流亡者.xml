@@ -50,14 +50,6 @@
       <Descript>前人类村落的技术当然是我们的筹码，而且我们可以决定将他赠与谁</Descript>
       <Ps. />
     </Node>
-    <Node ID="7">
-      <Name>蒙蔽天狗</Name>
-      <Star>false</Star>
-      <Duration>55</Duration>
-      <Effects>（天狗共和国）移除被转移的人类科学家，获得向往天狗（与竹林流亡者的关系+80），（竹林流亡者）获得暗怀杀机（与天狗共和国的关系-80），获得家国，其效果为（数学类研究速度：+4%）</Effects>
-      <Descript>我们怎么可能忘记天狗对我们的伤害呢，但远交近攻对我们并没有害处，尤其是对某些还有人类认同的科学家而言</Descript>
-      <Ps. />
-    </Node>
     <Node ID="8">
       <Name>软化付丧神</Name>
       <Star>false</Star>
@@ -88,14 +80,6 @@
       <Duration>55</Duration>
       <Effects>庙算追击效果：部队速度：-5%，加密：-5，堑壕速度：+20%，部队攻击：+20%</Effects>
       <Descript>故善动敌者，形之，敌必从之；予之，敌必取之。以利动之，以卒待之</Descript>
-      <Ps. />
-    </Node>
-    <Node ID="12">
-      <Name>避实击虚</Name>
-      <Star>false</Star>
-      <Duration>55</Duration>
-      <Effects>庙算追击效果：增援率：+15%，解密：+15</Effects>
-      <Descript>夫兵形象水，水之形，避高而趋下，兵之形，避实而击虚</Descript>
       <Ps. />
     </Node>
     <Node ID="13">
@@ -195,11 +179,8 @@
     <Relation ID="6">
       <Require>5</Require>
     </Relation>
-    <Relation ID="7">
-      <Require>6</Require>
-    </Relation>
     <Relation ID="8">
-      <Require>7</Require>
+      <Require />
     </Relation>
     <Relation ID="9">
       <Require>8</Require>
@@ -210,11 +191,8 @@
     <Relation ID="11">
       <Require>10</Require>
     </Relation>
-    <Relation ID="12">
-      <Require>11</Require>
-    </Relation>
     <Relation ID="13">
-      <Require>12</Require>
+      <Require />
     </Relation>
     <Relation ID="14">
       <Require>13</Require>

@@ -362,14 +362,6 @@
       <Descript>兕无所投其角，虎无所用其爪，兵无所容其刃。夫何故？以其无死地焉</Descript>
       <Ps. />
     </Node>
-    <Node ID="48">
-      <Name>物形器成</Name>
-      <Star>false</Star>
-      <Duration>30</Duration>
-      <Effects>3x60%研究加成：基础武器。</Effects>
-      <Descript>道生之，德畜之，物形之，器成之</Descript>
-      <Ps. />
-    </Node>
     <Node ID="49">
       <Name>见明守强</Name>
       <Star>false</Star>
@@ -1432,9 +1424,6 @@
     <Relation ID="40">
       <Require>39</Require>
     </Relation>
-    <Relation ID="42">
-      <Require />
-    </Relation>
     <Relation ID="43">
       <Require>42</Require>
     </Relation>
@@ -1450,11 +1439,8 @@
     <Relation ID="47">
       <Require>46</Require>
     </Relation>
-    <Relation ID="48">
-      <Require>47</Require>
-    </Relation>
     <Relation ID="49">
-      <Require>48</Require>
+      <Require />
     </Relation>
     <Relation ID="50">
       <Require>49</Require>

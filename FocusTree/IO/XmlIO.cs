@@ -1,5 +1,5 @@
-﻿using System.Xml.Serialization;
-using FocusTree.Data;
+﻿using FocusTree.Data;
+using System.Xml.Serialization;
 
 namespace FocusTree.IO
 {
@@ -10,7 +10,7 @@ namespace FocusTree.IO
         /// </summary>
         /// <param name="path">保存路径</param>
         /// <param name="graph">FGraph</param>
-        public static FocusGraph SaveGraph(string path, FocusGraph graph)
+        public static void SaveGraph(string path, FocusGraph graph)
         {
             try
             {
@@ -20,11 +20,10 @@ namespace FocusTree.IO
                 writer.Serialize(file, graph);
                 file.Close();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show($"[2303051316]无法保存文件。\n{ex.Message}");
             }
-            return graph;
         }
         /// <summary>
         /// 从 xml 文件中反序列化 FGraph
@@ -41,9 +40,9 @@ namespace FocusTree.IO
                 file.Close();
                 return graph;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                MessageBox.Show($"[2303051302]不受支持的xml文件。\n{ex.Message}");
+                MessageBox.Show($"[2303051302]不受支持的文件。\n{ex.Message}");
                 return null;
             }
         }

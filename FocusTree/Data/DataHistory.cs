@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace FocusTree.Data
+﻿namespace FocusTree.Data
 {
     internal class DataHistory
     {

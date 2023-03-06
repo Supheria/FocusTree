@@ -132,34 +132,34 @@ namespace FocusTree.UI
             // main_Menu_file_new
             // 
             this.main_Menu_file_new.Name = "main_Menu_file_new";
-            this.main_Menu_file_new.Size = new System.Drawing.Size(180, 22);
+            this.main_Menu_file_new.Size = new System.Drawing.Size(124, 22);
             this.main_Menu_file_new.Text = "新建";
             // 
             // main_Menu_file_open
             // 
             this.main_Menu_file_open.Name = "main_Menu_file_open";
-            this.main_Menu_file_open.Size = new System.Drawing.Size(180, 22);
+            this.main_Menu_file_open.Size = new System.Drawing.Size(124, 22);
             this.main_Menu_file_open.Text = "打开";
             this.main_Menu_file_open.Click += new System.EventHandler(this.main_Menu_file_open_Click);
             // 
             // main_Menu_file_save
             // 
             this.main_Menu_file_save.Name = "main_Menu_file_save";
-            this.main_Menu_file_save.Size = new System.Drawing.Size(180, 22);
+            this.main_Menu_file_save.Size = new System.Drawing.Size(124, 22);
             this.main_Menu_file_save.Text = "保存";
             this.main_Menu_file_save.Click += new System.EventHandler(this.main_Menu_file_save_Click);
             // 
             // main_Menu_file_saveas
             // 
             this.main_Menu_file_saveas.Name = "main_Menu_file_saveas";
-            this.main_Menu_file_saveas.Size = new System.Drawing.Size(180, 22);
+            this.main_Menu_file_saveas.Size = new System.Drawing.Size(124, 22);
             this.main_Menu_file_saveas.Text = "另存为";
             this.main_Menu_file_saveas.Click += new System.EventHandler(this.main_Menu_file_saveas_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(121, 6);
             // 
             // main_Menu_file_backup
             // 
@@ -167,27 +167,27 @@ namespace FocusTree.UI
             this.main_Menu_file_backup_open,
             this.main_Menu_file_backup_clear});
             this.main_Menu_file_backup.Name = "main_Menu_file_backup";
-            this.main_Menu_file_backup.Size = new System.Drawing.Size(180, 22);
+            this.main_Menu_file_backup.Size = new System.Drawing.Size(124, 22);
             this.main_Menu_file_backup.Text = "备份";
             // 
             // main_Menu_file_backup_open
             // 
             this.main_Menu_file_backup_open.Name = "main_Menu_file_backup_open";
-            this.main_Menu_file_backup_open.Size = new System.Drawing.Size(180, 22);
+            this.main_Menu_file_backup_open.Size = new System.Drawing.Size(100, 22);
             this.main_Menu_file_backup_open.Text = "打开";
             this.main_Menu_file_backup_open.Click += new System.EventHandler(this.main_Menu_file_backup_open_Click);
             // 
             // main_Menu_file_backup_clear
             // 
             this.main_Menu_file_backup_clear.Name = "main_Menu_file_backup_clear";
-            this.main_Menu_file_backup_clear.Size = new System.Drawing.Size(180, 22);
+            this.main_Menu_file_backup_clear.Size = new System.Drawing.Size(100, 22);
             this.main_Menu_file_backup_clear.Text = "清空";
             this.main_Menu_file_backup_clear.Click += new System.EventHandler(this.main_Menu_file_backup_clear_Click);
             // 
             // main_Menu_file_batch_saveas
             // 
             this.main_Menu_file_batch_saveas.Name = "main_Menu_file_batch_saveas";
-            this.main_Menu_file_batch_saveas.Size = new System.Drawing.Size(180, 22);
+            this.main_Menu_file_batch_saveas.Size = new System.Drawing.Size(124, 22);
             this.main_Menu_file_batch_saveas.Text = "批量转存";
             this.main_Menu_file_batch_saveas.Click += new System.EventHandler(this.main_Menu_file_batch_saveas_Click);
             // 
@@ -258,6 +258,7 @@ namespace FocusTree.UI
             this.MainMenuStrip = this.main_Menu;
             this.Name = "MainForm";
             this.Text = "MainForm";
+            this.Move += new System.EventHandler(this.MainForm_Move);
             this.main_StatusStrip.ResumeLayout(false);
             this.main_StatusStrip.PerformLayout();
             this.main_Menu.ResumeLayout(false);
