@@ -16,7 +16,7 @@ namespace FocusTree.IO
             {
                 var file = File.Create(path);
                 var writer = new XmlSerializer(typeof(FocusGraph));
-                graph = new(path, graph);
+                graph.FilePath = path;
                 writer.Serialize(file, graph);
                 file.Close();
             }

@@ -1,7 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 //Console.WriteLine("Hello, World!");
 
-using FocusTree.UI;
+using FocusTree.UI.Forms;
 
 internal static class Program
 {
@@ -42,7 +42,7 @@ internal static class Program
 //        DataHistory.Redo(graph);
 
 //        var graphRequire = graph.GetNodeRequireGroups(81);
-//        var graphLink = graph.GetNodeLinkedNodes(81);
+//        var graphLink = graph.GetNodeChildLinkes(81);
 
 //        Console.WriteLine();
 //    }

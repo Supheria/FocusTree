@@ -18,6 +18,14 @@
       <Descript>不管我们怎么认为，人类的确失败了，但至少现在我们不需要再次白手起家</Descript>
       <Ps. />
     </Node>
+    <Node ID="3">
+      <Name>在我们的兄弟当中</Name>
+      <Star>false</Star>
+      <Duration>5</Duration>
+      <Effects>获得8个编制为人类流亡编制的部队，450单位的竹林流亡者产步枪，450单位的草原流亡者产步枪，54单位的竹林流亡者产迫击炮，54单位的草原流亡者产迫击炮，150单位的竹林流亡者产近战武器，150单位的草原流亡者产近战武器添加进国家储备。触发事件“流亡者归来”。获得志愿军，其效果为（志愿军部队数上限：+6，派遣志愿军需要的部队数量：-100%）</Effects>
+      <Descript>很巧的是，我们都选择了互帮互助，虽然这批援助不知道是否来自哪个土作坊</Descript>
+      <Ps. />
+    </Node>
     <Node ID="4">
       <Name>慷慨解囊</Name>
       <Star>false</Star>
@@ -26,12 +34,44 @@
       <Descript>我们谁也不会说出去这是慷慧音政府之慨的</Descript>
       <Ps. />
     </Node>
+    <Node ID="5">
+      <Name>生存之道</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effects>获得争取复权生机，其效果为（投降界限：+10%，战争支持度：+15%，科研速度：-5%，正当化战争目标所需时间：-30%，征兵法案花费：-25%（幻想风洞）我国对其进攻修正：+10%（妖精乐园）我国对其防御修正：+10%</Effects>
+      <Descript>我们用战争和牺牲换来了这一小片土地，但如果我们不想面临围歼的风险，我们总得突破一个口子</Descript>
+      <Ps. />
+    </Node>
     <Node ID="6">
       <Name>合纵之道</Name>
       <Star>false</Star>
       <Duration>55</Duration>
       <Effects>政治点数：-100，（幻想风洞）获得合纵（和草原流亡者的关系+500）（和妖精乐园的关系-500）</Effects>
       <Descript>我们向幻想风洞供奉重礼，请求她们帮助我们击败妖精乐园，而我们可以将妖精乐园的南部赠与她们</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="7">
+      <Name>连横之道</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effects>政治点数：-100，（妖精乐园）获得连横（和草原流亡者的关系+500）（和幻想风洞的关系-500）</Effects>
+      <Descript>我们向妖精乐园供奉重礼，请求她们帮助我们击败幻想风洞，而我们只需要幻想风洞的北部</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="8">
+      <Name>裹挟借地</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effects>（妖精乐园）通过草原流亡者的提供军事通行权，触发事件：“借地？”。成为地底走私通道、花丛东侧、妖精丘陵的所有者</Effects>
+      <Descript>妖精的智力显然没法突破孩童，我们只需要派遣说客便能“借”下安身之地</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="9">
+      <Name>胁迫让地</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effects>（幻想风洞）触发事件“上当了！”。如果他们同意，则成为风洞南侧的所有者</Effects>
+      <Descript>先前虽然幻想风洞和妖精乐园也并不对头，但如果面临人类复权的扩张可能，还是会联合起来对我们进行绞杀，但现在他们已经彻底决裂，如果幻想风洞不愿意让出土地，他就要面临两国的同时进攻</Descript>
       <Ps. />
     </Node>
     <Node ID="10">
@@ -143,8 +183,29 @@
     <Relation ID="2">
       <Require>1</Require>
     </Relation>
+    <Relation ID="3">
+      <Require>2</Require>
+    </Relation>
+    <Relation ID="4">
+      <Require>3</Require>
+    </Relation>
+    <Relation ID="5">
+      <Require>4</Require>
+    </Relation>
+    <Relation ID="6">
+      <Require>5</Require>
+    </Relation>
+    <Relation ID="7">
+      <Require>6</Require>
+    </Relation>
+    <Relation ID="8">
+      <Require>7</Require>
+    </Relation>
+    <Relation ID="9">
+      <Require>8</Require>
+    </Relation>
     <Relation ID="10">
-      <Require />
+      <Require>9</Require>
     </Relation>
     <Relation ID="11">
       <Require>10</Require>

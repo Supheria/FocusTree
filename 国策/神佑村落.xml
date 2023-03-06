@@ -106,14 +106,6 @@
       <Descript>一部分“凋零者”被我们的诚意打动，自愿向秋静叶提出请求离开神明信仰联盟来帮助我们，而我们自然不会辜负他们的好意</Descript>
       <Ps. />
     </Node>
-    <Node ID="14">
-      <Name>智胜我们的敌人</Name>
-      <Star>false</Star>
-      <Duration>60</Duration>
-      <Effects>获得兵法（？），其效果为（堑壕速度：+10%，缴获装备比例：10%）</Effects>
-      <Descript>无缘冢总会有一些外界垃圾出现，当然也会有书籍，不过我们很难了解捡到并且宣传他的人是什么水平</Descript>
-      <Ps. />
-    </Node>
     <Node ID="15">
       <Name>其疾如风</Name>
       <Star>false</Star>
@@ -161,6 +153,14 @@
       <Effects>选择时，获得谨防外界干涉，其效果为（ai修正：专注防御：+100%，堑壕上限：+10，核心领土防御：+30%）直到国策结束。稳定度：-40%，获得（铃兰部落）（妖精汗国）（幽灵维权运动）（幽灵自治运动）所有领土的核心</Effects>
       <Descript>经过不懈努力，我们荡平了西南，整合完成后我们必须考虑自己和神明信仰联盟的关系了</Descript>
       <Ps.>（注：需要铃兰部落、妖精汗国、幽灵维权运动、幽灵自治运动不存在）</Ps.>
+    </Node>
+    <Node ID="21">
+      <Name>庇护的回报</Name>
+      <Star>true</Star>
+      <Duration>30</Duration>
+      <Effects>(神明信仰联盟）通过与神佑村落的互不侵犯条约，获得强烈的战略同盟（与神佑村落的关系+100），（神佑村落）获得强烈的战略同盟（与神佑村落的关系+100）</Effects>
+      <Descript>我们的神明永远是我们最坚实的后盾，是时候履行要求他们帮助的回报了</Descript>
+      <Ps.>（注：需要神明信仰联盟没有拒绝过支援）</Ps.>
     </Node>
     <Node ID="22">
       <Name>重回战前</Name>
@@ -304,6 +304,14 @@
       <Duration>60</Duration>
       <Effects>政治点数：-200，神明信仰联盟的忠犬追加效果：（太阳花田）我国对其进攻修正：+10%，我国对其防御修正：+10%</Effects>
       <Descript>我们的神明好像对那片花田有想法，我们当然愿意为此努力，但是毕竟师出无名</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="40">
+      <Name>做好对佛教的战争准备</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effects>政治点数：-100，神明信仰联盟的忠犬追加效果：（命莲寺）我国对其进攻修正：+10%，我国对其防御修正：+10%</Effects>
+      <Descript>我们的神明才是最伟大的，什么佛都要靠边站</Descript>
       <Ps. />
     </Node>
     <Node ID="41">
@@ -904,29 +912,29 @@
     <Relation ID="13">
       <Require>12</Require>
     </Relation>
-    <Relation ID="14">
-      <Require>13</Require>
-    </Relation>
     <Relation ID="15">
-      <Require>14</Require>
+      <Require />
     </Relation>
     <Relation ID="16">
-      <Require>14</Require>
+      <Require />
     </Relation>
     <Relation ID="17">
-      <Require>14</Require>
+      <Require />
     </Relation>
     <Relation ID="18">
-      <Require>14</Require>
+      <Require />
     </Relation>
     <Relation ID="19">
-      <Require>14</Require>
+      <Require />
     </Relation>
     <Relation ID="20">
-      <Require>14</Require>
+      <Require />
+    </Relation>
+    <Relation ID="21">
+      <Require>20</Require>
     </Relation>
     <Relation ID="22">
-      <Require />
+      <Require>21</Require>
     </Relation>
     <Relation ID="23">
       <Require>22</Require>
@@ -977,6 +985,9 @@
       <Require>37</Require>
     </Relation>
     <Relation ID="39">
+      <Require>38</Require>
+    </Relation>
+    <Relation ID="40">
       <Require>38</Require>
     </Relation>
     <Relation ID="41">

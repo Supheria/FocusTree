@@ -1,19 +1,24 @@
 ﻿using FocusTree.Data;
 using FocusTree.IO;
 
-namespace FocusTree.UI
+namespace FocusTree.UI.Controls
 {
     class GraphContextMenu : ContextMenuStrip
     {
         public MouseButtons ButtonTag;
         private GraphBox Display;
+        //
+        // MouseButtonRight
+        //
         private ToolStripMenuItem pic_contextMenu_graph_save = new();
         private ToolStripMenuItem pic_contextMenu_graph_saveas = new();
         private ToolStripMenuItem pic_contextMenu_graph_undo = new();
         private ToolStripMenuItem pic_contextMenu_graph_redo = new();
         private ToolStripMenuItem pic_contextMenu_graph_camreset = new();
+        private ToolStripMenuItem pic_contextMenu_graph_camfocus = new();
         private ToolStripSeparator spliter1 = new();
         private ToolStripSeparator spliter2 = new();
+
         public GraphContextMenu(GraphBox display, MouseButtons button)
         {
             ButtonTag = button;
@@ -37,9 +42,9 @@ namespace FocusTree.UI
             {
                 return;
             }
-            if (Display.GraphEdited || DataHistory.Length > 1)
+            if (Display.GraphEdited)
             {
-                if (MessageBox.Show("要放弃当前的所有更改切换到备份吗？", "提示 ", MessageBoxButtons.YesNo) == DialogResult.No)
+                if (MessageBox.Show("要放弃当前的更改切换到备份吗？", "提示 ", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No)
                 {
                     return;
                 }
@@ -76,38 +81,34 @@ namespace FocusTree.UI
         }
         private void GraphUndo(object sender, EventArgs args)
         {
-            if (DataHistory.HasPrev())
-            {
-                DataHistory.Undo(Display.Graph);
-            }
+            Display.Undo();
             main_Menu_edit_status_check();
             Display.Invalidate();
         }
         private void GraphRedo(object sender, EventArgs args)
         {
-            if (DataHistory.HasNext())
-            {
-                DataHistory.Redo(Display.Graph);
-            }
+            Display.Redo();
             main_Menu_edit_status_check();
             Display.Invalidate();
         }
         private void GraphCamReset(object sender, EventArgs args)
         {
             Display.RelocateCenter();
+        }
+        private void GraphCamFocus(object sender, EventArgs args)
+        {
+            Display.LocateSelected();
             Display.Invalidate();
         }
         public void main_Menu_edit_status_check()
         {
-            pic_contextMenu_graph_undo.Enabled = DataHistory.HasPrev();
-            pic_contextMenu_graph_redo.Enabled = DataHistory.HasNext();
-            pic_contextMenu_graph_save.Enabled = Display.ReadOnly ? true : false;
+            pic_contextMenu_graph_undo.Enabled = GraphHistory.HasPrev();
+            pic_contextMenu_graph_redo.Enabled = GraphHistory.HasNext();
         }
         private void main_Menu_edit_status_check(object sender, EventArgs e)
         {
-            pic_contextMenu_graph_undo.Enabled = DataHistory.HasPrev();
-            pic_contextMenu_graph_redo.Enabled = DataHistory.HasNext();
-            pic_contextMenu_graph_save.Enabled = Display.ReadOnly ? false : true;
+            pic_contextMenu_graph_undo.Enabled = GraphHistory.HasPrev();
+            pic_contextMenu_graph_redo.Enabled = GraphHistory.HasNext();
         }
 
         private void MouseButtonMiddle()
@@ -167,6 +168,13 @@ namespace FocusTree.UI
             pic_contextMenu_graph_camreset.Text = "重置相机位置";
             pic_contextMenu_graph_camreset.Click += GraphCamReset;
             // 
+            // pic_contextMenu_graph_camfocus
+            // 
+            pic_contextMenu_graph_camfocus.Name = "pic_contextMenu_graph_camfocus";
+            pic_contextMenu_graph_camfocus.Size = new Size(180, 22);
+            pic_contextMenu_graph_camfocus.Text = "聚焦";
+            pic_contextMenu_graph_camfocus.Click += GraphCamFocus;
+            // 
             // spliter
             // 
             spliter1.Name = "spliter1";
@@ -181,7 +189,8 @@ namespace FocusTree.UI
                 pic_contextMenu_graph_save,
                 pic_contextMenu_graph_saveas,
                 spliter2,
-                pic_contextMenu_graph_camreset
+                pic_contextMenu_graph_camreset,
+                pic_contextMenu_graph_camfocus
                 });
             Invalidated += main_Menu_edit_status_check;
         }

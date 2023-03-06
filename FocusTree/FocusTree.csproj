@@ -15,6 +15,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="UI\新文件夹\**" />
+    <EmbeddedResource Remove="UI\新文件夹\**" />
+    <None Remove="UI\新文件夹\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Resources\FocusTree.ico" />
   </ItemGroup>
 

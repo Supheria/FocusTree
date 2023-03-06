@@ -27,7 +27,7 @@ namespace FocusTree.IO
             try
             {
                 var dir = Directory.CreateDirectory(Path.Combine(DirectoryName, Path.GetFileNameWithoutExtension(path)));
-                var copyPath = Path.Combine(dir.FullName, DateTime.Now.ToString("yyyy年MM月dd日 HH时mm分ss秒"));
+                var copyPath = Path.Combine(dir.FullName, DateTime.Now.ToString("yyyyMMdd_HHmmss"));
                 File.Copy(path, copyPath, true);
             }
             catch (Exception ex)
@@ -47,14 +47,14 @@ namespace FocusTree.IO
                 return;
             }
             var prevGraph = XmlIO.LoadGraph(path);
-            if (JsGraph.SerializeGraph(graph) == JsGraph.SerializeGraph(prevGraph))
+            if (graph.Equals(prevGraph))
             {
                 return;
             }
             try
             {
                 var dir = Directory.CreateDirectory(Path.Combine(DirectoryName, Path.GetFileNameWithoutExtension(path)));
-                var copyPath = Path.Combine(dir.FullName, DateTime.Now.ToString("yyyy年MM月dd日 HH时mm分ss秒"));
+                var copyPath = Path.Combine(dir.FullName, DateTime.Now.ToString("yyyyMMdd_HHmmss"));
                 File.Copy(path, copyPath, true);
             }
             catch (Exception ex)
@@ -77,10 +77,10 @@ namespace FocusTree.IO
             if (File.Exists(graph.FilePath))
             {
                 var prevGraph = XmlIO.LoadGraph(graph.FilePath);
-                if (JsGraph.SerializeGraph(graph) != JsGraph.SerializeGraph(prevGraph))
+                if (graph.Equals(prevGraph) == false)
                 {
                     var dir = Directory.CreateDirectory(Path.Combine(DirectoryName, Path.GetFileNameWithoutExtension(graph.FilePath)));
-                    var copyPath = Path.Combine(dir.FullName, DateTime.Now.ToString("yyyy年MM月dd日 HH时mm分ss秒"));
+                    var copyPath = Path.Combine(dir.FullName, DateTime.Now.ToString("yyyyMMdd_HHmmss"));
                     File.Copy(graph.FilePath, copyPath, true);
                 }
             }

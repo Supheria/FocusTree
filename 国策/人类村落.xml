@@ -122,6 +122,22 @@
       <Descript>我们重新撮合神道同盟，虽然没有军事上的好处，但其他方面却是一个不落</Descript>
       <Ps.>（注：需要完成国策：建造佛展，建造道观）</Ps.>
     </Node>
+    <Node ID="16">
+      <Name>四海皆友</Name>
+      <Star>false</Star>
+      <Duration>100</Duration>
+      <Effects>绥靖政策追加效果：政治点数：+25%，每周稳定度：+0.1%，稳定度：+40%，（九十九工业）完成国策：物归原主</Effects>
+      <Descript>幻想乡任何地方都会有人类的身影，无论他们卑贱或高贵</Descript>
+      <Ps.>（注：需要完成国策：人才回流、道具回归）</Ps.>
+    </Node>
+    <Node ID="17">
+      <Name>沟通贤者</Name>
+      <Star>false</Star>
+      <Duration>100</Duration>
+      <Effects>绥靖政策追加效果：地方最大工业值：+30%，生活消费品：-10%，建造速度：+25%，工厂产出：+25%</Effects>
+      <Descript>贤者的职责是守护幻想乡的和平，而人类似乎也在进行这种职责</Descript>
+      <Ps.>（注：需要完成国策贡献血液、政治支持）</Ps.>
+    </Node>
     <Node ID="18">
       <Name>努力的结果</Name>
       <Star>false</Star>
@@ -136,14 +152,6 @@
       <Duration>60</Duration>
       <Effects>开启决议通过民用工厂换取核心省份</Effects>
       <Descript>我们可以通过赎买让曾经的土地回归怀抱</Descript>
-      <Ps. />
-    </Node>
-    <Node ID="20">
-      <Name>无限的投资</Name>
-      <Star>false</Star>
-      <Duration>60</Duration>
-      <Effects>开启决议使用政治点数获得建筑位和民用工厂</Effects>
-      <Descript>我们可以通过外交努力（慧音）换取源源不断的经济发展空间</Descript>
       <Ps. />
     </Node>
     <Node ID="21">
@@ -216,6 +224,14 @@
       <Duration>60</Duration>
       <Effects>获得人类财阀投资，其效果为（生活消费品工厂：-5%）</Effects>
       <Descript>财阀对外有许多投资我们是不能单方面断掉的，但是其余的都可以充公</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="30">
+      <Name>财阀投资</Name>
+      <Star>true</Star>
+      <Duration>60</Duration>
+      <Effects>（九十九工业）获得人类财阀投资，其效果为（生活消费品工厂：-5%），如果他们已经拥有这个民族精神，则人类财阀投资追加效果：生活消费品工厂：-5%</Effects>
+      <Descript>我们加大对九十九工业的支持，因为帮助他们就是帮助我们自己</Descript>
       <Ps. />
     </Node>
     <Node ID="31">
@@ -400,6 +416,14 @@
       <Duration>30</Duration>
       <Effects>稗田阿求的遗产追加效果：激进倾向：+0.9，军用工厂建造速度：+40%，绥靖政策追加效果：每日政治点数增长：-0.2，地区最大工业值：-20%，科研速度：-20%，工厂产出：+30%，战争的阴影追加效果：战争支持度：+20%，适役人口修正：+30%</Effects>
       <Descript>这不是结束，这甚至不是结束的开始，但这可能是开始的结束</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="54">
+      <Name> 重走旧路</Name>
+      <Star>true</Star>
+      <Duration>60</Duration>
+      <Effects>获得人民阵线，其效果为（激进倾向：-0.1，投降界限：+10%，（九十九工业）我国对其防御修正：+5%，我国对其进攻修正：+5%），获得统一战线，其效果为（政治点数：+25%，稳定度：+10%，战争支持度：+10%，厌战上涨周期：+33%）</Effects>
+      <Descript>雄关漫道真如铁，而今迈步从头越</Descript>
       <Ps. />
     </Node>
     <Node ID="55">
@@ -798,11 +822,17 @@
     <Relation ID="15">
       <Require>13</Require>
     </Relation>
+    <Relation ID="16">
+      <Require>13</Require>
+    </Relation>
+    <Relation ID="17">
+      <Require>13</Require>
+    </Relation>
+    <Relation ID="18">
+      <Require>17</Require>
+    </Relation>
     <Relation ID="19">
       <Require>18</Require>
-    </Relation>
-    <Relation ID="20">
-      <Require>19</Require>
     </Relation>
     <Relation ID="21">
       <Require>3</Require>
@@ -830,6 +860,12 @@
     </Relation>
     <Relation ID="29">
       <Require>28</Require>
+    </Relation>
+    <Relation ID="30">
+      <Require>28</Require>
+    </Relation>
+    <Relation ID="31">
+      <Require>30</Require>
     </Relation>
     <Relation ID="32">
       <Require>31</Require>
@@ -897,8 +933,11 @@
     <Relation ID="53">
       <Require>2</Require>
     </Relation>
+    <Relation ID="54">
+      <Require>53</Require>
+    </Relation>
     <Relation ID="55">
-      <Require />
+      <Require>54</Require>
     </Relation>
     <Relation ID="56">
       <Require>55</Require>

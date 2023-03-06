@@ -1,14 +1,13 @@
-﻿using FocusTree.UI;
+﻿using FocusTree.UI.Controls;
 using FocusTree.UITool;
 
-namespace FocusTree
+namespace FocusTree.UI.Forms
 {
     public partial class InfoDialog : Form
     {
         GraphBox Display;
         public bool ReadOnly;
         public Point Position;
-        public bool DoShow = false;
         /// <summary>
         /// 节点信息对话框
         /// </summary>
@@ -18,14 +17,26 @@ namespace FocusTree
         internal InfoDialog(GraphBox display)
         {
             InitializeComponent();
-            //TopLevel = false;
             TopMost = true;
             Display = display;
+            MinimumSize = Size;
+            ResizeForm.SetTag(this);
 
             Invalidated += OnInvalidated;
             FormClosing += InfoDialog_FormClosing;
+            SizeChanged += InfoDialog_SizeChanged;
+            DoubleClick += InfoDialog_DoubleClick;
             ResizeForm.SetTag(this);
-            this.MinimumSize = Size;
+        }
+
+        private void InfoDialog_DoubleClick(object sender, EventArgs e)
+        {
+            ResizeForm.DefultSize(this);
+        }
+
+        private void InfoDialog_SizeChanged(object sender, EventArgs e)
+        {
+            ResizeForm.ResizeControls(this);
         }
         #region ==== 窗体方法 ====
         /// <summary>
@@ -41,7 +52,7 @@ namespace FocusTree
                 return;
             }
             var focusData = Display.Graph.NodesCatalog[Display.SelectedNode.Value];
-            Text = focusData.Name;
+            Text = focusData.Name + $" (ID: {focusData.ID})";
             txtDuration.Text = $"{focusData.Duration}日";
             txtDescript.Text = focusData.Descript;
             txtEffects.Text = focusData.Effects;
@@ -59,7 +70,6 @@ namespace FocusTree
         /// <param name="e"></param>
         private void InfoDialog_FormClosing(object sender, FormClosingEventArgs e)
         {
-            DoShow = false;
             this.Hide();
             e.Cancel = true;
         }
@@ -99,44 +109,9 @@ namespace FocusTree
 
         public void Show(Point pos)
         {
-            if (DoShow)
-            {
-                Invalidate();
-                base.Show();
-                Location = pos;
-            }
-        }
-
-        private void txtDuration_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtDuration_DragEnter(object sender, DragEventArgs e)
-        {
-            //txtDuration.Focus();//获取焦点
-            txtDuration.Select(this.txtDuration.SelectionStart, 0);//光标定位到文本最后
-            txtDuration.ScrollToCaret();//滚动到光标处
-        }
-
-        private void txtDuration_MouseEnter(object sender, EventArgs e)
-        {
-            txtDuration.Focus();//获取焦点
-            txtDuration.Select(this.txtDuration.SelectionStart, 1);//光标定位到文本最后
-            txtDuration.ScrollToCaret();//滚动到光标处
-        }
-
-        private void InfoDialog_Resize(object sender, EventArgs e)
-        {
-            ResizeForm.ResizeControls(this);
-        }
-
-        private void InfoDialog_MouseDoubleClick(object sender, MouseEventArgs args)
-        {
-            if ((args.Button & MouseButtons.Left) == MouseButtons.Left)
-            {
-                ResizeForm.DefultSize(this);
-            }
+            Invalidate();
+            base.Show();
+            Location = pos;
         }
     }
 }

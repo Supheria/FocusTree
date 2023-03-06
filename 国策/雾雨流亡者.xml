@@ -50,6 +50,14 @@
       <Descript>项庄舞剑，志在沛公</Descript>
       <Ps.>（注：需要中有之道贸易站与幽灵革命运动处于和平）</Ps.>
     </Node>
+    <Node ID="7">
+      <Name>调虎离山</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effects>中有之道贸易站对幽灵革命运动宣战，雾雨流亡者对幽灵革命运动宣战</Effects>
+      <Descript>驱虎吞狼，坐收渔利</Descript>
+      <Ps. />
+    </Node>
     <Node ID="8">
       <Name>有志竟成</Name>
       <Star>false</Star>
@@ -90,6 +98,14 @@
       <Descript>赴汤蹈火，在所不辞</Descript>
       <Ps.>（注：需要铃兰部落存在）</Ps.>
     </Node>
+    <Node ID="13">
+      <Name>稳固边疆</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effects>政治点数：-500，创建阵营：第二次人类复权运动——西线，（神佑村落）触发事件“并非神明的援手”。如果他们同意，则（神佑村落）获得来自雾雨流亡者的支持，其效果为（政治点数：+15%，稳定度：+10%，战争支持度：+10%，科研速度：+5%），触发事件“翻脸”。</Effects>
+      <Descript>我们将会交涉神佑村落换取幽灵维权运动的所有领土，不过未来应该叫西南村落了吧</Descript>
+      <Ps. />
+    </Node>
     <Node ID="14">
       <Name>防患未然</Name>
       <Star>false</Star>
@@ -129,6 +145,14 @@
       <Effects>获得为期365天的“正中下怀”，其效果为（部队攻击：+10%，部队防御：+10%，（后户之国）我国对其进攻修正：+10%，我国对其防御修正：+10%）</Effects>
       <Descript>人类复权战争的背后是谁的身影？我们从未忘记</Descript>
       <Ps.>（注：需要和后户之国处于战争）</Ps.>
+    </Node>
+    <Node ID="19">
+      <Name>一战成名</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effects>获得强大的威望，其效果为（每日获得的政治点数：+0.25，部队组织度：+15%，稳定度：+20%，战争支持度：+20%，建造速度：+10%，部队攻击：+5%，部队防御：+5%，科研速度：+10%，工厂产出：+10%）</Effects>
+      <Descript>“一怒而诸侯惧，安居则天下息”</Descript>
+      <Ps. />
     </Node>
     <Node ID="20">
       <Name>斩草除根</Name>
@@ -290,14 +314,6 @@
       <Descript>我们不得已进行的快速发展至此也应该到头了</Descript>
       <Ps. />
     </Node>
-    <Node ID="40">
-      <Name>恢复福利</Name>
-      <Star>false</Star>
-      <Duration>55</Duration>
-      <Effects>获得战争福利，其效果为（生活消费品工厂：+3%，每周战争支持度：+0.1%，工厂产出：+5%，建造速度：+5%）</Effects>
-      <Descript>不用再苦一苦百姓了，过去需要人类牺牲的日子一去不复返了（但我们不会告诉他们代价是什么）</Descript>
-      <Ps. />
-    </Node>
     <Node ID="41">
       <Name>恢复编制</Name>
       <Star>false</Star>
@@ -379,8 +395,11 @@
     <Relation ID="6">
       <Require>5</Require>
     </Relation>
+    <Relation ID="7">
+      <Require>6</Require>
+    </Relation>
     <Relation ID="8">
-      <Require />
+      <Require>7</Require>
     </Relation>
     <Relation ID="9">
       <Require>8</Require>
@@ -394,8 +413,11 @@
     <Relation ID="12">
       <Require>11</Require>
     </Relation>
+    <Relation ID="13">
+      <Require>12</Require>
+    </Relation>
     <Relation ID="14">
-      <Require />
+      <Require>13</Require>
     </Relation>
     <Relation ID="15">
       <Require>14</Require>
@@ -409,8 +431,11 @@
     <Relation ID="18">
       <Require>17</Require>
     </Relation>
+    <Relation ID="19">
+      <Require>18</Require>
+    </Relation>
     <Relation ID="20">
-      <Require />
+      <Require>19</Require>
     </Relation>
     <Relation ID="21">
       <Require>20</Require>
@@ -459,9 +484,6 @@
     </Relation>
     <Relation ID="39">
       <Require>38</Require>
-    </Relation>
-    <Relation ID="40">
-      <Require>39</Require>
     </Relation>
     <Relation ID="42">
       <Require>41</Require>

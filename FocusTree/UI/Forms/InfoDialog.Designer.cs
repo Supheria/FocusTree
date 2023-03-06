@@ -1,4 +1,4 @@
-﻿namespace FocusTree
+﻿namespace FocusTree.UI.Forms
 {
     partial class InfoDialog
     {
@@ -53,7 +53,6 @@
             this.txtDuration.Size = new System.Drawing.Size(106, 23);
             this.txtDuration.TabIndex = 1;
             this.txtDuration.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.txtDuration.MouseEnter += new System.EventHandler(this.txtDuration_MouseEnter);
             // 
             // btnEvent
             // 
@@ -113,8 +112,6 @@
             this.Controls.Add(this.pcbIcon);
             this.Name = "InfoDialog";
             this.Text = "InfoDialog";
-            this.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.InfoDialog_MouseDoubleClick);
-            this.Resize += new System.EventHandler(this.InfoDialog_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.pcbIcon)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

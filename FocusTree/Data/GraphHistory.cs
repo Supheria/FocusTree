@@ -1,6 +1,6 @@
 ﻿namespace FocusTree.Data
 {
-    internal class DataHistory
+    internal class GraphHistory
     {
         /// <summary>
         /// 保留的历史记录数量（用于撤回和重做）
@@ -33,21 +33,22 @@
         {
             return Index > 0;
         }
+        public static bool HasHistory()
+        {
+            return Length > 1;
+        }
         /// <summary>
         /// 将当前的状态添加到历史记录（会使后续的记录失效）
         /// </summary>
         /// <param name="graph">当前的Graph</param>
-        [Obsolete("我不确定这东西有没有Bug，看起来很玄乎")]
+        //[Obsolete("我不确定这东西有没有Bug，看起来很玄乎")]
         public static void Enqueue(FocusGraph graph)
         {
-            var data = JsGraph.SerializeGraph(graph);
+            var data = graph.Serialize();
 
-            // 第一个历史记录
             if (Length == 0)
             {
-                Length++;
-                History[Index] = data;
-                return;
+                throw new Exception("[2303071704] GraphHistory 未初始化。");
             }
 
             // 新增的历史记录
@@ -71,23 +72,24 @@
         /// 撤回 (调用前需要检查 HasPrev())
         /// </summary>
         /// <param name="graph">当前的Graph</param>
-        public static void Undo(FocusGraph graph)
+        public static void Undo(ref FocusGraph graph)
         {
             Index--;
-            JsGraph.DeSerializeGraph(History[Index], ref graph);
-            graph.Update();
+            graph.Deserialize(History[Index]);
         }
         /// <summary>
         /// 重做 (调用前需要检查 HasNext())
         /// </summary>
         /// <param name="graph">当前的Graph</param>
         /// <exception cref="IndexOutOfRangeException">访问的历史记录越界</exception>
-        public static void Redo(FocusGraph graph)
+        public static void Redo(ref FocusGraph graph)
         {
             Index++;
-            if (Index >= Length) { throw new IndexOutOfRangeException("[2302191735] 历史记录越界"); }
-            JsGraph.DeSerializeGraph(History[Index], ref graph);
-            graph.Update();
+            if (Index >= Length) 
+            { 
+                throw new IndexOutOfRangeException("[2302191735] 历史记录越界"); 
+            }
+            graph.Deserialize(History[Index]);
         }
         /// <summary>
         /// 将所有历史记录向左移动一位（不删除当前位）
@@ -99,11 +101,13 @@
                 History[i] = History[i + 1];
             }
         }
-        public static void Clear()
+        public static void Initialize(FocusGraph graph)
         {
             History = new (string, string)[History.Length];
+            var data = graph.Serialize();
+            History[Index] = data;
+            Length = 1;
             Index = 0;
-            Length = 0;
         }
     }
 }

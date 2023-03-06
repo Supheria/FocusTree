@@ -8,9 +8,12 @@ namespace FocusTree.Data
 {
     public class FocusGraph : IXmlSerializable
     {
-        #region ---- 文件名 ----
+        #region ---- 存档文件名 ----
 
-        internal string FilePath { get; private set; }
+        /// <summary>
+        /// 存档文件名
+        /// </summary>
+        internal string FilePath;
 
         #endregion
 
@@ -19,19 +22,29 @@ namespace FocusTree.Data
         /// <summary>
         /// 以 ID 作为 Key 的所有节点
         /// </summary>
-        internal Dictionary<int, FocusData> NodesCatalog;
+        internal Dictionary<int, FocusData> NodesCatalog { get; private set; }
         /// <summary>
         /// 节点依赖的节点组合
         /// </summary>
-        internal Dictionary<int, List<HashSet<int>>> RequireGroups;
+        internal Dictionary<int, List<HashSet<int>>> RequireGroups { get; private set; }
         /// <summary>
-        /// 依赖于节点的节点 (自动生成) (父节点, 多个子节点)
+        /// 节点的子链接 (自动生成) (父节点, 多个子节点)
         /// </summary>
-        private Dictionary<int, HashSet<int>> LinkedNodes;
+        internal Dictionary<int, HashSet<int>> ChildLinkes { get; private set; }
         /// <summary>
         /// 节点显示位置
         /// </summary>
-        private Dictionary<int, Point> NodePoints;
+        internal Dictionary<int, Point> MetaPoints { get; private set; }
+
+        #endregion
+
+        #region ---- 基本信息 ----
+
+        public int NodesCount
+        {
+            get { return NodesCatalog.Count; }
+        }
+        public int BranchesCount { get; private set; }
 
         #endregion
 
@@ -61,7 +74,8 @@ namespace FocusTree.Data
                 MessageBox.Show("[2303031210]提示：无法添加节点 - 无法加入字典。");
                 return false;
             }
-            UpdateEdited();
+            CreateLinkes();
+            SetMetaPoints();
             return true;
         }
         /// <summary>
@@ -87,7 +101,8 @@ namespace FocusTree.Data
             }
             // 从节点表中删除此节点
             NodesCatalog.Remove(id);
-            UpdateEdited();
+            CreateLinkes();
+            SetMetaPoints();
             return true;
         }
         /// <summary>
@@ -105,7 +120,8 @@ namespace FocusTree.Data
                 return false;
             }
             NodesCatalog[id] = newData;
-            UpdateEdited();
+            CreateLinkes();
+            SetMetaPoints();
             return true;
         }
         /// <summary>
@@ -142,10 +158,10 @@ namespace FocusTree.Data
         /// </summary>
         /// <param name="id">节点id</param>
         /// <returns>连接的节点</returns>
-        public HashSet<int> GetNodeLinkedNodes(int id)
+        public HashSet<int> GetNodeChildLinkes(int id)
         {
-            LinkedNodes.TryGetValue(id, out HashSet<int> linkedNodes);
-            return linkedNodes;
+            ChildLinkes.TryGetValue(id, out HashSet<int> childLinkes);
+            return childLinkes;
         }
 
         #endregion
@@ -153,120 +169,12 @@ namespace FocusTree.Data
         #region ---- 图像操作 ----
 
         /// <summary>
-        /// 编辑节点后，更新连接关系和节点位置
-        /// </summary>
-        private void UpdateEdited()
-        {
-            CreateLinkes();
-            SetNodePoints();
-            DataHistory.Enqueue(this);
-        }
-        public void Update()
-        {
-            CreateLinkes();
-            SetNodePoints();
-        }
-        /// <summary>
-        /// 获取节点 LinkedNodes 的迭代器（与子节点的连接）
-        /// </summary>
-        /// <returns>LinkedNodes 迭代器</returns>
-        public IEnumerator<KeyValuePair<int, HashSet<int>>> GetLinkedNodesEnumerator()
-        {
-            return LinkedNodes.GetEnumerator();
-        }
-        /// <summary>
-        /// 获取 NodesCatalog 的迭代器
-        /// </summary>
-        /// <returns>NodesCatalog 的迭代器</returns>
-        public IEnumerator<KeyValuePair<int, FocusData>> GetNodesCatalogEnumerator()
-        {
-            return NodesCatalog.GetEnumerator();
-        }
-        /// <summary>
-        /// 获取 NodePoints 的迭代器
-        /// </summary>
-        /// <returns>NodePoints 的迭代器</returns>
-        public IEnumerator<KeyValuePair<int, Point>> GetNodePointsEnumerator()
-        {
-            return NodePoints.GetEnumerator();
-        }
-        /// <summary>
-        /// 获取 NodePoints 中指定节点的Point
-        /// </summary>
-        /// <param name="index">节点ID</param>
-        /// <returns>节点的Point</returns>
-        public Point GetNodePoint(int id)
-        {
-            if (NodePoints.TryGetValue(id, out Point point) == false)
-            {
-                MessageBox.Show($"[2303031337]提示：无法获取节点的Point - NodePoints 未包含 ID = {id} 对应的条目。");
-            }
-            return point;
-        }
-        /// <summary>
-        /// 获取绘图用的已自动排序后的 NodeMap
-        /// </summary>
-        /// <returns></returns>
-        private void SetNodePoints()
-        {
-            NodePoints = new Dictionary<int, Point>();
-            var rootNodes = GetRootNodes().ToArray();
-            var branches = GetBranches(rootNodes, true, true);
-            var nodeCoordinates = CombineBranchNodes(branches);
-            var width = branches.Count;
-            var height = branches.Max(x => x.Length);
-
-            foreach (var coordinate in nodeCoordinates)
-            {
-                var x = coordinate.Value[0] + (coordinate.Value[1] - coordinate.Value[0]) / 2;
-                var point = new Point(x, coordinate.Value[2]);
-                NodePoints[coordinate.Key] = point;
-            }
-        }
-        private Dictionary<int, List<int>> CombineBranchNodes(List<int[]> branches)
-        {
-            Dictionary<int, List<int>> nodeCoordinates = new();
-            int y = 0;
-            while (true)
-            {
-                HashSet<int> combined = new();
-                for (int x = 0; x < branches.Count; x++)
-                {
-                    if (y < branches[x].Length)
-                    {
-                        var node = branches[x][y];
-                        if (combined.Add(node))
-                        {
-
-                            nodeCoordinates.Add(node, new List<int>());
-                            // 起始x, [0]
-                            nodeCoordinates[node].Add(x);
-                            // 终止x, [1]
-                            nodeCoordinates[node].Add(x);
-                            // y, [2]
-                            nodeCoordinates[node].Add(y);
-                        }
-                        else
-                        {
-                            nodeCoordinates[node][1] = x;
-                        }
-                    }
-                }
-                if (combined.Count == 0)
-                {
-                    break;
-                }
-                y++;
-            }
-            return nodeCoordinates;
-        }
-        /// <summary>
         /// 使用 Requires 创建 Linked
         /// </summary>
         private void CreateLinkes()
         {
             // 这里一定要重新初始化，因为是刷新
-            LinkedNodes = new();
+            ChildLinkes = new();
 
             foreach (var requireGroups in RequireGroups)
             {
@@ -275,42 +183,24 @@ namespace FocusTree.Data
                     foreach (var requireNode in requireGroup)
                     {
                         // 如果父节点没有创建 HashSet 就创建一个新的
-                        LinkedNodes.TryAdd(requireNode, new HashSet<int>());
-                        // 向 LinkedNodes 里父节点的对应条目里添加当前节点（HashSet自动忽略重复项）
-                        LinkedNodes[requireNode].Add(requireGroups.Key);
+                        ChildLinkes.TryAdd(requireNode, new HashSet<int>());
+                        // 向 ChildLinkes 里父节点的对应条目里添加当前节点（HashSet自动忽略重复项）
+                        ChildLinkes[requireNode].Add(requireGroups.Key);
                     }
                 }
             }
         }
         /// <summary>
-        /// 获取 NodeMap 中心位置和尺寸
+        /// 获取绘图用的已自动排序后的 NodeMap
         /// </summary>
-        /// <returns>Center + Size</returns>
-        public Vector4 GetNodeMapBounds()
+        /// <returns></returns>
+        private void SetMetaPoints()
         {
-            bool first = true;
-            var bounds = new RectangleF();
-            var enumer = NodePoints.GetEnumerator();
-            while (enumer.MoveNext())
-            {
-                var p = enumer.Current.Value;
-                if (first)
-                {
-                    bounds = new RectangleF(p.X, p.Y, p.X, p.Y);
-                    first = false;
-                    continue;
-                }
-                if (p.X < bounds.X) { bounds.X = p.X; }
-                if (p.X > bounds.Width) { bounds.Width = p.X; }
-                if (p.Y < bounds.Y) { bounds.Y = p.Y; }
-                if (p.Y > bounds.Height) { bounds.Height = p.Y; }
-            }
-            return new Vector4(
-                (bounds.X + bounds.Width) / 2,
-                (bounds.Y + bounds.Height) / 2,
-                bounds.Width - bounds.X,
-                bounds.Height - bounds.Y
-                );
+            MetaPoints = new Dictionary<int, Point>();
+            var rootNodes = GetRootNodes().ToArray();
+            var branches = GetBranches(rootNodes, true, true);
+            BranchesCount = branches.Count;
+            MetaPoints = CombineBranchNodes(branches);
         }
         /// <summary>
         /// 获取某个节点的所有分支
@@ -340,7 +230,7 @@ namespace FocusTree.Data
         {
             steps.Push(currentNode);
             // 当前节点是末节点
-            if (LinkedNodes.TryGetValue(currentNode, out HashSet<int> linkedNodes) == false || linkedNodes.Count == 0)
+            if (ChildLinkes.TryGetValue(currentNode, out HashSet<int> childLinkes) == false || childLinkes.Count == 0)
             {
                 if (reverse)
                 {
@@ -353,12 +243,12 @@ namespace FocusTree.Data
             }
             else
             {
-                var linkedNodesList = linkedNodes.ToList();
+                var childLinkesList = childLinkes.ToList();
                 if (sort == true)
                 {
-                    linkedNodesList.Sort();
+                    childLinkesList.Sort();
                 }
-                foreach (var node in linkedNodesList)
+                foreach (var node in childLinkesList)
                 {
                     if (steps.Contains(node))
                     {
@@ -374,12 +264,114 @@ namespace FocusTree.Data
 
             steps.Pop();
         }
+        /// <summary>
+        /// 合并不同分支上的相同节点，使节点在分支范围内尽量居中
+        /// </summary>
+        /// <param name="branches"></param>
+        /// <returns></returns>
+        private Dictionary<int, Point> CombineBranchNodes(List<int[]> branches)
+        {
+            Dictionary<int, List<int>> nodeCoordinates = new();
+            var width = branches.Count;
+            var height = branches.Max(x => x.Length);
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    if (y < branches[x].Length)
+                    {
+                        var node = branches[x][y];
+                        if (nodeCoordinates.ContainsKey(node))
+                        {
+                            nodeCoordinates[node][0] = nodeCoordinates[node][0] < x ? nodeCoordinates[node][0] : x;
+                            nodeCoordinates[node][1] = nodeCoordinates[node][1] > x ? nodeCoordinates[node][1] : x;
+                            nodeCoordinates[node][2] = nodeCoordinates[node][2] > y ? nodeCoordinates[node][2] : y;
+                        }
+                        else
+                        {
+                            nodeCoordinates.Add(node, new List<int>());
+                            // 起始x, [0]
+                            nodeCoordinates[node].Add(x);
+                            // 终止x, [1]
+                            nodeCoordinates[node].Add(x);
+                            // y, [2]
+                            nodeCoordinates[node].Add(y);
+                        }
+                    }
+                }
+            }
+            Dictionary<int, Point> metaPoints = new();
+            foreach (var coordinate in nodeCoordinates)
+            {
+                var x = coordinate.Value[0] + (coordinate.Value[1] - coordinate.Value[0]) / 2;
+                var point = new Point(x, coordinate.Value[2]);
+                metaPoints[coordinate.Key] = point;
+            }
+
+            // 清除横坐标之间无节点的间隙
+
+            Dictionary<int, Dictionary<int, Point>> xMetaPoints = new();
+            foreach (var nodePoint in metaPoints)
+            {
+                var x = nodePoint.Value.X;
+                if (xMetaPoints.ContainsKey(x) == false)
+                {
+                    xMetaPoints.Add(x, new Dictionary<int, Point>());
+                }
+                xMetaPoints[x].Add(nodePoint.Key, nodePoint.Value);
+            }
+            int blank = 0;
+            for (int x = 0; x < width; x++)
+            {
+                if (xMetaPoints.ContainsKey(x))
+                {
+                    foreach (var nodePoint in xMetaPoints[x])
+                    {
+                        var point = new Point(nodePoint.Value.X - blank, nodePoint.Value.Y);
+                        metaPoints[nodePoint.Key] = point;
+                    }
+                }
+                else
+                {
+                    blank++;
+                }
+            }
+            return metaPoints;
+        }
+        /// <summary>
+        /// 全图的元中心坐标和元尺寸
+        /// </summary>
+        /// <returns></returns>
+        public (PointF, SizeF) CenterMetaData()
+        {
+            bool first = true;
+            var bounds = new RectangleF();
+            foreach(var point in MetaPoints.Values)
+            {
+                if (first)
+                {
+                    bounds = new RectangleF(point.X, point.Y, point.X, point.Y);
+                    first = false;
+                }
+                else
+                {
+                    bounds.X = point.X < bounds.X ? point.X : bounds.X;
+                    bounds.Y = point.Y < bounds.Y ? point.Y : bounds.Y;
+                    bounds.Width = point.X > bounds.Width ? point.X : bounds.Width;
+                    bounds.Height = point.Y > bounds.Height ? point.Y : bounds.Height;
+                }
+            }
+            return (
+                new PointF((bounds.X + bounds.Width) / 2, (bounds.Y + bounds.Height) / 2),
+                new SizeF(bounds.Width - bounds.X + 1, bounds.Height - bounds.Y + 1)
+                );
+        }
 
         #endregion
 
         #region ---- 构造函数 ----
         /// <summary>
-        /// 用节点列表和依赖组合列表生成FocusGraph
+        /// 从CSV生成专用，不更新历史记录
         /// </summary>
         /// <param name="nodesCatalog">节点列表</param>
         /// <param name="requireGroups">依赖组合列表</param>
@@ -388,8 +380,8 @@ namespace FocusTree.Data
             FilePath = path;
             NodesCatalog = nodesCatalog;
             RequireGroups = requireGroups;
-            DataHistory.Clear();
-            UpdateEdited();
+            CreateLinkes();
+            SetMetaPoints();
         }
         /// <summary>
         /// 用于序列化
@@ -407,9 +399,10 @@ namespace FocusTree.Data
             FilePath = path;
             NodesCatalog = graph.NodesCatalog;
             RequireGroups = graph.RequireGroups;
-            DataHistory.Clear();
-            UpdateEdited();
+            CreateLinkes();
+            SetMetaPoints();
         }
+
         #endregion
 
         #region ---- 序列化方法 ----
@@ -463,8 +456,8 @@ namespace FocusTree.Data
                     }
                 }
             }
-            DataHistory.Clear();
-            UpdateEdited();
+            CreateLinkes();
+            SetMetaPoints();
         }
         /// <summary>
         /// 反序列化时用于读取节点的关系
@@ -532,11 +525,6 @@ namespace FocusTree.Data
             writer.WriteEndElement();
             // </Relations>
         }
-
-        #endregion
-
-        #region ---- 其它工具 ----
-
         public static string IdArrayToString(HashSet<int> ids)
         {
             var splitmark = ", ";
@@ -553,6 +541,30 @@ namespace FocusTree.Data
             var split = ids.Split(',').Where(x => !string.IsNullOrWhiteSpace(x));
             return split.Select(x => int.Parse(x)).ToHashSet();
         }
+
+        #endregion
+
+        #region ---- 其它工具 ----
+
+        public (string, string) Serialize()
+        {
+            return JsObject.Serialize(this, NodesCatalog, RequireGroups);
+        }
+        public void Deserialize((string, string) data)
+        {
+            var metas = JsObject.DeSerialize<FocusGraph,
+                Dictionary<int, FocusData>,
+                Dictionary<int, List<HashSet<int>>>>(data, this);
+            NodesCatalog = metas.Item1;
+            RequireGroups = metas.Item2;
+            CreateLinkes();
+            SetMetaPoints();
+        }
+       public bool Equals(FocusGraph other)
+       {
+            return Serialize() == other.Serialize();
+       }
+
         #endregion
     }
 }

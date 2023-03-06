@@ -1,7 +1,8 @@
 ﻿using FocusTree.Data;
 using FocusTree.IO;
+using FocusTree.UI.Controls;
 
-namespace FocusTree.UI
+namespace FocusTree.UI.Forms
 {
     public partial class MainForm : Form
     {
@@ -17,7 +18,6 @@ namespace FocusTree.UI
         private void main_Menu_loc_camreset_Click(object sender, EventArgs e)
         {
             Display.RelocateCenter();
-            Display.Invalidate();
         }
         /// <summary>
         /// 打开
@@ -26,7 +26,13 @@ namespace FocusTree.UI
         /// <param name="e"></param>
         private void main_Menu_file_open_Click(object sender, EventArgs e)
         {
-            Display.SaveGraph();
+            if (Display.Graph != null && Display.GraphEdited)
+            {
+                if (MessageBox.Show("要放弃当前的更改吗？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Warning,MessageBoxDefaultButton.Button2) == DialogResult.No)
+                {
+                    return;
+                }
+            }
             main_Openfile.Filter = "xml文件|*.xml";
             if (main_Openfile.ShowDialog() == DialogResult.Cancel)
             {
@@ -42,6 +48,13 @@ namespace FocusTree.UI
         /// <param name="e"></param>
         private void main_Menu_file_backup_open_Click(object sender, EventArgs e)
         {
+            if (Display.Graph != null && Display.GraphEdited)
+            {
+                if (MessageBox.Show("要放弃当前的修改吗？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                {
+                    return;
+                }
+            }
             main_Openfile.Filter = "全部文件|*.*";
             var oldInitDir = main_Openfile.InitialDirectory;
             main_Openfile.InitialDirectory = Backup.DirectoryName;
@@ -132,20 +145,14 @@ namespace FocusTree.UI
 
         private void main_Menu_edit_undo_Click(object sender, EventArgs e)
         {
-            if (DataHistory.HasPrev())
-            {
-                DataHistory.Undo(Display.Graph);
-            }
+            Display.Undo();
             main_Menu_edit_status_check();
             Display.Invalidate();
         }
 
         private void main_Menu_edit_redo_Click(object sender, EventArgs e)
         {
-            if (DataHistory.HasNext())
-            {
-                DataHistory.Redo(Display.Graph);
-            }
+            Display.Redo();
             main_Menu_edit_status_check();
             Display.Invalidate();
         }
@@ -154,14 +161,13 @@ namespace FocusTree.UI
         /// </summary>
         public void main_Menu_edit_status_check()
         {
-            main_Menu_edit_undo.Enabled = DataHistory.HasPrev();
-            main_Menu_edit_redo.Enabled = DataHistory.HasNext();
+            main_Menu_edit_undo.Enabled = GraphHistory.HasPrev();
+            main_Menu_edit_redo.Enabled = GraphHistory.HasNext();
         }
         private void main_Menu_edit_status_check(object sender, EventArgs e)
         {
-            main_Menu_edit_undo.Enabled = DataHistory.HasPrev();
-            main_Menu_edit_redo.Enabled = DataHistory.HasNext();
-            main_Menu_file_save.Enabled = Display.ReadOnly ? false : true;
+            main_Menu_edit_undo.Enabled = GraphHistory.HasPrev();
+            main_Menu_edit_redo.Enabled = GraphHistory.HasNext();
         }
 
         private void main_Menu_edit_Click(object sender, EventArgs e)
@@ -170,11 +176,29 @@ namespace FocusTree.UI
         }
         public void UpdateText()
         {
-            Text = main_StatusStrip_filename.Text = Display.FileName;
+            if (Display.Graph == null)
+            {
+                Text = "国策树";
+                main_StatusStrip_filename.Text = "未加载";
+            }
+            Text = Display.FileName;
+            if(Display.ReadOnly)
+            {
+                main_StatusStrip_filename.Text = "正在预览";
+            }
+            else if (Display.GraphEdited)
+            {
+                main_StatusStrip_filename.Text = "正在编辑";
+            }
+            else
+            {
+                main_StatusStrip_filename.Text = "就绪";
+            }
         }
 
-        private void MainForm_Move(object sender, EventArgs e)
+        private void main_Menu_loc_camfocus_Click(object sender, EventArgs e)
         {
+            Display.LocateSelected();
             Display.Invalidate();
         }
     }
