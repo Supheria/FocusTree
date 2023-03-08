@@ -578,6 +578,14 @@
       <Descript>悠兮其贵言，功成身遂，百姓皆谓我自然</Descript>
       <Ps. />
     </Node>
+    <Node ID="73">
+      <Name>无不为</Name>
+      <Star>false</Star>
+      <Duration>30</Duration>
+      <Effects>稳定度：-50%，获得1个科研槽</Effects>
+      <Descript>道常无为，而无不为</Descript>
+      <Ps. />
+    </Node>
     <Node ID="74">
       <Name>无为而治</Name>
       <Star>false</Star>
@@ -858,6 +866,14 @@
       <Descript>知不知，尚矣；不知知，病也。是以圣人之不病也，以其病病也，是以不病</Descript>
       <Ps. />
     </Node>
+    <Node ID="109">
+      <Name>损余补足</Name>
+      <Star>true</Star>
+      <Duration>100</Duration>
+      <Effects>移除道教的探索精神，移除对势力规模的固定，移除对世界观的固定，移除对平均灵力值的固定，不争之争追加效果：规则修改：可以宣战</Effects>
+      <Descript>天之道，损有余而补不足</Descript>
+      <Ps.>（注：需要完成国策大盗终止）</Ps.>
+    </Node>
     <Node ID="110">
       <Name>种有几</Name>
       <Star>true</Star>
@@ -920,6 +936,14 @@
       <Duration>60</Duration>
       <Effects>种有几追加效果：部队防御：+10%）</Effects>
       <Descript>夫醉者之坠于车也，虽疾不死。骨节与人同，而犯害与人异，其神全也。乘亦弗知也，坠亦弗知也。死生惊惧不入乎其胸，是故遌物而不慑</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="118">
+      <Name>地文不誫</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effects>种有几追加效果：适役人口修正：-50%，堑壕速度：+10%，堑壕上限：+10</Effects>
+      <Descript>壶子曰：“向吾示之以地文，罪乎不誫不止，是殆见吾杜德几也”</Descript>
       <Ps. />
     </Node>
     <Node ID="119">
@@ -1316,6 +1340,7 @@
     </Node>
   </Nodes>
   <NodesRelations>
+    <Relation ID="1" />
     <Relation ID="2">
       <Require>1</Require>
     </Relation>
@@ -1375,9 +1400,6 @@
     </Relation>
     <Relation ID="21">
       <Require>19</Require>
-      <Require>20</Require>
-      <Require>36</Require>
-      <Require>19, 125</Require>
     </Relation>
     <Relation ID="22">
       <Require>21</Require>
@@ -1529,6 +1551,12 @@
     <Relation ID="72">
       <Require>71</Require>
     </Relation>
+    <Relation ID="73">
+      <Require>72</Require>
+    </Relation>
+    <Relation ID="74">
+      <Require>73</Require>
+    </Relation>
     <Relation ID="75">
       <Require>74</Require>
     </Relation>
@@ -1628,6 +1656,9 @@
     <Relation ID="108">
       <Require>107</Require>
     </Relation>
+    <Relation ID="109">
+      <Require>108</Require>
+    </Relation>
     <Relation ID="111">
       <Require>110</Require>
     </Relation>
@@ -1648,6 +1679,12 @@
     </Relation>
     <Relation ID="117">
       <Require>116</Require>
+    </Relation>
+    <Relation ID="118">
+      <Require>117</Require>
+    </Relation>
+    <Relation ID="119">
+      <Require>118</Require>
     </Relation>
     <Relation ID="120">
       <Require>119</Require>

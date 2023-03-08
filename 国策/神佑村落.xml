@@ -106,6 +106,14 @@
       <Descript>一部分“凋零者”被我们的诚意打动，自愿向秋静叶提出请求离开神明信仰联盟来帮助我们，而我们自然不会辜负他们的好意</Descript>
       <Ps. />
     </Node>
+    <Node ID="14">
+      <Name>智胜我们的敌人</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effects>获得兵法（？），其效果为（堑壕速度：+10%，缴获装备比例：10%）</Effects>
+      <Descript>无缘冢总会有一些外界垃圾出现，当然也会有书籍，不过我们很难了解捡到并且宣传他的人是什么水平</Descript>
+      <Ps. />
+    </Node>
     <Node ID="15">
       <Name>其疾如风</Name>
       <Star>false</Star>
@@ -876,6 +884,7 @@
     </Node>
   </Nodes>
   <NodesRelations>
+    <Relation ID="1" />
     <Relation ID="2">
       <Require>1</Require>
     </Relation>
@@ -912,23 +921,26 @@
     <Relation ID="13">
       <Require>12</Require>
     </Relation>
+    <Relation ID="14">
+      <Require>13</Require>
+    </Relation>
     <Relation ID="15">
-      <Require />
+      <Require>14</Require>
     </Relation>
     <Relation ID="16">
-      <Require />
+      <Require>14</Require>
     </Relation>
     <Relation ID="17">
-      <Require />
+      <Require>14</Require>
     </Relation>
     <Relation ID="18">
-      <Require />
+      <Require>14</Require>
     </Relation>
     <Relation ID="19">
-      <Require />
+      <Require>14</Require>
     </Relation>
     <Relation ID="20">
-      <Require />
+      <Require>14</Require>
     </Relation>
     <Relation ID="21">
       <Require>20</Require>

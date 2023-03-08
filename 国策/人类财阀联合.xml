@@ -18,6 +18,14 @@
       <Descript>人类村落在慧音政府上台之后走向了绥靖政策，但我们还不清楚内部人类的想法</Descript>
       <Ps. />
     </Node>
+    <Node ID="3">
+      <Name>顺水推舟</Name>
+      <Star>true</Star>
+      <Duration>30</Duration>
+      <Effects>移除道具的保护，韬光养晦追加效果：战争支持度：+10%，军用工厂建造速度：+100%，（人类村落）移除道具的保护获得韬光养晦，其效果为（政治点数：+50%，稳定度：+50%，基础建设建造速度：+100%，民用工厂建造速度：+100%，军事工厂建造速度：+100%，工厂产出：+50%）</Effects>
+      <Descript>看来人类还没有在妖怪的蛊惑下沉睡，我们只需要顺水推舟就是</Descript>
+      <Ps.>（注：需要人类村落完成变革的国策）</Ps.>
+    </Node>
     <Node ID="4">
       <Name>秦晋之好</Name>
       <Star>false</Star>
@@ -748,11 +756,15 @@
     </Node>
   </Nodes>
   <NodesRelations>
+    <Relation ID="1" />
     <Relation ID="2">
       <Require>1</Require>
     </Relation>
+    <Relation ID="3">
+      <Require>2</Require>
+    </Relation>
     <Relation ID="4">
-      <Require />
+      <Require>3</Require>
     </Relation>
     <Relation ID="5">
       <Require>4</Require>

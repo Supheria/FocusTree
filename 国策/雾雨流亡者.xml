@@ -314,6 +314,14 @@
       <Descript>我们不得已进行的快速发展至此也应该到头了</Descript>
       <Ps. />
     </Node>
+    <Node ID="40">
+      <Name>恢复福利</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effects>获得战争福利，其效果为（生活消费品工厂：+3%，每周战争支持度：+0.1%，工厂产出：+5%，建造速度：+5%）</Effects>
+      <Descript>不用再苦一苦百姓了，过去需要人类牺牲的日子一去不复返了（但我们不会告诉他们代价是什么）</Descript>
+      <Ps. />
+    </Node>
     <Node ID="41">
       <Name>恢复编制</Name>
       <Star>false</Star>
@@ -380,6 +388,7 @@
     </Node>
   </Nodes>
   <NodesRelations>
+    <Relation ID="1" />
     <Relation ID="2">
       <Require>1</Require>
     </Relation>
@@ -484,6 +493,9 @@
     </Relation>
     <Relation ID="39">
       <Require>38</Require>
+    </Relation>
+    <Relation ID="40">
+      <Require>39</Require>
     </Relation>
     <Relation ID="42">
       <Require>41</Require>

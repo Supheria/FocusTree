@@ -154,6 +154,14 @@
       <Descript>我们可以通过赎买让曾经的土地回归怀抱</Descript>
       <Ps. />
     </Node>
+    <Node ID="20">
+      <Name>无限的投资</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effects>开启决议使用政治点数获得建筑位和民用工厂</Effects>
+      <Descript>我们可以通过外交努力（慧音）换取源源不断的经济发展空间</Descript>
+      <Ps. />
+    </Node>
     <Node ID="21">
       <Name>"以地事秦"</Name>
       <Star>true</Star>
@@ -780,6 +788,7 @@
     </Node>
   </Nodes>
   <NodesRelations>
+    <Relation ID="1" />
     <Relation ID="2">
       <Require>1</Require>
     </Relation>
@@ -833,6 +842,9 @@
     </Relation>
     <Relation ID="19">
       <Require>18</Require>
+    </Relation>
+    <Relation ID="20">
+      <Require>19</Require>
     </Relation>
     <Relation ID="21">
       <Require>3</Require>

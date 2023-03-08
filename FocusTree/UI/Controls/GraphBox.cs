@@ -304,21 +304,24 @@ namespace FocusTree.UI.Controls
             Image ??= new Bitmap(Size.Width, Size.Height);
             var g = Graphics.FromImage(Image);
 
-            foreach (var nodeKey in Graph.MetaPoints.Keys)
+            foreach (var meta in Graph.MetaPoints)
             {
-                var id = nodeKey;
-                var rect = NodeDrawingRect(nodeKey);
+                var id = meta.Key;
+                var rect = NodeDrawingRect(id);
                 // 这里应该去连接依赖的节点，而不是去对子节点连接
-                var requires = Graph.GetNodeRequireGroups(id);
+                var requireGroups = Graph.GetNodeRequireGroups(id);
                 // 对于根节点，requires 为 null
-                if (requires == null) { continue; }
+                if (requireGroups == null) 
+                { 
+                    continue; 
+                }
 
                 int requireColor = 0; //不同需求要变色
-                foreach (var require_ids in requires)
+                foreach (var requireGroup in requireGroups)
                 {
-                    foreach (var require_id in require_ids)
+                    foreach (var require in requireGroup)
                     {
-                        var torect = NodeDrawingRect(require_id);
+                        var torect = NodeDrawingRect(require);
 
                         // 如果起始点和终点都不在画面里，就不需要绘制
                         if (!(IsRectVisible(rect) || IsRectVisible(torect))) { continue; }

@@ -1,8 +1,9 @@
-﻿using System.Numerics;
+using System.Numerics;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TreeView;
 
 namespace FocusTree.Data
 {
@@ -196,11 +197,11 @@ namespace FocusTree.Data
         /// <returns></returns>
         private void SetMetaPoints()
         {
-            MetaPoints = new Dictionary<int, Point>();
             var rootNodes = GetRootNodes().ToArray();
             var branches = GetBranches(rootNodes, true, true);
             BranchesCount = branches.Count;
-            MetaPoints = CombineBranchNodes(branches);
+            CombineBranchNodes(branches);
+            CleanBlanksForX();
         }
         /// <summary>
         /// 获取某个节点的所有分支
@@ -269,7 +270,7 @@ namespace FocusTree.Data
         /// </summary>
         /// <param name="branches"></param>
         /// <returns></returns>
-        private Dictionary<int, Point> CombineBranchNodes(List<int[]> branches)
+        private void CombineBranchNodes(List<int[]> branches)
         {
             Dictionary<int, List<int>> nodeCoordinates = new();
             var width = branches.Count;
@@ -300,18 +301,23 @@ namespace FocusTree.Data
                     }
                 }
             }
-            Dictionary<int, Point> metaPoints = new();
+            MetaPoints = new();
             foreach (var coordinate in nodeCoordinates)
             {
                 var x = coordinate.Value[0] + (coordinate.Value[1] - coordinate.Value[0]) / 2;
                 var point = new Point(x, coordinate.Value[2]);
-                metaPoints[coordinate.Key] = point;
+                MetaPoints[coordinate.Key] = point;
             }
-
-            // 清除横坐标之间无节点的间隙
-
+        }
+        /// <summary>
+        /// 清除横坐标之间无节点的间隙
+        /// </summary>
+        /// <param name="metaPoints"></param>
+        /// <returns></returns>
+        private void CleanBlanksForX()
+        {
             Dictionary<int, Dictionary<int, Point>> xMetaPoints = new();
-            foreach (var nodePoint in metaPoints)
+            foreach (var nodePoint in MetaPoints)
             {
                 var x = nodePoint.Value.X;
                 if (xMetaPoints.ContainsKey(x) == false)
@@ -320,7 +326,8 @@ namespace FocusTree.Data
                 }
                 xMetaPoints[x].Add(nodePoint.Key, nodePoint.Value);
             }
-            int blank = 0;
+            var blank = 0;
+            var width = MetaPoints.Max(x => x.Value.Y);
             for (int x = 0; x < width; x++)
             {
                 if (xMetaPoints.ContainsKey(x))
@@ -328,7 +335,7 @@ namespace FocusTree.Data
                     foreach (var nodePoint in xMetaPoints[x])
                     {
                         var point = new Point(nodePoint.Value.X - blank, nodePoint.Value.Y);
-                        metaPoints[nodePoint.Key] = point;
+                        MetaPoints[nodePoint.Key] = point;
                     }
                 }
                 else
@@ -336,7 +343,6 @@ namespace FocusTree.Data
                     blank++;
                 }
             }
-            return metaPoints;
         }
         /// <summary>
         /// 全图的元中心坐标和元尺寸
