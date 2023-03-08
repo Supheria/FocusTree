@@ -32,7 +32,7 @@ namespace FocusTree.IO
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"[2303051407]无法备份{path}。\n{ex.Message}");
+                throw new Exception($"[2303051407]无法备份{path}。\n{ex.Message}");
             }
         }
         /// <summary>
@@ -46,13 +46,13 @@ namespace FocusTree.IO
             {
                 return;
             }
-            var prevGraph = XmlIO.LoadGraph(path);
-            if (graph.Equals(prevGraph))
-            {
-                return;
-            }
             try
             {
+                var prevGraph = XmlIO.LoadGraph(path);
+                if (graph.Equals(prevGraph))
+                {
+                    return;
+                }
                 var dir = Directory.CreateDirectory(Path.Combine(DirectoryName, Path.GetFileNameWithoutExtension(path)));
                 var copyPath = Path.Combine(dir.FullName, DateTime.Now.ToString("yyyyMMdd_HHmmss"));
                 File.Copy(path, copyPath, true);

@@ -1,7 +1,7 @@
 using FocusTree.Data;
 using FocusTree.IO;
 using System.Numerics;
-using FocusTree.UI.Forms;
+using FocusTree.UI.NodeToolDialogs;
 using System.Drawing;
 using static System.ComponentModel.Design.ObjectSelectorEditor;
 
@@ -38,29 +38,11 @@ namespace FocusTree.UI.Controls
         /// <summary>
         /// 先前选中的节点
         /// </summary>
-        public int? SelectedNode 
-        {
-            get { return selectedNode; }
-            private set
-            {
-                selectedNode = value;
-                DrawGraph();
-            }
-        }
-        int? selectedNode;
+        public int? SelectedNode { get; private set; }
         /// <summary>
         /// 当前选中的节点
         /// </summary>
-        int? SelectingNode
-        {
-            get { return selectingNode; }
-            set
-            {
-                selectingNode = value;
-                DrawGraph();
-            }
-        }
-        int? selectingNode;
+        int? SelectingNode;
         /// <summary>
         /// 图像已更改
         /// </summary>
@@ -80,13 +62,32 @@ namespace FocusTree.UI.Controls
                 else { return false; }
             }
         }
+        public Dictionary<string, NodeToolDialog> ToolDialogs
+        {
+            get
+            {
+                foreach (var form in toolDialogs.Values)
+                {
+                    form.Hide();
+                }
+                return toolDialogs;
+            }
+        }
 
         #endregion
 
         #region ---- 关联控件 ----
 
         readonly new MainForm Parent;
-        readonly InfoDialog NodeInfo;
+        readonly Dictionary<string, NodeToolDialog> toolDialogs = new()
+        {
+            ["国策信息"] = new NodeToolDialog()
+        };
+        InfoDialog NodeInfo 
+        { 
+            get { return (InfoDialog)ToolDialogs["国策信息"]; }
+            init { toolDialogs["国策信息"] = value; }
+        }
         NodeContextMenu PicNodeContextMenu;
         GraphContextMenu PicGraphContextMenu;
         readonly ToolTip NodeInfoTip = new();
@@ -109,12 +110,12 @@ namespace FocusTree.UI.Controls
                 SelectedNode = null;
                 NodeInfo.Hide();
                 GraphHistory.Initialize(graph);
-                RelocateCenter();
+                RescaleToPanorama();
+                Invalidate();
             }
         }
         FocusGraph graph;
         (string, string) OriginalGraph;
-        string GraphInfo;
 
         #endregion
 
@@ -173,7 +174,7 @@ namespace FocusTree.UI.Controls
         float GScale
         {
             get { return gscale; }
-            set { gscale = value < 0.1f ? 0.1f : value > 10f ? 10f : value; }
+            set { gscale = value < 0.1f ? 0.1f : value > 5f ? 5f : value; }
         }
         float gscale = 1f; // 不要调用这个，不安全，用上边的访问器，有缩放尺寸限制
         /// <summary>
@@ -207,13 +208,20 @@ namespace FocusTree.UI.Controls
             MouseUp += OnMouseUp;
             MouseWheel += OnMouseWheel;
             MouseDoubleClick += OnMouseDoubleClick;
+            Paint += DrawGraph;
+            Invalidated += OnInvalidated;
+        }
+
+        private void OnInvalidated(object sender, EventArgs e)
+        {
+            Parent.UpdateText();
         }
 
         #endregion
 
         #region ---- 绘图 ----
 
-        private void DrawGraph()
+        private void DrawGraph(object sender, EventArgs e)
         {
             if (Graph == null)
             {
@@ -225,23 +233,22 @@ namespace FocusTree.UI.Controls
             g.Flush();
             g.Dispose();
 
-            GraphInfo = $"节点数量：{Graph.NodesCount}，分支数量：{Graph.BranchesCount}";
             DrawGraphInfo();
             DrawNodes();
             DrawLinks();
-            Invalidate();
 
-            Parent.UpdateText();
+            Invalidate();
         }
         private void DrawGraphInfo()
         {
             Image ??= new Bitmap(Size.Width, Size.Height);
             var g = Graphics.FromImage(Image);
 
-            var GraphInfoRect = new Rectangle(Bounds.Left, Bounds.Bottom - 100, Bounds.Width, 56);
-            var GraphInfoFont = new Font(NodeFont, 25, FontStyle.Bold, GraphicsUnit.Pixel);
-            
-            g.DrawString(GraphInfo, GraphInfoFont, NodeFG, GraphInfoRect, NodeFontFormat);
+            var graphInfoRect = new Rectangle(Bounds.Left, Bounds.Bottom - 100, Bounds.Width, 56);
+            var graphInfoFont = new Font(NodeFont, 25, FontStyle.Bold, GraphicsUnit.Pixel);
+            var graphInfo = $"节点数量：{Graph.NodesCount}，分支数量：{Graph.BranchesCount}";
+
+            g.DrawString(graphInfo, graphInfoFont, NodeFG, graphInfoRect, NodeFontFormat);
 
             g.Flush();
             g.Dispose();
@@ -350,10 +357,15 @@ namespace FocusTree.UI.Controls
 
         private void OnSizeChanged(object sender, EventArgs args)
         {
+            if (Graph == null)
+            {
+                return;
+            }
+
             if (Parent.WindowState != FormWindowState.Minimized)
             {
                 Image = new Bitmap(Size.Width, Size.Height);
-                DrawGraph();
+                Invalidate();
             }
         }
 
@@ -366,11 +378,18 @@ namespace FocusTree.UI.Controls
                 return;
             }
 
-            SelectingNode = PointInAnyNodeDrawingRect(args.Location);
+            CheckSelecting();
 
             if (args.Button == MouseButtons.Left)
             {
-                SetDragEventFlags(args.Location);
+                if (SelectingNode == null)
+                {
+                    SetDragEventFlags(args.Location);
+                }
+                else
+                {
+                    NodeLeftClicked(SelectingNode.Value);
+                }
             }
 
             else if ((args.Button & MouseButtons.Right) == MouseButtons.Right)
@@ -409,8 +428,21 @@ namespace FocusTree.UI.Controls
             PicNodeContextMenu = new NodeContextMenu(this);
             PicNodeContextMenu.Show(Cursor.Position);
             NodeInfo.Hide();
+            NodeInfoTip.Hide(this);
+            Invalidate();
         }
-
+        private void NodeLeftClicked(int id)
+        {
+            var prevRect = NodeDrawingRect(id);
+            RescaleToSelectingNode(id);
+            var newRect = NodeDrawingRect(id);
+            var dX = (int)(newRect.X - prevRect.X);
+            var dY = (int)(newRect.Y - prevRect.Y);
+            var point = new Point(Bounds.X + Bounds.Width / 2, Bounds.Y + Bounds.Height / 2);
+            Cursor.Position = Parent.PointToScreen(point);
+            NodeInfoTip.Hide(this);
+            Invalidate();
+        }
         //---- OnMouseDoubleClick ----//
 
         private void OnMouseDoubleClick(object sender, MouseEventArgs args)
@@ -420,7 +452,7 @@ namespace FocusTree.UI.Controls
                 return;
             }
 
-            SelectingNode = PointInAnyNodeDrawingRect(args.Location);
+            CheckSelecting();
 
             if ((args.Button & MouseButtons.Left) == MouseButtons.Left)
             {
@@ -430,7 +462,7 @@ namespace FocusTree.UI.Controls
                 }
                 else
                 {
-                    // 左键双击节点事件
+                    NodeLeftDoubleClicked();
                 }
             }
         }
@@ -446,11 +478,20 @@ namespace FocusTree.UI.Controls
                 }
             }
         }
+        private void NodeLeftDoubleClicked()
+        {
+            SelectedNode = SelectingNode;
+            Invalidate();
+        }
 
         //---- OnMouseMove ----//
 
         private void OnMouseMove(object sender, MouseEventArgs args)
         {
+            if (Graph == null)
+            {
+                return;
+            }
             if (args.Button == MouseButtons.Left && DragMousePoint_Flag)
             {
                 DragGraph(args.Location);
@@ -469,7 +510,7 @@ namespace FocusTree.UI.Controls
 
                 DrawingCenter -= difvec;
                 DragMousePoint = newPoint;
-                DrawGraph();
+                Invalidate();
             }
         }
         private void ShowNodeInfoTip(Point location)
@@ -477,6 +518,7 @@ namespace FocusTree.UI.Controls
             var node = PointInAnyNodeDrawingRect(location);
             if (node != null)
             {
+                NodeInfoTip.BackColor = Color.FromArgb(0, Color.AliceBlue);
                 NodeInfoTip.Show($"{Graph.GetNodeData(node.Value).Name}\nID: {node.Value}", this, location.X + 10, location.Y);
             }
             else
@@ -489,6 +531,10 @@ namespace FocusTree.UI.Controls
 
         private void OnMouseUp(object sender, MouseEventArgs args)
         {
+            if (Graph == null)
+            {
+                return;
+            }
             // 用于拖动事件
             if (args.Button == MouseButtons.Left)
             {
@@ -500,6 +546,10 @@ namespace FocusTree.UI.Controls
 
         private void OnMouseWheel(object sender, MouseEventArgs args)
         {
+            if (Graph == null)
+            {
+                return;
+            }
             var mulDelta = 1 + args.Delta * 0.002f; // 对，这个数就是很小，不然鼠标一滚就飞了
 
             // 鼠标点击的位置与窗口中心的偏移量
@@ -511,7 +561,19 @@ namespace FocusTree.UI.Controls
 
             // 缩放
             GScale *= mulDelta;
-            DrawGraph();
+            Invalidate();
+        }
+
+        //---- Public ----//
+        private void CheckSelecting()
+        {
+            var clickPos = PointToClient(Cursor.Position);
+            var selectingNode = PointInAnyNodeDrawingRect(clickPos);
+            if (SelectingNode != selectingNode)
+            {
+                SelectingNode = selectingNode;
+                Invalidate();
+            }
         }
 
         #endregion
@@ -618,17 +680,15 @@ namespace FocusTree.UI.Controls
                 && rect.Bottom >= 0
                 && rect.Top <= Size.Height;
         }
-
-        #endregion
-
-        #region ---- 镜头操作 ----
-
         /// <summary>
-        /// 自动缩放居中
+        /// 缩放居中至全景
         /// </summary>
-        public void RelocateCenter()
+        private void RescaleToPanorama()
         {
-            if (Graph == null) { return; }
+            if (Graph == null) 
+            { 
+                return;
+            }
             var center = Graph.CenterMetaData();
             DrawingCenter = MetaPointToCanvasPoint(center.Item1);
 
@@ -638,22 +698,28 @@ namespace FocusTree.UI.Controls
 
             // 我也不知道为什么这里要 *0.90，直接放结果缩放的尺寸会装不下，*0.90 能放下，而且边缘有空余
             GScale = Math.Min(px, py) * 0.90f;
-            DrawGraph();
         }
-        /// <summary>
-        /// 聚焦先前选中的节点
-        /// </summary>
-        public void LocateSelected()
+        private void RescaleToSelectedNode()
         {
-            if (selectedNode == null)
+            if (Graph == null)
             {
-                RelocateCenter();
                 return;
             }
-            var point = Graph.GetMetaPoint(selectedNode.Value);
+            var point = Graph.GetMetaPoint(SelectedNode.Value);
             var canvasPoint = MetaPointToCanvasPoint(point);
             DrawingCenter = new(canvasPoint.X + NodeSize.Width / 2, canvasPoint.Y + NodeSize.Height / 2);
-            DrawGraph();
+            GScale = 1.5f;
+        }
+        private void RescaleToSelectingNode(int ID)
+        {
+            if (Graph == null)
+            {
+                return;
+            }
+            var point = Graph.GetMetaPoint(ID);
+            var canvasPoint = MetaPointToCanvasPoint(point);
+            DrawingCenter = new(canvasPoint.X + NodeSize.Width / 2, canvasPoint.Y + NodeSize.Height / 2);
+            GScale = 1.5f;
         }
 
         #endregion
@@ -710,7 +776,7 @@ namespace FocusTree.UI.Controls
             {
                 GraphHistory.Undo(ref graph);
             }
-            DrawGraph();
+            Invalidate();
         }
         /// <summary>
         /// 重做
@@ -721,19 +787,36 @@ namespace FocusTree.UI.Controls
             {
                 GraphHistory.Redo(ref graph);
             }
-            DrawGraph();
+            Invalidate();
         }
 
         #endregion
 
-        #region ---- 节点操作 ----
-
-        public void ShowNodeInfo()
+        #region ---- 外部事件调用 ----
+        
+        public void CamLocatePanorama()
         {
-            if (NodeInfo == null || SelectedNode == null)
+            RescaleToPanorama();
+            Invalidate();
+        }
+        /// <summary>
+        /// 聚焦先前选中的节点
+        /// </summary>
+        public void CamLocateSelected()
+        {
+            if (SelectedNode == null)
             {
+                RescaleToPanorama();
                 return;
             }
+            else
+            {
+                RescaleToSelectedNode();
+            }
+            Invalidate();
+        }
+        public void ShowNodeInfo()
+        {
             var rect = NodeDrawingRect(SelectedNode.Value);
             var point = new Point((int)(rect.X + rect.Width / 2), (int)(rect.Y + rect.Height / 2));
             NodeInfo.Show(PointToScreen(point));
@@ -747,7 +830,7 @@ namespace FocusTree.UI.Controls
             Graph.RemoveNode(SelectedNode.Value);
             GraphHistory.Enqueue(Graph);
             SelectedNode = null;
-            DrawGraph();
+            Invalidate();
         }
         public FocusData GetSelectedNodeData()
         {

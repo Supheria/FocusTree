@@ -21,6 +21,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="UI\NodeToolDialogs\MainForm.cs" />
+    <Compile Remove="UI\NodeToolDialogs\MainForm.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="UI\NodeToolDialogs\MainForm.resx" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Resources\FocusTree.ico" />
   </ItemGroup>
 

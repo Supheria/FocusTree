@@ -78,7 +78,6 @@ namespace FocusTree.IO
                 {
                     last = new TreeNode<int>(rowCount, 0);
                     nodes.Add(last.Value, focusData);
-                    requires.Add(last.Value, new List<HashSet<int>>());
                     continue; // 这个要加的
                 }
                 // 如果新节点与上一节点的右移距离大于1，则表示产生了断层

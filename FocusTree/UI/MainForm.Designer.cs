@@ -1,6 +1,6 @@
 ﻿using FocusTree.IO;
 
-namespace FocusTree.UI.Forms
+namespace FocusTree.UI
 {
     partial class MainForm
     {
@@ -53,9 +53,10 @@ namespace FocusTree.UI.Forms
             this.main_Menu_edit_redo = new System.Windows.Forms.ToolStripMenuItem();
             this.main_Menu_loc = new System.Windows.Forms.ToolStripMenuItem();
             this.main_Menu_loc_camreset = new System.Windows.Forms.ToolStripMenuItem();
+            this.main_Menu_loc_camfocus = new System.Windows.Forms.ToolStripMenuItem();
             this.main_Menu_node = new System.Windows.Forms.ToolStripMenuItem();
             this.main_Menu_node_add = new System.Windows.Forms.ToolStripMenuItem();
-            this.main_Menu_loc_camfocus = new System.Windows.Forms.ToolStripMenuItem();
+            this.main_Menu_window = new System.Windows.Forms.ToolStripMenuItem();
             this.main_StatusStrip.SuspendLayout();
             this.main_Menu.SuspendLayout();
             this.SuspendLayout();
@@ -109,7 +110,8 @@ namespace FocusTree.UI.Forms
             this.main_Menu_file,
             this.main_Menu_edit,
             this.main_Menu_loc,
-            this.main_Menu_node});
+            this.main_Menu_node,
+            this.main_Menu_window});
             this.main_Menu.Location = new System.Drawing.Point(0, 0);
             this.main_Menu.Name = "main_Menu";
             this.main_Menu.Size = new System.Drawing.Size(784, 25);
@@ -232,9 +234,16 @@ namespace FocusTree.UI.Forms
             // main_Menu_loc_camreset
             // 
             this.main_Menu_loc_camreset.Name = "main_Menu_loc_camreset";
-            this.main_Menu_loc_camreset.Size = new System.Drawing.Size(180, 22);
-            this.main_Menu_loc_camreset.Text = "重置相机位置";
+            this.main_Menu_loc_camreset.Size = new System.Drawing.Size(148, 22);
+            this.main_Menu_loc_camreset.Text = "全景";
             this.main_Menu_loc_camreset.Click += new System.EventHandler(this.main_Menu_loc_camreset_Click);
+            // 
+            // main_Menu_loc_camfocus
+            // 
+            this.main_Menu_loc_camfocus.Name = "main_Menu_loc_camfocus";
+            this.main_Menu_loc_camfocus.Size = new System.Drawing.Size(148, 22);
+            this.main_Menu_loc_camfocus.Text = "聚焦";
+            this.main_Menu_loc_camfocus.Click += new System.EventHandler(this.main_Menu_loc_camfocus_Click);
             // 
             // main_Menu_node
             // 
@@ -247,15 +256,14 @@ namespace FocusTree.UI.Forms
             // main_Menu_node_add
             // 
             this.main_Menu_node_add.Name = "main_Menu_node_add";
-            this.main_Menu_node_add.Size = new System.Drawing.Size(136, 22);
+            this.main_Menu_node_add.Size = new System.Drawing.Size(180, 22);
             this.main_Menu_node_add.Text = "添加新节点";
             // 
-            // main_Menu_loc_camfocus
+            // main_Menu_window
             // 
-            this.main_Menu_loc_camfocus.Name = "main_Menu_loc_camfocus";
-            this.main_Menu_loc_camfocus.Size = new System.Drawing.Size(180, 22);
-            this.main_Menu_loc_camfocus.Text = "聚焦";
-            this.main_Menu_loc_camfocus.Click += new System.EventHandler(this.main_Menu_loc_camfocus_Click);
+            this.main_Menu_window.Name = "main_Menu_window";
+            this.main_Menu_window.Size = new System.Drawing.Size(44, 21);
+            this.main_Menu_window.Text = "窗口";
             // 
             // MainForm
             // 
@@ -304,5 +312,6 @@ namespace FocusTree.UI.Forms
         private ToolStripMenuItem main_Menu_file_backup_open;
         private ToolStripMenuItem main_Menu_file_backup_clear;
         private ToolStripMenuItem main_Menu_loc_camfocus;
+        private ToolStripMenuItem main_Menu_window;
     }
 }

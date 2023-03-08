@@ -324,7 +324,7 @@ namespace FocusTree.Data
         {
             bool first = true;
             var bounds = new RectangleF();
-            foreach(var point in MetaPoints.Values)
+            foreach (var point in MetaPoints.Values)
             {
                 if (first)
                 {
@@ -434,6 +434,7 @@ namespace FocusTree.Data
                     }
                 }
             }
+
             CreateLinkes();
             SetMetaPoints();
         }
@@ -538,10 +539,21 @@ namespace FocusTree.Data
             CreateLinkes();
             SetMetaPoints();
         }
-       public bool Equals(FocusGraph other)
-       {
-            return Serialize() == other.Serialize();
-       }
+        public bool Equals(FocusGraph other)
+        {
+            if (this == null && other == null)
+            {
+                return true;
+            }
+            else if (this == null || other == null)
+            {
+                return false;
+            }
+            else
+            {
+                return Serialize() == other.Serialize();
+            }
+        }
 
         #endregion
 

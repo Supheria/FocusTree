@@ -2,7 +2,7 @@
 using FocusTree.IO;
 using FocusTree.UI.Controls;
 
-namespace FocusTree.UI.Forms
+namespace FocusTree.UI
 {
     public partial class MainForm : Form
     {
@@ -14,10 +14,18 @@ namespace FocusTree.UI.Forms
             main_StatusStrip_filename.Text = "等待打开文件";
             main_StatusStrip_status.Text = "";
             main_Openfile.FileName = "";
+
+            foreach (var name in Display.ToolDialogs.Keys)
+            {
+                ToolStripMenuItem item = new();
+                item.Text = name;
+                item.Click += main_Menu_window_display_toolDialog_Click;
+                this.main_Menu_window.DropDownItems.Add(item);
+            }
         }
         private void main_Menu_loc_camreset_Click(object sender, EventArgs e)
         {
-            Display.RelocateCenter();
+            Display.CamLocatePanorama();
         }
         /// <summary>
         /// 打开
@@ -147,14 +155,12 @@ namespace FocusTree.UI.Forms
         {
             Display.Undo();
             main_Menu_edit_status_check();
-            Display.Invalidate();
         }
 
         private void main_Menu_edit_redo_Click(object sender, EventArgs e)
         {
             Display.Redo();
             main_Menu_edit_status_check();
-            Display.Invalidate();
         }
         /// <summary>
         /// 更新撤回和重做按钮是否可用的状态
@@ -198,8 +204,12 @@ namespace FocusTree.UI.Forms
 
         private void main_Menu_loc_camfocus_Click(object sender, EventArgs e)
         {
-            Display.LocateSelected();
-            Display.Invalidate();
+            Display.CamLocateSelected();
+        }
+        private void main_Menu_window_display_toolDialog_Click(object sender, EventArgs e)
+        {
+            var item = (ToolStripMenuItem)sender;
+            Display.ToolDialogs[item.Text].Show();
         }
     }
 }

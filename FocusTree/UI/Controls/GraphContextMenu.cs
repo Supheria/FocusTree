@@ -93,11 +93,11 @@ namespace FocusTree.UI.Controls
         }
         private void GraphCamReset(object sender, EventArgs args)
         {
-            Display.RelocateCenter();
+            Display.CamLocatePanorama();
         }
         private void GraphCamFocus(object sender, EventArgs args)
         {
-            Display.LocateSelected();
+            Display.CamLocateSelected();
             Display.Invalidate();
         }
         public void main_Menu_edit_status_check()
@@ -165,7 +165,7 @@ namespace FocusTree.UI.Controls
             // 
             pic_contextMenu_graph_camreset.Name = "main_contextMenu_graph_camreset";
             pic_contextMenu_graph_camreset.Size = new Size(180, 22);
-            pic_contextMenu_graph_camreset.Text = "重置相机位置";
+            pic_contextMenu_graph_camreset.Text = "全景";
             pic_contextMenu_graph_camreset.Click += GraphCamReset;
             // 
             // pic_contextMenu_graph_camfocus

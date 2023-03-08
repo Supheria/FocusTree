@@ -788,7 +788,6 @@
     </Node>
   </Nodes>
   <NodesRelations>
-    <Relation ID="1" />
     <Relation ID="2">
       <Require>1</Require>
     </Relation>

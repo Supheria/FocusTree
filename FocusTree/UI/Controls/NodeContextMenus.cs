@@ -12,8 +12,11 @@
         private ToolStripMenuItem pic_contextMenu_node_edit_link = new();
         private ToolStripMenuItem pic_contextMenu_node_remove = new();
         private ToolStripMenuItem pic_contextMenu_node_checkout = new();
+        private ToolStripMenuItem test = new();
         public NodeContextMenu(GraphBox display)
         {
+            
+            //MouseMove += NodeContextMenu_MouseMove;
             Display = display;
 
             //==== 添加 ====//
@@ -28,6 +31,11 @@
             pic_contextMenu_node_add.Name = "pic_contextMenu_node_add";
             pic_contextMenu_node_add.Size = new Size(180, 22);
             pic_contextMenu_node_add.Text = "添加";
+            pic_contextMenu_node_add.MergeIndex = 0;
+            //pic_contextMenu_node_add.MouseLeave += Leaved;
+            pic_contextMenu_node_add.MouseMove += ToolStripItemMouseMove;
+
+            //pic_contextMenu_node_add.ShowDropDown();
             // 
             // pic_contextMenu_node_add_parent
             //
@@ -54,6 +62,8 @@
             pic_contextMenu_node_edit.Name = "pic_contextMenu_node_edit";
             pic_contextMenu_node_edit.Size = new Size(180, 22);
             pic_contextMenu_node_edit.Text = "编辑";
+            pic_contextMenu_node_edit.MouseMove += ToolStripItemMouseMove;
+            pic_contextMenu_node_edit.MergeIndex = 1;
             // 
             // pic_contextMenu_node_edit_focus
             //
@@ -61,6 +71,9 @@
             pic_contextMenu_node_edit_focus.Size = new Size(180, 22);
             pic_contextMenu_node_edit_focus.Text = "国策";
             pic_contextMenu_node_edit_focus.Click += EditFocus;
+            pic_contextMenu_node_edit_focus.DropDownItems.Add("hello");
+            pic_contextMenu_node_edit_focus.MouseMove += ToolStripItemMouseMove;
+            pic_contextMenu_node_edit_focus.MergeIndex = 1;
             // 
             // pic_contextMenu_node_edit_requireGroup
             //
@@ -112,15 +125,88 @@
             }
         }
 
-        private void EditFocus(object sender, EventArgs args)
+        private void NodeContextMenu_MouseMove(object sender, MouseEventArgs args)
+        {
+            for (int i = 0; i < Items.Count; i++)
+            {
+                if (!(Items[i] is ToolStripMenuItem))
+                {
+                    continue;
+                }
+                var menuItem = Items[i] as ToolStripMenuItem;
+                
+                var point = new Point (args.Location.X, args.Location.Y);
+                var rects = GetItemRects(Items[i], i);
+                var a = GetItemRects(Items[i], i).TakeWhile(x => x.Contains(point)).Any();
+                if (GetItemRects(Items[i], i).TakeWhile(x => x.Contains(point)).Any())
+                {
+                    
+                    menuItem.ShowDropDown();
+                    rects.Remove(rects[0]);
+                    for (int j = 0; j < menuItem.DropDownItems.Count; j++)
+                    {
+                        showChild(menuItem.DropDownItems[j], args, j, rects);
+                    }
+                }
+                else
+                {
+                    menuItem.HideDropDown();
+                }
+                
+            }
+        }
+        private void showChild(object item, MouseEventArgs args, int index, List<Rectangle> rects)
+        {
+            var menuItem = item as ToolStripMenuItem;
+
+            var point = new Point(args.Location.X, args.Location.Y);
+            //var rects = GetItemRects(menuItem, index);
+            //var a = GetItemRects(menuItem, index).TakeWhile(x => x.Contains(point)).Any();
+            if (GetItemRects(menuItem, index).TakeWhile(x => x.Contains(point)).Any())
+            {
+
+                menuItem.ShowDropDown();
+                rects.Remove(rects[0]);
+                for (int j = 0; j < menuItem.DropDownItems.Count; j++)
+                {
+                    showChild(menuItem.DropDownItems[j], args, j, rects);
+                }
+            }
+            else
+            {
+                menuItem.HideDropDown();
+            }
+        }
+        private void ToolStripItemMouseMove(object sender, MouseEventArgs args)
+        {
+            var menuItem = sender as ToolStripMenuItem;
+            var e = new MouseEventArgs(args.Button, args.Clicks, args.X, args.Y + menuItem.Height * menuItem.MergeIndex, args.Delta);
+            NodeContextMenu_MouseMove(this, e);
+        }
+        private List<Rectangle> GetItemRects(ToolStripItem item, int index)
+        {
+            List<Rectangle> rects = new() { item.Bounds};
+            if (item is ToolStripMenuItem)
+            {
+                var menuItem = item as ToolStripMenuItem;
+                foreach(ToolStripItem subItem in menuItem.DropDownItems)
+                {
+                    var subRects = GetItemRects(subItem, index);
+                    subRects.ForEach(x => rects.Add(new(x.X + menuItem.Width, x.Y + menuItem.Height * index, x.Width, x.Height)));
+                }
+            }
+            return rects;
+        }
+
+        private void EditFocus(object sender, EventArgs e)
         {
             Display.ShowNodeInfo();
         }
-        private void NodeRemove(object sender, EventArgs args)
+        private void NodeRemove(object sender, EventArgs e)
         {
             Display.RemoveNode();
         }
-        private void NodeCheckOut(object sender, EventArgs args)
+        private void NodeCheckOut(object sender, EventArgs e)
         {
             Display.ShowNodeInfo();
         }

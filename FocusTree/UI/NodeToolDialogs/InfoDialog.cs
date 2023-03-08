@@ -1,13 +1,10 @@
 ﻿using FocusTree.UI.Controls;
 using FocusTree.UITool;
 
-namespace FocusTree.UI.Forms
+namespace FocusTree.UI.NodeToolDialogs
 {
-    public partial class InfoDialog : Form
+    public partial class InfoDialog : NodeToolDialog
     {
-        GraphBox Display;
-        public bool ReadOnly;
-        public Point Position;
         /// <summary>
         /// 节点信息对话框
         /// </summary>
@@ -61,7 +58,27 @@ namespace FocusTree.UI.Forms
             //（还要考虑越界情况）
 
             btnEvent.Text = Display.ReadOnly ? "开始" : "保存";
+            UpdateStatus();
+        }
 
+        private void UpdateStatus()
+        {
+            if(Display.ReadOnly)
+            {
+                AllowDrop = false;
+                txtDuration.ReadOnly = true;
+                txtRequire.ReadOnly = true;
+                txtDescript.ReadOnly = true;
+                txtEffects.ReadOnly = true;
+            }
+            else
+            {
+                AllowDrop = true;
+                txtDuration.ReadOnly = false;
+                txtRequire.ReadOnly = false;
+                txtDescript.ReadOnly = false;
+                txtEffects.ReadOnly = false;
+            }
         }
         /// <summary>
         /// 将关闭窗体设置为隐藏窗体
@@ -77,13 +94,9 @@ namespace FocusTree.UI.Forms
         #region ==== 控件事件 ====
         private void btnEvent_Click(object sender, EventArgs e)
         {
-            if (Display.SelectedNode == null)
+            if (Display.ReadOnly)
             {
-                return;
-            }
-            if (ReadOnly)
-            {
-                EventShow();
+                EventReadOnly();
             }
             else
             {
@@ -93,12 +106,12 @@ namespace FocusTree.UI.Forms
         /// <summary>
         /// 作为展示对话框
         /// </summary>
-        private void EventShow()
+        private void EventReadOnly()
         {
 
         }
         /// <summary>
-        /// 作为修改对话框
+        /// 作为可编辑对话框
         /// </summary>
         private void EventEdit()
         {
@@ -106,12 +119,5 @@ namespace FocusTree.UI.Forms
         }
 
         #endregion
-
-        public void Show(Point pos)
-        {
-            Invalidate();
-            base.Show();
-            Location = pos;
-        }
     }
 }
