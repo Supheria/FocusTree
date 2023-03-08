@@ -51,7 +51,7 @@ namespace FocusTree.UI.Forms
             {
                 return;
             }
-            var focusData = Display.Graph.NodesCatalog[Display.SelectedNode.Value];
+            var focusData = Display.GetSelectedNodeData();
             Text = focusData.Name + $" (ID: {focusData.ID})";
             txtDuration.Text = $"{focusData.Duration}日";
             txtDescript.Text = focusData.Descript;

@@ -1,4 +1,4 @@
-﻿using FocusTree.Data;
+using FocusTree.Data;
 using FocusTree.IO;
 using System.Numerics;
 using FocusTree.UI.Forms;
@@ -101,7 +101,7 @@ namespace FocusTree.UI.Controls
         public FocusGraph Graph
         {
             get { return graph; }
-            set
+            private set
             {
                 graph = value;
                 OriginalGraph = value.Serialize();
@@ -251,24 +251,25 @@ namespace FocusTree.UI.Controls
             Image ??= new Bitmap(Size.Width, Size.Height);
             var g = Graphics.FromImage(Image);
 
-            foreach (var node in Graph.NodesCatalog)
+            var enumer = Graph.GetNodesDataEnumerator();
+            while (enumer.MoveNext())
             {
-                var name = node.Value.Name;
-                var rect = NodeDrawingRect(node.Key);
+                var name = enumer.Current.Value.Name;
+                var rect = NodeDrawingRect(enumer.Current.Key);
                 var font = new Font(NodeFont, 10 * GScale, FontStyle.Bold, GraphicsUnit.Pixel);
 
                 if (IsRectVisible(rect))
                 {
-                    if (IsNodeConflict(node.Key))
+                    if (IsNodeConflict(enumer.Current.Key))
                     {
                         SolidBrush BG = new(Color.FromArgb(80, Color.Red));
                         g.FillRectangle(BG, rect);
                     }
-                    else if (node.Key == SelectingNode)
+                    else if (enumer.Current.Key == SelectingNode)
                     {
                         g.FillRectangle(NodeBG_Selecting, rect);
                     }
-                    else if (node.Key == SelectedNode)
+                    else if (enumer.Current.Key == SelectedNode)
                     {
                         g.FillRectangle(NodeBG_Selected, rect);
                     }
@@ -286,13 +287,14 @@ namespace FocusTree.UI.Controls
         /// <summary>
         /// 判断有无节点冲突
         /// </summary>
-        /// <param name="nodeKey"></param>
+        /// <param name="id">节点ID</param>
         /// <returns></returns>
-        private bool IsNodeConflict(int nodeKey)
+        private bool IsNodeConflict(int id)
         {
-            foreach (var meta in Graph.MetaPoints)
+            var enumer = Graph.GetMetaPointsEnumerator();
+            while (enumer.MoveNext())
             {
-                if (nodeKey != meta.Key && Graph.MetaPoints[nodeKey] == meta.Value)
+                if (id != enumer.Current.Key && Graph.GetMetaPoint(id) == enumer.Current.Value)
                 {
                     return true;
                 }
@@ -304,12 +306,13 @@ namespace FocusTree.UI.Controls
             Image ??= new Bitmap(Size.Width, Size.Height);
             var g = Graphics.FromImage(Image);
 
-            foreach (var meta in Graph.MetaPoints)
+            var enumer = Graph.GetMetaPointsEnumerator();
+            while (enumer.MoveNext())
             {
-                var id = meta.Key;
+                var id = enumer.Current.Key;
                 var rect = NodeDrawingRect(id);
                 // 这里应该去连接依赖的节点，而不是去对子节点连接
-                var requireGroups = Graph.GetNodeRequireGroups(id);
+                var requireGroups = Graph.GetRequireGroups(id);
                 // 对于根节点，requires 为 null
                 if (requireGroups == null) 
                 { 
@@ -474,7 +477,7 @@ namespace FocusTree.UI.Controls
             var node = PointInAnyNodeDrawingRect(location);
             if (node != null)
             {
-                NodeInfoTip.Show($"{Graph.NodesCatalog[node.Value].Name}\nID: {node.Value}", this, location.X + 10, location.Y);
+                NodeInfoTip.Show($"{Graph.GetNodeData(node.Value).Name}\nID: {node.Value}", this, location.X + 10, location.Y);
             }
             else
             {
@@ -582,12 +585,13 @@ namespace FocusTree.UI.Controls
             {
                 return null;
             }
-            foreach (var nodeKey in Graph.MetaPoints.Keys)
+
+            foreach (var id in Graph.IdList)
             {
-                var rect = NodeDrawingRect(nodeKey);
+                var rect = NodeDrawingRect(id);
                 if (rect.Contains(location))
                 {
-                    return nodeKey;
+                    return id;
                 }
             }
             return null;
@@ -597,9 +601,9 @@ namespace FocusTree.UI.Controls
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
-        private RectangleF NodeDrawingRect(int node)
+        private RectangleF NodeDrawingRect(int id)
         {
-            var rect = new RectangleF(MetaPointToCanvasPoint(Graph.MetaPoints[node]), NodeSize);
+            var rect = new RectangleF(MetaPointToCanvasPoint(Graph.GetMetaPoint(id)), NodeSize);
             return CanvasRectToDrawingRect(rect);
         }
         /// <summary>
@@ -646,7 +650,7 @@ namespace FocusTree.UI.Controls
                 RelocateCenter();
                 return;
             }
-            var point = Graph.MetaPoints[selectedNode.Value];
+            var point = Graph.GetMetaPoint(selectedNode.Value);
             var canvasPoint = MetaPointToCanvasPoint(point);
             DrawingCenter = new(canvasPoint.X + NodeSize.Width / 2, canvasPoint.Y + NodeSize.Height / 2);
             DrawGraph();
@@ -744,6 +748,10 @@ namespace FocusTree.UI.Controls
             GraphHistory.Enqueue(Graph);
             SelectedNode = null;
             DrawGraph();
+        }
+        public FocusData GetSelectedNodeData()
+        {
+            return Graph.GetNodeData(SelectedNode.Value);
         }
 
         #endregion

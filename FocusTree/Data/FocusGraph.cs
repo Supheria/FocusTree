@@ -1,9 +1,10 @@
 using System.Numerics;
 using System.Text;
 using System.Xml;
+using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TreeView;
+using static System.Windows.Forms.LinkLabel;
 
 namespace FocusTree.Data
 {
@@ -20,22 +21,26 @@ namespace FocusTree.Data
 
         #region ---- 基本变量 ----
 
+        public List<int> IdList
+        {
+            get { return NodesCatalog.Keys.ToList(); }
+        }
         /// <summary>
         /// 以 ID 作为 Key 的所有节点
         /// </summary>
-        internal Dictionary<int, FocusData> NodesCatalog { get; private set; }
+        Dictionary<int, FocusData> NodesCatalog;
         /// <summary>
         /// 节点依赖的节点组合
         /// </summary>
-        internal Dictionary<int, List<HashSet<int>>> RequireGroups { get; private set; }
+        Dictionary<int, List<HashSet<int>>> RequireGroups;
         /// <summary>
         /// 节点的子链接 (自动生成) (父节点, 多个子节点)
         /// </summary>
-        internal Dictionary<int, HashSet<int>> ChildLinkes { get; private set; }
+        Dictionary<int, HashSet<int>> ChildLinkes;
         /// <summary>
         /// 节点显示位置
         /// </summary>
-        internal Dictionary<int, Point> MetaPoints { get; private set; }
+        Dictionary<int, Point> MetaPoints;
 
         #endregion
 
@@ -51,19 +56,6 @@ namespace FocusTree.Data
 
         #region ---- 节点操作 ----
 
-        /// <summary>
-        /// 用ID读取节点 O(1)
-        /// </summary>
-        /// <param name="id">ID</param>
-        /// <returns>节点数据</returns>
-        public FocusData GetNode(int id)
-        {
-            if (NodesCatalog.TryGetValue(id, out FocusData focusData) == false)
-            {
-                throw new Exception($"[2303031200]异常：无法获取节点 - NodesCatalog 未包含 ID = {id} 的节点。");
-            }
-            return focusData;
-        }
         /// <summary>
         /// 添加节点 O(1)，绘图时记得重新调用 GetNodeMap
         /// </summary>
@@ -142,27 +134,6 @@ namespace FocusTree.Data
                 }
             }
             return result;
-        }
-        /// <summary>
-        /// 获取节点所依赖的节点组合  O(1)
-        /// </summary>
-        /// <param name="id">节点id</param>
-        /// <returns>依赖关系列表</returns>
-        /// <summary>
-        public List<HashSet<int>> GetNodeRequireGroups(int id)
-        {
-            RequireGroups.TryGetValue(id, out List<HashSet<int>> requireGroups);
-            return requireGroups;
-        }
-        /// <summary>
-        /// 获取依赖于节点的节点（不含分组关系） O(1)
-        /// </summary>
-        /// <param name="id">节点id</param>
-        /// <returns>连接的节点</returns>
-        public HashSet<int> GetNodeChildLinkes(int id)
-        {
-            ChildLinkes.TryGetValue(id, out HashSet<int> childLinkes);
-            return childLinkes;
         }
 
         #endregion
@@ -279,25 +250,26 @@ namespace FocusTree.Data
             {
                 for (int x = 0; x < width; x++)
                 {
-                    if (y < branches[x].Length)
+                    if (y >= branches[x].Length)
                     {
-                        var node = branches[x][y];
-                        if (nodeCoordinates.ContainsKey(node))
-                        {
-                            nodeCoordinates[node][0] = nodeCoordinates[node][0] < x ? nodeCoordinates[node][0] : x;
-                            nodeCoordinates[node][1] = nodeCoordinates[node][1] > x ? nodeCoordinates[node][1] : x;
-                            nodeCoordinates[node][2] = nodeCoordinates[node][2] > y ? nodeCoordinates[node][2] : y;
-                        }
-                        else
-                        {
-                            nodeCoordinates.Add(node, new List<int>());
-                            // 起始x, [0]
-                            nodeCoordinates[node].Add(x);
-                            // 终止x, [1]
-                            nodeCoordinates[node].Add(x);
-                            // y, [2]
-                            nodeCoordinates[node].Add(y);
-                        }
+                        continue;
+                    }
+                    var node = branches[x][y];
+                    if (nodeCoordinates.ContainsKey(node))
+                    {
+                        nodeCoordinates[node][0] = nodeCoordinates[node][0] < x ? nodeCoordinates[node][0] : x;
+                        nodeCoordinates[node][1] = nodeCoordinates[node][1] > x ? nodeCoordinates[node][1] : x;
+                        nodeCoordinates[node][2] = nodeCoordinates[node][2] > y ? nodeCoordinates[node][2] : y;
+                    }
+                    else
+                    {
+                        nodeCoordinates.Add(node, new List<int>());
+                        // 起始x, [0]
+                        nodeCoordinates[node].Add(x);
+                        // 终止x, [1]
+                        nodeCoordinates[node].Add(x);
+                        // y, [2]
+                        nodeCoordinates[node].Add(y);
                     }
                 }
             }
@@ -327,8 +299,8 @@ namespace FocusTree.Data
                 xMetaPoints[x].Add(nodePoint.Key, nodePoint.Value);
             }
             var blank = 0;
-            var width = MetaPoints.Max(x => x.Value.Y);
-            for (int x = 0; x < width; x++)
+            var width = MetaPoints.Max(x => x.Value.X);
+            for (int x = 0; x <= width; x++)
             {
                 if (xMetaPoints.ContainsKey(x))
                 {
@@ -550,7 +522,7 @@ namespace FocusTree.Data
 
         #endregion
 
-        #region ---- 其它工具 ----
+        #region ---- 历史和备份工具 ----
 
         public (string, string) Serialize()
         {
@@ -570,6 +542,49 @@ namespace FocusTree.Data
        {
             return Serialize() == other.Serialize();
        }
+
+        #endregion
+
+        #region ---- 变量获取器 ----
+
+        public FocusData GetNodeData(int id)
+        {
+            NodesCatalog.TryGetValue(id, out var focusData);
+            return focusData;
+        }
+        public List<HashSet<int>> GetRequireGroups(int id)
+        {
+            RequireGroups.TryGetValue(id, out var groupList);
+            return groupList;
+        }
+        public HashSet<int> GetChildLinks(int id)
+        {
+            ChildLinkes.TryGetValue(id, out var childLinks);
+            return childLinks;
+        }
+        public Point GetMetaPoint(int id)
+        {
+            MetaPoints.TryGetValue(id, out var metaPoint);
+            {
+                return metaPoint;
+            }
+        }
+        public IEnumerator<KeyValuePair<int, FocusData>> GetNodesDataEnumerator()
+        {
+            return NodesCatalog.GetEnumerator();
+        }
+        public IEnumerator<KeyValuePair<int, List<HashSet<int>>>> GetRequireGroupsEnumerator()
+        {
+            return RequireGroups.GetEnumerator();
+        }
+        public IEnumerator<KeyValuePair<int, HashSet<int>>> GetChildLinksEnumerator() 
+        { 
+            return ChildLinkes.GetEnumerator(); 
+        }
+        public IEnumerator<KeyValuePair<int, Point>> GetMetaPointsEnumerator() 
+        { 
+            return MetaPoints.GetEnumerator(); 
+        }
 
         #endregion
     }
