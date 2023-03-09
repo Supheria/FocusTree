@@ -1,6 +1,7 @@
 ﻿using FocusTree.Data;
 using FocusTree.IO;
 using FocusTree.UI.Controls;
+using FocusTree.UITool;
 
 namespace FocusTree.UI
 {
@@ -11,9 +12,10 @@ namespace FocusTree.UI
         {
             Display = new GraphBox(this);
             InitializeComponent();
-            //main_StatusStrip_filename.Text = "等待打开文件";
+            main_StatusStrip_filename.Text = "等待打开文件";
             main_StatusStrip_status.Text = "";
             main_Openfile.FileName = "";
+            ResizeForm.SetTag(this);
 
             foreach (var name in Display.ToolDialogs.Keys)
             {
@@ -36,7 +38,7 @@ namespace FocusTree.UI
         {
             if (Display.Graph != null && Display.GraphEdited)
             {
-                if (MessageBox.Show("要放弃当前的更改吗？", "提示", MessageBoxButtons.YesNo) == DialogResult.No)
+                if (MessageBox.Show("要放弃当前的更改吗？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No)
                 {
                     return;
                 }
@@ -204,7 +206,6 @@ namespace FocusTree.UI
                 main_StatusStrip_filename.Text = "就绪";
                 main_StatusStrip_status.Text = "";
             }
-            Invalidate();
         }
 
         private void main_Menu_loc_camfocus_Click(object sender, EventArgs e)
@@ -215,6 +216,15 @@ namespace FocusTree.UI
         {
             var item = (ToolStripMenuItem)sender;
             Display.ToolDialogs[item.Text].Show();
+        }
+
+        private void MainForm_SizeChanged(object sender, EventArgs e)
+        {
+            var ratioVec = ResizeForm.GetRatio(this);
+            var ratio = Width < Height ? ratioVec.X : ratioVec.Y;
+            //ResizeForm.SetTag(this);
+
+            //Display.ChangeSize(ratio);
         }
     }
 }

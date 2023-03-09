@@ -33,7 +33,7 @@ namespace FocusTree.UI.NodeToolDialogs
 
         private void InfoDialog_SizeChanged(object sender, EventArgs e)
         {
-            ResizeForm.ResizeControls(this);
+            ResizeForm.Resize(this);
         }
         #region ==== 窗体方法 ====
         /// <summary>

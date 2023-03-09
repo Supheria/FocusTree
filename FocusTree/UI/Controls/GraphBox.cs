@@ -4,6 +4,7 @@ using System.Numerics;
 using FocusTree.UI.NodeToolDialogs;
 using System.Drawing;
 using static System.ComponentModel.Design.ObjectSelectorEditor;
+using FocusTree.UITool;
 
 namespace FocusTree.UI.Controls
 {
@@ -190,7 +191,7 @@ namespace FocusTree.UI.Controls
 
         //===== 方法 =====//
 
-        #region ---- 初始化 ----
+        #region ---- 初始化和更新 ----
 
         public GraphBox(MainForm mainForm)
         {
@@ -198,8 +199,9 @@ namespace FocusTree.UI.Controls
             NodeInfo = new InfoDialog(this);
             NodeFontFormat.Alignment = StringAlignment.Center;
             NodeFontFormat.LineAlignment = StringAlignment.Center;
-            SizeMode = PictureBoxSizeMode.Zoom;
+            //SizeMode = PictureBoxSizeMode.Zoom;
             Dock = DockStyle.Fill;
+            DoubleBuffered = true;
 
             SizeChanged += OnSizeChanged;
             MouseDown += OnMouseDown;
@@ -207,8 +209,26 @@ namespace FocusTree.UI.Controls
             MouseUp += OnMouseUp;
             MouseWheel += OnMouseWheel;
             MouseDoubleClick += OnMouseDoubleClick;
-            Paint += DrawGraph;
+            Invalidated += UpdateGraph;
         }
+        private void UpdateGraph(object sender, EventArgs e)
+        {
+            if (Graph == null)
+            {
+                return;
+            }
+            DrawNodeMap();
+            DrawInfo($"节点数量：{Graph.NodesCount}，分支数量：{Graph.BranchesCount}",
+                new Rectangle(Bounds.Left, Bounds.Bottom - 88, Bounds.Width, 35),
+                new Font(NodeFont, 25, FontStyle.Bold, GraphicsUnit.Pixel),
+                new SolidBrush(Color.FromArgb(160, Color.DarkGray)),
+                new SolidBrush(Color.FromArgb(255, Color.WhiteSmoke))
+                );
+            Parent.UpdateText();
+
+            Update();
+        }
+
         #endregion
 
         #region ---- 绘图 ----
@@ -282,41 +302,7 @@ namespace FocusTree.UI.Controls
                 }
             }
         }
-        private void DrawInfo(string info)
-        {
-            if (Graph == null)
-            {
-                return;
-            }
-            Image ??= new Bitmap(Size.Width, Size.Height);
-            var g = Graphics.FromImage(Image);
 
-            var infoRect = new Rectangle(Bounds.Left, Bounds.Bottom - 100, Bounds.Width, 56);
-            var infoFont = new Font(NodeFont, 25, FontStyle.Bold, GraphicsUnit.Pixel);
-
-            g.FillRectangle(new SolidBrush(Color.FromArgb(160, Color.DarkGray)), infoRect);
-            g.DrawString(
-                info, 
-                infoFont, 
-                new SolidBrush(Color.FromArgb(255, Color.WhiteSmoke)), 
-                infoRect,
-                NodeFontFormat);
-
-            g.Flush();
-            g.Dispose();
-        }
-        private void DrawGraph(object sender, EventArgs e)
-        {
-            if (Graph == null)
-            {
-                return;
-            }
-            DrawNodeMap();
-            DrawInfo($"节点数量：{Graph.NodesCount}，分支数量：{Graph.BranchesCount}");
-            Parent.UpdateText();
-
-            Invalidate();
-        }
         /// <summary>
         /// 判断有无节点冲突
         /// </summary>
@@ -334,6 +320,46 @@ namespace FocusTree.UI.Controls
             }
             return false;
         }
+        private void DrawInfo(string info, Rectangle infoRect, Font infoFont, Brush BackBrush, Brush FontBrush)
+        {
+            if (Graph == null)
+            {
+                return;
+            }
+            Image ??= new Bitmap(Size.Width, Size.Height);
+            var g = Graphics.FromImage(Image);
+
+            g.FillRectangle(BackBrush, infoRect);
+            g.DrawString(
+                info,
+                infoFont,
+                FontBrush,
+                infoRect,
+                NodeFontFormat);
+
+            g.Flush();
+            g.Dispose();
+        }
+        private void DrawInfo(string info)
+        {
+            if (Graph == null)
+            {
+                return;
+            }
+            DrawNodeMap();
+            Invalidated -= UpdateGraph;
+
+            DrawInfo(info,
+                new Rectangle(Bounds.Left, Bounds.Bottom - 100, Bounds.Width, 66),
+                new Font(NodeFont, 25, FontStyle.Bold, GraphicsUnit.Pixel),
+                new SolidBrush(Color.FromArgb(160, Color.DarkGray)),
+                new SolidBrush(Color.FromArgb(255, Color.WhiteSmoke))
+                );
+
+            Invalidate();
+            Invalidated += UpdateGraph;
+        }
+        
 
         #endregion
 
@@ -346,16 +372,17 @@ namespace FocusTree.UI.Controls
 
         private void OnSizeChanged(object sender, EventArgs args)
         {
-            if (Graph == null)
+            if (Graph == null || Math.Min(Size.Width, Size.Height) < 0)
             {
                 return;
             }
 
-            if (Parent.WindowState != FormWindowState.Minimized)
-            {
-                Image = new Bitmap(Size.Width, Size.Height);
-                Invalidate();
-            }
+            var ratioVec = ResizeForm.GetRatio(Parent);
+            var ratio = Width < Height ? ratioVec.X : ratioVec.Y;
+            ResizeForm.SetTag(Parent, false);
+            Image = new Bitmap(Size.Width, Size.Height);
+            GScale = GScale * ratio;
+            Invalidate();
         }
 
         //---- OnMouseDown ----//
@@ -414,7 +441,6 @@ namespace FocusTree.UI.Controls
         private void NodeRightClicked()
         {
             SelectedNode = SelectingNode;
-            Invalidate();
             PicNodeContextMenu = new NodeContextMenu(this);
             PicNodeContextMenu.Show(Cursor.Position);
             Invalidate();
@@ -429,7 +455,11 @@ namespace FocusTree.UI.Controls
             var point = new Point(Bounds.X + Bounds.Width / 2, Bounds.Y + Bounds.Height / 2);
             Cursor.Position = Parent.PointToScreen(point);
             NodeInfoTip.Hide(this);
+            var data = Graph.GetNodeData(id);
+            var info = $"{data.Name}, {data.Duration}日\n{data.Descript}";
+            
             Invalidate();
+            DrawInfo(info);
         }
         //---- OnMouseDoubleClick ----//
 
@@ -498,7 +528,7 @@ namespace FocusTree.UI.Controls
 
                 DrawingCenter -= difvec;
                 DragMousePoint = newPoint;
-                //Invalidate();
+                Invalidate();
             }
         }
         private void ShowNodeInfoTip(Point location)
@@ -583,9 +613,9 @@ namespace FocusTree.UI.Controls
                 rect.Height * GScale
                 );
         }
-        private PointF CanvasPointToDrawingPoint(PointF point)
+        private Vector2 CanvasPointToDrawingPoint(Vector2 point)
         {
-            return new PointF(
+            return new Vector2(
                 (point.X - DrawingCenter.X) * GScale + Width / 2,
                 (point.Y - DrawingCenter.Y) * GScale + Height / 2
                 );
@@ -595,28 +625,13 @@ namespace FocusTree.UI.Controls
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
-        private PointF MetaPointToCanvasPoint(Point point)
-        {
-            return new PointF(
-                point.X * MetaOrdinateCanvasUnit.X,
-                point.Y * MetaOrdinateCanvasUnit.Y
-                );
-        }
-        private Vector2 MetaPointToCanvasPoint(PointF point)
+        private Vector2 MetaPointToCanvasPoint(Vector2 point)
         {
             return new Vector2(
                 point.X * MetaOrdinateCanvasUnit.X,
                 point.Y * MetaOrdinateCanvasUnit.Y
                 );
         }
-        private SizeF MetaSizeToCanvasSize(Size size)
-        {
-            return new SizeF(
-                size.Width * MetaOrdinateCanvasUnit.X,
-                size.Height * MetaOrdinateCanvasUnit.Y
-                );
-        }
-
         private SizeF MetaSizeToCanvasSize(SizeF size)
         {
             return new SizeF(
@@ -653,7 +668,8 @@ namespace FocusTree.UI.Controls
         /// <returns></returns>
         private RectangleF NodeDrawingRect(int id)
         {
-            var rect = new RectangleF(MetaPointToCanvasPoint(Graph.GetMetaPoint(id)), NodeSize);
+            var point = MetaPointToCanvasPoint(Graph.GetMetaPoint(id));
+            var rect = new RectangleF(new(point.X, point.Y), NodeSize);
             return CanvasRectToDrawingRect(rect);
         }
         /// <summary>
@@ -685,7 +701,7 @@ namespace FocusTree.UI.Controls
             float py = Size.Height / canvasSize.Height;
 
             // 我也不知道为什么这里要 *0.90，直接放结果缩放的尺寸会装不下，*0.90 能放下，而且边缘有空余
-            GScale = Math.Min(px, py) * 0.90f;
+            GScale = MathF.Min(px, py);
         }
         /// <summary>
         /// 缩放居中至节点
@@ -838,7 +854,7 @@ namespace FocusTree.UI.Controls
         public void DrawingFreeze()
         {
             DrawNodeMap();
-            Paint -= DrawGraph;
+            Invalidated -= UpdateGraph;
             SizeChanged -= OnSizeChanged;
             MouseDown -= OnMouseDown;
             MouseMove -= OnMouseMove;
@@ -859,16 +875,13 @@ namespace FocusTree.UI.Controls
             MouseUp += OnMouseUp;
             MouseWheel += OnMouseWheel;
             MouseDoubleClick += OnMouseDoubleClick;
-            Paint += DrawGraph;
+            Invalidated += UpdateGraph;
             Invalidate();
         }
-
         public void DrawAddtionalInfo(string info)
         {
-            Paint -= DrawGraph;
-            DrawNodeMap();
-            DrawInfo(info);
             Invalidate();
+            DrawInfo(info);
         }
 
         #endregion

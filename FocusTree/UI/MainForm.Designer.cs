@@ -234,14 +234,14 @@ namespace FocusTree.UI
             // main_Menu_loc_camreset
             // 
             this.main_Menu_loc_camreset.Name = "main_Menu_loc_camreset";
-            this.main_Menu_loc_camreset.Size = new System.Drawing.Size(148, 22);
+            this.main_Menu_loc_camreset.Size = new System.Drawing.Size(100, 22);
             this.main_Menu_loc_camreset.Text = "全景";
             this.main_Menu_loc_camreset.Click += new System.EventHandler(this.main_Menu_loc_camreset_Click);
             // 
             // main_Menu_loc_camfocus
             // 
             this.main_Menu_loc_camfocus.Name = "main_Menu_loc_camfocus";
-            this.main_Menu_loc_camfocus.Size = new System.Drawing.Size(148, 22);
+            this.main_Menu_loc_camfocus.Size = new System.Drawing.Size(100, 22);
             this.main_Menu_loc_camfocus.Text = "聚焦";
             this.main_Menu_loc_camfocus.Click += new System.EventHandler(this.main_Menu_loc_camfocus_Click);
             // 
@@ -256,7 +256,7 @@ namespace FocusTree.UI
             // main_Menu_node_add
             // 
             this.main_Menu_node_add.Name = "main_Menu_node_add";
-            this.main_Menu_node_add.Size = new System.Drawing.Size(180, 22);
+            this.main_Menu_node_add.Size = new System.Drawing.Size(136, 22);
             this.main_Menu_node_add.Text = "添加新节点";
             // 
             // main_Menu_window
@@ -275,6 +275,7 @@ namespace FocusTree.UI
             this.MainMenuStrip = this.main_Menu;
             this.Name = "MainForm";
             this.Text = "MainForm";
+            this.SizeChanged += new System.EventHandler(this.MainForm_SizeChanged);
             this.main_StatusStrip.ResumeLayout(false);
             this.main_StatusStrip.PerformLayout();
             this.main_Menu.ResumeLayout(false);

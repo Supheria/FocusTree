@@ -193,6 +193,18 @@ namespace FocusTree.UI.Controls
                 pic_contextMenu_graph_camfocus
                 });
             Invalidated += main_Menu_edit_status_check;
+            this.Closed += GraphContextMenu_Closed;
+        }
+
+        private void GraphContextMenu_Closed(object sender, ToolStripDropDownClosedEventArgs e)
+        {
+            //Display.DrawingDefreeze();
+        }
+
+        public new void Show(Point location)
+        {
+            //Display.DrawingFreeze();
+            base.Show(location);
         }
     }
 }

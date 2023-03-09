@@ -136,7 +136,7 @@ namespace FocusTree.UI.Controls
             //    ["添加"] = GetMenuItemRange(menuItem_add),
             //    ["编辑"] = GetMenuItemRange(menuItem_edit)
             //};
-            this.Closed += NodeContextMenu_Closed; ;
+            this.Closed += NodeContextMenu_Closed;
         }
 
         private void MenuItem_edit_focus_MouseMove(object sender, MouseEventArgs e)
@@ -146,7 +146,7 @@ namespace FocusTree.UI.Controls
 
         private void NodeContextMenu_Closed(object sender, ToolStripDropDownClosedEventArgs e)
         {
-            Display.DrawingDefreeze();
+            //Display.DrawingDefreeze();
         }
 
         private void EditFocus(object sender, EventArgs e)
@@ -163,12 +163,9 @@ namespace FocusTree.UI.Controls
         }
         public new void Show(Point location)
         {
-            LocationOnScreen = location;
-            
-            var a = location.ToString();
-            Display.DrawingFreeze();
+            //Display.DrawingFreeze();
             var data = Display.GetSelectedNodeData();
-            var info = $"{data.Name}, {data.ID}";
+            var info = $"{data.Name}, {data.Duration}日\n{data.Descript}";
             Display.DrawAddtionalInfo(info);
             base.Show(location);
         }

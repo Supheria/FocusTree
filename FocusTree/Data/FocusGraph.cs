@@ -40,7 +40,7 @@ namespace FocusTree.Data
         /// <summary>
         /// 节点显示位置
         /// </summary>
-        Dictionary<int, Point> MetaPoints;
+        Dictionary<int, Vector2> MetaPoints;
 
         #endregion
 
@@ -277,7 +277,7 @@ namespace FocusTree.Data
             foreach (var coordinate in nodeCoordinates)
             {
                 var x = coordinate.Value[0] + (coordinate.Value[1] - coordinate.Value[0]) / 2;
-                var point = new Point(x, coordinate.Value[2]);
+                var point = new Vector2(x, coordinate.Value[2]);
                 MetaPoints[coordinate.Key] = point;
             }
         }
@@ -288,13 +288,13 @@ namespace FocusTree.Data
         /// <returns></returns>
         private void CleanBlanksForX()
         {
-            Dictionary<int, Dictionary<int, Point>> xMetaPoints = new();
+            Dictionary<float, Dictionary<int, Vector2>> xMetaPoints = new();
             foreach (var nodePoint in MetaPoints)
             {
                 var x = nodePoint.Value.X;
                 if (xMetaPoints.ContainsKey(x) == false)
                 {
-                    xMetaPoints.Add(x, new Dictionary<int, Point>());
+                    xMetaPoints.Add(x, new Dictionary<int, Vector2>());
                 }
                 xMetaPoints[x].Add(nodePoint.Key, nodePoint.Value);
             }
@@ -306,7 +306,7 @@ namespace FocusTree.Data
                 {
                     foreach (var nodePoint in xMetaPoints[x])
                     {
-                        var point = new Point(nodePoint.Value.X - blank, nodePoint.Value.Y);
+                        var point = new Vector2(nodePoint.Value.X - blank, nodePoint.Value.Y);
                         MetaPoints[nodePoint.Key] = point;
                     }
                 }
@@ -320,7 +320,7 @@ namespace FocusTree.Data
         /// 全图的元中心坐标和元尺寸
         /// </summary>
         /// <returns></returns>
-        public (PointF, SizeF) CenterMetaData()
+        public (Vector2, SizeF) CenterMetaData()
         {
             bool first = true;
             var bounds = new RectangleF();
@@ -340,7 +340,7 @@ namespace FocusTree.Data
                 }
             }
             return (
-                new PointF((bounds.X + bounds.Width) / 2, (bounds.Y + bounds.Height) / 2),
+                new Vector2((bounds.X + bounds.Width) / 2, (bounds.Y + bounds.Height) / 2),
                 new SizeF(bounds.Width - bounds.X + 1, bounds.Height - bounds.Y + 1)
                 );
         }
@@ -574,7 +574,7 @@ namespace FocusTree.Data
             ChildLinkes.TryGetValue(id, out var childLinks);
             return childLinks;
         }
-        public Point GetMetaPoint(int id)
+        public Vector2 GetMetaPoint(int id)
         {
             MetaPoints.TryGetValue(id, out var metaPoint);
             {
@@ -593,7 +593,7 @@ namespace FocusTree.Data
         { 
             return ChildLinkes.GetEnumerator(); 
         }
-        public IEnumerator<KeyValuePair<int, Point>> GetMetaPointsEnumerator() 
+        public IEnumerator<KeyValuePair<int, Vector2>> GetMetaPointsEnumerator() 
         { 
             return MetaPoints.GetEnumerator(); 
         }
