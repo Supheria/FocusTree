@@ -11,7 +11,7 @@ namespace FocusTree.UI
         {
             Display = new GraphBox(this);
             InitializeComponent();
-            main_StatusStrip_filename.Text = "等待打开文件";
+            //main_StatusStrip_filename.Text = "等待打开文件";
             main_StatusStrip_status.Text = "";
             main_Openfile.FileName = "";
 
@@ -36,7 +36,7 @@ namespace FocusTree.UI
         {
             if (Display.Graph != null && Display.GraphEdited)
             {
-                if (MessageBox.Show("要放弃当前的更改吗？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Warning,MessageBoxDefaultButton.Button2) == DialogResult.No)
+                if (MessageBox.Show("要放弃当前的更改吗？", "提示", MessageBoxButtons.YesNo) == DialogResult.No)
                 {
                     return;
                 }
@@ -186,20 +186,25 @@ namespace FocusTree.UI
             {
                 Text = "国策树";
                 main_StatusStrip_filename.Text = "未加载";
+                main_StatusStrip_status.Text = "";
             }
             Text = Display.FileName;
             if(Display.ReadOnly)
             {
                 main_StatusStrip_filename.Text = "正在预览";
+                main_StatusStrip_status.Text = "";
             }
             else if (Display.GraphEdited)
             {
                 main_StatusStrip_filename.Text = "正在编辑";
+                main_StatusStrip_status.Text = "";
             }
             else
             {
                 main_StatusStrip_filename.Text = "就绪";
+                main_StatusStrip_status.Text = "";
             }
+            Invalidate();
         }
 
         private void main_Menu_loc_camfocus_Click(object sender, EventArgs e)
