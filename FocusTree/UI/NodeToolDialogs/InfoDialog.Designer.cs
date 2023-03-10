@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             this.pcbIcon = new System.Windows.Forms.PictureBox();
-            this.txtDuration = new System.Windows.Forms.TextBox();
             this.btnEvent = new System.Windows.Forms.Button();
             this.txtRequire = new System.Windows.Forms.TextBox();
             this.txtDescript = new System.Windows.Forms.TextBox();
             this.lblEffects = new System.Windows.Forms.Label();
             this.txtEffects = new System.Windows.Forms.TextBox();
+            this.txtDuration = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pcbIcon)).BeginInit();
             this.SuspendLayout();
             // 
@@ -45,14 +45,6 @@
             this.pcbIcon.Size = new System.Drawing.Size(100, 100);
             this.pcbIcon.TabIndex = 0;
             this.pcbIcon.TabStop = false;
-            // 
-            // txtDuration
-            // 
-            this.txtDuration.Location = new System.Drawing.Point(118, 12);
-            this.txtDuration.Name = "txtDuration";
-            this.txtDuration.Size = new System.Drawing.Size(106, 23);
-            this.txtDuration.TabIndex = 1;
-            this.txtDuration.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // btnEvent
             // 
@@ -98,18 +90,26 @@
             this.txtEffects.Size = new System.Drawing.Size(284, 148);
             this.txtEffects.TabIndex = 6;
             // 
+            // txtDuration
+            // 
+            this.txtDuration.Location = new System.Drawing.Point(124, 12);
+            this.txtDuration.Name = "txtDuration";
+            this.txtDuration.Size = new System.Drawing.Size(100, 23);
+            this.txtDuration.TabIndex = 7;
+            // 
             // InfoDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(308, 415);
+            this.Controls.Add(this.txtDuration);
             this.Controls.Add(this.txtEffects);
             this.Controls.Add(this.lblEffects);
             this.Controls.Add(this.txtDescript);
             this.Controls.Add(this.txtRequire);
             this.Controls.Add(this.btnEvent);
-            this.Controls.Add(this.txtDuration);
             this.Controls.Add(this.pcbIcon);
+            this.MinimizeBox = false;
             this.Name = "InfoDialog";
             this.Text = "InfoDialog";
             ((System.ComponentModel.ISupportInitialize)(this.pcbIcon)).EndInit();
@@ -121,11 +121,11 @@
         #endregion
 
         private PictureBox pcbIcon;
-        private TextBox txtDuration;
         private Button btnEvent;
         private TextBox txtRequire;
         private TextBox txtDescript;
         private Label lblEffects;
         private TextBox txtEffects;
+        private TextBox txtDuration;
     }
 }

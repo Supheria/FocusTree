@@ -10,12 +10,12 @@ namespace FocusTree.UI.Controls
         //
         // MouseButtonRight
         //
-        private ToolStripMenuItem pic_contextMenu_graph_save = new();
-        private ToolStripMenuItem pic_contextMenu_graph_saveas = new();
-        private ToolStripMenuItem pic_contextMenu_graph_undo = new();
-        private ToolStripMenuItem pic_contextMenu_graph_redo = new();
-        private ToolStripMenuItem pic_contextMenu_graph_camreset = new();
-        private ToolStripMenuItem pic_contextMenu_graph_camfocus = new();
+        private ToolStripMenuItem GraphContextMenu_edit_save = new();
+        private ToolStripMenuItem GraphContextMenu_edit_saveas = new();
+        private ToolStripMenuItem GraphContextMenu_edit_undo = new();
+        private ToolStripMenuItem GraphContextMenu_edit_redo = new();
+        private ToolStripMenuItem GraphContextMenu_camera_panorama = new();
+        private ToolStripMenuItem GraphContextMenu_camera_focus = new();
         private ToolStripSeparator spliter1 = new();
         private ToolStripSeparator spliter2 = new();
 
@@ -52,7 +52,7 @@ namespace FocusTree.UI.Controls
             Display.LoadGraph(item.Tag.ToString());
             ButtonTag = MouseButtons.None;
         }
-        private void GraphSave(object sender, EventArgs args)
+        private void GraphContextMenu_edit_save_Click(object sender, EventArgs args)
         {
             if (Display.Graph == null)
             {
@@ -63,7 +63,7 @@ namespace FocusTree.UI.Controls
                 Display.SaveGraph();
             }
         }
-        private void GraphSaveas(object sender, EventArgs args)
+        private void GraphContextMenu_edit_saveas_Click(object sender, EventArgs args)
         {
             if (Display.Graph == null)
             {
@@ -79,36 +79,35 @@ namespace FocusTree.UI.Controls
                 Display.SaveAsNew(main_Savefile.FileName);
             }
         }
-        private void GraphUndo(object sender, EventArgs args)
+        private void GraphContextMenu_edit_undo_Click(object sender, EventArgs args)
         {
             Display.Undo();
-            main_Menu_edit_status_check();
-            Display.Invalidate();
+            GraphContextMenu_edit_status_check();
+            Invalidate();
         }
-        private void GraphRedo(object sender, EventArgs args)
+        private void GraphContextMenu_edit_redo_Click(object sender, EventArgs args)
         {
             Display.Redo();
-            main_Menu_edit_status_check();
-            Display.Invalidate();
+            GraphContextMenu_edit_status_check();
+            Invalidate();
         }
-        private void GraphCamReset(object sender, EventArgs args)
+        private void GraphContextMenu_camera_panorama_Click(object sender, EventArgs args)
         {
             Display.CamLocatePanorama();
         }
-        private void GraphCamFocus(object sender, EventArgs args)
+        private void GraphContextMenu_camera_focus_Click(object sender, EventArgs args)
         {
             Display.CamLocateSelected();
-            Display.Invalidate();
         }
-        public void main_Menu_edit_status_check()
+        public void GraphContextMenu_edit_status_check()
         {
-            pic_contextMenu_graph_undo.Enabled = GraphHistory.HasPrev();
-            pic_contextMenu_graph_redo.Enabled = GraphHistory.HasNext();
+            GraphContextMenu_edit_undo.Enabled = GraphHistory.HasPrev();
+            GraphContextMenu_edit_redo.Enabled = GraphHistory.HasNext();
         }
-        private void main_Menu_edit_status_check(object sender, EventArgs e)
+        private void GraphContextMenu_edit_status_check(object sender, EventArgs e)
         {
-            pic_contextMenu_graph_undo.Enabled = GraphHistory.HasPrev();
-            pic_contextMenu_graph_redo.Enabled = GraphHistory.HasNext();
+            GraphContextMenu_edit_undo.Enabled = GraphHistory.HasPrev();
+            GraphContextMenu_edit_redo.Enabled = GraphHistory.HasNext();
         }
 
         private void MouseButtonMiddle()
@@ -133,47 +132,47 @@ namespace FocusTree.UI.Controls
         private void MouseButtonRight()
         {
             // 
-            // pic_contextMenu_graph_save
+            // GraphContextMenu_edit_save
             // 
-            pic_contextMenu_graph_save.Name = "main_contextMenu_graph_save";
-            pic_contextMenu_graph_save.Size = new Size(180, 22);
-            pic_contextMenu_graph_save.Text = "保存";
-            pic_contextMenu_graph_save.Click += GraphSave;
+            GraphContextMenu_edit_save.Name = "main_contextMenu_graph_save";
+            GraphContextMenu_edit_save.Size = new Size(180, 22);
+            GraphContextMenu_edit_save.Text = "保存";
+            GraphContextMenu_edit_save.Click += GraphContextMenu_edit_save_Click;
             // 
-            // pic_contextMenu_graph_saveas
+            // GraphContextMenu_edit_saveas
             // 
-            pic_contextMenu_graph_saveas.Name = "main_contextMenu_graph_save";
-            pic_contextMenu_graph_saveas.Size = new Size(180, 22);
-            pic_contextMenu_graph_saveas.Text = "另存为";
-            pic_contextMenu_graph_saveas.Click += GraphSaveas;
+            GraphContextMenu_edit_saveas.Name = "main_contextMenu_graph_save";
+            GraphContextMenu_edit_saveas.Size = new Size(180, 22);
+            GraphContextMenu_edit_saveas.Text = "另存为";
+            GraphContextMenu_edit_saveas.Click += GraphContextMenu_edit_saveas_Click;
             // 
-            // pic_contextMenu_graph_undo
+            // GraphContextMenu_edit_undo
             // 
-            pic_contextMenu_graph_undo.Name = "main_contextMenu_graph_undo";
-            pic_contextMenu_graph_undo.Size = new Size(180, 22);
-            pic_contextMenu_graph_undo.Text = "撤销";
-            pic_contextMenu_graph_undo.Click += GraphUndo;
+            GraphContextMenu_edit_undo.Name = "main_contextMenu_graph_undo";
+            GraphContextMenu_edit_undo.Size = new Size(180, 22);
+            GraphContextMenu_edit_undo.Text = "撤销";
+            GraphContextMenu_edit_undo.Click += GraphContextMenu_edit_undo_Click;
             // 
-            // pic_contextMenu_graph_redo
+            // GraphContextMenu_edit_redo
             // 
-            pic_contextMenu_graph_redo.Name = "main_contextMenu_graph_redo";
-            pic_contextMenu_graph_redo.Size = new Size(180, 22);
-            pic_contextMenu_graph_redo.Text = "重做";
-            pic_contextMenu_graph_redo.Click += GraphRedo;
+            GraphContextMenu_edit_redo.Name = "main_contextMenu_graph_redo";
+            GraphContextMenu_edit_redo.Size = new Size(180, 22);
+            GraphContextMenu_edit_redo.Text = "重做";
+            GraphContextMenu_edit_redo.Click += GraphContextMenu_edit_redo_Click;
             // 
-            // pic_contextMenu_graph_camreset
+            // GraphContextMenu_camera_panorama
             // 
-            pic_contextMenu_graph_camreset.Name = "main_contextMenu_graph_camreset";
-            pic_contextMenu_graph_camreset.Size = new Size(180, 22);
-            pic_contextMenu_graph_camreset.Text = "全景";
-            pic_contextMenu_graph_camreset.Click += GraphCamReset;
+            GraphContextMenu_camera_panorama.Name = "main_contextMenu_graph_camreset";
+            GraphContextMenu_camera_panorama.Size = new Size(180, 22);
+            GraphContextMenu_camera_panorama.Text = "全景";
+            GraphContextMenu_camera_panorama.Click += GraphContextMenu_camera_panorama_Click;
             // 
-            // pic_contextMenu_graph_camfocus
+            // GraphContextMenu_camera_focus
             // 
-            pic_contextMenu_graph_camfocus.Name = "pic_contextMenu_graph_camfocus";
-            pic_contextMenu_graph_camfocus.Size = new Size(180, 22);
-            pic_contextMenu_graph_camfocus.Text = "聚焦";
-            pic_contextMenu_graph_camfocus.Click += GraphCamFocus;
+            GraphContextMenu_camera_focus.Name = "GraphContextMenu_camera_focus";
+            GraphContextMenu_camera_focus.Size = new Size(180, 22);
+            GraphContextMenu_camera_focus.Text = "聚焦";
+            GraphContextMenu_camera_focus.Click += GraphContextMenu_camera_focus_Click;
             // 
             // spliter
             // 
@@ -183,28 +182,22 @@ namespace FocusTree.UI.Controls
             // main_contextMenu_graph
             // 
             Items.AddRange(new ToolStripItem[] {
-                pic_contextMenu_graph_undo,
-                pic_contextMenu_graph_redo,
+                GraphContextMenu_edit_undo,
+                GraphContextMenu_edit_redo,
                 spliter1,
-                pic_contextMenu_graph_save,
-                pic_contextMenu_graph_saveas,
+                GraphContextMenu_edit_save,
+                GraphContextMenu_edit_saveas,
                 spliter2,
-                pic_contextMenu_graph_camreset,
-                pic_contextMenu_graph_camfocus
+                GraphContextMenu_camera_panorama,
+                GraphContextMenu_camera_focus
                 });
-            Invalidated += main_Menu_edit_status_check;
-            this.Closed += GraphContextMenu_Closed;
-        }
-
-        private void GraphContextMenu_Closed(object sender, ToolStripDropDownClosedEventArgs e)
-        {
-            //Display.DrawingDefreeze();
+            Invalidated += GraphContextMenu_edit_status_check;
         }
 
         public new void Show(Point location)
         {
-            //Display.DrawingFreeze();
             base.Show(location);
+            Invalidate();
         }
     }
 }

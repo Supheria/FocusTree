@@ -5,7 +5,7 @@ namespace FocusTree.UITool
     public static class ResizeForm
     {
         static string SPLITER = " ";
-        public static void SetTag(Control parent, bool setChildren = true)
+        public static void SetTag(Control parent, bool setChildren)
         {
             parent.Tag = parent.Width + SPLITER + 
                 parent.Height + SPLITER + 
@@ -25,7 +25,33 @@ namespace FocusTree.UITool
                     child.Font.Size;
                 if (child.Controls.Count > 0)
                 {
-                    SetTag(child);
+                    SetTag(child, true);
+                }
+            }
+        }
+        public static void Resize(Control parent, bool keepScale)
+        {
+            string[] tagContent = parent.Tag.ToString().Split(SPLITER);
+            float rX = parent.Width / float.Parse(tagContent[0]);
+            float rY = parent.Height / float.Parse(tagContent[1]);
+            var r = MathF.Max(rX, rY);
+            parent.Width = (int)(float.Parse(tagContent[0]) * r);
+            parent.Height = (int)(float.Parse(tagContent[1]) * r);
+            foreach (Control child in parent.Controls)
+            {
+                if (child.Tag != null)
+                {
+                    tagContent = child.Tag.ToString().Split(SPLITER);
+                    child.Width = (int)(float.Parse(tagContent[0]) * r);
+                    child.Height = (int)(float.Parse(tagContent[1]) * r);
+                    child.Left = (int)(float.Parse(tagContent[2]) * r);
+                    child.Top = (int)(float.Parse(tagContent[3]) * r);
+                    var fontSize = float.Parse(tagContent[4]) * r;
+                    child.Font = new Font(child.Font.Name, fontSize, child.Font.Style, child.Font.Unit);
+                    if (child.Controls.Count > 0)
+                    {
+                        Resize(child);
+                    }
                 }
             }
         }

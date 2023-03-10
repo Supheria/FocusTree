@@ -218,7 +218,7 @@ namespace FocusTree.UI.Controls
                 return;
             }
             DrawNodeMap();
-            DrawInfo($"节点数量：{Graph.NodesCount}，分支数量：{Graph.BranchesCount}",
+            _draw_info($"节点数量：{Graph.NodesCount}，分支数量：{Graph.BranchesCount}",
                 new Rectangle(Bounds.Left, Bounds.Bottom - 88, Bounds.Width, 35),
                 new Font(NodeFont, 25, FontStyle.Bold, GraphicsUnit.Pixel),
                 new SolidBrush(Color.FromArgb(160, Color.DarkGray)),
@@ -228,6 +228,45 @@ namespace FocusTree.UI.Controls
 
             Update();
         }
+        public void DrawInfo(string info, Rectangle infoRect, Font infoFont, Brush BackBrush, Brush FrontBrush)
+        {
+            if (Graph == null)
+            {
+                return;
+            }
+            Invalidated -= UpdateGraph;
+
+            DrawNodeMap();
+            _draw_info(info,
+                infoRect,
+                infoFont,
+                BackBrush,
+                FrontBrush
+                );
+
+            Invalidate();
+            Invalidated += UpdateGraph;
+        }
+        public void DrawInfo(string info)
+        {
+            if (Graph == null)
+            {
+                return;
+            }
+            Invalidated -= UpdateGraph;
+
+            DrawNodeMap();
+            _draw_info(info,
+                new Rectangle(Bounds.Left, Bounds.Bottom - 100, Bounds.Width, 66),
+                new Font(NodeFont, 25, FontStyle.Bold, GraphicsUnit.Pixel),
+                new SolidBrush(Color.FromArgb(160, Color.DarkGray)),
+                new SolidBrush(Color.FromArgb(255, Color.WhiteSmoke))
+                );
+
+            Invalidate();
+            Invalidated += UpdateGraph;
+        }
+
 
         #endregion
 
@@ -320,7 +359,7 @@ namespace FocusTree.UI.Controls
             }
             return false;
         }
-        private void DrawInfo(string info, Rectangle infoRect, Font infoFont, Brush BackBrush, Brush FontBrush)
+        private void _draw_info(string info, Rectangle infoRect, Font infoFont, Brush BackBrush, Brush FrontBrush)
         {
             if (Graph == null)
             {
@@ -333,33 +372,13 @@ namespace FocusTree.UI.Controls
             g.DrawString(
                 info,
                 infoFont,
-                FontBrush,
+                FrontBrush,
                 infoRect,
                 NodeFontFormat);
 
             g.Flush();
             g.Dispose();
         }
-        private void DrawInfo(string info)
-        {
-            if (Graph == null)
-            {
-                return;
-            }
-            DrawNodeMap();
-            Invalidated -= UpdateGraph;
-
-            DrawInfo(info,
-                new Rectangle(Bounds.Left, Bounds.Bottom - 100, Bounds.Width, 66),
-                new Font(NodeFont, 25, FontStyle.Bold, GraphicsUnit.Pixel),
-                new SolidBrush(Color.FromArgb(160, Color.DarkGray)),
-                new SolidBrush(Color.FromArgb(255, Color.WhiteSmoke))
-                );
-
-            Invalidate();
-            Invalidated += UpdateGraph;
-        }
-        
 
         #endregion
 
@@ -372,7 +391,7 @@ namespace FocusTree.UI.Controls
 
         private void OnSizeChanged(object sender, EventArgs args)
         {
-            if (Graph == null || Math.Min(Size.Width, Size.Height) < 0)
+            if (Graph == null || Math.Min(Size.Width, Size.Height) < 0 || Parent.WindowState == FormWindowState.Minimized)
             {
                 return;
             }
@@ -443,7 +462,6 @@ namespace FocusTree.UI.Controls
             SelectedNode = SelectingNode;
             PicNodeContextMenu = new NodeContextMenu(this);
             PicNodeContextMenu.Show(Cursor.Position);
-            Invalidate();
         }
         private void NodeLeftClicked(int id)
         {
@@ -458,9 +476,9 @@ namespace FocusTree.UI.Controls
             var data = Graph.GetNodeData(id);
             var info = $"{data.Name}, {data.Duration}日\n{data.Descript}";
             
-            Invalidate();
             DrawInfo(info);
         }
+
         //---- OnMouseDoubleClick ----//
 
         private void OnMouseDoubleClick(object sender, MouseEventArgs args)
@@ -847,37 +865,6 @@ namespace FocusTree.UI.Controls
         #endregion
 
         #region ---- 绘图操作调用 ----
-
-        /// <summary>
-        /// 冻结绘图更新和所有操作
-        /// </summary>
-        public void DrawingFreeze()
-        {
-            DrawNodeMap();
-            Invalidated -= UpdateGraph;
-            SizeChanged -= OnSizeChanged;
-            MouseDown -= OnMouseDown;
-            MouseMove -= OnMouseMove;
-            MouseUp -= OnMouseUp;
-            MouseWheel -= OnMouseWheel;
-            MouseDoubleClick -= OnMouseDoubleClick;
-            Invalidate();
-        }
-        /// <summary>
-        /// 恢复绘图更新和所有操作
-        /// </summary>
-        /// <param name="info"></param>
-        public void DrawingDefreeze()
-        {
-            SizeChanged += OnSizeChanged;
-            MouseDown += OnMouseDown;
-            MouseMove += OnMouseMove;
-            MouseUp += OnMouseUp;
-            MouseWheel += OnMouseWheel;
-            MouseDoubleClick += OnMouseDoubleClick;
-            Invalidated += UpdateGraph;
-            Invalidate();
-        }
         public void DrawAddtionalInfo(string info)
         {
             Invalidate();

@@ -12,20 +12,20 @@ namespace FocusTree.UI
         {
             Display = new GraphBox(this);
             InitializeComponent();
-            main_StatusStrip_filename.Text = "等待打开文件";
-            main_StatusStrip_status.Text = "";
-            main_Openfile.FileName = "";
-            ResizeForm.SetTag(this);
+            MainForm_StatusStrip_filename.Text = "等待打开文件";
+            MainForm_StatusStrip_status.Text = "";
+            MainForm_Openfile.FileName = "";
+            ResizeForm.SetTag(this, false);
 
             foreach (var name in Display.ToolDialogs.Keys)
             {
                 ToolStripMenuItem item = new();
                 item.Text = name;
-                item.Click += main_Menu_window_display_toolDialog_Click;
-                this.main_Menu_window.DropDownItems.Add(item);
+                item.Click += MainForm_Menu_window_display_toolDialog_Click;
+                this.MainForm_Menu_window.DropDownItems.Add(item);
             }
         }
-        private void main_Menu_loc_camreset_Click(object sender, EventArgs e)
+        private void MainForm_Menu_camera_panorama_Click(object sender, EventArgs e)
         {
             Display.CamLocatePanorama();
         }
@@ -34,7 +34,7 @@ namespace FocusTree.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void main_Menu_file_open_Click(object sender, EventArgs e)
+        private void MainForm_Menu_file_open_Click(object sender, EventArgs e)
         {
             if (Display.Graph != null && Display.GraphEdited)
             {
@@ -43,20 +43,20 @@ namespace FocusTree.UI
                     return;
                 }
             }
-            main_Openfile.Filter = "xml文件|*.xml";
-            if (main_Openfile.ShowDialog() == DialogResult.Cancel)
+            MainForm_Openfile.Filter = "xml文件|*.xml";
+            if (MainForm_Openfile.ShowDialog() == DialogResult.Cancel)
             {
                 return;
             }
-            main_Openfile.InitialDirectory = Path.GetDirectoryName(main_Openfile.FileName);
-            Display.LoadGraph(main_Openfile.FileName);
+            MainForm_Openfile.InitialDirectory = Path.GetDirectoryName(MainForm_Openfile.FileName);
+            Display.LoadGraph(MainForm_Openfile.FileName);
         }
         /// <summary>
         /// 打开备份
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void main_Menu_file_backup_open_Click(object sender, EventArgs e)
+        private void MainForm_Menu_file_backup_open_Click(object sender, EventArgs e)
         {
             if (Display.Graph != null && Display.GraphEdited)
             {
@@ -65,14 +65,14 @@ namespace FocusTree.UI
                     return;
                 }
             }
-            main_Openfile.Filter = "全部文件|*.*";
-            var oldInitDir = main_Openfile.InitialDirectory;
-            main_Openfile.InitialDirectory = Backup.DirectoryName;
-            if (main_Openfile.ShowDialog() == DialogResult.OK)
+            MainForm_Openfile.Filter = "全部文件|*.*";
+            var oldInitDir = MainForm_Openfile.InitialDirectory;
+            MainForm_Openfile.InitialDirectory = Backup.DirectoryName;
+            if (MainForm_Openfile.ShowDialog() == DialogResult.OK)
             {
-                Display.LoadGraph(main_Openfile.FileName);
+                Display.LoadGraph(MainForm_Openfile.FileName);
             }
-            main_Openfile.InitialDirectory = oldInitDir;
+            MainForm_Openfile.InitialDirectory = oldInitDir;
 
         }
         /// <summary>
@@ -80,7 +80,7 @@ namespace FocusTree.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void main_Menu_file_save_Click(object sender, EventArgs e)
+        private void MainForm_Menu_file_save_Click(object sender, EventArgs e)
         {
             if (Display.Graph == null)
             {
@@ -98,18 +98,18 @@ namespace FocusTree.UI
         /// <param name="sender"></param>
         /// <param name="e"></param>
         //[Obsolete("这个功能还没完善")]
-        private void main_Menu_file_saveas_Click(object sender, EventArgs e)
+        private void MainForm_Menu_file_saveas_Click(object sender, EventArgs e)
         {
             if (Display.Graph == null)
             {
                 MessageBox.Show("[2303051524]没有可以保存的图像");
                 return;
             }
-            main_Savefile.InitialDirectory = Path.GetDirectoryName(Display.Graph.FilePath);
-            main_Savefile.FileName = Path.GetFileNameWithoutExtension(Display.Graph.FilePath) + "_new.xml";
-            if (main_Savefile.ShowDialog() == DialogResult.OK)
+            MainForm_Savefile.InitialDirectory = Path.GetDirectoryName(Display.Graph.FilePath);
+            MainForm_Savefile.FileName = Path.GetFileNameWithoutExtension(Display.Graph.FilePath) + "_new.xml";
+            if (MainForm_Savefile.ShowDialog() == DialogResult.OK)
             {
-                Display.SaveAsNew(main_Savefile.FileName);
+                Display.SaveAsNew(MainForm_Savefile.FileName);
             }
         }
         /// <summary>
@@ -117,7 +117,7 @@ namespace FocusTree.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void main_Menu_file_backup_clear_Click(object sender, EventArgs e)
+        private void MainForm_Menu_file_backup_clear_Click(object sender, EventArgs e)
         {
             Backup.Clear();
         }
@@ -126,16 +126,16 @@ namespace FocusTree.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void main_Menu_file_batch_saveas_Click(object sender, EventArgs e)
+        private void MainForm_Menu_file_batch_saveas_Click(object sender, EventArgs e)
         {
-            main_Openfile_batch.Filter = "csv文件 (.csv) |*.csv";
-            if (main_Openfile_batch.ShowDialog() == DialogResult.Cancel)
+            MainForm_Openfile_batch.Filter = "csv文件 (.csv) |*.csv";
+            if (MainForm_Openfile_batch.ShowDialog() == DialogResult.Cancel)
             {
                 return;
             }
-            var fileNames = main_Openfile_batch.FileNames;
-            main_Openfile_batch.InitialDirectory = Path.GetDirectoryName(fileNames[0]);
-            var suc = main_Openfile_batch.FileNames.Length;
+            var fileNames = MainForm_Openfile_batch.FileNames;
+            MainForm_Openfile_batch.InitialDirectory = Path.GetDirectoryName(fileNames[0]);
+            var suc = MainForm_Openfile_batch.FileNames.Length;
             foreach (var fileName in fileNames)
             {
                 try
@@ -153,66 +153,66 @@ namespace FocusTree.UI
             MessageBox.Show($"成功转存{suc}个文件。");
         }
 
-        private void main_Menu_edit_undo_Click(object sender, EventArgs e)
+        private void MainForm_Menu_edit_undo_Click(object sender, EventArgs e)
         {
             Display.Undo();
-            main_Menu_edit_status_check();
+            MainForm_Menu_edit_status_check();
         }
 
-        private void main_Menu_edit_redo_Click(object sender, EventArgs e)
+        private void MainForm_Menu_edit_redo_Click(object sender, EventArgs e)
         {
             Display.Redo();
-            main_Menu_edit_status_check();
+            MainForm_Menu_edit_status_check();
         }
         /// <summary>
         /// 更新撤回和重做按钮是否可用的状态
         /// </summary>
-        public void main_Menu_edit_status_check()
+        public void MainForm_Menu_edit_status_check()
         {
-            main_Menu_edit_undo.Enabled = GraphHistory.HasPrev();
-            main_Menu_edit_redo.Enabled = GraphHistory.HasNext();
+            MainForm_Menu_edit_undo.Enabled = GraphHistory.HasPrev();
+            MainForm_Menu_edit_redo.Enabled = GraphHistory.HasNext();
         }
-        private void main_Menu_edit_status_check(object sender, EventArgs e)
+        private void MainForm_Menu_edit_status_check(object sender, EventArgs e)
         {
-            main_Menu_edit_undo.Enabled = GraphHistory.HasPrev();
-            main_Menu_edit_redo.Enabled = GraphHistory.HasNext();
+            MainForm_Menu_edit_undo.Enabled = GraphHistory.HasPrev();
+            MainForm_Menu_edit_redo.Enabled = GraphHistory.HasNext();
         }
 
-        private void main_Menu_edit_Click(object sender, EventArgs e)
+        private void MainForm_Menu_edit_Click(object sender, EventArgs e)
         {
-            main_Menu_edit_status_check();
+            MainForm_Menu_edit_status_check();
         }
         public void UpdateText()
         {
             if (Display.Graph == null)
             {
                 Text = "国策树";
-                main_StatusStrip_filename.Text = "未加载";
-                main_StatusStrip_status.Text = "";
+                MainForm_StatusStrip_filename.Text = "未加载";
+                MainForm_StatusStrip_status.Text = "";
             }
             Text = Display.FileName;
             if(Display.ReadOnly)
             {
-                main_StatusStrip_filename.Text = "正在预览";
-                main_StatusStrip_status.Text = "";
+                MainForm_StatusStrip_filename.Text = "正在预览";
+                MainForm_StatusStrip_status.Text = "";
             }
             else if (Display.GraphEdited)
             {
-                main_StatusStrip_filename.Text = "正在编辑";
-                main_StatusStrip_status.Text = "";
+                MainForm_StatusStrip_filename.Text = "正在编辑";
+                MainForm_StatusStrip_status.Text = "";
             }
             else
             {
-                main_StatusStrip_filename.Text = "就绪";
-                main_StatusStrip_status.Text = "";
+                MainForm_StatusStrip_filename.Text = "就绪";
+                MainForm_StatusStrip_status.Text = "";
             }
         }
 
-        private void main_Menu_loc_camfocus_Click(object sender, EventArgs e)
+        private void MainForm_Menu_camera_focus_Click(object sender, EventArgs e)
         {
             Display.CamLocateSelected();
         }
-        private void main_Menu_window_display_toolDialog_Click(object sender, EventArgs e)
+        private void MainForm_Menu_window_display_toolDialog_Click(object sender, EventArgs e)
         {
             var item = (ToolStripMenuItem)sender;
             Display.ToolDialogs[item.Text].Show();

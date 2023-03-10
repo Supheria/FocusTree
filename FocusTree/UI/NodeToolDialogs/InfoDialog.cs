@@ -5,25 +5,78 @@ namespace FocusTree.UI.NodeToolDialogs
 {
     public partial class InfoDialog : NodeToolDialog
     {
+        List<TextBox> textBoxList;
+        bool DoResize = false;
+
         /// <summary>
         /// 节点信息对话框
         /// </summary>
         /// <param name="parent">父窗口</param>
         /// <param name="editDialog">是否修改信息并保存</param>
-        public InfoDialog() { }
         internal InfoDialog(GraphBox display)
         {
             InitializeComponent();
             TopMost = true;
             Display = display;
             MinimumSize = Size;
-            ResizeForm.SetTag(this);
-
+            DoubleBuffered = true;
+            
             Invalidated += OnInvalidated;
             FormClosing += InfoDialog_FormClosing;
             SizeChanged += InfoDialog_SizeChanged;
             DoubleClick += InfoDialog_DoubleClick;
-            ResizeForm.SetTag(this);
+
+            textBoxList = new()
+            {
+                txtDuration,
+                txtRequire,
+                txtDescript,
+                txtEffects,
+            };
+
+            textBoxList.ForEach(x => x.KeyDown += TextBox_KeyDown);
+            textBoxList.ForEach(x => x.MouseWheel += TextBox_MouseWheel);
+            textBoxList.ForEach(x => x.KeyUp += TextBox_KeyUp);
+
+            var font = new Font("仿宋", 15, FontStyle.Bold, GraphicsUnit.Pixel);
+            textBoxList.ForEach(x => x.Font = font);
+
+            ResizeForm.SetTag(this, true);
+        }
+
+        private void TextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            DoResize = false;
+        }
+
+        private void TextBox_MouseWheel(object sender, MouseEventArgs e)
+        {
+            if (DoResize == false)
+            {
+                return;
+            }
+            var ratio = 1 + e.Delta * 0.002f;
+            this.Size = new Size((int)(Width * ratio), (int)(Height * ratio));
+        }
+
+        private void TextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.ControlKey)
+            {
+                DoResize = true;
+            }
+        }
+
+        private void TxtDuration_FontChanged(object sender, EventArgs e)
+        {
+            var textBox = sender as RichTextBox;
+            var font = textBox.Font;
+            txtDuration.Font = font;
+
+            txtRequire.Font = font;
+            txtDescript.Font = font;
+            txtEffects.Font = font;
+
         }
 
         private void InfoDialog_DoubleClick(object sender, EventArgs e)
@@ -33,8 +86,9 @@ namespace FocusTree.UI.NodeToolDialogs
 
         private void InfoDialog_SizeChanged(object sender, EventArgs e)
         {
-            ResizeForm.Resize(this);
+            ResizeForm.Resize(this, true);
         }
+
         #region ==== 窗体方法 ====
         /// <summary>
         /// 设置指向的节点
@@ -90,8 +144,11 @@ namespace FocusTree.UI.NodeToolDialogs
             this.Hide();
             e.Cancel = true;
         }
+
         #endregion
+
         #region ==== 控件事件 ====
+
         private void btnEvent_Click(object sender, EventArgs e)
         {
             if (Display.ReadOnly)
