@@ -39,7 +39,7 @@ namespace FocusTree.UI.Controls
         /// <summary>
         /// 先前选中的节点
         /// </summary>
-        public int? SelectedNode { get; private set; }
+        public int? SelectedNode { get; set; }
         /// <summary>
         /// 当前选中的节点
         /// </summary>
@@ -398,7 +398,7 @@ namespace FocusTree.UI.Controls
 
             var ratioVec = ResizeForm.GetRatio(Parent);
             var ratio = Width < Height ? ratioVec.X : ratioVec.Y;
-            ResizeForm.SetTag(Parent, false);
+            ResizeForm.SetTag(Parent);
             Image = new Bitmap(Size.Width, Size.Height);
             GScale = GScale * ratio;
             Invalidate();

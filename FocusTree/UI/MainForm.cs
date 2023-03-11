@@ -1,6 +1,7 @@
 ﻿using FocusTree.Data;
 using FocusTree.IO;
 using FocusTree.UI.Controls;
+using FocusTree.UI.NodeToolDialogs;
 using FocusTree.UITool;
 
 namespace FocusTree.UI
@@ -15,7 +16,7 @@ namespace FocusTree.UI
             MainForm_StatusStrip_filename.Text = "等待打开文件";
             MainForm_StatusStrip_status.Text = "";
             MainForm_Openfile.FileName = "";
-            ResizeForm.SetTag(this, false);
+            ResizeForm.SetTag(this);
 
             foreach (var name in Display.ToolDialogs.Keys)
             {
@@ -24,6 +25,11 @@ namespace FocusTree.UI
                 item.Click += MainForm_Menu_window_display_toolDialog_Click;
                 this.MainForm_Menu_window.DropDownItems.Add(item);
             }
+            Display.LoadGraph("D:\\Non_E\\documents\\GitHub\\FocusTree\\FocusTree\\国策\\隐居村落.xml");
+            
+            var a = new InfoDialog(Display);
+            Display.SelectedNode = 1;
+            a.Show(new(Screen.PrimaryScreen.Bounds.Width / 3, Screen.PrimaryScreen.Bounds.Height / 3));
         }
         private void MainForm_Menu_camera_panorama_Click(object sender, EventArgs e)
         {
@@ -216,15 +222,6 @@ namespace FocusTree.UI
         {
             var item = (ToolStripMenuItem)sender;
             Display.ToolDialogs[item.Text].Show();
-        }
-
-        private void MainForm_SizeChanged(object sender, EventArgs e)
-        {
-            var ratioVec = ResizeForm.GetRatio(this);
-            var ratio = Width < Height ? ratioVec.X : ratioVec.Y;
-            //ResizeForm.SetTag(this);
-
-            //Display.ChangeSize(ratio);
         }
     }
 }

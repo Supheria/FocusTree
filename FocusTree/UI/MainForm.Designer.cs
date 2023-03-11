@@ -275,7 +275,6 @@ namespace FocusTree.UI
             this.MainMenuStrip = this.MainForm_Menu;
             this.Name = "MainForm";
             this.Text = "MainForm";
-            this.SizeChanged += new System.EventHandler(this.MainForm_SizeChanged);
             this.MainForm_StatusStrip.ResumeLayout(false);
             this.MainForm_StatusStrip.PerformLayout();
             this.MainForm_Menu.ResumeLayout(false);

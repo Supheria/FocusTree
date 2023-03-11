@@ -21,9 +21,10 @@ namespace FocusTree.UI.NodeToolDialogs
             {
                 return;
             }
-            Invalidate();
-            base.Show();
+            //Invalidate();
+
             Location = pos;
+            base.Show();
         }
     }
 }
