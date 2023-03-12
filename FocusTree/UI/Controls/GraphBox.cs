@@ -5,6 +5,8 @@ using FocusTree.UI.NodeToolDialogs;
 using System.Drawing;
 using static System.ComponentModel.Design.ObjectSelectorEditor;
 using FocusTree.UITool;
+using System;
+using System.Xml.Linq;
 
 namespace FocusTree.UI.Controls
 {
@@ -39,11 +41,20 @@ namespace FocusTree.UI.Controls
         /// <summary>
         /// 先前选中的节点
         /// </summary>
-        public int? SelectedNode { get; set; }
+        public int? SelectedNode 
+        {
+            get { return selectedNode; }
+            set
+            {
+                selectedNode = value;
+                PrevSelectNode = null;
+            }
+        }
+        int? selectedNode;
         /// <summary>
-        /// 当前选中的节点
+        /// 预选中的节点
         /// </summary>
-        int? SelectingNode;
+        int? PrevSelectNode;
         /// <summary>
         /// 图像已更改
         /// </summary>
@@ -267,7 +278,6 @@ namespace FocusTree.UI.Controls
             Invalidated += UpdateGraph;
         }
 
-
         #endregion
 
         #region ---- 绘图 ----
@@ -295,7 +305,7 @@ namespace FocusTree.UI.Controls
                         SolidBrush BG = new(Color.FromArgb(80, Color.Red));
                         g.FillRectangle(BG, rect);
                     }
-                    else if (enumer.Current.Key == SelectingNode)
+                    else if (enumer.Current.Key == PrevSelectNode)
                     {
                         g.FillRectangle(NodeBG_Selecting, rect);
                     }
@@ -340,24 +350,9 @@ namespace FocusTree.UI.Controls
                     requireColor++;
                 }
             }
-        }
 
-        /// <summary>
-        /// 判断有无节点冲突
-        /// </summary>
-        /// <param name="id">节点ID</param>
-        /// <returns></returns>
-        private bool IsNodeConflict(int id)
-        {
-            var enumer = Graph.GetMetaPointsEnumerator();
-            while (enumer.MoveNext())
-            {
-                if (id != enumer.Current.Key && Graph.GetMetaPoint(id) == enumer.Current.Value)
-                {
-                    return true;
-                }
-            }
-            return false;
+            g.Flush();
+            g.Dispose();
         }
         private void _draw_info(string info, Rectangle infoRect, Font infoFont, Brush BackBrush, Brush FrontBrush)
         {
@@ -379,6 +374,23 @@ namespace FocusTree.UI.Controls
             g.Flush();
             g.Dispose();
         }
+        /// <summary>
+        /// 判断有无节点冲突
+        /// </summary>
+        /// <param name="id">节点ID</param>
+        /// <returns></returns>
+        private bool IsNodeConflict(int id)
+        {
+            var enumer = Graph.GetMetaPointsEnumerator();
+            while (enumer.MoveNext())
+            {
+                if (id != enumer.Current.Key && Graph.GetMetaPoint(id) == enumer.Current.Value)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
         #endregion
 
@@ -395,7 +407,7 @@ namespace FocusTree.UI.Controls
             {
                 return;
             }
-
+            Image.Dispose();
             var ratioVec = ResizeForm.GetRatio(Parent);
             var ratio = Width < Height ? ratioVec.X : ratioVec.Y;
             ResizeForm.SetTag(Parent);
@@ -413,23 +425,23 @@ namespace FocusTree.UI.Controls
                 return;
             }
 
-            CheckSelecting();
+            CheckPrevSelect();
 
             if (args.Button == MouseButtons.Left)
             {
-                if (SelectingNode == null)
+                if (PrevSelectNode == null)
                 {
                     SetDragEventFlags(args.Location);
                 }
                 else
                 {
-                    NodeLeftClicked(SelectingNode.Value);
+                    NodeLeftClicked(PrevSelectNode.Value);
                 }
             }
 
             else if ((args.Button & MouseButtons.Right) == MouseButtons.Right)
             {
-                if (SelectingNode == null)
+                if (PrevSelectNode == null)
                 {
                     OpenPicGraphContextMenu(args.Button);
                 }
@@ -459,23 +471,16 @@ namespace FocusTree.UI.Controls
         }
         private void NodeRightClicked()
         {
-            SelectedNode = SelectingNode;
+            SelectedNode = PrevSelectNode;
+            RescaleToNode(SelectedNode.Value, false);
             PicNodeContextMenu = new NodeContextMenu(this);
             PicNodeContextMenu.Show(Cursor.Position);
+            Invalidate();
         }
         private void NodeLeftClicked(int id)
         {
-            var prevRect = NodeDrawingRect(id);
-            RescaleToNode(id, false);
-            var newRect = NodeDrawingRect(id);
-            var dX = (int)(newRect.X - prevRect.X);
-            var dY = (int)(newRect.Y - prevRect.Y);
-            var point = new Point(Bounds.X + Bounds.Width / 2, Bounds.Y + Bounds.Height / 2);
-            Cursor.Position = Parent.PointToScreen(point);
-            NodeInfoTip.Hide(this);
             var data = Graph.GetNodeData(id);
             var info = $"{data.Name}, {data.Duration}日\n{data.Descript}";
-            
             DrawInfo(info);
         }
 
@@ -488,11 +493,11 @@ namespace FocusTree.UI.Controls
                 return;
             }
 
-            CheckSelecting();
+            CheckPrevSelect();
 
             if ((args.Button & MouseButtons.Left) == MouseButtons.Left)
             {
-                if (SelectingNode == null)
+                if (PrevSelectNode == null)
                 {
                     RestoreBackup();
                 }
@@ -516,7 +521,9 @@ namespace FocusTree.UI.Controls
         }
         private void NodeLeftDoubleClicked()
         {
-            SelectedNode = SelectingNode;
+            SelectedNode = PrevSelectNode;
+            RescaleToNode(SelectedNode.Value, false);
+            NodeInfoTip.Hide(this);
             Invalidate();
         }
 
@@ -601,15 +608,10 @@ namespace FocusTree.UI.Controls
         }
 
         //---- Public ----//
-        private void CheckSelecting()
+        private void CheckPrevSelect()
         {
             var clickPos = PointToClient(Cursor.Position);
-            var selectingNode = PointInAnyNodeDrawingRect(clickPos);
-            if (SelectingNode != selectingNode)
-            {
-                SelectingNode = selectingNode;
-                Invalidate();
-            }
+            PrevSelectNode = PointInAnyNodeDrawingRect(clickPos);
         }
 
         #endregion
@@ -739,6 +741,10 @@ namespace FocusTree.UI.Controls
             {
                 GScale = 1.5f;
             }
+            Cursor.Position = Parent.PointToScreen(new Point(
+                Bounds.X + Bounds.Width / 2,
+                Bounds.Y + Bounds.Height / 2
+                ));
         }
 
         #endregion

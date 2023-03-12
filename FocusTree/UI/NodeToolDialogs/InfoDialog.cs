@@ -10,43 +10,27 @@ namespace FocusTree.UI.NodeToolDialogs
     public partial class InfoDialog : NodeToolDialog
     {
         List<TextBox> textBoxList;
-        bool DoResize = false;
+        bool DoFontScale = false;
         float SizeRatio = 0.618f;
 
-        PictureBox FocusIcon = new();
-        TextBox Duration = new();
-        Button ButtonEvent = new();
-        TextBox Requires = new TextBox();
-        TextBox Descript = new();
-        PictureBox EffectsTitle = new();
-        TextBox Effects = new();
+        #region ==== 初始化和更新 ====
 
         internal InfoDialog(GraphBox display)
         {
             Display = display;
-            Initialize();
-            Controls.AddRange(new Control[]
-            {
-                FocusIcon,
-                Duration,
-                ButtonEvent,
-                Requires,
-                Descript,
-                EffectsTitle,
-                Effects
-            });
-            Invalidated += OnInvalidated;
+            InitializeComponent();
+
+            Invalidated += InfoDialog_Invalidated;
             FormClosing += InfoDialog_FormClosing;
-            SizeChanged += InfoDialog_SizeChanged;
-            DoubleClick += InfoDialog_DoubleClick;
-            //Layout += InfoDialog_Layout;
+            Resize += InfoDialog_SizeChanged;
+            ResizeEnd += InfoDialog_ResizeEnd;
             textBoxList = new()
             {
                 Requires,
                 Descript,
                 Effects,
             };
-            var font = new Font("仿宋", 15, FontStyle.Bold, GraphicsUnit.Pixel);
+            var font = new Font("仿宋", 20, FontStyle.Regular, GraphicsUnit.Pixel);
             textBoxList.ForEach(x => x.Font = font);
             textBoxList.ForEach(x => x.KeyDown += TextBox_KeyDown);
             textBoxList.ForEach(x => x.MouseWheel += TextBox_MouseWheel);
@@ -56,77 +40,93 @@ namespace FocusTree.UI.NodeToolDialogs
             ResizeForm.SetTag(this);
         }
 
-        private void InfoDialog_Layout(object sender, EventArgs e)
+        private void InfoDialog_Invalidated(object sender, InvalidateEventArgs e)
         {
-            // Center the Form on the user's screen everytime it Requires a Layout.
-            this.SetBounds(
-                (Screen.GetBounds(this).Width / 2) - (this.Width / 2),
-                (Screen.GetBounds(this).Height / 2) - (this.Height / 2),
-                this.Width, 
-                this.Height, 
-                BoundsSpecified.Location);
+            var focusData = Display.GetSelectedNodeData();
+            Text = $"{focusData.Name}, {focusData.ID}";
+            Duration.Text = $"{focusData.Duration}日";
+            Descript.Text = focusData.Descript;
+            Effects.Text = focusData.Effects;
+        }
+
+        private void InfoDialog_ResizeEnd(object sender, EventArgs e)
+        {
+
+            var differ = ResizeForm.GetDifference(this);
+            if (differ.Width == 0 && differ.Height != 0)
+            {
+                Width = (int)(Height * SizeRatio);
+            }
+            else if (differ.Width != 0 && differ.Height == 0)
+            {
+                Height = (int)(Width / SizeRatio);
+            }
+            else if (differ.Width != 0 && differ.Height != 0)
+            {
+                var ratioVec = ResizeForm.GetRatio(this);
+                if(ratioVec.X > ratioVec.Y)
+                {
+                    Width = (int)(Height * SizeRatio);
+                }
+                else
+                {
+                    Height = (int)(Width / SizeRatio);
+                }
+            }
+            if (Bottom > Screen.PrimaryScreen.Bounds.Bottom)
+            {
+                if (Height > Screen.PrimaryScreen.Bounds.Height)
+                {
+                    Height = Screen.PrimaryScreen.Bounds.Height;
+                }
+                Top -= Bottom - Screen.PrimaryScreen.Bounds.Bottom;
+                Width = (int)(Height * SizeRatio);
+            }
+            if(Left < Screen.PrimaryScreen.Bounds.Left)
+            {
+                Left = Screen.PrimaryScreen.Bounds.Left;
+            }
+            if(Right > Screen.PrimaryScreen.Bounds.Right)
+            {
+                Left -= Right - Screen.PrimaryScreen.Bounds.Right;
+            }
+
+            ResizeForm.SetTag(this);
         }
 
         private void TextBox_KeyUp(object sender, KeyEventArgs e)
         {
-            DoResize = false;
+            DoFontScale = false;
         }
-
         private void TextBox_MouseWheel(object sender, MouseEventArgs e)
         {
-            if (DoResize == true)
+            if (DoFontScale == true)
             {
                 var textBox = sender as TextBox;
-                var font = new Font("仿宋", textBox.Font.Size + e.Delta * 0.01f, FontStyle.Regular, GraphicsUnit.Pixel);
+                var font = new Font(textBox.Font.FontFamily, textBox.Font.Size + e.Delta * 0.01f, FontStyle.Regular, GraphicsUnit.Pixel);
                 textBoxList.ForEach(x => x.Font = font);
             }
         }
-
         private void TextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.ControlKey)
             {
-                DoResize = true;
+                DoFontScale = true;
             }
         }
-
-        private void InfoDialog_DoubleClick(object sender, EventArgs e)
-        {
-            ResizeForm.DefultSize(this);
-        }
-
         private void InfoDialog_SizeChanged(object sender, EventArgs e)
         {
             DrawClient();
         }
-
-        #region ==== 窗体方法 ====
-        /// <summary>
-        /// 设置指向的节点
-        /// </summary>
-        /// <param name="node"></param>
-
-        public void OnInvalidated(object sender, EventArgs args)
+        private void InfoDialog_FormClosing(object sender, FormClosingEventArgs e)
         {
-            //TxtRequire.Text = szRequire;
-            // 设置窗口位置为节点控件右下角
-            //（还要考虑越界情况）
-            var focusData = Display.GetSelectedNodeData();
-
-            Duration.Text = $"{focusData.Duration}日";
-            Descript.Text = focusData.Descript;
-            Effects.Text = focusData.Effects;
-
-            if (Display.SelectNextControl == null) return;
-            AllowDrop = Display.ReadOnly ? false : true;
-            Update();
+            this.Hide();
+            e.Cancel = true;
         }
-
         private void DrawClient()
         {
             SuspendLayout();
             int padding = 12;
-
             var fontSize = MathF.Min(Width * 0.05f, Height * 0.03f);
             //
             // FocusIcon
@@ -135,6 +135,7 @@ namespace FocusTree.UI.NodeToolDialogs
             FocusIcon.Top = ClientRectangle.Top + padding;
             FocusIcon.Width = (int)(MathF.Min(ClientRectangle.Width * 0.382f, ClientRectangle.Height * 0.3f));
             FocusIcon.Height = (int)(MathF.Min(ClientRectangle.Width * 0.382f, ClientRectangle.Height * 0.3f));
+            AllowDrop = Display.ReadOnly ? false : true;
             //
             // Duration
             //
@@ -184,21 +185,17 @@ namespace FocusTree.UI.NodeToolDialogs
             Effects.Width = (int)(ClientRectangle.Width - padding * 2.5f);
             Effects.Height = (int)(ClientRectangle.Bottom - EffectsTitle.Bottom - padding * 2.5f);
             Effects.ReadOnly = Display.ReadOnly;
-
-            if(FocusIcon.Image != null)
-            {
-                FocusIcon.Image.Dispose();
-            }
+            //
+            // draw picture box image
+            //
+            if (FocusIcon.Image != null) { FocusIcon.Image.Dispose(); }
+            if (EffectsTitle.Image != null) { EffectsTitle.Image.Dispose(); }
             FocusIcon.Image = Image.FromFile("D:\\Non_E\\documents\\GitHub\\FocusTree\\FocusTree\\FocusTree\\Resources\\FocusTree.ico");
-            if (EffectsTitle.Image != null)
-            {
-                EffectsTitle.Image.Dispose();
-            }
             EffectsTitle.Image = new Bitmap(EffectsTitle.Width, EffectsTitle.Height);
             var g = Graphics.FromImage(EffectsTitle.Image);
+            g.Clear(BackColor);
             var stringFormat = new StringFormat();
             stringFormat.Alignment = StringAlignment.Center;
-            //g.Clear(Color.Transparent);
             g.DrawString(
                 "==== 效果 ====",
                 new Font("仿宋", fontSize, FontStyle.Regular, GraphicsUnit.Pixel),
@@ -215,11 +212,6 @@ namespace FocusTree.UI.NodeToolDialogs
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void InfoDialog_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            this.Hide();
-            e.Cancel = true;
-        }
 
         #endregion
 
@@ -253,25 +245,10 @@ namespace FocusTree.UI.NodeToolDialogs
 
         #endregion
 
-        #region ==== 初始化 ====
+        #region ==== InitializeComponent ====
 
-
-        private void Initialize()
+        private void InitializeComponent()
         {
-            //
-            // main
-            //
-            TopMost = true;
-            MinimumSize = Size = new((int)(500 * SizeRatio), 500);
-            Location = new(
-                (Screen.GetBounds(this).Width / 2) - (this.Width / 2),
-                (Screen.GetBounds(this).Height / 2) - (this.Height / 2)
-                );
-            MaximizeBox = false;
-            MinimizeBox = false;
-            //AutoScroll = true;
-            DoubleBuffered = true;
-            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             //
             // FocusIcon
             //
@@ -306,7 +283,38 @@ namespace FocusTree.UI.NodeToolDialogs
             Effects.Multiline = true;
             Effects.WordWrap = false;
             Effects.ScrollBars = ScrollBars.Both;
+            //
+            // main
+            //
+            Controls.AddRange(new Control[]
+            {
+                FocusIcon,
+                Duration,
+                ButtonEvent,
+                Requires,
+                Descript,
+                EffectsTitle,
+                Effects
+            });
+            TopMost = true;
+            MinimumSize = Size = new((int)(500 * SizeRatio), 500);
+            Location = new(
+                (Screen.GetBounds(this).Width / 2) - (this.Width / 2),
+                (Screen.GetBounds(this).Height / 2) - (this.Height / 2)
+                );
+            MinimizeBox = MaximizeBox = false;
+            DoubleBuffered = true;
+            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+            FormBorderStyle = FormBorderStyle.SizableToolWindow;
         }
+
+        PictureBox FocusIcon = new();
+        TextBox Duration = new();
+        Button ButtonEvent = new();
+        TextBox Requires = new TextBox();
+        TextBox Descript = new();
+        PictureBox EffectsTitle = new();
+        TextBox Effects = new();
 
         #endregion
     }
