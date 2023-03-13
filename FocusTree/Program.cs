@@ -2,6 +2,7 @@
 //Console.WriteLine("Hello, World!");
 
 using FocusTree.Data;
+using FocusTree.Tool.Data;
 using FocusTree.UI;
 
 internal static class Program
@@ -12,8 +13,9 @@ internal static class Program
     [STAThread]
     static void Main()
     {
-        //var a = GraphHistory<string>.HasHistory();
-        //var b = GraphHistory<(string, string)>.HasHistory();
+        //string test = "";
+        //ObjectHistory<string>.Enqueue(test);
+        //var b = ObjectHistory<(string, string)>.Length;
         //Test.FMapTest();
         //Test.FGraphToXmlTest();
         Application.Run(new MainForm());
@@ -21,8 +23,9 @@ internal static class Program
         //Application.EnableVisualStyles();
         //Application.SetCompatibleTextRenderingDefault(false);
         //Application.Run(new MainForm());
-        //var c = GraphHistory<string>.HasHistory();
-        //var e = GraphHistory<(string, string)>.HasHistory();
+        //var c = ObjectHistory<string>.Length;
+        //var e = ObjectHistory<(string, string)>.Length;
+        //var d = ObjectHistory<FocusGraph>.Length;
 
     }
 }

@@ -1,6 +1,8 @@
-﻿namespace FocusTree.Tool.Data
+﻿using System;
+
+namespace FocusTree.Tool.Data
 {
-    internal class ObjectHistory<HistoryData>
+    internal class ObjectHistory<HistoryableType>
     {
         /// <summary>
         /// 历史记录指针
@@ -33,9 +35,10 @@
         /// </summary>
         /// <param name="graph">当前的Graph</param>
         //[Obsolete("我不确定这东西有没有Bug，看起来很玄乎")]
-        public static void Enqueue(IFormatable<HistoryData> obj)
+        public static void Enqueue(HistoryableType HistoryableObject)
         {
-            var data = obj.Format();
+            var obj = HistoryableObject as IHistoryable;
+            var data = obj == null ? throw new InvalidCastException("不可转换为 IHistoryFormattable 的类型") : obj.Format();
 
             if (Length == 0)
             {
@@ -67,8 +70,13 @@
         /// 撤回 (调用前需要检查 HasPrev())
         /// </summary>
         /// <param name="graph">当前的Graph</param>
-        public static void Undo(IFormatable<HistoryData> obj)
+        public static void Undo(HistoryableType HistoryableObject)
         {
+            var obj = HistoryableObject as IHistoryable;
+            if (obj == null)
+            {
+                throw new InvalidCastException("不可转换为 IHistoryFormattable 的类型");
+            }
             Index--;
             obj.Deformat(obj.History[Index]);
         }
@@ -77,8 +85,13 @@
         /// </summary>
         /// <param name="graph">当前的Graph</param>
         /// <exception cref="IndexOutOfRangeException">访问的历史记录越界</exception>
-        public static void Redo(IFormatable<HistoryData> obj)
+        public static void Redo(HistoryableType HistoryableObject)
         {
+            var obj = HistoryableObject as IHistoryable;
+            if (obj == null)
+            {
+                throw new InvalidCastException("不可转换为 IHistoryFormattable 的类型");
+            }
             Index++;
             if (Index >= Length)
             {
@@ -86,10 +99,11 @@
             }
             obj.Deformat(obj.History[Index]);
         }
-        public static void Initialize(IFormatable<HistoryData> obj)
+        public static void Initialize(HistoryableType HistoryableObject)
         {
-            var data = obj.Format();
-            obj.History[Index] = data;
+            var obj = HistoryableObject as IHistoryable;
+            var data = obj == null ? throw new InvalidCastException("不可转换为 IHistoryFormattable 的类型") : obj.Format();
+            obj.History[0] = data;
             Length = 1;
             Index = 0;
         }

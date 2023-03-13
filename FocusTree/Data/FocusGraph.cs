@@ -6,10 +6,11 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using FocusTree.Tool.Data;
 using Newtonsoft.Json;
+using static System.Windows.Forms.DataFormats;
 
 namespace FocusTree.Data
 {
-    public class FocusGraph : IXmlSerializable, IFormatable<(string, string)>
+    public class FocusGraph : IXmlSerializable, IHistoryable
     {
         #region ---- 存档文件名 ----
 
@@ -361,7 +362,7 @@ namespace FocusTree.Data
             RequireGroups = requireGroups;
             CreateLinkes();
             SetMetaPoints();
-            ObjectHistory<(string, string)>.Initialize(this);
+            ObjectHistory<FocusGraph>.Initialize(this);
         }
         /// <summary>
         /// 用于序列化
@@ -381,7 +382,7 @@ namespace FocusTree.Data
             RequireGroups = graph.RequireGroups;
             CreateLinkes();
             SetMetaPoints();
-            ObjectHistory<(string, string)>.Initialize(this);
+            ObjectHistory<FocusGraph>.Initialize(this);
         }
 
         // -- 序列化工具 --
@@ -437,7 +438,7 @@ namespace FocusTree.Data
 
             CreateLinkes();
             SetMetaPoints();
-            ObjectHistory<(string, string)>.Initialize(this);
+            ObjectHistory<FocusGraph>.Initialize(this);
         }
         /// <summary>
         /// 反序列化时用于读取节点的关系
@@ -526,17 +527,18 @@ namespace FocusTree.Data
 
         #region ---- 历史和备份工具 ----
 
-        public (string, string)[] History { get { return history; } }
-        (string, string)[] history
-            = new (string, string)[20];
-        public (string, string) Format()
+        public IHistoryData[] History { get { return history; } }
+        HistoryData_FocusGraph[] history
+            = new HistoryData_FocusGraph[20];
+        public IHistoryData Format()
         {
             var jsMeta1 = JsonConvert.SerializeObject(NodesCatalog);
             var jsMeat2 = JsonConvert.SerializeObject(RequireGroups);
-            return (jsMeta1, jsMeat2);
+            return new HistoryData_FocusGraph(jsMeta1, jsMeat2);
         }
-        public void Deformat((string, string) data)
+        public void Deformat(IHistoryData IData)
         {
+            var data = IData as HistoryData_FocusGraph;
             NodesCatalog = JsonConvert.DeserializeObject<Dictionary<int, FocusData>>(data.Item1);
             RequireGroups = JsonConvert.DeserializeObject<Dictionary<int, List<HashSet<int>>>>(data.Item2);
             CreateLinkes();
@@ -556,32 +558,6 @@ namespace FocusTree.Data
             {
                 return Format() == other.Format();
             }
-        }
-        public bool HasPrevHistory()
-        {
-            return ObjectHistory<(string, string)>.HasPrev();
-        }
-        public bool HasNextHistory()
-        {
-            return ObjectHistory<(string, string)>.HasNext();
-        }
-        public void Undo()
-        {
-            if (ObjectHistory<(string, string)>.HasPrev())
-            {
-                ObjectHistory<(string, string)>.Undo(this);
-            }
-        }
-        public void Redo()
-        {
-            if (ObjectHistory<(string, string)>.HasNext())
-            {
-                ObjectHistory<(string, string)>.Redo(this);
-            }
-        }
-        public void HistoryEnqueue()
-        {
-            ObjectHistory<(string, string)>.Enqueue(this);
         }
 
         #endregion
