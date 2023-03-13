@@ -1,7 +1,10 @@
 using FocusTree.Data;
 using FocusTree.IO;
-using FocusTree.Tool;
+using FocusTree.Tool.IO;
+using FocusTree.Tool.UI;
 using FocusTree.UI.NodeToolDialogs;
+using Newtonsoft.Json.Linq;
+using System.IO;
 using System.Numerics;
 
 namespace FocusTree.UI.Controls
@@ -20,12 +23,7 @@ namespace FocusTree.UI.Controls
             get
             {
                 if (ReadOnly) { return Path.GetFileNameWithoutExtension(Graph.FilePath) + $"_{Path.GetFileNameWithoutExtension(FilePath)}" + "（只读）"; }
-                else if (GraphEdited)
-                {
-                    if (OriginalGraph != Graph.Serialize()) { return Path.GetFileNameWithoutExtension(FilePath) + "（未保存）"; }
-                    else { return Path.GetFileNameWithoutExtension(FilePath) + "*"; }
-
-                }
+                else if (GraphEdited) { return Path.GetFileNameWithoutExtension(FilePath) + "（未保存）"; }
                 else { return Path.GetFileNameWithoutExtension(FilePath); }
             }
         }
@@ -40,7 +38,7 @@ namespace FocusTree.UI.Controls
         public int? SelectedNode
         {
             get { return selectedNode; }
-            set
+            private set
             {
                 selectedNode = value;
                 PrevSelectNode = null;
@@ -58,10 +56,11 @@ namespace FocusTree.UI.Controls
         {
             get
             {
-                if (OriginalGraph != Graph.Serialize() || Graph.HasHistory()) { return true; }
-                else { return false; }
+                if (OriginalGraph == null || OriginalGraph == Graph.Format()) { return false; }
+                else { return true; }
             }
         }
+        (string, string)? OriginalGraph = null;
         public bool ReadOnly
         {
             get
@@ -70,17 +69,7 @@ namespace FocusTree.UI.Controls
                 else { return false; }
             }
         }
-        public Dictionary<string, NodeToolDialog> ToolDialogs
-        {
-            get
-            {
-                foreach (var form in toolDialogs.Values)
-                {
-                    form.Hide();
-                }
-                return toolDialogs;
-            }
-        }
+        public Dictionary<string, NodeToolDialog> ToolDialogs { get { return toolDialogs; } }
 
         #endregion
 
@@ -107,22 +96,7 @@ namespace FocusTree.UI.Controls
         /// <summary>
         /// 数据存储结构
         /// </summary>
-        public FocusGraph Graph
-        {
-            get { return graph; }
-            private set
-            {
-                graph = value;
-                OriginalGraph = value.Serialize();
-                PicGraphContextMenu = new GraphContextMenu(this, MouseButtons.None);
-                SelectedNode = null;
-                NodeInfo.Hide();
-                //GraphHistory.Initialize(graph);
-                RescaleToPanorama();
-            }
-        }
-        FocusGraph graph;
-        (string, string) OriginalGraph;
+        public FocusGraph Graph { get; private set; }
 
         #endregion
 
@@ -217,6 +191,8 @@ namespace FocusTree.UI.Controls
             MouseWheel += OnMouseWheel;
             MouseDoubleClick += OnMouseDoubleClick;
             Invalidated += UpdateGraph;
+
+            ResizeControl.SetTag(this);
         }
         private void UpdateGraph(object sender, EventArgs e)
         {
@@ -404,9 +380,9 @@ namespace FocusTree.UI.Controls
                 return;
             }
             Image.Dispose();
-            var ratioVec = ResizeForm.GetRatio(Parent);
-            var ratio = Width < Height ? ratioVec.X : ratioVec.Y;
-            ResizeForm.SetTag(Parent);
+            var ratioVec = ResizeControl.GetRatio(this);
+            var ratio = MathF.Min(ratioVec.X, ratioVec.Y);
+            ResizeControl.SetTag(this);
             Image = new Bitmap(Size.Width, Size.Height);
             GScale = GScale * ratio;
             Invalidate();
@@ -427,7 +403,7 @@ namespace FocusTree.UI.Controls
             {
                 if (PrevSelectNode == null)
                 {
-                    SetDragEventFlags(args.Location);
+                    GraphLeftClicked(args.Location);
                 }
                 else
                 {
@@ -452,10 +428,11 @@ namespace FocusTree.UI.Controls
                 OpenPicGraphContextMenu(args.Button);
             }
         }
-        private void SetDragEventFlags(Point dragMousePoint)
+        private void GraphLeftClicked(Point dragMousePoint)
         {
             DragMousePoint_Flag = true;
             DragMousePoint = dragMousePoint;
+            Invalidate();
         }
         private void OpenPicGraphContextMenu(MouseButtons button)
         {
@@ -467,6 +444,7 @@ namespace FocusTree.UI.Controls
         }
         private void NodeRightClicked()
         {
+            CloseAllNodeToolDialogs();
             SelectedNode = PrevSelectNode;
             RescaleToNode(SelectedNode.Value, false);
             PicNodeContextMenu = new NodeContextMenu(this);
@@ -484,7 +462,7 @@ namespace FocusTree.UI.Controls
 
         private void OnMouseDoubleClick(object sender, MouseEventArgs args)
         {
-            if (graph == null)
+            if (Graph == null)
             {
                 return;
             }
@@ -495,6 +473,7 @@ namespace FocusTree.UI.Controls
             {
                 if (PrevSelectNode == null)
                 {
+                    GraphLeftDoubleClicked();
                     RestoreBackup();
                 }
                 else
@@ -503,15 +482,24 @@ namespace FocusTree.UI.Controls
                 }
             }
         }
+        private void GraphLeftDoubleClicked()
+        {
+            SelectedNode = null;
+            Invalidate();
+        }
         private void RestoreBackup()
         {
             if (ReadOnly)
             {
                 if (MessageBox.Show("[202303052340]是否恢复并删除备份？", "提示", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
+                    CloseAllNodeToolDialogs();
                     Graph = Backup.Restore(FilePath);
                     FilePath = Graph.FilePath;
-                    Parent.UpdateText();
+                    OriginalGraph = Graph == null ? null : Graph.Format();
+                    SelectedNode = null;
+                    RescaleToPanorama();
+                    Invalidate();
                 }
             }
         }
@@ -599,7 +587,7 @@ namespace FocusTree.UI.Controls
             DrawingCenter += dif * 0.2f / GScale; // 这个函数不是算出来的，只是目前恰好能用 ;p
 
             // 缩放
-            GScale *= mulDelta;
+            GScale = MathF.Min(GScale * mulDelta, MathF.Min(Width * 0.1f, Height * 0.2f) * 0.02f);
             Invalidate();
         }
 
@@ -608,6 +596,10 @@ namespace FocusTree.UI.Controls
         {
             var clickPos = PointToClient(Cursor.Position);
             PrevSelectNode = PointInAnyNodeDrawingRect(clickPos);
+        }
+        private void CloseAllNodeToolDialogs()
+        {
+            ToolDialogs.ToList().ForEach(x => x.Value.Close());
         }
 
         #endregion
@@ -735,7 +727,7 @@ namespace FocusTree.UI.Controls
             DrawingCenter = new(canvasPoint.X + NodeSize.Width / 2, canvasPoint.Y + NodeSize.Height / 2);
             if (zoom)
             {
-                GScale = 1.5f;
+                GScale = MathF.Min(Width * 0.1f, Height * 0.2f) * 0.02f;
             }
             Cursor.Position = Parent.PointToScreen(new Point(
                 Bounds.X + Bounds.Width / 2,
@@ -760,7 +752,7 @@ namespace FocusTree.UI.Controls
             {
                 Backup.BackupFile(FilePath);
                 XmlIO.SaveGraph(FilePath, Graph);
-                OriginalGraph = Graph.Serialize();
+                OriginalGraph = Graph.Format();
                 Invalidate();
             }
             else
@@ -776,7 +768,7 @@ namespace FocusTree.UI.Controls
         {
             Graph.FilePath = FilePath = path;
             XmlIO.SaveGraph(path, Graph);
-            OriginalGraph = Graph.Serialize();
+            OriginalGraph = Graph.Format();
             Invalidate();
         }
         /// <summary>
@@ -785,8 +777,12 @@ namespace FocusTree.UI.Controls
         /// <param name="path"></param>
         public void LoadGraph(string path)
         {
+            CloseAllNodeToolDialogs();
             FilePath = path;
             Graph = XmlIO.LoadGraph(path);
+            OriginalGraph = Graph == null ? null : Graph.Format();
+            SelectedNode = null;
+            RescaleToPanorama();
             Invalidate();
         }
         /// <summary>
@@ -808,10 +804,18 @@ namespace FocusTree.UI.Controls
 
         public bool HasPrevHistory()
         {
+            if (Graph == null)
+            {
+                return false;
+            }
             return Graph.HasPrevHistory();
         }
         public bool HasNextHistory()
         {
+            if (Graph == null)
+            {
+                return false;
+            }
             return Graph.HasNextHistory();
         }
 
@@ -831,7 +835,6 @@ namespace FocusTree.UI.Controls
         {
             if (SelectedNode == null)
             {
-                RescaleToPanorama();
                 return;
             }
             else
@@ -865,6 +868,12 @@ namespace FocusTree.UI.Controls
         public FocusData GetSelectedNodeData()
         {
             return Graph.GetNodeData(SelectedNode.Value);
+        }
+        public Point GetSelectedNodeCenterOnScreen()
+        {
+            var rect = NodeDrawingRect(SelectedNode.Value);
+            var point = new Point((int)(rect.X + rect.Width / 2), (int)(rect.Y + rect.Height / 2));
+            return PointToScreen(point);
         }
 
         #endregion

@@ -1,13 +1,15 @@
+using System.Diagnostics.Metrics;
 using System.Numerics;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using FocusTree.Tool;
+using FocusTree.Tool.Data;
+using Newtonsoft.Json;
 
 namespace FocusTree.Data
 {
-    public class FocusGraph : IXmlSerializable, IHistoryable<(string, string)>
+    public class FocusGraph : IXmlSerializable, IFormatable<(string, string)>
     {
         #region ---- 存档文件名 ----
 
@@ -346,7 +348,7 @@ namespace FocusTree.Data
 
         #endregion
 
-        #region ---- 构造函数 ----
+        #region ---- 初始化和序列化 ----
         /// <summary>
         /// 从CSV生成专用，不更新历史记录
         /// </summary>
@@ -382,9 +384,6 @@ namespace FocusTree.Data
             ObjectHistory<(string, string)>.Initialize(this);
         }
 
-        #endregion
-
-        #region ---- 序列化方法 ----
         // -- 序列化工具 --
         static XmlSerializer FData_serial = new(typeof(FocusData));
         static XmlSerializerNamespaces NullXmlNameSpace = new(new XmlQualifiedName[] { new XmlQualifiedName("", "") });
@@ -530,17 +529,16 @@ namespace FocusTree.Data
         public (string, string)[] History { get { return history; } }
         (string, string)[] history
             = new (string, string)[20];
-        public (string, string) Serialize()
+        public (string, string) Format()
         {
-            return JsObject.Serialize(NodesCatalog, RequireGroups);
+            var jsMeta1 = JsonConvert.SerializeObject(NodesCatalog);
+            var jsMeat2 = JsonConvert.SerializeObject(RequireGroups);
+            return (jsMeta1, jsMeat2);
         }
-        public void Deserialize(int index)
+        public void Deformat((string, string) data)
         {
-            var metas = JsObject.DeSerialize<
-                Dictionary<int, FocusData>,
-                Dictionary<int, List<HashSet<int>>>>(History[index]);
-            NodesCatalog = metas.Item1;
-            RequireGroups = metas.Item2;
+            NodesCatalog = JsonConvert.DeserializeObject<Dictionary<int, FocusData>>(data.Item1);
+            RequireGroups = JsonConvert.DeserializeObject<Dictionary<int, List<HashSet<int>>>>(data.Item2);
             CreateLinkes();
             SetMetaPoints();
         }
@@ -556,7 +554,7 @@ namespace FocusTree.Data
             }
             else
             {
-                return Serialize() == other.Serialize();
+                return Format() == other.Format();
             }
         }
         public bool HasPrevHistory()
@@ -566,10 +564,6 @@ namespace FocusTree.Data
         public bool HasNextHistory()
         {
             return ObjectHistory<(string, string)>.HasNext();
-        }
-        public bool HasHistory()
-        {
-            return ObjectHistory<(string, string)>.HasHistory();
         }
         public void Undo()
         {

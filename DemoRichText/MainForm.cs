@@ -19,19 +19,22 @@ namespace DemoRichText
         }
         
 
-        public void btnButtonClick(object sender, EventArgs e) {
+        public void btnButtonClick(object sender, EventArgs e) 
+        {
             Button btn = (Button)sender;
             BTNType btnType;
-            if (Enum.TryParse<BTNType>(btn.Tag.ToString(), out btnType)) {
-                if (btnType == BTNType.Search) {
+            if (Enum.TryParse(btn.Tag.ToString(), out btnType)) 
+            {
+                if (btnType == BTNType.Search) 
+                {
                     if (!string.IsNullOrEmpty(this.txtSearch.Text.Trim()))
                     {
                         this.rtbInfo.Tag = this.txtSearch.Text.Trim();
                     }
-                    else {
+                    else
+                    {
                         return;
                     }
-                    
                 }
                 IRichFormat richFomat = RichFormatFactory.CreateRichFormat(btnType);
                 richFomat.SetFormat(this.rtbInfo);

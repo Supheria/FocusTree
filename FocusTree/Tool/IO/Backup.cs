@@ -1,7 +1,8 @@
 ﻿using FocusTree.Data;
+using FocusTree.IO;
 using System.IO.Compression;
 
-namespace FocusTree.IO
+namespace FocusTree.Tool.IO
 {
     internal class Backup
     {

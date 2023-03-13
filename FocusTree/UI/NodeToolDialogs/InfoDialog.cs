@@ -1,4 +1,4 @@
-﻿using FocusTree.Tool;
+﻿using FocusTree.Tool.UI;
 using FocusTree.UI.Controls;
 
 namespace FocusTree.UI.NodeToolDialogs
@@ -6,7 +6,6 @@ namespace FocusTree.UI.NodeToolDialogs
     public partial class InfoDialog : NodeToolDialog
     {
         bool DoFontScale = false;
-        float SizeRatio = 0.618f;
 
         #region ==== 初始化和更新 ====
 
@@ -16,8 +15,6 @@ namespace FocusTree.UI.NodeToolDialogs
             InitializeComponent();
 
             Invalidated += InfoDialog_Invalidated;
-            FormClosing += InfoDialog_FormClosing;
-            Resize += InfoDialog_SizeChanged;
             ResizeEnd += InfoDialog_ResizeEnd;
 
             var font = new Font("仿宋", 20, FontStyle.Regular, GraphicsUnit.Pixel);
@@ -28,7 +25,7 @@ namespace FocusTree.UI.NodeToolDialogs
             ButtonEvent.Click += ButtonEvent_Click;
 
             DrawClient();
-            ResizeForm.SetTag(this);
+            ResizeControl.SetTag(this);
         }
 
         #endregion
@@ -53,33 +50,8 @@ namespace FocusTree.UI.NodeToolDialogs
 
         private void InfoDialog_ResizeEnd(object sender, EventArgs e)
         {
-            var differ = ResizeForm.GetDifference(this);
-            if (differ.Width == 0 && differ.Height != 0)
-            {
-                Width = (int)(Height / SizeRatio);
-            }
-            else if (differ.Width != 0 && differ.Height == 0)
-            {
-                Height = (int)(Width * SizeRatio);
-            }
-            if (Bottom > Screen.PrimaryScreen.Bounds.Bottom)
-            {
-                if (Height > Screen.PrimaryScreen.Bounds.Height)
-                {
-                    Height = Screen.PrimaryScreen.Bounds.Height;
-                }
-                Top -= Bottom - Screen.PrimaryScreen.Bounds.Bottom;
-            }
-            if (Left < Screen.PrimaryScreen.Bounds.Left)
-            {
-                Left = Screen.PrimaryScreen.Bounds.Left;
-            }
-            if (Right > Screen.PrimaryScreen.Bounds.Right)
-            {
-                Left -= Right - Screen.PrimaryScreen.Bounds.Right;
-            }
             var textBox = textBoxList.FirstOrDefault();
-            var ratio = ResizeForm.GetRatio(this).Y;
+            var ratio = ResizeControl.GetRatio(this).Y;
             var fontSize = textBox.Font.Size * ratio;
             var font = new Font(
                     textBox.Font.FontFamily,
@@ -88,7 +60,7 @@ namespace FocusTree.UI.NodeToolDialogs
                     FontStyle.Regular,
                     GraphicsUnit.Pixel);
             textBoxList.ForEach(x => x.Font = font);
-            ResizeForm.SetTag(this);
+            ResizeControl.SetTag(this);
         }
 
         private void TextBox_KeyUp(object sender, KeyEventArgs e)
@@ -117,16 +89,11 @@ namespace FocusTree.UI.NodeToolDialogs
                 DoFontScale = true;
             }
         }
-        private void InfoDialog_SizeChanged(object sender, EventArgs e)
+        public override void Close()
         {
-            DrawClient();
+            Hide();
         }
-        private void InfoDialog_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            this.Hide();
-            e.Cancel = true;
-        }
-        private void DrawClient()
+        protected override void DrawClient()
         {
             if (WindowState == FormWindowState.Minimized)
             {

@@ -125,9 +125,9 @@ namespace FocusTree.UI
             this.MainForm_Menu_file_open,
             this.MainForm_Menu_file_save,
             this.MainForm_Menu_file_saveas,
+            this.MainForm_Menu_file_batch_saveas,
             this.toolStripSeparator1,
-            this.MainForm_Menu_file_backup,
-            this.MainForm_Menu_file_batch_saveas});
+            this.MainForm_Menu_file_backup});
             this.MainForm_Menu_file.Name = "MainForm_Menu_file";
             this.MainForm_Menu_file.Size = new System.Drawing.Size(44, 21);
             this.MainForm_Menu_file.Text = "文件";

@@ -1,8 +1,8 @@
 ﻿using System.Numerics;
 
-namespace FocusTree.Tool
+namespace FocusTree.Tool.UI
 {
-    public static class ResizeForm
+    public static class ResizeControl
     {
         static string SPLITER = " ";
         public static void SetTag(Control parent)

@@ -1,5 +1,6 @@
 ﻿using FocusTree.IO;
-using FocusTree.Tool;
+using FocusTree.Tool.IO;
+using FocusTree.Tool.UI;
 using FocusTree.UI.Controls;
 using FocusTree.UI.NodeToolDialogs;
 
@@ -15,7 +16,6 @@ namespace FocusTree.UI
             MainForm_StatusStrip_filename.Text = "等待打开文件";
             MainForm_StatusStrip_status.Text = "";
             MainForm_Openfile.FileName = "";
-            ResizeForm.SetTag(this);
 
             foreach (var name in Display.ToolDialogs.Keys)
             {
@@ -24,11 +24,11 @@ namespace FocusTree.UI
                 item.Click += MainForm_Menu_window_display_toolDialog_Click;
                 this.MainForm_Menu_window.DropDownItems.Add(item);
             }
-            Display.LoadGraph("D:\\Non_E\\documents\\GitHub\\FocusTree\\FocusTree\\国策\\隐居村落.xml");
+            //Display.LoadGraph("D:\\Non_E\\documents\\GitHub\\FocusTree\\FocusTree\\国策\\隐居村落.xml");
 
-            var a = new InfoDialog(Display);
-            Display.SelectedNode = 1;
-            a.Show(new(Screen.PrimaryScreen.Bounds.Width / 3, Screen.PrimaryScreen.Bounds.Height / 3));
+            //var a = new InfoDialog(Display);
+            //Display.SelectedNode = 1;
+            //a.Show(new(Screen.PrimaryScreen.Bounds.Width / 3, Screen.PrimaryScreen.Bounds.Height / 3));
         }
         private void MainForm_Menu_camera_panorama_Click(object sender, EventArgs e)
         {

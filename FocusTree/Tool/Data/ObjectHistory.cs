@@ -1,8 +1,6 @@
-﻿using FocusTree.Data;
-
-namespace FocusTree.Tool
+﻿namespace FocusTree.Tool.Data
 {
-    internal class ObjectHistory<DataType>
+    internal class ObjectHistory<HistoryData>
     {
         /// <summary>
         /// 历史记录指针
@@ -30,18 +28,14 @@ namespace FocusTree.Tool
         {
             return Index > 0;
         }
-        public static bool HasHistory()
-        {
-            return Length > 1;
-        }
         /// <summary>
         /// 将当前的状态添加到历史记录（会使后续的记录失效）
         /// </summary>
         /// <param name="graph">当前的Graph</param>
         //[Obsolete("我不确定这东西有没有Bug，看起来很玄乎")]
-        public static void Enqueue(IHistoryable<DataType> obj)
+        public static void Enqueue(IFormatable<HistoryData> obj)
         {
-            var data = obj.Serialize();
+            var data = obj.Format();
 
             if (Length == 0)
             {
@@ -73,28 +67,28 @@ namespace FocusTree.Tool
         /// 撤回 (调用前需要检查 HasPrev())
         /// </summary>
         /// <param name="graph">当前的Graph</param>
-        public static void Undo(IHistoryable<DataType> obj)
+        public static void Undo(IFormatable<HistoryData> obj)
         {
             Index--;
-            obj.Deserialize(Index);
+            obj.Deformat(obj.History[Index]);
         }
         /// <summary>
         /// 重做 (调用前需要检查 HasNext())
         /// </summary>
         /// <param name="graph">当前的Graph</param>
         /// <exception cref="IndexOutOfRangeException">访问的历史记录越界</exception>
-        public static void Redo(IHistoryable<DataType> obj)
+        public static void Redo(IFormatable<HistoryData> obj)
         {
             Index++;
             if (Index >= Length)
             {
                 throw new IndexOutOfRangeException("[2302191735] 历史记录越界");
             }
-            obj.Deserialize(Index);
+            obj.Deformat(obj.History[Index]);
         }
-        public static void Initialize(IHistoryable<DataType> obj)
+        public static void Initialize(IFormatable<HistoryData> obj)
         {
-            var data = obj.Serialize();
+            var data = obj.Format();
             obj.History[Index] = data;
             Length = 1;
             Index = 0;

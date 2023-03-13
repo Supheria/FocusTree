@@ -1,4 +1,4 @@
-﻿namespace FocusTree.IO
+﻿namespace FocusTree.Tool.IO
 {
     internal class AutoSave
     {
