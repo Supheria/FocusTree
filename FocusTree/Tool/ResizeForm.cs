@@ -1,18 +1,14 @@
 ﻿using System.Numerics;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
-namespace FocusTree.UITool
+namespace FocusTree.Tool
 {
     public static class ResizeForm
     {
         static string SPLITER = " ";
         public static void SetTag(Control parent)
         {
-            parent.Tag = parent.Width + SPLITER + 
-                parent.Height + SPLITER + 
-                parent.Left + SPLITER + 
-                parent.Top + SPLITER + 
-                parent.Font.Size;
+            parent.Tag = parent.Width + SPLITER +
+                parent.Height + SPLITER;
         }
         public static Size GetDifference(Control parent)
         {

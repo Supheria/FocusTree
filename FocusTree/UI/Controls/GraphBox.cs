@@ -1,12 +1,8 @@
 using FocusTree.Data;
 using FocusTree.IO;
-using System.Numerics;
+using FocusTree.Tool;
 using FocusTree.UI.NodeToolDialogs;
-using System.Drawing;
-using static System.ComponentModel.Design.ObjectSelectorEditor;
-using FocusTree.UITool;
-using System;
-using System.Xml.Linq;
+using System.Numerics;
 
 namespace FocusTree.UI.Controls
 {
@@ -24,11 +20,11 @@ namespace FocusTree.UI.Controls
             get
             {
                 if (ReadOnly) { return Path.GetFileNameWithoutExtension(Graph.FilePath) + $"_{Path.GetFileNameWithoutExtension(FilePath)}" + "（只读）"; }
-                else if (GraphEdited) 
+                else if (GraphEdited)
                 {
                     if (OriginalGraph != Graph.Serialize()) { return Path.GetFileNameWithoutExtension(FilePath) + "（未保存）"; }
                     else { return Path.GetFileNameWithoutExtension(FilePath) + "*"; }
-                    
+
                 }
                 else { return Path.GetFileNameWithoutExtension(FilePath); }
             }
@@ -41,7 +37,7 @@ namespace FocusTree.UI.Controls
         /// <summary>
         /// 先前选中的节点
         /// </summary>
-        public int? SelectedNode 
+        public int? SelectedNode
         {
             get { return selectedNode; }
             set
@@ -62,7 +58,7 @@ namespace FocusTree.UI.Controls
         {
             get
             {
-                if (OriginalGraph != Graph.Serialize() || GraphHistory.HasHistory()) { return true; }
+                if (OriginalGraph != Graph.Serialize() || Graph.HasHistory()) { return true; }
                 else { return false; }
             }
         }
@@ -95,8 +91,8 @@ namespace FocusTree.UI.Controls
         {
             ["国策信息"] = new NodeToolDialog()
         };
-        InfoDialog NodeInfo 
-        { 
+        InfoDialog NodeInfo
+        {
             get { return (InfoDialog)ToolDialogs["国策信息"]; }
             init { toolDialogs["国策信息"] = value; }
         }
@@ -121,7 +117,7 @@ namespace FocusTree.UI.Controls
                 PicGraphContextMenu = new GraphContextMenu(this, MouseButtons.None);
                 SelectedNode = null;
                 NodeInfo.Hide();
-                GraphHistory.Initialize(graph);
+                //GraphHistory.Initialize(graph);
                 RescaleToPanorama();
             }
         }
@@ -539,7 +535,7 @@ namespace FocusTree.UI.Controls
             {
                 DragGraph(args.Location);
             }
-            else if(args.Button == MouseButtons.None)
+            else if (args.Button == MouseButtons.None)
             {
                 ShowNodeInfoTip(args.Location);
             }
@@ -709,8 +705,8 @@ namespace FocusTree.UI.Controls
         /// </summary>
         private void RescaleToPanorama()
         {
-            if (Graph == null) 
-            { 
+            if (Graph == null)
+            {
                 return;
             }
             var center = Graph.CenterMetaData();
@@ -756,7 +752,7 @@ namespace FocusTree.UI.Controls
         /// </summary>
         public void SaveGraph()
         {
-            if(Graph == null)
+            if (Graph == null)
             {
                 return;
             }
@@ -798,10 +794,7 @@ namespace FocusTree.UI.Controls
         /// </summary>
         public void Undo()
         {
-            if (GraphHistory.HasPrev())
-            {
-                GraphHistory.Undo(ref graph);
-            }
+            Graph.Undo();
             Invalidate();
         }
         /// <summary>
@@ -809,17 +802,23 @@ namespace FocusTree.UI.Controls
         /// </summary>
         public void Redo()
         {
-            if (GraphHistory.HasNext())
-            {
-                GraphHistory.Redo(ref graph);
-            }
+            Graph.Redo();
             Invalidate();
+        }
+
+        public bool HasPrevHistory()
+        {
+            return Graph.HasPrevHistory();
+        }
+        public bool HasNextHistory()
+        {
+            return Graph.HasNextHistory();
         }
 
         #endregion
 
         #region ---- 镜头操作调用 ----
-        
+
         public void CamLocatePanorama()
         {
             RescaleToPanorama();
@@ -859,7 +858,7 @@ namespace FocusTree.UI.Controls
                 return;
             }
             Graph.RemoveNode(SelectedNode.Value);
-            GraphHistory.Enqueue(Graph);
+            Graph.HistoryEnqueue();
             SelectedNode = null;
             Invalidate();
         }

@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace FocusTree.Data
+namespace FocusTree.Tool
 {
     internal class JsObject
     {
@@ -9,12 +9,8 @@ namespace FocusTree.Data
         /// </summary>
         /// <param name="graph">Graph</param>
         /// <returns>序列化对象</returns>
-        public static (string, string) Serialize<ClassType, MetaType1, MetaType2>(ClassType obj, MetaType1 meta1, MetaType2 meta2)
+        public static (string, string) Serialize<MetaType1, MetaType2>(MetaType1 meta1, MetaType2 meta2)
         {
-            if (obj == null)
-            {
-                return (null, null);
-            }
             var jsMeta1 = JsonConvert.SerializeObject(meta1);
             var jsMeat2 = JsonConvert.SerializeObject(meta2);
             return (jsMeta1, jsMeat2);
@@ -24,12 +20,8 @@ namespace FocusTree.Data
         /// </summary>
         /// <param name="data">序列化的历史记录</param>
         /// <param name="graph">反序列化到目标</param>
-        public static (MetaType1, MetaType2) DeSerialize<ClassType, MetaType1, MetaType2>((string, string) data, ClassType obj)
+        public static (MetaType1, MetaType2) DeSerialize<MetaType1, MetaType2>((string, string) data)
         {
-            if (obj == null)
-            {
-                return (default(MetaType1), default(MetaType2));
-            }
             var meta1 = JsonConvert.DeserializeObject<MetaType1>(data.Item1);
             var meta2 = JsonConvert.DeserializeObject<MetaType2>(data.Item2);
             return (meta1, meta2);

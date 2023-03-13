@@ -1,9 +1,4 @@
 ﻿using FocusTree.UI.Controls;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FocusTree.UI.NodeToolDialogs
 {
@@ -21,7 +16,7 @@ namespace FocusTree.UI.NodeToolDialogs
             {
                 return;
             }
-            //Invalidate();
+            Invalidate();
 
             Location = pos;
             base.Show();

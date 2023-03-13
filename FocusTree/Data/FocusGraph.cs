@@ -1,14 +1,13 @@
 using System.Numerics;
 using System.Text;
 using System.Xml;
-using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using static System.Windows.Forms.LinkLabel;
+using FocusTree.Tool;
 
 namespace FocusTree.Data
 {
-    public class FocusGraph : IXmlSerializable
+    public class FocusGraph : IXmlSerializable, IHistoryable<(string, string)>
     {
         #region ---- 存档文件名 ----
 
@@ -360,6 +359,7 @@ namespace FocusTree.Data
             RequireGroups = requireGroups;
             CreateLinkes();
             SetMetaPoints();
+            ObjectHistory<(string, string)>.Initialize(this);
         }
         /// <summary>
         /// 用于序列化
@@ -379,6 +379,7 @@ namespace FocusTree.Data
             RequireGroups = graph.RequireGroups;
             CreateLinkes();
             SetMetaPoints();
+            ObjectHistory<(string, string)>.Initialize(this);
         }
 
         #endregion
@@ -437,6 +438,7 @@ namespace FocusTree.Data
 
             CreateLinkes();
             SetMetaPoints();
+            ObjectHistory<(string, string)>.Initialize(this);
         }
         /// <summary>
         /// 反序列化时用于读取节点的关系
@@ -525,15 +527,18 @@ namespace FocusTree.Data
 
         #region ---- 历史和备份工具 ----
 
+        public (string, string)[] History { get { return history; } }
+        (string, string)[] history
+            = new (string, string)[20];
         public (string, string) Serialize()
         {
-            return JsObject.Serialize(this, NodesCatalog, RequireGroups);
+            return JsObject.Serialize(NodesCatalog, RequireGroups);
         }
-        public void Deserialize((string, string) data)
+        public void Deserialize(int index)
         {
-            var metas = JsObject.DeSerialize<FocusGraph,
+            var metas = JsObject.DeSerialize<
                 Dictionary<int, FocusData>,
-                Dictionary<int, List<HashSet<int>>>>(data, this);
+                Dictionary<int, List<HashSet<int>>>>(History[index]);
             NodesCatalog = metas.Item1;
             RequireGroups = metas.Item2;
             CreateLinkes();
@@ -553,6 +558,36 @@ namespace FocusTree.Data
             {
                 return Serialize() == other.Serialize();
             }
+        }
+        public bool HasPrevHistory()
+        {
+            return ObjectHistory<(string, string)>.HasPrev();
+        }
+        public bool HasNextHistory()
+        {
+            return ObjectHistory<(string, string)>.HasNext();
+        }
+        public bool HasHistory()
+        {
+            return ObjectHistory<(string, string)>.HasHistory();
+        }
+        public void Undo()
+        {
+            if (ObjectHistory<(string, string)>.HasPrev())
+            {
+                ObjectHistory<(string, string)>.Undo(this);
+            }
+        }
+        public void Redo()
+        {
+            if (ObjectHistory<(string, string)>.HasNext())
+            {
+                ObjectHistory<(string, string)>.Redo(this);
+            }
+        }
+        public void HistoryEnqueue()
+        {
+            ObjectHistory<(string, string)>.Enqueue(this);
         }
 
         #endregion
@@ -589,13 +624,13 @@ namespace FocusTree.Data
         {
             return RequireGroups.GetEnumerator();
         }
-        public IEnumerator<KeyValuePair<int, HashSet<int>>> GetChildLinksEnumerator() 
-        { 
-            return ChildLinkes.GetEnumerator(); 
+        public IEnumerator<KeyValuePair<int, HashSet<int>>> GetChildLinksEnumerator()
+        {
+            return ChildLinkes.GetEnumerator();
         }
-        public IEnumerator<KeyValuePair<int, Vector2>> GetMetaPointsEnumerator() 
-        { 
-            return MetaPoints.GetEnumerator(); 
+        public IEnumerator<KeyValuePair<int, Vector2>> GetMetaPointsEnumerator()
+        {
+            return MetaPoints.GetEnumerator();
         }
 
         #endregion

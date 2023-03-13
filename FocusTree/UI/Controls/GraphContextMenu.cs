@@ -1,5 +1,4 @@
-﻿using FocusTree.Data;
-using FocusTree.IO;
+﻿using FocusTree.IO;
 
 namespace FocusTree.UI.Controls
 {
@@ -101,13 +100,13 @@ namespace FocusTree.UI.Controls
         }
         public void GraphContextMenu_edit_status_check()
         {
-            GraphContextMenu_edit_undo.Enabled = GraphHistory.HasPrev();
-            GraphContextMenu_edit_redo.Enabled = GraphHistory.HasNext();
+            GraphContextMenu_edit_undo.Enabled = Display.HasPrevHistory();
+            GraphContextMenu_edit_redo.Enabled = Display.HasNextHistory();
         }
         private void GraphContextMenu_edit_status_check(object sender, EventArgs e)
         {
-            GraphContextMenu_edit_undo.Enabled = GraphHistory.HasPrev();
-            GraphContextMenu_edit_redo.Enabled = GraphHistory.HasNext();
+            GraphContextMenu_edit_undo.Enabled = Display.HasPrevHistory();
+            GraphContextMenu_edit_redo.Enabled = Display.HasNextHistory();
         }
 
         private void MouseButtonMiddle()

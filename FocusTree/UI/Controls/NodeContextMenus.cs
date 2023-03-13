@@ -1,7 +1,4 @@
-﻿using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
-using System;
-
-namespace FocusTree.UI.Controls
+﻿namespace FocusTree.UI.Controls
 {
     class NodeContextMenu : ContextMenuStrip
     {

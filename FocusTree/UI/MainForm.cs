@@ -1,8 +1,7 @@
-﻿using FocusTree.Data;
-using FocusTree.IO;
+﻿using FocusTree.IO;
+using FocusTree.Tool;
 using FocusTree.UI.Controls;
 using FocusTree.UI.NodeToolDialogs;
-using FocusTree.UITool;
 
 namespace FocusTree.UI
 {
@@ -26,7 +25,7 @@ namespace FocusTree.UI
                 this.MainForm_Menu_window.DropDownItems.Add(item);
             }
             Display.LoadGraph("D:\\Non_E\\documents\\GitHub\\FocusTree\\FocusTree\\国策\\隐居村落.xml");
-            
+
             var a = new InfoDialog(Display);
             Display.SelectedNode = 1;
             a.Show(new(Screen.PrimaryScreen.Bounds.Width / 3, Screen.PrimaryScreen.Bounds.Height / 3));
@@ -175,13 +174,13 @@ namespace FocusTree.UI
         /// </summary>
         public void MainForm_Menu_edit_status_check()
         {
-            MainForm_Menu_edit_undo.Enabled = GraphHistory.HasPrev();
-            MainForm_Menu_edit_redo.Enabled = GraphHistory.HasNext();
+            MainForm_Menu_edit_undo.Enabled = Display.HasPrevHistory();
+            MainForm_Menu_edit_redo.Enabled = Display.HasNextHistory();
         }
         private void MainForm_Menu_edit_status_check(object sender, EventArgs e)
         {
-            MainForm_Menu_edit_undo.Enabled = GraphHistory.HasPrev();
-            MainForm_Menu_edit_redo.Enabled = GraphHistory.HasNext();
+            MainForm_Menu_edit_undo.Enabled = Display.HasPrevHistory();
+            MainForm_Menu_edit_redo.Enabled = Display.HasNextHistory();
         }
 
         private void MainForm_Menu_edit_Click(object sender, EventArgs e)
@@ -197,7 +196,7 @@ namespace FocusTree.UI
                 MainForm_StatusStrip_status.Text = "";
             }
             Text = Display.FileName;
-            if(Display.ReadOnly)
+            if (Display.ReadOnly)
             {
                 MainForm_StatusStrip_filename.Text = "正在预览";
                 MainForm_StatusStrip_status.Text = "";

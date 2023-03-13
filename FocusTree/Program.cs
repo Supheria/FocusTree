@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 //Console.WriteLine("Hello, World!");
 
+using FocusTree.Data;
 using FocusTree.UI;
 
 internal static class Program
@@ -11,6 +12,8 @@ internal static class Program
     [STAThread]
     static void Main()
     {
+        //var a = GraphHistory<string>.HasHistory();
+        //var b = GraphHistory<(string, string)>.HasHistory();
         //Test.FMapTest();
         //Test.FGraphToXmlTest();
         Application.Run(new MainForm());
@@ -18,7 +21,8 @@ internal static class Program
         //Application.EnableVisualStyles();
         //Application.SetCompatibleTextRenderingDefault(false);
         //Application.Run(new MainForm());
-
+        //var c = GraphHistory<string>.HasHistory();
+        //var e = GraphHistory<(string, string)>.HasHistory();
 
     }
 }

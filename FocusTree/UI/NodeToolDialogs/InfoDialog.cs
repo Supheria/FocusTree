@@ -1,15 +1,10 @@
-﻿using FocusTree.UI.Controls;
-using FocusTree.UITool;
-using System.Drawing;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
-using System.Windows.Forms;
-using Newtonsoft.Json;
+﻿using FocusTree.Tool;
+using FocusTree.UI.Controls;
 
 namespace FocusTree.UI.NodeToolDialogs
 {
     public partial class InfoDialog : NodeToolDialog
     {
-        List<TextBox> textBoxList;
         bool DoFontScale = false;
         float SizeRatio = 0.618f;
 
@@ -24,21 +19,21 @@ namespace FocusTree.UI.NodeToolDialogs
             FormClosing += InfoDialog_FormClosing;
             Resize += InfoDialog_SizeChanged;
             ResizeEnd += InfoDialog_ResizeEnd;
-            textBoxList = new()
-            {
-                Requires,
-                Descript,
-                Effects,
-            };
+
             var font = new Font("仿宋", 20, FontStyle.Regular, GraphicsUnit.Pixel);
             textBoxList.ForEach(x => x.Font = font);
             textBoxList.ForEach(x => x.KeyDown += TextBox_KeyDown);
             textBoxList.ForEach(x => x.MouseWheel += TextBox_MouseWheel);
             textBoxList.ForEach(x => x.KeyUp += TextBox_KeyUp);
+            ButtonEvent.Click += ButtonEvent_Click;
 
             DrawClient();
             ResizeForm.SetTag(this);
         }
+
+        #endregion
+
+        #region ==== 事件和更新 ====
 
         private void InfoDialog_Invalidated(object sender, InvalidateEventArgs e)
         {
@@ -47,31 +42,25 @@ namespace FocusTree.UI.NodeToolDialogs
             Duration.Text = $"{focusData.Duration}日";
             Descript.Text = focusData.Descript;
             Effects.Text = focusData.Effects;
+
+            AllowDrop = Display.ReadOnly ? false : true;
+            Duration.ReadOnly = Display.ReadOnly;
+            ButtonEvent.Text = Display.ReadOnly ? "开始" : "保存";
+            Requires.ReadOnly = Display.ReadOnly;
+            Descript.ReadOnly = Display.ReadOnly;
+            Effects.ReadOnly = Display.ReadOnly;
         }
 
         private void InfoDialog_ResizeEnd(object sender, EventArgs e)
         {
-
             var differ = ResizeForm.GetDifference(this);
             if (differ.Width == 0 && differ.Height != 0)
             {
-                Width = (int)(Height * SizeRatio);
+                Width = (int)(Height / SizeRatio);
             }
             else if (differ.Width != 0 && differ.Height == 0)
             {
-                Height = (int)(Width / SizeRatio);
-            }
-            else if (differ.Width != 0 && differ.Height != 0)
-            {
-                var ratioVec = ResizeForm.GetRatio(this);
-                if(ratioVec.X > ratioVec.Y)
-                {
-                    Width = (int)(Height * SizeRatio);
-                }
-                else
-                {
-                    Height = (int)(Width / SizeRatio);
-                }
+                Height = (int)(Width * SizeRatio);
             }
             if (Bottom > Screen.PrimaryScreen.Bounds.Bottom)
             {
@@ -80,17 +69,25 @@ namespace FocusTree.UI.NodeToolDialogs
                     Height = Screen.PrimaryScreen.Bounds.Height;
                 }
                 Top -= Bottom - Screen.PrimaryScreen.Bounds.Bottom;
-                Width = (int)(Height * SizeRatio);
             }
-            if(Left < Screen.PrimaryScreen.Bounds.Left)
+            if (Left < Screen.PrimaryScreen.Bounds.Left)
             {
                 Left = Screen.PrimaryScreen.Bounds.Left;
             }
-            if(Right > Screen.PrimaryScreen.Bounds.Right)
+            if (Right > Screen.PrimaryScreen.Bounds.Right)
             {
                 Left -= Right - Screen.PrimaryScreen.Bounds.Right;
             }
-
+            var textBox = textBoxList.FirstOrDefault();
+            var ratio = ResizeForm.GetRatio(this).Y;
+            var fontSize = textBox.Font.Size * ratio;
+            var font = new Font(
+                    textBox.Font.FontFamily,
+                    fontSize < Height * 0.025f ? Height * 0.025f :
+                    fontSize > Height * 0.05f ? Height * 0.05f : fontSize,
+                    FontStyle.Regular,
+                    GraphicsUnit.Pixel);
+            textBoxList.ForEach(x => x.Font = font);
             ResizeForm.SetTag(this);
         }
 
@@ -102,8 +99,14 @@ namespace FocusTree.UI.NodeToolDialogs
         {
             if (DoFontScale == true)
             {
-                var textBox = sender as TextBox;
-                var font = new Font(textBox.Font.FontFamily, textBox.Font.Size + e.Delta * 0.01f, FontStyle.Regular, GraphicsUnit.Pixel);
+                var textBox = textBoxList.FirstOrDefault();
+                var fontSize = textBox.Font.Size + e.Delta * 0.01f;
+                var font = new Font(
+                    textBox.Font.FontFamily,
+                    fontSize < Height * 0.025f ? Height * 0.025f :
+                    fontSize > Height * 0.05f ? Height * 0.05f : fontSize,
+                    FontStyle.Regular,
+                    GraphicsUnit.Pixel);
                 textBoxList.ForEach(x => x.Font = font);
             }
         }
@@ -125,9 +128,13 @@ namespace FocusTree.UI.NodeToolDialogs
         }
         private void DrawClient()
         {
+            if (WindowState == FormWindowState.Minimized)
+            {
+                return;
+            }
             SuspendLayout();
             int padding = 12;
-            var fontSize = MathF.Min(Width * 0.05f, Height * 0.03f);
+            var fontSize = Height * 0.03f;
             //
             // FocusIcon
             //
@@ -135,7 +142,6 @@ namespace FocusTree.UI.NodeToolDialogs
             FocusIcon.Top = ClientRectangle.Top + padding;
             FocusIcon.Width = (int)(MathF.Min(ClientRectangle.Width * 0.382f, ClientRectangle.Height * 0.3f));
             FocusIcon.Height = (int)(MathF.Min(ClientRectangle.Width * 0.382f, ClientRectangle.Height * 0.3f));
-            AllowDrop = Display.ReadOnly ? false : true;
             //
             // Duration
             //
@@ -144,7 +150,6 @@ namespace FocusTree.UI.NodeToolDialogs
             Duration.Width = (int)((ClientRectangle.Right - FocusIcon.Right) * 0.5f);
             //Duration.Height = textFont.Height;
             Duration.Font = new Font(Font.FontFamily, fontSize, FontStyle.Regular, GraphicsUnit.Pixel);
-            Duration.ReadOnly = Display.ReadOnly;
             //
             // ButtonEvent
             //
@@ -153,7 +158,6 @@ namespace FocusTree.UI.NodeToolDialogs
             ButtonEvent.Width = (int)(ClientRectangle.Right - Duration.Right - padding * 1.7f);
             ButtonEvent.Height = Duration.Height;
             ButtonEvent.Font = new Font("黑体", fontSize * 0.8f, FontStyle.Regular, GraphicsUnit.Pixel);
-            ButtonEvent.Text = Display.ReadOnly ? "开始" : "保存";
             //
             // Requires
             //
@@ -161,7 +165,6 @@ namespace FocusTree.UI.NodeToolDialogs
             Requires.Top = Duration.Bottom + padding;
             Requires.Width = (int)(ClientRectangle.Right - FocusIcon.Right - padding * 2.5f);
             Requires.Height = FocusIcon.Bottom - Duration.Bottom - padding;
-            Requires.ReadOnly = Display.ReadOnly;
             //
             // Descript
             //
@@ -169,7 +172,6 @@ namespace FocusTree.UI.NodeToolDialogs
             Descript.Top = FocusIcon.Bottom + padding;
             Descript.Width = (int)(ClientRectangle.Width - padding * 2.5f);
             Descript.Height = (int)(ClientRectangle.Height * 0.22f);
-            Descript.ReadOnly = Display.ReadOnly;
             //
             //EffectsTitle
             //
@@ -184,7 +186,6 @@ namespace FocusTree.UI.NodeToolDialogs
             Effects.Top = (int)(EffectsTitle.Bottom + padding * 0.5f);
             Effects.Width = (int)(ClientRectangle.Width - padding * 2.5f);
             Effects.Height = (int)(ClientRectangle.Bottom - EffectsTitle.Bottom - padding * 2.5f);
-            Effects.ReadOnly = Display.ReadOnly;
             //
             // draw picture box image
             //
@@ -217,7 +218,7 @@ namespace FocusTree.UI.NodeToolDialogs
 
         #region ==== 控件事件 ====
 
-        private void btnEvent_Click(object sender, EventArgs e)
+        private void ButtonEvent_Click(object sender, EventArgs e)
         {
             if (Display.ReadOnly)
             {
@@ -249,6 +250,12 @@ namespace FocusTree.UI.NodeToolDialogs
 
         private void InitializeComponent()
         {
+            textBoxList = new()
+            {
+                Requires,
+                Descript,
+                Effects,
+            };
             //
             // FocusIcon
             //
@@ -256,7 +263,8 @@ namespace FocusTree.UI.NodeToolDialogs
             //
             // Duration
             //
-
+            Duration.Name = "Duration";
+            Duration.TextAlign = HorizontalAlignment.Center;
             //
             // ButtonEvent
             //
@@ -264,15 +272,16 @@ namespace FocusTree.UI.NodeToolDialogs
             //
             // Requires
             //
+            Requires.Name = "Requires";
             Requires.Multiline = true;
             Requires.WordWrap = false;
             Requires.ScrollBars = ScrollBars.Both;
             //
             // Descript
             //
+            Descript.Name = "Descript";
             Descript.Multiline = true;
-            Descript.WordWrap = false;
-            Descript.ScrollBars = ScrollBars.Both;
+            Descript.ScrollBars = ScrollBars.Vertical;
             //
             //EffectsTitle
             //
@@ -280,6 +289,7 @@ namespace FocusTree.UI.NodeToolDialogs
             //
             // Effects
             //
+            Effects.Name = "Effects";
             Effects.Multiline = true;
             Effects.WordWrap = false;
             Effects.ScrollBars = ScrollBars.Both;
@@ -302,19 +312,19 @@ namespace FocusTree.UI.NodeToolDialogs
                 (Screen.GetBounds(this).Width / 2) - (this.Width / 2),
                 (Screen.GetBounds(this).Height / 2) - (this.Height / 2)
                 );
-            MinimizeBox = MaximizeBox = false;
+            //MinimizeBox = MaximizeBox = false;
             DoubleBuffered = true;
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-            FormBorderStyle = FormBorderStyle.SizableToolWindow;
         }
 
-        PictureBox FocusIcon = new();
-        TextBox Duration = new();
-        Button ButtonEvent = new();
-        TextBox Requires = new TextBox();
-        TextBox Descript = new();
-        PictureBox EffectsTitle = new();
-        TextBox Effects = new();
+        System.Windows.Forms.PictureBox FocusIcon = new();
+        System.Windows.Forms.TextBox Duration = new();
+        System.Windows.Forms.Button ButtonEvent = new();
+        System.Windows.Forms.TextBox Requires = new();
+        System.Windows.Forms.TextBox Descript = new();
+        System.Windows.Forms.PictureBox EffectsTitle = new();
+        System.Windows.Forms.TextBox Effects = new();
+        List<System.Windows.Forms.TextBox> textBoxList;
 
         #endregion
     }
