@@ -24,11 +24,11 @@ namespace FocusTree.UI
                 item.Click += MainForm_Menu_window_display_toolDialog_Click;
                 this.MainForm_Menu_window.DropDownItems.Add(item);
             }
-            //Display.LoadGraph("D:\\Non_E\\documents\\GitHub\\FocusTree\\FocusTree\\国策\\隐居村落.xml");
+            Display.LoadGraph("D:\\Non_E\\documents\\GitHub\\FocusTree\\FocusTree\\国策\\隐居村落.xml");
 
-            //var a = new InfoDialog(Display);
-            //Display.SelectedNode = 1;
-            //a.Show(new(Screen.PrimaryScreen.Bounds.Width / 3, Screen.PrimaryScreen.Bounds.Height / 3));
+            var a = new InfoDialog(Display);
+            Display.SelectedNode = 1;
+            a.Show(new(Screen.PrimaryScreen.Bounds.Width / 3, Screen.PrimaryScreen.Bounds.Height / 3));
         }
         private void MainForm_Menu_camera_panorama_Click(object sender, EventArgs e)
         {

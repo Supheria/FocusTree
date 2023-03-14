@@ -1,20 +1,18 @@
 ﻿namespace FocusTree.Tool.Data
 {
-    internal interface IHistoryable
+    internal interface IHistoryable : IFormattable
     {
         /// <summary>
         /// 保留的历史记录
         /// </summary>
-        public IHistoryData[] History { get; }
+        public IFormattedData[] History { get; }
         /// <summary>
-        /// 获取格式化数据
+        /// 最近一次保存时的数据
         /// </summary>
-        /// <returns>格式化数据</returns>
-        public IHistoryData Format();
+        public IFormattedData Latest { get; set; }
         /// <summary>
-        /// 复原格式化数据
+        /// 较最近一次保存是否已被编辑
         /// </summary>
-        /// <param name="data">格式化数据</param>
-        public void Deformat(IHistoryData data);
+        public bool IsEdit();
     }
 }

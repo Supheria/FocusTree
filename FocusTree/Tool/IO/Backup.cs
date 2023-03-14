@@ -1,5 +1,6 @@
 ﻿using FocusTree.Data;
 using FocusTree.IO;
+using FocusTree.Tool.Data;
 using System.IO.Compression;
 
 namespace FocusTree.Tool.IO
@@ -50,7 +51,7 @@ namespace FocusTree.Tool.IO
             try
             {
                 var prevGraph = XmlIO.LoadGraph(path);
-                if (graph.Equals(prevGraph))
+                if (graph.Format().Equals(prevGraph.Format()))
                 {
                     return;
                 }
@@ -78,7 +79,7 @@ namespace FocusTree.Tool.IO
             if (File.Exists(graph.FilePath))
             {
                 var prevGraph = XmlIO.LoadGraph(graph.FilePath);
-                if (graph.Equals(prevGraph) == false)
+                if (graph.Format().Equals(prevGraph.Format()) == false)
                 {
                     var dir = Directory.CreateDirectory(Path.Combine(DirectoryName, Path.GetFileNameWithoutExtension(graph.FilePath)));
                     var copyPath = Path.Combine(dir.FullName, DateTime.Now.ToString("yyyyMMdd_HHmmss"));

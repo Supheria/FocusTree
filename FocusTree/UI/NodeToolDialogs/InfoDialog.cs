@@ -1,11 +1,16 @@
-﻿using FocusTree.Tool.UI;
+﻿using FocusTree.Data;
+using FocusTree.Tool.Data;
+using FocusTree.Tool.UI;
 using FocusTree.UI.Controls;
+using Newtonsoft.Json;
 
 namespace FocusTree.UI.NodeToolDialogs
 {
-    public partial class InfoDialog : NodeToolDialog
+    public partial class InfoDialog : NodeToolDialog, IHistoryable
     {
         bool DoFontScale = false;
+        bool DoTextEditCheck = false;
+        FormatedInfoDialog Origin;
 
         #region ==== 初始化和更新 ====
 
@@ -15,43 +20,98 @@ namespace FocusTree.UI.NodeToolDialogs
             InitializeComponent();
 
             Invalidated += InfoDialog_Invalidated;
-            ResizeEnd += InfoDialog_ResizeEnd;
+            Resize += InfoDialog_Resize;
 
             var font = new Font("仿宋", 20, FontStyle.Regular, GraphicsUnit.Pixel);
             textBoxList.ForEach(x => x.Font = font);
             textBoxList.ForEach(x => x.KeyDown += TextBox_KeyDown);
             textBoxList.ForEach(x => x.MouseWheel += TextBox_MouseWheel);
             textBoxList.ForEach(x => x.KeyUp += TextBox_KeyUp);
+            textBoxList.ForEach(x => x.TextChanged += Text_TextChanged);
+            textBoxList.ForEach(x => x.LostFocus += Text_LostFocus);
             ButtonEvent.Click += ButtonEvent_Click;
 
             DrawClient();
-            ResizeControl.SetTag(this);
         }
-
-        #endregion
-
-        #region ==== 事件和更新 ====
 
         private void InfoDialog_Invalidated(object sender, InvalidateEventArgs e)
         {
             var focusData = Display.GetSelectedNodeData();
-            Text = $"{focusData.Name}, {focusData.ID}";
-            Duration.Text = $"{focusData.Duration}日";
+            Text = $"id: {focusData.ID}";
+            FocusName.Text = focusData.Name;
+            Duration.Text = $"{focusData.Duration}";
             Descript.Text = focusData.Descript;
             Effects.Text = focusData.Effects;
 
             AllowDrop = Display.ReadOnly ? false : true;
+            FocusName.ReadOnly = Display.ReadOnly;
             Duration.ReadOnly = Display.ReadOnly;
             ButtonEvent.Text = Display.ReadOnly ? "开始" : "保存";
             Requires.ReadOnly = Display.ReadOnly;
             Descript.ReadOnly = Display.ReadOnly;
             Effects.ReadOnly = Display.ReadOnly;
+
+            ObjectHistory<InfoDialog>.Initialize(this);
+            Origin = Format() as FormatedInfoDialog;
         }
 
-        private void InfoDialog_ResizeEnd(object sender, EventArgs e)
+        #endregion
+
+        #region ==== 控件事件 ====
+
+        private void Text_LostFocus(object sender, EventArgs e)
+        {
+            if (DoTextEditCheck == false)
+            {
+                return;
+            }
+            if (Equals(Origin))
+            {
+                return;
+            }
+            ObjectHistory<InfoDialog>.Enqueue(this);
+        }
+
+        private void Text_TextChanged(object sender, EventArgs e)
+        {
+            DoTextEditCheck = true;
+        }
+
+        private void ButtonEvent_Click(object sender, EventArgs e)
+        {
+            if (Display.ReadOnly)
+            {
+                EventReadOnly();
+            }
+            else
+            {
+                EventEdit();
+            }
+        }
+        /// <summary>
+        /// 作为展示对话框
+        /// </summary>
+        private void EventReadOnly()
+        {
+
+        }
+        /// <summary>
+        /// 作为可编辑对话框
+        /// </summary>
+        private void EventEdit()
+        {
+
+        }
+
+        #endregion
+
+        #region ==== 绘图和事件 ====
+
+        private void InfoDialog_Resize(object sender, EventArgs e)
         {
             var textBox = textBoxList.FirstOrDefault();
-            var ratio = ResizeControl.GetRatio(this).Y;
+            var a = ControlResize.GetRatio(this);
+            var ratio = ControlResize.GetRatio(this).Y;
             var fontSize = textBox.Font.Size * ratio;
             var font = new Font(
                     textBox.Font.FontFamily,
@@ -60,7 +120,6 @@ namespace FocusTree.UI.NodeToolDialogs
                     FontStyle.Regular,
                     GraphicsUnit.Pixel);
             textBoxList.ForEach(x => x.Font = font);
-            ResizeControl.SetTag(this);
         }
 
         private void TextBox_KeyUp(object sender, KeyEventArgs e)
@@ -103,42 +162,56 @@ namespace FocusTree.UI.NodeToolDialogs
             int padding = 12;
             var fontSize = Height * 0.03f;
             //
+            // FocusName
+            //
+            FocusName.Left = ClientRectangle.Left + padding;
+            FocusName.Top = ClientRectangle.Top + padding;
+            FocusName.Width = (int)((ClientRectangle.Width - padding * 2.5) * 0.7 - padding);
+            FocusName.Font = new Font(Font.FontFamily, fontSize, FontStyle.Regular, GraphicsUnit.Pixel);
+            //
             // FocusIcon
             //
             FocusIcon.Left = ClientRectangle.Left + padding;
-            FocusIcon.Top = ClientRectangle.Top + padding;
+            FocusIcon.Top = FocusName.Bottom + padding;
             FocusIcon.Width = (int)(MathF.Min(ClientRectangle.Width * 0.382f, ClientRectangle.Height * 0.3f));
             FocusIcon.Height = (int)(MathF.Min(ClientRectangle.Width * 0.382f, ClientRectangle.Height * 0.3f));
             //
             // Duration
             //
             Duration.Left = FocusIcon.Right + padding;
-            Duration.Top = ClientRectangle.Top + padding;
-            Duration.Width = (int)((ClientRectangle.Right - FocusIcon.Right) * 0.5f);
+            Duration.Top = FocusName.Bottom + padding;
+            Duration.Width = (int)((FocusName.Width * 1.05f - FocusIcon.Right) * 0.6f);
             //Duration.Height = textFont.Height;
             Duration.Font = new Font(Font.FontFamily, fontSize, FontStyle.Regular, GraphicsUnit.Pixel);
             //
+            // DurationUnit
+            //
+            DurationUnit.Left = (int)(Duration.Right);
+            DurationUnit.Top = (int)(FocusName.Bottom + padding * 1.22f);
+            DurationUnit.Width = (int)(FocusName.Width - FocusIcon.Width - Duration.Width);
+            DurationUnit.Height = Duration.Height;
+            //
             // ButtonEvent
             //
-            ButtonEvent.Left = (int)(Duration.Right + padding * 0.2f);
+            ButtonEvent.Left = (int)(FocusName.Right + padding * 2.5f);
             ButtonEvent.Top = ClientRectangle.Top + padding;
-            ButtonEvent.Width = (int)(ClientRectangle.Right - Duration.Right - padding * 1.7f);
-            ButtonEvent.Height = Duration.Height;
-            ButtonEvent.Font = new Font("黑体", fontSize * 0.8f, FontStyle.Regular, GraphicsUnit.Pixel);
+            ButtonEvent.Width = (int)(ClientRectangle.Right - FocusName.Right - padding * 4.5f);
+            ButtonEvent.Height = (int)(Duration.Bottom - ClientRectangle.Top - padding);
+            ButtonEvent.Font = new Font("黑体", fontSize, FontStyle.Regular, GraphicsUnit.Pixel);
             //
             // Requires
             //
             Requires.Left = FocusIcon.Right + padding;
-            Requires.Top = Duration.Bottom + padding;
+            Requires.Top = (int)(Duration.Bottom + padding * 1.5f);
             Requires.Width = (int)(ClientRectangle.Right - FocusIcon.Right - padding * 2.5f);
-            Requires.Height = FocusIcon.Bottom - Duration.Bottom - padding;
+            Requires.Height = FocusIcon.Bottom - Duration.Bottom - padding * 2;
             //
             // Descript
             //
             Descript.Left = ClientRectangle.Left + padding;
             Descript.Top = FocusIcon.Bottom + padding;
             Descript.Width = (int)(ClientRectangle.Width - padding * 2.5f);
-            Descript.Height = (int)(ClientRectangle.Height * 0.22f);
+            Descript.Height = (int)(ClientRectangle.Height * 0.15f);
             //
             //EffectsTitle
             //
@@ -157,22 +230,36 @@ namespace FocusTree.UI.NodeToolDialogs
             // draw picture box image
             //
             if (FocusIcon.Image != null) { FocusIcon.Image.Dispose(); }
+            if (DurationUnit.Image != null) { DurationUnit.Image.Dispose(); }
             if (EffectsTitle.Image != null) { EffectsTitle.Image.Dispose(); }
             FocusIcon.Image = Image.FromFile("D:\\Non_E\\documents\\GitHub\\FocusTree\\FocusTree\\FocusTree\\Resources\\FocusTree.ico");
+            DurationUnit.Image = new Bitmap(DurationUnit.Width, DurationUnit.Height);
             EffectsTitle.Image = new Bitmap(EffectsTitle.Width, EffectsTitle.Height);
-            var g = Graphics.FromImage(EffectsTitle.Image);
-            g.Clear(BackColor);
+            var g1 = Graphics.FromImage(DurationUnit.Image);
+            var g2 = Graphics.FromImage(EffectsTitle.Image);
+            g1.Clear(BackColor);
+            g2.Clear(BackColor);
+            var brush = new SolidBrush(Color.Black);
             var stringFormat = new StringFormat();
+            stringFormat.Alignment = StringAlignment.Near;
+            stringFormat.LineAlignment = StringAlignment.Center;
+            g1.DrawString(
+                "日",
+                new Font("仿宋", fontSize, FontStyle.Bold, GraphicsUnit.Pixel),
+                brush,
+                new RectangleF(0, 0, DurationUnit.Width, DurationUnit.Height),
+                stringFormat
+                );
             stringFormat.Alignment = StringAlignment.Center;
-            g.DrawString(
+            g2.DrawString(
                 "==== 效果 ====",
                 new Font("仿宋", fontSize, FontStyle.Regular, GraphicsUnit.Pixel),
-                new SolidBrush(Color.Black),
+                brush,
                 new RectangleF(0, 0, EffectsTitle.Width, EffectsTitle.Height),
                 stringFormat
                 );
-            g.Flush();
-            g.Dispose();
+            g1.Flush(); g1.Dispose();
+            g2.Flush(); g2.Dispose();
             ResumeLayout();
         }
         /// <summary>
@@ -183,40 +270,12 @@ namespace FocusTree.UI.NodeToolDialogs
 
         #endregion
 
-        #region ==== 控件事件 ====
-
-        private void ButtonEvent_Click(object sender, EventArgs e)
-        {
-            if (Display.ReadOnly)
-            {
-                EventReadOnly();
-            }
-            else
-            {
-                EventEdit();
-            }
-        }
-        /// <summary>
-        /// 作为展示对话框
-        /// </summary>
-        private void EventReadOnly()
-        {
-
-        }
-        /// <summary>
-        /// 作为可编辑对话框
-        /// </summary>
-        private void EventEdit()
-        {
-
-        }
-
-        #endregion
-
         #region ==== InitializeComponent ====
 
         private void InitializeComponent()
         {
+            var backColor = Color.White;
+            var foreColor = Color.DarkBlue;
             textBoxList = new()
             {
                 Requires,
@@ -224,18 +283,32 @@ namespace FocusTree.UI.NodeToolDialogs
                 Effects,
             };
             //
+            // FocusName
+            //
+            FocusName.TextAlign = HorizontalAlignment.Center;
+            FocusName.BorderStyle = BorderStyle.FixedSingle;
+            FocusName.BackColor = backColor;
+            FocusName.ForeColor = foreColor;
+            //
             // FocusIcon
             //
 
             //
             // Duration
             //
-            Duration.Name = "Duration";
             Duration.TextAlign = HorizontalAlignment.Center;
+            Duration.BorderStyle = BorderStyle.FixedSingle;
+            Duration.BackColor = backColor;
+            Duration.ForeColor = foreColor;
+            //
+            // DurationUnit
+            //
+
             //
             // ButtonEvent
             //
-
+            ButtonEvent.TextAlign = ContentAlignment.MiddleCenter;
+            ButtonEvent.FlatStyle = FlatStyle.Flat;
             //
             // Requires
             //
@@ -243,12 +316,18 @@ namespace FocusTree.UI.NodeToolDialogs
             Requires.Multiline = true;
             Requires.WordWrap = false;
             Requires.ScrollBars = ScrollBars.Both;
+            Requires.BorderStyle = BorderStyle.FixedSingle;
+            Requires.BackColor = backColor;
+            Requires.ForeColor = foreColor;
             //
             // Descript
             //
             Descript.Name = "Descript";
             Descript.Multiline = true;
             Descript.ScrollBars = ScrollBars.Vertical;
+            Descript.BorderStyle = BorderStyle.FixedSingle;
+            Descript.BackColor = backColor;
+            Descript.ForeColor = foreColor;
             //
             //EffectsTitle
             //
@@ -260,13 +339,18 @@ namespace FocusTree.UI.NodeToolDialogs
             Effects.Multiline = true;
             Effects.WordWrap = false;
             Effects.ScrollBars = ScrollBars.Both;
+            Effects.BorderStyle = BorderStyle.FixedSingle;
+            Effects.BackColor = backColor;
+            Effects.ForeColor = foreColor;
             //
             // main
             //
             Controls.AddRange(new Control[]
             {
+                FocusName,
                 FocusIcon,
                 Duration,
+                DurationUnit,
                 ButtonEvent,
                 Requires,
                 Descript,
@@ -275,6 +359,7 @@ namespace FocusTree.UI.NodeToolDialogs
             });
             TopMost = true;
             MinimumSize = Size = new((int)(500 * SizeRatio), 500);
+            BackColor = backColor;
             Location = new(
                 (Screen.GetBounds(this).Width / 2) - (this.Width / 2),
                 (Screen.GetBounds(this).Height / 2) - (this.Height / 2)
@@ -284,14 +369,62 @@ namespace FocusTree.UI.NodeToolDialogs
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
         }
 
+        System.Windows.Forms.TextBox FocusName = new();
         System.Windows.Forms.PictureBox FocusIcon = new();
         System.Windows.Forms.TextBox Duration = new();
+        System.Windows.Forms.PictureBox DurationUnit = new();
         System.Windows.Forms.Button ButtonEvent = new();
         System.Windows.Forms.TextBox Requires = new();
         System.Windows.Forms.TextBox Descript = new();
         System.Windows.Forms.PictureBox EffectsTitle = new();
         System.Windows.Forms.TextBox Effects = new();
         List<System.Windows.Forms.TextBox> textBoxList;
+
+        #endregion
+
+        #region ==== 历史工具 ====
+
+        public IFormattedData[] History { get { return history; } }
+        FormatedInfoDialog[] history
+            = new FormatedInfoDialog[50];
+        public IFormattedData Latest
+        {
+            get { return latest; }
+            set { latest = value as FormatedInfoDialog; }
+        }
+        FormatedInfoDialog latest;
+        public IFormattedData Format()
+        {
+            var focusData = Display.GetSelectedNodeData();
+            FocusData data = new(
+                focusData.ID,
+                FocusName.Text,
+                focusData.BeginWithStar,
+                int.Parse(Duration.Text),
+                Effects.Text,
+                Descript.Text,
+                focusData.Ps
+                );
+            var JsMeta = JsonConvert.SerializeObject(data);
+            return new FormatedInfoDialog(JsMeta);
+        }
+        public void Deformat(IFormattedData data)
+        {
+            var focusData = JsonConvert.DeserializeObject<FocusData>(data.Items[0]);
+            Text = $"id: {focusData.ID}";
+            FocusName.Text = focusData.Name;
+            Duration.Text = $"{focusData.Duration}";
+            Descript.Text = focusData.Descript;
+            Effects.Text = focusData.Effects;
+        }
+        public bool IsEdit()
+        {
+            if (Latest == null)
+            {
+                return false;
+            }
+            return ! Latest.Equals(this.Format());
+        }
 
         #endregion
     }

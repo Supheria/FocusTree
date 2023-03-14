@@ -527,37 +527,36 @@ namespace FocusTree.Data
 
         #region ---- 历史和备份工具 ----
 
-        public IHistoryData[] History { get { return history; } }
-        HistoryData_FocusGraph[] history
-            = new HistoryData_FocusGraph[20];
-        public IHistoryData Format()
+        public IFormattedData[] History { get { return history; } }
+        FormatedFocusGraph[] history
+            = new FormatedFocusGraph[20];
+        public IFormattedData Latest
+        {
+            get { return latest; }
+            set { latest = value as FormatedFocusGraph; }
+        }
+        FormatedFocusGraph latest;
+        public IFormattedData Format()
         {
             var jsMeta1 = JsonConvert.SerializeObject(NodesCatalog);
             var jsMeat2 = JsonConvert.SerializeObject(RequireGroups);
-            return new HistoryData_FocusGraph(jsMeta1, jsMeat2);
+            return new FormatedFocusGraph(jsMeta1, jsMeat2);
         }
-        public void Deformat(IHistoryData IData)
+        public void Deformat(IFormattedData data)
         {
-            var data = IData as HistoryData_FocusGraph;
-            NodesCatalog = JsonConvert.DeserializeObject<Dictionary<int, FocusData>>(data.Item1);
-            RequireGroups = JsonConvert.DeserializeObject<Dictionary<int, List<HashSet<int>>>>(data.Item2);
+            //var data = IData as FormatedFocusGraph;
+            NodesCatalog = JsonConvert.DeserializeObject<Dictionary<int, FocusData>>(data.Items[0]);
+            RequireGroups = JsonConvert.DeserializeObject<Dictionary<int, List<HashSet<int>>>>(data.Items[1]);
             CreateLinkes();
             SetMetaPoints();
         }
-        public bool Equals(FocusGraph other)
+        public bool IsEdit()
         {
-            if (this == null && other == null)
-            {
-                return true;
-            }
-            else if (this == null || other == null)
+            if (Latest == null)
             {
                 return false;
             }
-            else
-            {
-                return Format() == other.Format();
-            }
+            return ! Latest.Equals(this.Format());
         }
 
         #endregion

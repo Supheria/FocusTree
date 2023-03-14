@@ -10,6 +10,7 @@ namespace FocusTree.UI.NodeToolDialogs
         /// 初始宽高比
         /// </summary>
         internal float SizeRatio = 0.618f;
+        internal float HeightMaxlRatio = 3f;
         internal NodeToolDialog()
         {
             ResizeEnd += NodeToolDialog_ResizeEnd;
@@ -27,21 +28,12 @@ namespace FocusTree.UI.NodeToolDialogs
 
         private void NodeToolDialog_ResizeEnd(object sender, EventArgs e)
         {
-            var differ = ResizeControl.GetDifference(this);
-            if (differ.Width == 0 && differ.Height != 0)
+            if (Width / Height < 0.4f)
             {
-                Width = (int)(Height / SizeRatio);
-            }
-            else if (differ.Width != 0 && differ.Height == 0)
-            {
-                Height = (int)(Width * SizeRatio);
+                Width = (int)(Height * 0.4f);
             }
             if (Bottom > Screen.PrimaryScreen.Bounds.Bottom)
             {
-                if (Height > Screen.PrimaryScreen.Bounds.Height)
-                {
-                    Height = Screen.PrimaryScreen.Bounds.Height;
-                }
                 Top -= Bottom - Screen.PrimaryScreen.Bounds.Bottom;
             }
             if (Left < Screen.PrimaryScreen.Bounds.Left)
@@ -56,6 +48,7 @@ namespace FocusTree.UI.NodeToolDialogs
 
         private void NodeToolDialog_SizeChanged(object sender, EventArgs e)
         {
+            ControlResize.SetTag(this);
             DrawClient();
         }
 

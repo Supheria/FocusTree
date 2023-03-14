@@ -103,6 +103,7 @@ namespace FocusTree.Tool.Data
         {
             var obj = HistoryableObject as IHistoryable;
             var data = obj == null ? throw new InvalidCastException("不可转换为 IHistoryFormattable 的类型") : obj.Format();
+            obj.Latest = obj.Format();
             obj.History[0] = data;
             Length = 1;
             Index = 0;
