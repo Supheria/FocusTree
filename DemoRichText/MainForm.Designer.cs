@@ -52,8 +52,9 @@ namespace DemoRichText
             this.btnItalic = new System.Windows.Forms.Button();
             this.btnLeft = new System.Windows.Forms.Button();
             this.btnBold = new System.Windows.Forms.Button();
-            this.rtbInfo = new System.Windows.Forms.RichTextBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.rtbInfo = new System.Windows.Forms.RichTextBox();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -95,6 +96,7 @@ namespace DemoRichText
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.richTextBox1);
             this.splitContainer1.Panel2.Controls.Add(this.textBox1);
             this.splitContainer1.Panel2.Controls.Add(this.rtbInfo);
             this.splitContainer1.Size = new System.Drawing.Size(534, 362);
@@ -351,6 +353,13 @@ namespace DemoRichText
             this.btnBold.UseVisualStyleBackColor = true;
             this.btnBold.Click += new System.EventHandler(this.btnButtonClick);
             // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(236, 74);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(100, 21);
+            this.textBox1.TabIndex = 1;
+            // 
             // rtbInfo
             // 
             this.rtbInfo.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -360,12 +369,13 @@ namespace DemoRichText
             this.rtbInfo.TabIndex = 0;
             this.rtbInfo.Text = "";
             // 
-            // textBox1
+            // richTextBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(236, 74);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 21);
-            this.textBox1.TabIndex = 1;
+            this.richTextBox1.Location = new System.Drawing.Point(8, 8);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.Size = new System.Drawing.Size(100, 96);
+            this.richTextBox1.TabIndex = 2;
+            this.richTextBox1.Text = "";
             // 
             // MainForm
             // 
@@ -410,6 +420,7 @@ namespace DemoRichText
         private TextBox txtSearch;
         private ComboBox combFontSize;
         private TextBox textBox1;
+        private RichTextBox richTextBox1;
     }
 }
 

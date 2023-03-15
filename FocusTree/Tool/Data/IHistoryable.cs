@@ -13,6 +13,6 @@
         /// <summary>
         /// 较最近一次保存是否已被编辑
         /// </summary>
-        public bool IsEdit();
+        public bool IsEdit { get { return Latest == null ? false : !Latest.Equals(Format()); } }
     }
 }

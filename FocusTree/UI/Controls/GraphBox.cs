@@ -53,7 +53,7 @@ namespace FocusTree.UI.Controls
         /// <summary>
         /// 图像已更改
         /// </summary>
-        public bool GraphEdited { get { return Graph.IsEdit(); } }
+        public bool GraphEdited { get { return ((IHistoryable)Graph).IsEdit; } }
         public bool ReadOnly
         {
             get

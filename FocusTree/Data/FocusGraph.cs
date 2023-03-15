@@ -550,14 +550,6 @@ namespace FocusTree.Data
             CreateLinkes();
             SetMetaPoints();
         }
-        public bool IsEdit()
-        {
-            if (Latest == null)
-            {
-                return false;
-            }
-            return ! Latest.Equals(this.Format());
-        }
 
         #endregion
 

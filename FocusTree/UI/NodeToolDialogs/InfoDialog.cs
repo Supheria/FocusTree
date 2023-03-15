@@ -19,13 +19,14 @@ namespace FocusTree.UI.NodeToolDialogs
             Display = display;
             InitializeComponent();
 
-            Invalidated += InfoDialog_Invalidated;
+            VisibleChanged += InfoDialog_VisibleChanged;
             Resize += InfoDialog_Resize;
 
             var font = new Font("仿宋", 20, FontStyle.Regular, GraphicsUnit.Pixel);
-            textBoxList.ForEach(x => x.Font = font);
-            textBoxList.ForEach(x => x.KeyDown += TextBox_KeyDown);
-            textBoxList.ForEach(x => x.MouseWheel += TextBox_MouseWheel);
+            var richBoxes = textBoxList.SkipWhile(x => x.Name == "FocusName" || x.Name == "Duration").ToList();
+            richBoxes.ForEach(x => x.Font = font);
+            richBoxes.ForEach(x => x.KeyDown += RichTextBox_KeyDown);
+            richBoxes.ForEach(x => x.MouseWheel += RichTextBox_MouseWheel);
             textBoxList.ForEach(x => x.KeyUp += TextBox_KeyUp);
             textBoxList.ForEach(x => x.TextChanged += Text_TextChanged);
             textBoxList.ForEach(x => x.LostFocus += Text_LostFocus);
@@ -34,7 +35,7 @@ namespace FocusTree.UI.NodeToolDialogs
             DrawClient();
         }
 
-        private void InfoDialog_Invalidated(object sender, InvalidateEventArgs e)
+        private void InfoDialog_VisibleChanged(object sender, EventArgs e)
         {
             var focusData = Display.GetSelectedNodeData();
             Text = $"id: {focusData.ID}";
@@ -65,11 +66,15 @@ namespace FocusTree.UI.NodeToolDialogs
             {
                 return;
             }
-            if (Equals(Origin))
+            if (((IHistoryable)this).IsEdit)
             {
-                return;
+                ObjectHistory<InfoDialog>.Enqueue(this);
+                ButtonEvent.BackColor = Color.Yellow;
             }
-            ObjectHistory<InfoDialog>.Enqueue(this);
+            else
+            {
+                ButtonEvent.BackColor = BackColor;
+            }
         }
 
         private void Text_TextChanged(object sender, EventArgs e)
@@ -109,39 +114,31 @@ namespace FocusTree.UI.NodeToolDialogs
 
         private void InfoDialog_Resize(object sender, EventArgs e)
         {
-            var textBox = textBoxList.FirstOrDefault();
-            var a = ControlResize.GetRatio(this);
-            var ratio = ControlResize.GetRatio(this).Y;
-            var fontSize = textBox.Font.Size * ratio;
-            var font = new Font(
-                    textBox.Font.FontFamily,
-                    fontSize < Height * 0.025f ? Height * 0.025f :
-                    fontSize > Height * 0.05f ? Height * 0.05f : fontSize,
-                    FontStyle.Regular,
-                    GraphicsUnit.Pixel);
-            textBoxList.ForEach(x => x.Font = font);
+            ScaleFontSize(Descript.ZoomFactor * ControlResize.GetRatio(this).Y);
         }
 
         private void TextBox_KeyUp(object sender, KeyEventArgs e)
         {
             DoFontScale = false;
         }
-        private void TextBox_MouseWheel(object sender, MouseEventArgs e)
+        private void RichTextBox_MouseWheel(object sender, MouseEventArgs e)
         {
-            if (DoFontScale == true)
+            if (DoFontScale == false)
             {
-                var textBox = textBoxList.FirstOrDefault();
-                var fontSize = textBox.Font.Size + e.Delta * 0.01f;
-                var font = new Font(
-                    textBox.Font.FontFamily,
-                    fontSize < Height * 0.025f ? Height * 0.025f :
-                    fontSize > Height * 0.05f ? Height * 0.05f : fontSize,
-                    FontStyle.Regular,
-                    GraphicsUnit.Pixel);
-                textBoxList.ForEach(x => x.Font = font);
+                return;
             }
+            var richBox = sender as RichTextBox;
+            ScaleFontSize(richBox.ZoomFactor + e.Delta * 0.00001f);
         }
-        private void TextBox_KeyDown(object sender, KeyEventArgs e)
+        private void ScaleFontSize(float zoomFactor)
+        {
+            List<RichTextBox> richBoxes = textBoxList.SkipWhile(x => x.Name == "FocusName" || x.Name == "Duration").ToList().Cast<RichTextBox>().ToList();
+            var textBox = richBoxes.FirstOrDefault();
+            zoomFactor = zoomFactor < Height * 0.0015f ? Height * 0.0015f :
+                zoomFactor > Height * 0.002f ? Height * 0.002f : zoomFactor;
+            richBoxes.ForEach(x => x.ZoomFactor = zoomFactor);
+        }
+        private void RichTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.ControlKey)
             {
@@ -205,6 +202,7 @@ namespace FocusTree.UI.NodeToolDialogs
             Requires.Top = (int)(Duration.Bottom + padding * 1.5f);
             Requires.Width = (int)(ClientRectangle.Right - FocusIcon.Right - padding * 2.5f);
             Requires.Height = FocusIcon.Bottom - Duration.Bottom - padding * 2;
+            
             //
             // Descript
             //
@@ -278,6 +276,8 @@ namespace FocusTree.UI.NodeToolDialogs
             var foreColor = Color.DarkBlue;
             textBoxList = new()
             {
+                FocusName,
+                Duration,
                 Requires,
                 Descript,
                 Effects,
@@ -285,6 +285,7 @@ namespace FocusTree.UI.NodeToolDialogs
             //
             // FocusName
             //
+            FocusName.Name = "FocusName";
             FocusName.TextAlign = HorizontalAlignment.Center;
             FocusName.BorderStyle = BorderStyle.FixedSingle;
             FocusName.BackColor = backColor;
@@ -296,6 +297,7 @@ namespace FocusTree.UI.NodeToolDialogs
             //
             // Duration
             //
+            Duration.Name = "Duration";
             Duration.TextAlign = HorizontalAlignment.Center;
             Duration.BorderStyle = BorderStyle.FixedSingle;
             Duration.BackColor = backColor;
@@ -315,7 +317,7 @@ namespace FocusTree.UI.NodeToolDialogs
             Requires.Name = "Requires";
             Requires.Multiline = true;
             Requires.WordWrap = false;
-            Requires.ScrollBars = ScrollBars.Both;
+            Requires.ScrollBars = RichTextBoxScrollBars.Both;
             Requires.BorderStyle = BorderStyle.FixedSingle;
             Requires.BackColor = backColor;
             Requires.ForeColor = foreColor;
@@ -324,7 +326,7 @@ namespace FocusTree.UI.NodeToolDialogs
             //
             Descript.Name = "Descript";
             Descript.Multiline = true;
-            Descript.ScrollBars = ScrollBars.Vertical;
+            Descript.ScrollBars = RichTextBoxScrollBars.Vertical;
             Descript.BorderStyle = BorderStyle.FixedSingle;
             Descript.BackColor = backColor;
             Descript.ForeColor = foreColor;
@@ -338,7 +340,7 @@ namespace FocusTree.UI.NodeToolDialogs
             Effects.Name = "Effects";
             Effects.Multiline = true;
             Effects.WordWrap = false;
-            Effects.ScrollBars = ScrollBars.Both;
+            Effects.ScrollBars = RichTextBoxScrollBars.Both;
             Effects.BorderStyle = BorderStyle.FixedSingle;
             Effects.BackColor = backColor;
             Effects.ForeColor = foreColor;
@@ -374,11 +376,11 @@ namespace FocusTree.UI.NodeToolDialogs
         System.Windows.Forms.TextBox Duration = new();
         System.Windows.Forms.PictureBox DurationUnit = new();
         System.Windows.Forms.Button ButtonEvent = new();
-        System.Windows.Forms.TextBox Requires = new();
-        System.Windows.Forms.TextBox Descript = new();
+        System.Windows.Forms.RichTextBox Requires = new();
+        System.Windows.Forms.RichTextBox Descript = new();
         System.Windows.Forms.PictureBox EffectsTitle = new();
-        System.Windows.Forms.TextBox Effects = new();
-        List<System.Windows.Forms.TextBox> textBoxList;
+        System.Windows.Forms.RichTextBox Effects = new();
+        List<System.Windows.Forms.TextBoxBase> textBoxList;
 
         #endregion
 
@@ -416,14 +418,6 @@ namespace FocusTree.UI.NodeToolDialogs
             Duration.Text = $"{focusData.Duration}";
             Descript.Text = focusData.Descript;
             Effects.Text = focusData.Effects;
-        }
-        public bool IsEdit()
-        {
-            if (Latest == null)
-            {
-                return false;
-            }
-            return ! Latest.Equals(this.Format());
         }
 
         #endregion

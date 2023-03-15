@@ -28,7 +28,7 @@ namespace FocusTree.UI.NodeToolDialogs
 
         private void NodeToolDialog_ResizeEnd(object sender, EventArgs e)
         {
-            if (Width / Height < 0.4f)
+            if (Width < 0.4f * Height)
             {
                 Width = (int)(Height * 0.4f);
             }
@@ -70,7 +70,6 @@ namespace FocusTree.UI.NodeToolDialogs
             {
                 return;
             }
-            Invalidate();
 
             Location = pos;
             base.Show();
