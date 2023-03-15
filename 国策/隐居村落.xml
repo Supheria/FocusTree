@@ -914,6 +914,14 @@
       <Descript>五年之后，心更念是非，口俞言利害，夫子始一解颜而笑</Descript>
       <Ps. />
     </Node>
+    <Node ID="115">
+      <Name>并席而坐</Name>
+      <Star>false</Star>
+      <Duration>30</Duration>
+      <Effects>获得妖兽，其效果为（动员速度：+20%，适役人口：+14%，改善关系持续花费：+25%，每日人类影响力基础变化：+0.04，征兵法案花费：-10%）</Effects>
+      <Descript>七年之后，从心之所念，庚无是非；从口之所言，庚无利害，夫子始一引吾并席而坐</Descript>
+      <Ps. />
+    </Node>
     <Node ID="116">
       <Name>内外进矣</Name>
       <Star>false</Star>
@@ -1089,6 +1097,14 @@
       <Effects>获得资源探测优化，其效果为（战略资源获取率：+25%）</Effects>
       <Descript />
       <Ps. />
+    </Node>
+    <Node ID="138">
+      <Name>工业理论</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effects>获得工业理论，其效果为（生产效率保持：+33%，生产效率上限：+5%，生产效率增长：+15%）</Effects>
+      <Descript />
+      <Ps.>（注：资源工厂改良或资源探测优化）</Ps.>
     </Node>
     <Node ID="139">
       <Name>科技创新</Name>
@@ -1324,7 +1340,7 @@
     </Node>
   </Nodes>
   <NodesRelations>
-    <Relation ID="1">
+    <Relation ID="2">
       <Require>1</Require>
     </Relation>
     <Relation ID="3">
@@ -1383,6 +1399,9 @@
     </Relation>
     <Relation ID="21">
       <Require>19</Require>
+      <Require>20</Require>
+      <Require>36</Require>
+      <Require>19, 125</Require>
     </Relation>
     <Relation ID="22">
       <Require>21</Require>
@@ -1654,6 +1673,12 @@
     <Relation ID="114">
       <Require>113</Require>
     </Relation>
+    <Relation ID="115">
+      <Require>114</Require>
+    </Relation>
+    <Relation ID="116">
+      <Require>115</Require>
+    </Relation>
     <Relation ID="117">
       <Require>116</Require>
     </Relation>
@@ -1713,6 +1738,9 @@
     </Relation>
     <Relation ID="137">
       <Require>136</Require>
+    </Relation>
+    <Relation ID="138">
+      <Require>137</Require>
     </Relation>
     <Relation ID="139">
       <Require>124</Require>

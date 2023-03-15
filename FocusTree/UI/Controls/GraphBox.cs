@@ -53,7 +53,7 @@ namespace FocusTree.UI.Controls
         /// <summary>
         /// 图像已更改
         /// </summary>
-        public bool GraphEdited { get { return ((IHistoryable)Graph).IsEdit; } }
+        public bool GraphEdited { get { return Graph.IsEdit(); } }
         public bool ReadOnly
         {
             get
@@ -779,10 +779,7 @@ namespace FocusTree.UI.Controls
         /// </summary>
         public void Undo()
         {
-            if (ObjectHistory<FocusGraph>.HasPrev())
-            {
-                ObjectHistory<FocusGraph>.Undo(Graph);
-            }
+            Graph.Undo();
             Invalidate();
         }
         /// <summary>
@@ -790,10 +787,7 @@ namespace FocusTree.UI.Controls
         /// </summary>
         public void Redo()
         {
-            if (ObjectHistory<FocusGraph>.HasNext())
-            {
-                ObjectHistory<FocusGraph>.Redo(Graph);
-            }
+            Graph.Redo();
             Invalidate();
         }
 
@@ -803,7 +797,7 @@ namespace FocusTree.UI.Controls
             {
                 return false;
             }
-            return ObjectHistory<FocusGraph>.HasPrev();
+            return Graph.HasPrev();
         }
         public bool HasNextHistory()
         {
@@ -811,7 +805,7 @@ namespace FocusTree.UI.Controls
             {
                 return false;
             }
-            return ObjectHistory<FocusGraph>.HasNext();
+            return Graph.HasNext();
         }
 
         #endregion
@@ -856,12 +850,16 @@ namespace FocusTree.UI.Controls
                 return;
             }
             Graph.RemoveNode(SelectedNode.Value);
-            ObjectHistory<FocusGraph>.Enqueue(Graph);
+            Graph.EnqueueHistory();
             SelectedNode = null;
             Invalidate();
         }
-        public FocusData GetSelectedNodeData()
+        public FocusData? GetSelectedNodeData()
         {
+            if (SelectedNode == null)
+            {
+                return null;
+            }    
             return Graph.GetNodeData(SelectedNode.Value);
         }
         public Point GetSelectedNodeCenterOnScreen()

@@ -1,18 +1,24 @@
-﻿namespace FocusTree.Tool.Data
+﻿using System;
+
+namespace FocusTree.Tool.Data
 {
-    internal interface IHistoryable : IFormattable
+    public interface IHistoryable : IFormattable
     {
         /// <summary>
-        /// 保留的历史记录
+        /// 历史记录指针
         /// </summary>
-        public IFormattedData[] History { get; }
+        public int HistoryIndex { get; set; }
+        /// <summary>
+        /// 历史记录长度
+        /// </summary>
+        public int CurrentHistoryLength { get; set; }
+        /// <summary>
+        /// 开辟的的历史记录保存空间
+        /// </summary>
+        public FormattedData[] History { get; set; }
         /// <summary>
         /// 最近一次保存时的数据
         /// </summary>
-        public IFormattedData Latest { get; set; }
-        /// <summary>
-        /// 较最近一次保存是否已被编辑
-        /// </summary>
-        public bool IsEdit { get { return Latest == null ? false : !Latest.Equals(Format()); } }
+        public FormattedData Latest { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿using FocusTree.Data;
+using FocusTree.Data;
 using FocusTree.Tool.Data;
 using FocusTree.Tool.UI;
 using FocusTree.UI.Controls;
@@ -10,7 +10,6 @@ namespace FocusTree.UI.NodeToolDialogs
     {
         bool DoFontScale = false;
         bool DoTextEditCheck = false;
-        FormatedInfoDialog Origin;
 
         #region ==== 初始化和更新 ====
 
@@ -38,11 +37,15 @@ namespace FocusTree.UI.NodeToolDialogs
         private void InfoDialog_VisibleChanged(object sender, EventArgs e)
         {
             var focusData = Display.GetSelectedNodeData();
-            Text = $"id: {focusData.ID}";
-            FocusName.Text = focusData.Name;
-            Duration.Text = $"{focusData.Duration}";
-            Descript.Text = focusData.Descript;
-            Effects.Text = focusData.Effects;
+            if (focusData == null)
+            {
+                return;
+            }
+            Text = $"id: {focusData.Value.ID}";
+            FocusName.Text = focusData.Value.Name;
+            Duration.Text = $"{focusData.Value.Duration}";
+            Descript.Text = focusData.Value.Descript;
+            Effects.Text = focusData.Value.Effects;
 
             AllowDrop = Display.ReadOnly ? false : true;
             FocusName.ReadOnly = Display.ReadOnly;
@@ -52,8 +55,7 @@ namespace FocusTree.UI.NodeToolDialogs
             Descript.ReadOnly = Display.ReadOnly;
             Effects.ReadOnly = Display.ReadOnly;
 
-            ObjectHistory<InfoDialog>.Initialize(this);
-            Origin = Format() as FormatedInfoDialog;
+            this.ClearHistory();
         }
 
         #endregion
@@ -66,9 +68,9 @@ namespace FocusTree.UI.NodeToolDialogs
             {
                 return;
             }
-            if (((IHistoryable)this).IsEdit)
+            if (this.IsEdit())
             {
-                ObjectHistory<InfoDialog>.Enqueue(this);
+                this.EnqueueHistory();
                 ButtonEvent.BackColor = Color.Yellow;
             }
             else
@@ -202,7 +204,7 @@ namespace FocusTree.UI.NodeToolDialogs
             Requires.Top = (int)(Duration.Bottom + padding * 1.5f);
             Requires.Width = (int)(ClientRectangle.Right - FocusIcon.Right - padding * 2.5f);
             Requires.Height = FocusIcon.Bottom - Duration.Bottom - padding * 2;
-            
+
             //
             // Descript
             //
@@ -386,38 +388,25 @@ namespace FocusTree.UI.NodeToolDialogs
 
         #region ==== 历史工具 ====
 
-        public IFormattedData[] History { get { return history; } }
-        FormatedInfoDialog[] history
-            = new FormatedInfoDialog[50];
-        public IFormattedData Latest
+        public int HistoryIndex { get; set; } = 0;
+        public int CurrentHistoryLength { get; set; } = 0;
+        public FormattedData[] History { get; set; } = new FormattedData[50];
+        public FormattedData Latest { get; set; }
+        public FormattedData Format()
         {
-            get { return latest; }
-            set { latest = value as FormatedInfoDialog; }
-        }
-        FormatedInfoDialog latest;
-        public IFormattedData Format()
-        {
-            var focusData = Display.GetSelectedNodeData();
-            FocusData data = new(
-                focusData.ID,
+            return new FormattedData(
                 FocusName.Text,
-                focusData.BeginWithStar,
-                int.Parse(Duration.Text),
+                Duration.Text,
                 Effects.Text,
-                Descript.Text,
-                focusData.Ps
+                Descript.Text
                 );
-            var JsMeta = JsonConvert.SerializeObject(data);
-            return new FormatedInfoDialog(JsMeta);
         }
-        public void Deformat(IFormattedData data)
+        public void Deformat(FormattedData data)
         {
-            var focusData = JsonConvert.DeserializeObject<FocusData>(data.Items[0]);
-            Text = $"id: {focusData.ID}";
-            FocusName.Text = focusData.Name;
-            Duration.Text = $"{focusData.Duration}";
-            Descript.Text = focusData.Descript;
-            Effects.Text = focusData.Effects;
+            FocusName.Text = data.Items[0];
+            Duration.Text = data.Items[1]; ;
+            Descript.Text = data.Items[2]; ;
+            Effects.Text = data.Items[3]; ;
         }
 
         #endregion

@@ -362,27 +362,14 @@ namespace FocusTree.Data
             RequireGroups = requireGroups;
             CreateLinkes();
             SetMetaPoints();
-            ObjectHistory<FocusGraph>.Initialize(this);
+            this.ClearHistory();
+            this.EnqueueHistory();
         }
         /// <summary>
         /// 用于序列化
         /// </summary>
         private FocusGraph()
         {
-        }
-        /// <summary>
-        /// 更新文件路径和历史记录
-        /// </summary>
-        /// <param name="path">新的文件路径</param>
-        /// <param name="graph">原来的graph</param>
-        public FocusGraph(string path, FocusGraph graph)
-        {
-            FilePath = path;
-            NodesCatalog = graph.NodesCatalog;
-            RequireGroups = graph.RequireGroups;
-            CreateLinkes();
-            SetMetaPoints();
-            ObjectHistory<FocusGraph>.Initialize(this);
         }
 
         // -- 序列化工具 --
@@ -438,7 +425,8 @@ namespace FocusTree.Data
 
             CreateLinkes();
             SetMetaPoints();
-            ObjectHistory<FocusGraph>.Initialize(this);
+            this.ClearHistory();
+            this.EnqueueHistory();
         }
         /// <summary>
         /// 反序列化时用于读取节点的关系
@@ -527,24 +515,19 @@ namespace FocusTree.Data
 
         #region ---- 历史和备份工具 ----
 
-        public IFormattedData[] History { get { return history; } }
-        FormatedFocusGraph[] history
-            = new FormatedFocusGraph[20];
-        public IFormattedData Latest
+        public int HistoryIndex { get; set; } = 0;
+        public int CurrentHistoryLength { get; set; } = 0;
+        public FormattedData[] History { get; set; } = new FormattedData[20];
+        public FormattedData Latest { get; set; }
+        public FormattedData Format()
         {
-            get { return latest; }
-            set { latest = value as FormatedFocusGraph; }
+            return new FormattedData(
+                JsonConvert.SerializeObject(NodesCatalog),
+                JsonConvert.SerializeObject(RequireGroups)
+                );
         }
-        FormatedFocusGraph latest;
-        public IFormattedData Format()
+        public void Deformat(FormattedData data)
         {
-            var jsMeta1 = JsonConvert.SerializeObject(NodesCatalog);
-            var jsMeat2 = JsonConvert.SerializeObject(RequireGroups);
-            return new FormatedFocusGraph(jsMeta1, jsMeat2);
-        }
-        public void Deformat(IFormattedData data)
-        {
-            //var data = IData as FormatedFocusGraph;
             NodesCatalog = JsonConvert.DeserializeObject<Dictionary<int, FocusData>>(data.Items[0]);
             RequireGroups = JsonConvert.DeserializeObject<Dictionary<int, List<HashSet<int>>>>(data.Items[1]);
             CreateLinkes();
