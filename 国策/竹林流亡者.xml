@@ -14,7 +14,8 @@
       <Name>再次联络</Name>
       <Star>false</Star>
       <Duration>5</Duration>
-      <Effects>获得科技：147季无线电。触发事件“再看幻想乡”。</Effects>
+      <Effects>获得科技：147季无线电。</Effects>
+      <Effects>触发事件“再看幻想乡”。</Effects>
       <Descript>不管我们怎么认为，人类的确失败了，但至少现在我们不需要再次白手起家</Descript>
       <Ps. />
     </Node>
@@ -22,7 +23,10 @@
       <Name>在我们的兄弟当中</Name>
       <Star>false</Star>
       <Duration>5</Duration>
-      <Effects>获得2个编制为人类流亡编制的部队，1800单位的竹林流亡者产步枪，1800单位的草原流亡者产步枪，216单位的竹林流亡者产迫击炮，216单位的草原流亡者产迫击炮，600单位的竹林流亡者产近战武器，600单位的草原流亡者产近战武器添加进国家储备。触发事件“流亡者归来”。获得志愿军，其效果为（志愿军部队数上限：+6，派遣志愿军需要的部队数量：-100%）</Effects>
+      <Effects />
+      <Effects>获得志愿军，其效果为（志愿军部队数上限：+6，派遣志愿军需要的部队数量：-100%）</Effects>
+      <Effects>获得2个编制为人类流亡编制的部队，1800单位的竹林流亡者产步枪，1800单位的草原流亡者产步枪，216单位的竹林流亡者产迫击炮，216单位的草原流亡者产迫击炮，600单位的竹林流亡者产近战武器，600单位的草原流亡者产近战武器添加进国家储备。</Effects>
+      <Effects>触发事件“流亡者归来”。</Effects>
       <Descript>很巧的是，我们都选择了互帮互助，虽然这批援助不知道是否来自哪个土作坊</Descript>
       <Ps. />
     </Node>
@@ -38,6 +42,7 @@
       <Name>私通财阀</Name>
       <Star>false</Star>
       <Duration>55</Duration>
+      <Effects />
       <Effects>获得人类财阀投资，其效果为（生活消费品工厂：-5%）</Effects>
       <Descript>我们是在其他流亡者中离人类村落最近的，原因就是我们知道本居小铃隐藏的想法，她一定会帮助我们</Descript>
       <Ps. />
@@ -46,7 +51,6 @@
       <Name>科教兴国</Name>
       <Star>false</Star>
       <Duration>55</Duration>
-      <Effects>增加2个科研槽</Effects>
       <Descript>前人类村落的技术当然是我们的筹码，而且我们可以决定将他赠与谁</Descript>
       <Ps. />
     </Node>
@@ -54,7 +58,8 @@
       <Name>蒙蔽天狗</Name>
       <Star>false</Star>
       <Duration>55</Duration>
-      <Effects>（天狗共和国）移除被转移的人类科学家，获得向往天狗（与竹林流亡者的关系+80），（竹林流亡者）获得暗怀杀机（与天狗共和国的关系-80），获得家国，其效果为（数学类研究速度：+4%）</Effects>
+      <Effects />
+      <Effects>获得家国，其效果为（数学类研究速度：+4%）</Effects>
       <Descript>我们怎么可能忘记天狗对我们的伤害呢，但远交近攻对我们并没有害处，尤其是对某些还有人类认同的科学家而言</Descript>
       <Ps. />
     </Node>
@@ -62,7 +67,8 @@
       <Name>软化付丧神</Name>
       <Star>false</Star>
       <Duration>55</Duration>
-      <Effects>（九十九工业）移除成妖的道具们，获得起源呼唤（与竹林流亡者的关系+80），（竹林流亡者）获得隐忍背叛（与九十九工业的关系-80），获得故土，其效果为（迫击炮：对人员杀伤：+10%，步枪：对人员杀伤：+5%，对装甲杀伤：+5%，生产效率上限：+10%）</Effects>
+      <Effects />
+      <Effects>获得故土，其效果为（迫击炮：对人员杀伤：+10%，步枪：对人员杀伤：+5%，对装甲杀伤：+5%，生产效率上限：+10%）</Effects>
       <Descript>付丧神的背叛如芒在背，但我们如果使用怀柔政策，还能得到少部分付丧神的支持</Descript>
       <Ps.>（注：如果多多良小伞不是九十九工业的领导人，那么多多良小伞会成为将领）</Ps.>
     </Node>
@@ -70,7 +76,6 @@
       <Name>鸷鸟卑飞</Name>
       <Star>false</Star>
       <Duration>55</Duration>
-      <Effects>开启决议对周边国家进行边境冲突</Effects>
       <Descript>鸷鸟将击，卑飞敛翼；猛兽将搏，弭耳俯伏</Descript>
       <Ps. />
     </Node>
@@ -78,6 +83,7 @@
       <Name>待敌可胜</Name>
       <Star>false</Star>
       <Duration>55</Duration>
+      <Effects />
       <Effects>获得庙算，其效果为（补给消耗：-20%，工厂产出：+20%，堑壕上限：+10）</Effects>
       <Descript>昔之善战者，先为不可胜，以待敌之可胜</Descript>
       <Ps. />
@@ -86,7 +92,6 @@
       <Name>奇正相生</Name>
       <Star>false</Star>
       <Duration>55</Duration>
-      <Effects>庙算追击效果：部队速度：-5%，加密：-5，堑壕速度：+20%，部队攻击：+20%</Effects>
       <Descript>故善动敌者，形之，敌必从之；予之，敌必取之。以利动之，以卒待之</Descript>
       <Ps. />
     </Node>
@@ -94,7 +99,6 @@
       <Name>避实击虚</Name>
       <Star>false</Star>
       <Duration>55</Duration>
-      <Effects>庙算追击效果：增援率：+15%，解密：+15</Effects>
       <Descript>夫兵形象水，水之形，避高而趋下，兵之形，避实而击虚</Descript>
       <Ps. />
     </Node>
@@ -102,7 +106,9 @@
       <Name>火攻</Name>
       <Star>false</Star>
       <Duration>55</Duration>
-      <Effects>获得火攻，其效果为（侦察：+5，地形惩罚降低：-50%，林地游侠特质经验增长速度：+50%），（竹林妖怪联盟）（月兔年糕厂）获得溃逃，其效果为（部队组织度：-10%，堑壕上限：-10）</Effects>
+      <Effects />
+      <Effects>获得火攻，其效果为（侦察：+5，地形惩罚降低：-50%，林地游侠特质经验增长速度：+50%）</Effects>
+      <Effects>获得溃逃，其效果为（部队组织度：-10%，堑壕上限：-10）</Effects>
       <Descript>兵有奇变，不在众寡……依草结营，易为风火……因夜纵烧，必大惊乱</Descript>
       <Ps. />
     </Node>
@@ -110,7 +116,7 @@
       <Name>坐忘道</Name>
       <Star>false</Star>
       <Duration>55</Duration>
-      <Effects>（人类村落）成为竹林流亡者的四级附庸（势力范围），释放人类财阀联合</Effects>
+      <Effects />
       <Descript>堕肢体，黜聪明，离形去知，同于大通，此谓坐忘</Descript>
       <Ps.>（注：需要人类村落存在且意识形态为孤立）</Ps.>
     </Node>
@@ -118,7 +124,7 @@
       <Name>昭然若揭</Name>
       <Star>false</Star>
       <Duration>55</Duration>
-      <Effects>创建阵营：第二次人类复权运动——南线，（人类财阀联合）触发事件：“无心插柳”。</Effects>
+      <Effects>（人类财阀联合）触发事件：“无心插柳”。</Effects>
       <Descript>吾心昭昭，又何惧天下之口}（注：需要竹林妖怪联盟、月兔年糕厂不存在</Descript>
       <Ps. />
     </Node>
@@ -126,7 +132,8 @@
       <Name>一顾茅庐</Name>
       <Star>false</Star>
       <Duration>55</Duration>
-      <Effects>（藤原卫队）触发事件：“戏谑的诗句”。获得第一次拜访（与竹林流亡者的关系+30）</Effects>
+      <Effects />
+      <Effects>（藤原卫队）触发事件：“戏谑的诗句”。</Effects>
       <Descript>人类复权运动失败之后许多曾经帮助我们一方的重要人物都被软禁或流放到其他地方，但我们拥有了改变的机会</Descript>
       <Ps. />
     </Node>
@@ -134,7 +141,9 @@
       <Name>二顾茅庐</Name>
       <Star>false</Star>
       <Duration>55</Duration>
-      <Effects>获得军乐队，其效果为（部队组织度：+10%），（藤原卫队）触发事件：“熟悉的音乐”。获得第二次拜访（与竹林流亡者的关系+60）</Effects>
+      <Effects />
+      <Effects>获得军乐队，其效果为（部队组织度：+10%）</Effects>
+      <Effects>（部队组织度：+10%），（藤原卫队）触发事件：“熟悉的音乐”。</Effects>
       <Descript>人类复权路上，我们能付出的只有真挚与坚持</Descript>
       <Ps. />
     </Node>
@@ -142,7 +151,8 @@
       <Name>三顾茅庐</Name>
       <Star>false</Star>
       <Duration>55</Duration>
-      <Effects>（藤原卫队）触发事件：“承认人类身份”。如果他们同意，则（藤原卫队）成为竹林流亡者的四级附庸（势力范围）</Effects>
+      <Effects />
+      <Effects>（藤原卫队）触发事件：“承认人类身份”。</Effects>
       <Descript>文王拉车八百步，周朝天下八百年</Descript>
       <Ps. />
     </Node>
@@ -150,7 +160,6 @@
       <Name>家仇国恨</Name>
       <Star>false</Star>
       <Duration>55</Duration>
-      <Effects>竹林流亡者对永远亭宣战</Effects>
       <Descript>经过我们的开导，藤原妹红明白了父亲和自己的悲剧并不是源于自身，而是源于妖怪操控的社会</Descript>
       <Ps.>（注：需要永远亭存在，需要藤原卫队是我们的盟友）</Ps.>
     </Node>
@@ -158,7 +167,8 @@
       <Name>软禁辉夜</Name>
       <Star>false</Star>
       <Duration>55</Duration>
-      <Effects>获得强大的威望，其效果为（每日获得的政治点数：+0.25，部队组织度：+15%，稳定度：+20%，战争支持度：+20%，建造速度：+10%，部队攻击：+5%，部队防御：+5%，科研速度：+10%，工厂产出：+10%），竹林流亡者吞并藤原卫队</Effects>
+      <Effects />
+      <Effects>获得强大的威望，其效果为（每日获得的政治点数：+0.25，部队组织度：+15%，稳定度：+20%，战争支持度：+20%，建造速度：+10%，部队攻击：+5%，部队防御：+5%，科研速度：+10%，工厂产出：+10%）</Effects>
       <Descript>此战之后藤原妹红再无挂念，差人建造一座金屋后就将藤原卫队全权交给我们</Descript>
       <Ps.>（注：需要永远亭不存在）</Ps.>
     </Node>
@@ -166,6 +176,7 @@
       <Name>威霸一方</Name>
       <Star>false</Star>
       <Duration>55</Duration>
+      <Effects />
       <Effects>获得外交中立，其效果为（稳定度：+35%，训练时间：+5%，ai修正：加入或扩大一个阵营的意愿：-250，ai修正：专注防御：+50%，ai修正：专注进攻：-30%，ai修正：专注和平：+40%，ai修正：部署部队数量修正：-20%）</Effects>
       <Descript>威名一方，霸业安稳</Descript>
       <Ps. />

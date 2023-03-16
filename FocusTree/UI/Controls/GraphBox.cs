@@ -372,7 +372,10 @@ namespace FocusTree.UI.Controls
             {
                 return;
             }
-            Image.Dispose();
+            if (Image != null)
+            {
+                Image.Dispose();
+            }
             var ratioVec = ControlResize.GetRatio(this);
             var ratio = MathF.Min(ratioVec.X, ratioVec.Y);
             ControlResize.SetTag(this);

@@ -33,7 +33,7 @@ namespace FocusTree.Data
         /// 国策效果
         /// </summary>
         [XmlElement("Effects")]
-        public string Effects = string.Empty;
+        public string[] Effects = null;
         /// <summary>
         /// 国策描述
         /// </summary>
@@ -44,34 +44,6 @@ namespace FocusTree.Data
         /// </summary>
         [XmlElement("Ps.")]
         public string Ps = string.Empty;
-
-        /// <summary>
-        /// 使用数据创建国策
-        /// </summary>
-        /// <param name="name">国策名称</param>
-        /// <param name="isBeginWithstar">字段是否以 * 开头</param>
-        /// <param name="duration">实施天数</param>
-        /// <param name="effects">国策效果</param>
-        /// <param name="descript">国策描述</param>
-        /// <param name="ps">备注</param>
-        public FocusData(
-            int id,
-            string name,
-            bool isBeginWithstar,
-            int duration,
-            string effects,
-            string descript,
-            string ps
-            )
-        {
-            ID = id;
-            Name = name;
-            BeginWithStar = isBeginWithstar;
-            Duration = duration;
-            Effects = effects;
-            Descript = descript;
-            Ps = ps;
-        }
         /// <summary>
         /// 从文本中解析 FocusData(国测数据)
         /// </summary>
@@ -79,6 +51,7 @@ namespace FocusTree.Data
         /// <exception cref="Exception">正则匹配异常</exception>
         public FocusData(int id, string text)
         {
+            ID = id;
             // 在 C# 中的字符串，{ 需要转义，通过分割一对来避免歧义。 原 Regex: (.+?){(\d+)天}{(.+?)}(?:{(.+)})?(.+)?
             var pattern = "(.+?){" + "(\\d+)天}{" + "(.+?)}(?:{" + "(.+)})?(.+)?";
             try
@@ -87,33 +60,21 @@ namespace FocusTree.Data
                 // Groups[0] 是匹配成功部分的文本，应当等同于 text。
                 // 从[1]开始才是括号匹配的数据
                 // 是否以 * 开头
-                var isBeginWithStar = match.Groups[1].Value.StartsWith("*");
+                BeginWithStar = match.Groups[1].Value.StartsWith("*");
                 // 名称
-                string name;
                 // 如果以 * 开头，则去掉 *
-                if (isBeginWithStar)
-                    name = match.Groups[1].Value[1..];
+                if (BeginWithStar)
+                    Name = match.Groups[1].Value[1..];
                 else
-                    name = match.Groups[1].Value;
+                    Name = match.Groups[1].Value;
                 // 天数
-                int duration = int.Parse(match.Groups[2].Value);
+                Duration = int.Parse(match.Groups[2].Value);
                 // 效果
-                string effects = match.Groups[3].Value;
+                Effects = new string[] { match.Groups[3].Value };
                 // 描述
-                string descript = match.Groups[4].Value;
+                Descript = match.Groups[4].Value;
                 // 备注
-                string ps = match.Groups[5].Value;
-
-                // 使用数据创建实例
-                this = new FocusData(
-                    id,
-                    name,
-                    isBeginWithStar,
-                    duration,
-                    effects,
-                    descript,
-                    ps
-                    );
+                Ps = match.Groups[5].Value;
             }
             catch (Exception ex)
             {
@@ -123,5 +84,89 @@ namespace FocusTree.Data
                     $"异常信息: {ex.Message}");
             }
         }
+        public string GetEffects()
+        {
+            if (Effects == null)
+            {
+                return "";
+            }
+            string effects = "";
+            for (int i = 0; i < Effects.Length; i++)
+            {
+                effects += Effects[i] + "\n";
+            }
+            return effects;
+        }
+        public void SetEffects(string effects)
+        {
+            Effects = effects.Split('\n');
+        }
+
+        ///// <summary>
+        ///// 分割效果
+        ///// </summary>
+        ///// <returns></returns>
+        //private string[] GetEffects(string str, string fileName, int id)
+        //{
+        //    bool hasStr = false;
+        //    List<string> effects = new();
+        //    //var reg = "\\W(\\w+)\\W([+|-]\\d+)((?:%)?)\\W"; // 原： \W(\w+)\W([+|-]\d+)((?:%)?)\W
+        //    //var reg = "([\\u4e00-\\u9fa5]+\\W?[+|-]\\d+%?)"; // (\w+)\W?[+|-]\d+%?
+        //    //var reg2 = "((增加)?(添加)?\\d+个\\w+)"; // ((?:增加)?\d+个\w+)
+        //    var reg3 = "(\\d+x\\d+%?\\w+：\\w+)"; // (\d+x\d+%?\w+：\w+)
+        //    var reg4 = "(减少\\d.?\\d\\w+\\d+%?\\w+)"; // (减少\d.?\d\w+\d+%?\w+)
+        //    var reg5 = "[\\u4e00-\\u9fa5]+[（].+[）]"; // XX（）
+        //    var reg6 = "((（[\\u4e00-\\u9fa5]+）)?获得[\\u4e00-\\u9fa5]+，其效果为（[^（]+）。?)"; // 获得...，其效果为（...）
+        //    var reg7 = "(获得[\\u4e00-\\u9fa5]+：[\\u4E00-\\u9FA50-9]+。?)"; // 获得...：...
+        //    var reg8 = "((（[\\u4e00-\\u9fa5]+）)?获得\\d+(单位|个){1}[\\u4e00-\\u9fa5]+(，\\d+(单位|个){1}[\\u4e00-\\u9fa5]+)*。?)"; // 获得x个/单位...(，x个/单位...)*
+        //    var reg9 = "((（[\\u4e00-\\u9fa5]+）)?(触发事件|完成国策)\\W?(.+”|.+\")+。?)"; // 触发事件/完成国策
+        //    var reg10 = "((（[\\u4e00-\\u9fa5]+）)?[\\u4e00-\\u9fa5]+对[\\u4e00-\\u9fa5]+：[+|-]\\d+%?。?)"; // ...对...：+/-...
+        //    var reg11 = "(^([\\u4e00-\\u9fa5]+：)?[\\u4e00-\\u9fa5（）]+：([+|-]\\d+%?|[\\u4e00-\\u9fa5]+))(，[\\u4e00-\\u9fa5]+：([+|-]\\d+%?|[\\u4e00-\\u9fa5]+))*"; // 争取复权生机追加效果：（蜘蛛风洞）我国对其进攻修正：+10%，我国对其防御加成：+10%
+        //    var reg12 = "以.+取代.+(?:，以|。以)"; // 以...取代...
+        //    var matches =
+        //        // Regex.Matches(str, reg).Union(
+        //        //Regex.Matches(str, reg2).Union(
+        //        Regex.Matches(str, reg3).Union(
+        //        Regex.Matches(str, reg4)).Union(
+        //        Regex.Matches(str, reg5)).Union(
+        //        Regex.Matches(str, reg6)).Union(
+        //        Regex.Matches(str, reg7)).Union(
+        //        Regex.Matches(str, reg8)).Union(
+        //        Regex.Matches(str, reg9)).Union(
+        //        Regex.Matches(str, reg10)).Union(
+        //        Regex.Matches(str, reg11)).Union(
+        //        Regex.Matches(str, reg12)).ToArray();
+        //    if (matches.Length > 0)
+        //    {
+        //        foreach (Match match in matches)
+        //        {
+        //            if (match.Success)
+        //            {
+        //                effects.Add(match.Groups[1].Value);
+
+        //                hasStr = true;
+        //            }
+        //        }
+        //    }
+        //    string testStr = "";
+        //    effects.ForEach(x => testStr += x);
+        //    if (testStr.Length != str.Length)
+        //    {
+        //        Program.testInfo.InfoText += $"×{fileName}[{id}] - {str}\n";
+        //        Program.testInfo.erro++;
+        //    }
+        //    else if (testStr != str)
+        //    {
+        //        Program.testInfo.InfoText += $"?{fileName}[{id}] - {str}\n";
+        //        Program.testInfo.differ++;
+        //    }
+        //    else
+        //    {
+        //        Program.testInfo.InfoText += $"√{fileName}[{id}] - {str}\n";
+        //        Program.testInfo.good++;
+        //    }
+        //    Program.testInfo.total++;
+        //    return effects.ToArray();
+        //}
     }
 }

@@ -15,12 +15,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="UI\新文件夹\**" />
-    <EmbeddedResource Remove="UI\新文件夹\**" />
-    <None Remove="UI\新文件夹\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Remove="UI\NodeToolDialogs\MainForm.cs" />
     <Compile Remove="UI\NodeToolDialogs\MainForm.Designer.cs" />
   </ItemGroup>
