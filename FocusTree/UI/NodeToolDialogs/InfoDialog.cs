@@ -45,7 +45,10 @@ namespace FocusTree.UI.NodeToolDialogs
             FocusName.Text = focusData.Value.Name;
             Duration.Text = $"{focusData.Value.Duration}";
             Descript.Text = focusData.Value.Descript;
-            Effects.Text = focusData.Value.GetEffects();
+            for (int i = 0; i < focusData.Value.Effects.Length; i++)
+            {
+                Effects.Text += $"{i + 1}. {focusData.Value.Effects[i]}\n";
+            }
 
             AllowDrop = Display.ReadOnly ? false : true;
             FocusName.ReadOnly = Display.ReadOnly;

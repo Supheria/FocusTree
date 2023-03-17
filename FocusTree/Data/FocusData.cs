@@ -32,7 +32,7 @@ namespace FocusTree.Data
         /// <summary>
         /// 国策效果
         /// </summary>
-        [XmlElement("Effects")]
+        [XmlElement("Effect")]
         public string[] Effects = null;
         /// <summary>
         /// 国策描述
@@ -83,23 +83,6 @@ namespace FocusTree.Data
                     $"试图解析的内容: {text}\n" +
                     $"异常信息: {ex.Message}");
             }
-        }
-        public string GetEffects()
-        {
-            if (Effects == null)
-            {
-                return "";
-            }
-            string effects = "";
-            for (int i = 0; i < Effects.Length; i++)
-            {
-                effects += Effects[i] + "\n";
-            }
-            return effects;
-        }
-        public void SetEffects(string effects)
-        {
-            Effects = effects.Split('\n');
         }
 
         ///// <summary>
