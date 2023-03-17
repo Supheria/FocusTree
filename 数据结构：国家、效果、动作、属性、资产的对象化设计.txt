@@ -1,0 +1,35 @@
+（效果描述）（国家）（触发条件）时，（获得）为期（时常）的“效果名”，其效果为（属性1：变量，属性2：变量）
+
+国家 - State - 通过国家名与数据建立对照
+	动作 - Action
+		施加对象 - Object
+	属性字典 - AttributeList
+	资产 - Asset
+	
+效果 - Effect - 静态的接口拓展方法（动作可施加）
+	施加对象 - Object
+		施加属性 - Attribute
+			开关 - Switch
+			数值 - Value
+	时长 - Duration
+	修正 - Modify
+	
+动作 - Action - 接口
+	施加对象 - Object
+	行为 - Behavior
+		开关 - Switch
+		修正 - Modify
+		
+属性 - Attribute - 静态的接口拓展方法（动作可施加）
+	开关 - Switch
+	向性 - Potential
+		正向增益 - Positive
+		负向增益 - Negative
+	修正 - Modify
+		
+属性：
+	拥有者 - Owner
+	政治点数 - Political_Power
+	(接口)对_Object_的进攻 < - > Object的防御
+	(接口)对_Object_的防御 < - > Object的进攻
+	(接口)对_Object_的宣战 < - > Object的宣战

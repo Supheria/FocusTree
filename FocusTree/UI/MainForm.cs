@@ -1,118 +1,228 @@
-﻿using FocusTree.Focus;
-using FocusTree.IO;
+﻿using FocusTree.IO;
+using FocusTree.Tool.IO;
+using FocusTree.Tool.UI;
+using FocusTree.UI.Controls;
+using FocusTree.UI.NodeToolDialogs;
 
 namespace FocusTree.UI
 {
     public partial class MainForm : Form
     {
-        DisplayBox Display;
+        GraphBox Display;
         public MainForm()
         {
-            Display = new DisplayBox(this);
+            Display = new GraphBox(this);
             InitializeComponent();
-            Controls.Add(Display);
-            main_StatusStrip_filename.Text = "等待打开文件";
-            main_StatusStrip_status.Text = "";
-            main_Openfile.FileName = "";
-        }
+            MainForm_StatusStrip_filename.Text = "等待打开文件";
+            MainForm_StatusStrip_status.Text = "";
+            MainForm_Openfile.FileName = "";
 
-        private void main_Menu_file_open_csv_Click(object sender, EventArgs e)
-        {
-            main_Openfile.Filter = "csv files (.csv) |*.csv";
-            var result = main_Openfile.ShowDialog();
-            if (result == DialogResult.OK)
+            foreach (var name in Display.ToolDialogs.Keys)
             {
-                Display.Graph = new FGraph(main_Openfile.FileName);
-                Display.RelocateCenter();
-                Display.Invalidate();
-                main_StatusStrip_filename.Text = Path.GetFileNameWithoutExtension(main_Openfile.FileName);
+                ToolStripMenuItem item = new();
+                item.Text = name;
+                item.Click += MainForm_Menu_window_display_toolDialog_Click;
+                this.MainForm_Menu_window.DropDownItems.Add(item);
             }
-        }
+            //Display.LoadGraph("D:\\Non_E\\documents\\GitHub\\FocusTree\\FocusTree\\国策\\隐居村落.xml");
 
-        private void main_Menu_loc_camreset_Click(object sender, EventArgs e)
-        {
-            Display.RelocateCenter();
-            Display.Invalidate();
-        }
+            //var a = new InfoDialog(Display);
+            //Display.SelectedNode = 1;
+            //a.Show(new(Screen.PrimaryScreen.Bounds.Width / 3, Screen.PrimaryScreen.Bounds.Height / 3));
 
-        private void main_Menu_file_open_xml_Click(object sender, EventArgs e)
+            
+        }
+        private void MainForm_Menu_camera_panorama_Click(object sender, EventArgs e)
         {
-            main_Openfile.Filter = "xml files (.xml) |*.xml";
-            var result = main_Openfile.ShowDialog();
-            if (result == DialogResult.OK)
+            Display.CamLocatePanorama();
+        }
+        /// <summary>
+        /// 打开
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MainForm_Menu_file_open_Click(object sender, EventArgs e)
+        {
+            if (Display.Graph != null && Display.GraphEdited)
             {
-                Display.Graph = FXml.LoadGraph(main_Openfile.FileName);
-                Display.RelocateCenter();
-                Display.Invalidate();
-                main_StatusStrip_filename.Text = Path.GetFileNameWithoutExtension(main_Openfile.FileName);
+                if (MessageBox.Show("要放弃当前的更改吗？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No)
+                {
+                    return;
+                }
             }
-        }
-
-        private void main_Menu_file_save_Click(object sender, EventArgs e)
-        {
-            if (Display.Graph == null || Display.Graph.FilePath == null)
+            MainForm_Openfile.Filter = "xml文件|*.xml";
+            if (MainForm_Openfile.ShowDialog() == DialogResult.Cancel)
             {
-                MessageBox.Show("[2302191440]错误，当前没有可保存的有效文件"); return;
+                return;
             }
-            var dir = Directory.CreateDirectory("backups");
-            var path = Display.Graph.FilePath;
-            var savepath = Path.Combine(dir.FullName, DateTime.Now.ToString("yyyyMMddHHmmss ") + Path.GetFileName(path));
-            // 备份文件
-            var path_xml = Path.ChangeExtension(path, ".xml");
-            if (File.Exists(path_xml))
+            MainForm_Openfile.InitialDirectory = Path.GetDirectoryName(MainForm_Openfile.FileName);
+            Display.LoadGraph(MainForm_Openfile.FileName);
+        }
+        /// <summary>
+        /// 打开备份
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MainForm_Menu_file_backup_open_Click(object sender, EventArgs e)
+        {
+            if (Display.Graph != null && Display.GraphEdited)
             {
-                File.Copy(path_xml, Path.ChangeExtension(savepath,".xml"), true);
+                if (MessageBox.Show("要放弃当前的修改吗？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                {
+                    return;
+                }
+            }
+            MainForm_Openfile.Filter = "全部文件|*.*";
+            var oldInitDir = MainForm_Openfile.InitialDirectory;
+            MainForm_Openfile.InitialDirectory = Backup.DirectoryName;
+            if (MainForm_Openfile.ShowDialog() == DialogResult.OK)
+            {
+                Display.LoadGraph(MainForm_Openfile.FileName);
+            }
+            MainForm_Openfile.InitialDirectory = oldInitDir;
+
+        }
+        /// <summary>
+        /// 保存
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MainForm_Menu_file_save_Click(object sender, EventArgs e)
+        {
+            if (Display.Graph == null)
+            {
+                MessageBox.Show("[2302191440]没有可以保存的图像");
             }
             else
             {
-                File.Copy(path, savepath, true);
+                Display.SaveGraph();
             }
-            // 保存
-            FXml.SaveGraph(path_xml, Display.Graph);
-            Display.Graph.SetFileName(path_xml);
+
         }
-        [Obsolete("这个功能还没写完")]
-        private void main_Menu_file_saveas_Click(object sender, EventArgs e)
+        /// <summary>
+        /// 另存为
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        //[Obsolete("这个功能还没完善")]
+        private void MainForm_Menu_file_saveas_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("这个功能还没写完");
+            if (Display.Graph == null)
+            {
+                MessageBox.Show("[2303051524]没有可以保存的图像");
+                return;
+            }
+            MainForm_Savefile.InitialDirectory = Path.GetDirectoryName(Display.Graph.FilePath);
+            MainForm_Savefile.FileName = Path.GetFileNameWithoutExtension(Display.Graph.FilePath) + "_new.xml";
+            if (MainForm_Savefile.ShowDialog() == DialogResult.OK)
+            {
+                Display.SaveAsNew(MainForm_Savefile.FileName);
+            }
+        }
+        /// <summary>
+        /// 清空备份
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MainForm_Menu_file_backup_clear_Click(object sender, EventArgs e)
+        {
+            Backup.Clear();
+        }
+        /// <summary>
+        /// 批量转存
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MainForm_Menu_file_batch_saveas_Click(object sender, EventArgs e)
+        {
+            MainForm_Openfile_batch.Filter = "csv文件 (.csv) |*.csv";
+            if (MainForm_Openfile_batch.ShowDialog() == DialogResult.Cancel)
+            {
+                return;
+            }
+            var fileNames = MainForm_Openfile_batch.FileNames;
+            MainForm_Openfile_batch.InitialDirectory = Path.GetDirectoryName(fileNames[0]);
+            var suc = MainForm_Openfile_batch.FileNames.Length;
+            foreach (var fileName in fileNames)
+            {
+                try
+                {
+                    var graph = CsvReader.LoadGraph(fileName);
+                    Backup.BackupFile(graph);
+                    XmlIO.SaveGraph(graph.FilePath, graph);
+                }
+                catch (Exception ex)
+                {
+                    suc--;
+                    MessageBox.Show($"{fileName}转存失败。\n{ex.Message}");
+                }
+            }
+            MessageBox.Show($"成功转存{suc}个文件。");
         }
 
-        private void main_Menu_edit_undo_Click(object sender, EventArgs e)
+        private void MainForm_Menu_edit_undo_Click(object sender, EventArgs e)
         {
-            if (FHistory.HasPrev())
-            {
-                FHistory.Undo(Display.Graph);
-            }
-            main_Menu_edit_status_check();
-            Display.Invalidate();
+            Display.Undo();
+            MainForm_Menu_edit_status_check();
         }
 
-        private void main_Menu_edit_redo_Click(object sender, EventArgs e)
+        private void MainForm_Menu_edit_redo_Click(object sender, EventArgs e)
         {
-            if (FHistory.HasNext())
-            {
-                FHistory.Redo(Display.Graph);
-            }
-            main_Menu_edit_status_check();
-            Display.Invalidate();
+            Display.Redo();
+            MainForm_Menu_edit_status_check();
         }
         /// <summary>
         /// 更新撤回和重做按钮是否可用的状态
         /// </summary>
-        public void main_Menu_edit_status_check()
+        public void MainForm_Menu_edit_status_check()
         {
-            main_Menu_edit_undo.Enabled = FHistory.HasPrev();
-            main_Menu_edit_redo.Enabled = FHistory.HasNext();
+            MainForm_Menu_edit_undo.Enabled = Display.HasPrevHistory();
+            MainForm_Menu_edit_redo.Enabled = Display.HasNextHistory();
         }
-        private void main_Menu_edit_status_check(object sender, EventArgs e)
+        private void MainForm_Menu_edit_status_check(object sender, EventArgs e)
         {
-            main_Menu_edit_undo.Enabled = FHistory.HasPrev();
-            main_Menu_edit_redo.Enabled = FHistory.HasNext();
+            MainForm_Menu_edit_undo.Enabled = Display.HasPrevHistory();
+            MainForm_Menu_edit_redo.Enabled = Display.HasNextHistory();
         }
 
-        private void main_Menu_edit_Click(object sender, EventArgs e)
+        private void MainForm_Menu_edit_Click(object sender, EventArgs e)
         {
-            main_Menu_edit_status_check();
+            MainForm_Menu_edit_status_check();
+        }
+        public void UpdateText()
+        {
+            if (Display.Graph == null)
+            {
+                Text = "国策树";
+                MainForm_StatusStrip_filename.Text = "未加载";
+                MainForm_StatusStrip_status.Text = "";
+            }
+            Text = Display.FileName;
+            if (Display.ReadOnly)
+            {
+                MainForm_StatusStrip_filename.Text = "正在预览";
+                MainForm_StatusStrip_status.Text = "";
+            }
+            else if (Display.GraphEdited)
+            {
+                MainForm_StatusStrip_filename.Text = "正在编辑";
+                MainForm_StatusStrip_status.Text = "";
+            }
+            else
+            {
+                MainForm_StatusStrip_filename.Text = "就绪";
+                MainForm_StatusStrip_status.Text = "";
+            }
+        }
+
+        private void MainForm_Menu_camera_focus_Click(object sender, EventArgs e)
+        {
+            Display.CamLocateSelected();
+        }
+        private void MainForm_Menu_window_display_toolDialog_Click(object sender, EventArgs e)
+        {
+            var item = (ToolStripMenuItem)sender;
+            Display.ToolDialogs[item.Text].Show();
         }
     }
 }

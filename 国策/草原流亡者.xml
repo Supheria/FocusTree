@@ -1,354 +1,261 @@
-﻿<focus-tree>
-	<tree-name>草原流亡者</tree-name>
-	<node>
-		<ID>1</ID>
-		<relied-ID>0</relied-ID>
-		<child-ID>2</child-ID>
-		<level>0</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>流浪啊流浪</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>5</duration>
-			<effects>触发事件“曾经的约定”。</effects>
-			<descript>人类复权运动失败之后，我们看似四散而逃，实则在为人类保留火种……</descript>
-			<ps.></ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>2</ID>
-		<relied-ID>1</relied-ID>
-		<child-ID>3</child-ID>
-		<level>1</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>再次联络</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>5</duration>
-			<effects>获得科技：147季无线电。触发事件“再看幻想乡”。</effects>
-			<descript>不管我们怎么认为，人类的确失败了，但至少现在我们不需要再次白手起家</descript>
-			<ps.></ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>3</ID>
-		<relied-ID>2</relied-ID>
-		<child-ID>4</child-ID>
-		<level>2</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>在我们的兄弟当中</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>5</duration>
-			<effects>获得8个编制为人类流亡编制的部队，450单位的竹林流亡者产步枪，450单位的草原流亡者产步枪，54单位的竹林流亡者产迫击炮，54单位的草原流亡者产迫击炮，150单位的竹林流亡者产近战武器，150单位的草原流亡者产近战武器添加进国家储备。触发事件“流亡者归来”。获得志愿军，其效果为（志愿军部队数上限：+6，派遣志愿军需要的部队数量：-100%）</effects>
-			<descript>很巧的是，我们都选择了互帮互助，虽然这批援助不知道是否来自哪个土作坊</descript>
-			<ps.></ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>4</ID>
-		<relied-ID>3</relied-ID>
-		<child-ID>5</child-ID>
-		<level>3</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>慷慨解囊</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>5</duration>
-			<effects>获得2个地图外民用工厂</effects>
-			<descript>我们谁也不会说出去这是慷慧音政府之慨的</descript>
-			<ps.></ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>5</ID>
-		<relied-ID>4</relied-ID>
-		<child-ID>6</child-ID>
-		<level>4</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>生存之道</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>55</duration>
-			<effects>获得争取复权生机，其效果为（投降界限：+10%，战争支持度：+15%，科研速度：-5%，正当化战争目标所需时间：-30%，征兵法案花费：-25%（幻想风洞）我国对其进攻修正：+10%（妖精乐园）我国对其防御修正：+10%</effects>
-			<descript>我们用战争和牺牲换来了这一小片土地，但如果我们不想面临围歼的风险，我们总得突破一个口子</descript>
-			<ps.></ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>6</ID>
-		<relied-ID>5</relied-ID>
-		<child-ID>7</child-ID>
-		<level>5</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>合纵之道</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>55</duration>
-			<effects>政治点数：-100，（幻想风洞）获得合纵（和草原流亡者的关系+500）（和妖精乐园的关系-500）</effects>
-			<descript>我们向幻想风洞供奉重礼，请求她们帮助我们击败妖精乐园，而我们可以将妖精乐园的南部赠与她们</descript>
-			<ps.></ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>7</ID>
-		<relied-ID>6</relied-ID>
-		<child-ID>8</child-ID>
-		<level>6</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>连横之道</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>55</duration>
-			<effects>政治点数：-100，（妖精乐园）获得连横（和草原流亡者的关系+500）（和幻想风洞的关系-500）</effects>
-			<descript>我们向妖精乐园供奉重礼，请求她们帮助我们击败幻想风洞，而我们只需要幻想风洞的北部</descript>
-			<ps.></ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>8</ID>
-		<relied-ID>7</relied-ID>
-		<child-ID>9</child-ID>
-		<level>7</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>裹挟借地</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>55</duration>
-			<effects>（妖精乐园）通过草原流亡者的提供军事通行权，触发事件：“借地？”。成为地底走私通道、花丛东侧、妖精丘陵的所有者</effects>
-			<descript>妖精的智力显然没法突破孩童，我们只需要派遣说客便能“借”下安身之地</descript>
-			<ps.></ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>9</ID>
-		<relied-ID>8</relied-ID>
-		<child-ID>10</child-ID>
-		<level>8</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>胁迫让地</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>55</duration>
-			<effects>（幻想风洞）触发事件“上当了！”。如果他们同意，则成为风洞南侧的所有者</effects>
-			<descript>先前虽然幻想风洞和妖精乐园也并不对头，但如果面临人类复权的扩张可能，还是会联合起来对我们进行绞杀，但现在他们已经彻底决裂，如果幻想风洞不愿意让出土地，他就要面临两国的同时进攻</descript>
-			<ps.></ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>10</ID>
-		<relied-ID>9</relied-ID>
-		<child-ID>11</child-ID>
-		<level>9</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>图穷匕见</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>55</duration>
-			<effects>草原流亡者对幻想风洞宣战，获得为期365天的“图穷匕见”，其效果为（部队速度：+5%，部队攻击：+5%）</effects>
-			<descript>此图穷而匕首见</descript>
-			<ps.>（注：需要幻想风洞存在）</ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>11</ID>
-		<relied-ID>10</relied-ID>
-		<child-ID>12</child-ID>
-		<level>10</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>霸占北部</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>55</duration>
-			<effects>成为幻想风洞的所有者，（妖精乐园）获得“？”（和草原流亡者的关系-100）</effects>
-			<descript>太驰则虎狼之态尽显</descript>
-			<ps.>（注：需要幻想风洞不存在）</ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>12</ID>
-		<relied-ID>11</relied-ID>
-		<child-ID>13</child-ID>
-		<level>11</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>外交事宜</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>55</duration>
-			<effects>（妖精乐园）触发事件：“解释”。失去“？”</effects>
-			<descript>其实我们做的一切都有迹可循，是之前约定好的，所以其实是我们占理</descript>
-			<ps.></ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>13</ID>
-		<relied-ID>12</relied-ID>
-		<child-ID>14</child-ID>
-		<level>12</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>夺敌心气</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>55</duration>
-			<effects>获得庙算，其效果为（陆军夜战攻击：+100%，部队突破：+10%）</effects>
-			<descript>三军可夺气，将军可夺心。是故朝气锐，昼气惰，暮气归</descript>
-			<ps.></ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>14</ID>
-		<relied-ID>13</relied-ID>
-		<child-ID>15</child-ID>
-		<level>13</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>明察五危</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>55</duration>
-			<effects>庙算追加效果：新陆军指挥官初始等级：+2，新将领初始进攻技能等级：+2，新将领初始防御技能等级：+2，新将领初始计划技能等级：+2，新将领初始后勤技能等级：+2</effects>
-			<descript>将有五危：必死，可杀也；必生，可虏也；忿速，可侮也；廉洁，可辱也；爱民，可烦也</descript>
-			<ps.></ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>15</ID>
-		<relied-ID>14</relied-ID>
-		<child-ID>16</child-ID>
-		<level>14</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>与众相得</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>55</duration>
-			<effects>庙算追加效果：部队组织度：+10%，部队组织度恢复：+10%），所有陆军指挥官：获得特质魅力非凡</effects>
-			<descript>卒未亲附而罚之，则不服，不服则难用也。卒已亲附而罚不行，则不可用也。故令之以文，齐之以武，是谓必取。令素行以教其民，则民服；令不素行以教其民，则民不服。令素行者，与众相得也</descript>
-			<ps.></ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>16</ID>
-		<relied-ID>15</relied-ID>
-		<child-ID>17</child-ID>
-		<level>15</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>吊民伐罪</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>55</duration>
-			<effects>争取复权生机追加效果：（蜘蛛风洞）我国对其进攻修正：+10%，我国对其防御加成：+10%</effects>
-			<descript>诛其罪，吊其民，如时雨降，民大悦</descript>
-			<ps.></ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>17</ID>
-		<relied-ID>16</relied-ID>
-		<child-ID>18</child-ID>
-		<level>16</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>统一风洞</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>55</duration>
-			<effects>草原流亡者对蜘蛛风洞宣战</effects>
-			<descript>强兵以足食为本，攘外以安内为先</descript>
-			<ps.></ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>18</ID>
-		<relied-ID>17</relied-ID>
-		<child-ID>19</child-ID>
-		<level>17</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>寻求承认</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>55</duration>
-			<effects>创建阵营：第二次人类复权运动——北线，（妖精乐园）加入第二次人类复权运动——北线，（斯卡雷特帝国）触发事件：“承认流亡者？”。如果他们同意，则获得幻想乡正规势力，其效果为（政治点数：+20%，部队组织度：+10%，制造战争的紧张度限制：+20%，正当化战争目标所需时间：+25%），获得内乱，其效果为（稳定度：-20%，战争支持度：-20%，政治点数：-20%）。开启解决内乱的决议</effects>
-			<descript>人类需要得到承认，在幻想乡真正站起来</descript>
-			<ps.>（注：需要斯卡雷特帝国存在）</ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>19</ID>
-		<relied-ID>18</relied-ID>
-		<child-ID>20</child-ID>
-		<level>18</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>强迫承认</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>55</duration>
-			<effects>草原流亡者对斯卡雷特帝国宣战，获得“我蛮夷也”，其效果为（政治点数：-20%，部队组织度：+20%，制造战争的紧张度限制：-20%，正当化战争目标时间：-25%）</effects>
-			<descript>其实我们并不是真的在和她们商量……</descript>
-			<ps.>（注：需要斯卡雷特帝国不同意）</ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>20</ID>
-		<relied-ID>19</relied-ID>
-		<child-ID>21</child-ID>
-		<level>19</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>让帝国再次伟大</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>55</duration>
-			<effects>，斯卡雷特帝国）加入第二次人类复权运动——北线，获得强大的威望，其效果为（每日获得的政治点数：+0.25，部队组织度：+15%，稳定度：+20%，战争支持度：+20%，建造速度：+10%，部队攻击：+5%，部队防御：+5%，科研速度：+10%，工厂产出：+10%），获得强大的威望，其效果为（每日获得的政治点数：+0.25，部队组织度：+15%，稳定度：+20%，战争支持度：+20%，建造速度：+10%，部队攻击：+5%，部队防御：+5%，科研速度：+10%，工厂产出：+10%）</effects>
-			<descript>吸血鬼和我们化敌为友互利共赢，拥有如此庞大帝国支持的人类还能说没有复权吗？</descript>
-			<ps.>（注：需要拥有民族精神幻想乡正规势力或“我蛮夷也”</ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>21</ID>
-		<relied-ID>20</relied-ID>
-		<child-ID>22</child-ID>
-		<level>20</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>威霸一方</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>55</duration>
-			<effects>获得外交中立，其效果为（稳定度：+35%，训练时间：+5%，ai修正：加入或扩大一个阵营的意愿：-250，ai修正：专注防御：+50%，ai修正：专注进攻：-30%，ai修正：专注和平：+40%，ai修正：部署部队数量修正：-20%）</effects>
-			<descript>威名一方，霸业安稳</descript>
-			<ps.></ps.>
-		</focus-data>
-	</node>
-	<node>
-		<ID>22</ID>
-		<relied-ID>21</relied-ID>
-		<level>21</level>
-		<start-colum>0</start-colum>
-		<end-colum>0</end-colum>
-		<focus-data>
-			<name>人类复权运动的未来</name>
-			<begin-with-star>false</begin-with-star>
-			<duration>110</duration>
-			<effects>触发事件：“人类复权运动的未来”。</effects>
-			<descript>当初为人类保留火种的任务我们已经超额完成了，我们又一次站在人类的岔路口上</descript>
-			<ps.></ps.>
-		</focus-data>
-	</node>
-</focus-tree>
+<?xml version="1.0" encoding="utf-8"?>
+<FocusGraph>
+  <FilePath>D:\Non_E\documents\GitHub\FocusTree\FocusTree\国策\草原流亡者.xml</FilePath>
+  <Nodes>
+    <Node ID="1">
+      <Name>流浪啊流浪</Name>
+      <Star>false</Star>
+      <Duration>5</Duration>
+      <Effect>触发事件“曾经的约定”。</Effect>
+      <Descript>人类复权运动失败之后，我们看似四散而逃，实则在为人类保留火种……</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="2">
+      <Name>再次联络</Name>
+      <Star>false</Star>
+      <Duration>5</Duration>
+      <Effect>获得科技：147季无线电。</Effect>
+      <Effect>触发事件“再看幻想乡”。</Effect>
+      <Descript>不管我们怎么认为，人类的确失败了，但至少现在我们不需要再次白手起家</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="3">
+      <Name>在我们的兄弟当中</Name>
+      <Star>false</Star>
+      <Duration>5</Duration>
+      <Effect>获得8个编制为人类流亡编制的部队</Effect>
+      <Effect>450单位的竹林流亡者产步枪，450单位的草原流亡者产步枪，54单位的竹林流亡者产迫击炮，54单位的草原流亡者产迫击炮，150单位的竹林流亡者产近战武器，150单位的草原流亡者产近战武器添加进国家储备。</Effect>
+      <Effect>触发事件“流亡者归来”。</Effect>
+      <Effect>获得志愿军，其效果为（志愿军部队数上限：+6，派遣志愿军需要的部队数量：-100%）</Effect>
+      <Descript>很巧的是，我们都选择了互帮互助，虽然这批援助不知道是否来自哪个土作坊</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="4">
+      <Name>慷慨解囊</Name>
+      <Star>false</Star>
+      <Duration>5</Duration>
+      <Effect>获得2个地图外民用工厂</Effect>
+      <Descript>我们谁也不会说出去这是慷慧音政府之慨的</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="5">
+      <Name>生存之道</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effect>获得争取复权生机，其效果为（投降界限：+10%，战争支持度：+15%，科研速度：-5%，正当化战争目标所需时间：-30%，征兵法案花费：-25%）</Effect>
+      <Effect>（幻想风洞）我国对其进攻修正：+10%（妖精乐园）</Effect>
+      <Effect>我国对其防御修正：+10%</Effect>
+      <Descript>我们用战争和牺牲换来了这一小片土地，但如果我们不想面临围歼的风险，我们总得突破一个口子</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="6">
+      <Name>合纵之道</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effect>政治点数：-100</Effect>
+      <Effect>（幻想风洞）获得合纵（和草原流亡者的关系+500）（和妖精乐园的关系-500）</Effect>
+      <Descript>我们向幻想风洞供奉重礼，请求她们帮助我们击败妖精乐园，而我们可以将妖精乐园的南部赠与她们</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="7">
+      <Name>连横之道</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effect>政治点数：-100</Effect>
+      <Effect>（妖精乐园）获得连横（和草原流亡者的关系+500）（和幻想风洞的关系-500）</Effect>
+      <Descript>我们向妖精乐园供奉重礼，请求她们帮助我们击败幻想风洞，而我们只需要幻想风洞的北部</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="8">
+      <Name>裹挟借地</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effect>（妖精乐园）通过草原流亡者的提供军事通行权</Effect>
+      <Effect>触发事件：“借地？”。成为地底走私通道、花丛东侧、妖精丘陵的所有者</Effect>
+      <Descript>妖精的智力显然没法突破孩童，我们只需要派遣说客便能“借”下安身之地</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="9">
+      <Name>胁迫让地</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effect>（幻想风洞）触发事件“上当了！”。如果他们同意，则成为风洞南侧的所有者</Effect>
+      <Descript>先前虽然幻想风洞和妖精乐园也并不对头，但如果面临人类复权的扩张可能，还是会联合起来对我们进行绞杀，但现在他们已经彻底决裂，如果幻想风洞不愿意让出土地，他就要面临两国的同时进攻</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="10">
+      <Name>图穷匕见</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effect>草原流亡者对幻想风洞宣战，获得为期365天的“图穷匕见”，其效果为（部队速度：+5%，部队攻击：+5%）</Effect>
+      <Descript>此图穷而匕首见</Descript>
+      <Ps.>（注：需要幻想风洞存在）</Ps.>
+    </Node>
+    <Node ID="11">
+      <Name>霸占北部</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effect>成为幻想风洞的所有者</Effect>
+      <Effect>（妖精乐园）获得“？”（和草原流亡者的关系-100）</Effect>
+      <Descript>太驰则虎狼之态尽显</Descript>
+      <Ps.>（注：需要幻想风洞不存在）</Ps.>
+    </Node>
+    <Node ID="12">
+      <Name>外交事宜</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effect>（妖精乐园）触发事件：“解释”。失去“？”</Effect>
+      <Descript>其实我们做的一切都有迹可循，是之前约定好的，所以其实是我们占理</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="13">
+      <Name>夺敌心气</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effect>获得庙算，其效果为（陆军夜战攻击：+100%，部队突破：+10%）</Effect>
+      <Descript>三军可夺气，将军可夺心。是故朝气锐，昼气惰，暮气归</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="14">
+      <Name>明察五危</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effect>庙算追加效果：新陆军指挥官初始等级：+2，新将领初始进攻技能等级：+2，新将领初始防御技能等级：+2，新将领初始计划技能等级：+2，新将领初始后勤技能等级：+2</Effect>
+      <Descript>将有五危：必死，可杀也；必生，可虏也；忿速，可侮也；廉洁，可辱也；爱民，可烦也</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="15">
+      <Name>与众相得</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effect>庙算追加效果：部队组织度：+10%，部队组织度恢复：+10%，所有陆军指挥官：获得特质魅力非凡</Effect>
+      <Descript>卒未亲附而罚之，则不服，不服则难用也。卒已亲附而罚不行，则不可用也。故令之以文，齐之以武，是谓必取。令素行以教其民，则民服；令不素行以教其民，则民不服。令素行者，与众相得也</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="16">
+      <Name>吊民伐罪</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effect>争取复权生机追加效果：（蜘蛛风洞）我国对其进攻修正：+10%，我国对其防御加成：+10%</Effect>
+      <Descript>诛其罪，吊其民，如时雨降，民大悦</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="17">
+      <Name>统一风洞</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effect>草原流亡者对蜘蛛风洞宣战</Effect>
+      <Descript>强兵以足食为本，攘外以安内为先</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="18">
+      <Name>寻求承认</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effect>创建阵营：第二次人类复权运动——北线</Effect>
+      <Effect>（妖精乐园）加入第二次人类复权运动——北线</Effect>
+      <Effect>（斯卡雷特帝国）触发事件：“承认流亡者？”。如果他们同意，则获得幻想乡正规势力，其效果为（政治点数：+20%，部队组织度：+10%，制造战争的紧张度限制：+20%，正当化战争目标所需时间：+25%）</Effect>
+      <Effect>获得内乱，其效果为（稳定度：-20%，战争支持度：-20%，政治点数：-20%）。开启解决内乱的决议</Effect>
+      <Descript>人类需要得到承认，在幻想乡真正站起来</Descript>
+      <Ps.>（注：需要斯卡雷特帝国存在）</Ps.>
+    </Node>
+    <Node ID="19">
+      <Name>强迫承认</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effect>草原流亡者对斯卡雷特帝国宣战，获得“我蛮夷也”，其效果为（政治点数：-20%，部队组织度：+20%，制造战争的紧张度限制：-20%，正当化战争目标时间：-25%）</Effect>
+      <Descript>其实我们并不是真的在和她们商量……</Descript>
+      <Ps.>（注：需要斯卡雷特帝国不同意）</Ps.>
+    </Node>
+    <Node ID="20">
+      <Name>让帝国再次伟大</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effect>（斯卡雷特帝国）加入第二次人类复权运动——北线，获得强大的威望，其效果为（每日获得的政治点数：+0.25，部队组织度：+15%，稳定度：+20%，战争支持度：+20%，建造速度：+10%，部队攻击：+5%，部队防御：+5%，科研速度：+10%，工厂产出：+10%）</Effect>
+      <Effect>获得强大的威望，其效果为（每日获得的政治点数：+0.25，部队组织度：+15%，稳定度：+20%，战争支持度：+20%，建造速度：+10%，部队攻击：+5%，部队防御：+5%，科研速度：+10%，工厂产出：+10%）</Effect>
+      <Descript>吸血鬼和我们化敌为友互利共赢，拥有如此庞大帝国支持的人类还能说没有复权吗？</Descript>
+      <Ps.>（注：需要拥有民族精神幻想乡正规势力或“我蛮夷也”</Ps.>
+    </Node>
+    <Node ID="21">
+      <Name>威霸一方</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effect>获得外交中立，其效果为（稳定度：+35%，训练时间：+5%，ai修正：加入或扩大一个阵营的意愿：-250，ai修正：专注防御：+50%，ai修正：专注进攻：-30%，ai修正：专注和平：+40%，ai修正：部署部队数量修正：-20%）</Effect>
+      <Descript>威名一方，霸业安稳</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="22">
+      <Name>人类复权运动的未来</Name>
+      <Star>false</Star>
+      <Duration>110</Duration>
+      <Effect>触发事件：“人类复权运动的未来”。</Effect>
+      <Descript>当初为人类保留火种的任务我们已经超额完成了，我们又一次站在人类的岔路口上</Descript>
+      <Ps. />
+    </Node>
+  </Nodes>
+  <NodesRelations>
+    <Relation ID="2">
+      <Require>1</Require>
+    </Relation>
+    <Relation ID="3">
+      <Require>2</Require>
+    </Relation>
+    <Relation ID="4">
+      <Require>3</Require>
+    </Relation>
+    <Relation ID="5">
+      <Require>4</Require>
+    </Relation>
+    <Relation ID="6">
+      <Require>5</Require>
+    </Relation>
+    <Relation ID="7">
+      <Require>6</Require>
+    </Relation>
+    <Relation ID="8">
+      <Require>7</Require>
+    </Relation>
+    <Relation ID="9">
+      <Require>8</Require>
+    </Relation>
+    <Relation ID="10">
+      <Require>9</Require>
+    </Relation>
+    <Relation ID="11">
+      <Require>10</Require>
+    </Relation>
+    <Relation ID="12">
+      <Require>11</Require>
+    </Relation>
+    <Relation ID="13">
+      <Require>12</Require>
+    </Relation>
+    <Relation ID="14">
+      <Require>13</Require>
+    </Relation>
+    <Relation ID="15">
+      <Require>14</Require>
+    </Relation>
+    <Relation ID="16">
+      <Require>15</Require>
+    </Relation>
+    <Relation ID="17">
+      <Require>16</Require>
+    </Relation>
+    <Relation ID="18">
+      <Require>17</Require>
+    </Relation>
+    <Relation ID="19">
+      <Require>18</Require>
+    </Relation>
+    <Relation ID="20">
+      <Require>19</Require>
+    </Relation>
+    <Relation ID="21">
+      <Require>20</Require>
+    </Relation>
+    <Relation ID="22">
+      <Require>21</Require>
+    </Relation>
+  </NodesRelations>
+</FocusGraph>

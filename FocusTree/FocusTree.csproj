@@ -15,12 +15,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="UI\NodeToolDialogs\MainForm.cs" />
+    <Compile Remove="UI\NodeToolDialogs\MainForm.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="UI\NodeToolDialogs\MainForm.resx" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Resources\FocusTree.ico" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="CSVFile" Version="3.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="System.IO.Compression.ZipFile" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>

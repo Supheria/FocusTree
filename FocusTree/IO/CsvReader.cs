@@ -1,17 +1,9 @@
 ﻿using CSVFile;
-using FocusTree.Focus;
-using FocusTree.Tree;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Xml.Linq;
+using FocusTree.Data;
 
 namespace FocusTree.IO
 {
-    internal class FCsv
+    internal class CsvReader
     {
         /// <summary>
         /// 读取Csv文件，获得 string[][] 二维文本
@@ -40,7 +32,18 @@ namespace FocusTree.IO
             }
             return data;
         }
-        public static void ReadGraphFromCsv(string path, ref Dictionary<int, FData> nodes, ref Dictionary<int, List<HashSet<int>>> requires)
+        public static FocusGraph LoadGraph(string path)
+        {
+            if (!File.Exists(path))
+            {
+                throw new Exception("[2302191048] 文件不存在: " + path);
+            }
+            Dictionary<int, FocusData> NodesCatalog = new();
+            Dictionary<int, List<HashSet<int>>> RequireGroups = new();
+            ReadGraphFromCsv(path, ref NodesCatalog, ref RequireGroups);
+            return new FocusGraph(Path.ChangeExtension(path, ".xml"), NodesCatalog, RequireGroups);
+        }
+        private static void ReadGraphFromCsv(string path, ref Dictionary<int, FocusData> nodes, ref Dictionary<int, List<HashSet<int>>> requires)
         {
             var data = ReadCsv(path);
 
@@ -58,10 +61,10 @@ namespace FocusTree.IO
                 // 从头循环匹配所有为空并统计总数，数量就是第一个非空的index
                 int level = row.TakeWhile(col => string.IsNullOrWhiteSpace(col)).Count();
                 // 获取原始字段
-                FData focusData;
+                FocusData focusData;
                 try
                 {
-                    focusData = new FData(rowCount, row[level]);
+                    focusData = new FocusData(rowCount, row[level]);
                 }
                 catch (Exception ex)
                 {
@@ -75,7 +78,6 @@ namespace FocusTree.IO
                 {
                     last = new TreeNode<int>(rowCount, 0);
                     nodes.Add(last.Value, focusData);
-                    // 这里不需要添加它的 Require
                     continue; // 这个要加的
                 }
                 // 如果新节点与上一节点的右移距离大于1，则表示产生了断层
