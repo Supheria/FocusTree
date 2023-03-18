@@ -1,0 +1,1195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FocusGraph>
+  <FilePath>D:\Non_E\documents\GitHub\FocusTree\FocusTree\国策\人类村落.xml</FilePath>
+  <Nodes>
+    <Node ID="1">
+      <Name>风萧萧</Name>
+      <Star>false</Star>
+      <Duration>30</Duration>
+      <Effect>触发事件：“风萧萧兮易水寒”。</Effect>
+      <Effect>获得稗田阿求的遗产，其效果为（激进倾向：+0.1，军用工厂建造速度：+10%）</Effect>
+      <Descript>慷慨悲歌，壮士死国</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="2">
+      <Name>黄金台</Name>
+      <Star>false</Star>
+      <Duration>30</Duration>
+      <Effect>开启决议召回前人类村落的政治顾问</Effect>
+      <Effect>获得客卿，其效果为（生活消费品工厂：+3%，政治点数：-25%，科研速度：+20%）</Effect>
+      <Descript>千金买骨，求贤若渴</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="3">
+      <Name>顺从</Name>
+      <Star>true</Star>
+      <Duration>30</Duration>
+      <Effect>绥靖政策追加效果：每日政治点数增长：+0.2，地区最大工业值：+20%，科研速度：+45%，工厂产出：+15%，军用工厂建造速度：-20%</Effect>
+      <Descript />
+      <Ps. />
+    </Node>
+    <Node ID="4">
+      <Name>乐不思蜀</Name>
+      <Star>true</Star>
+      <Duration>60</Duration>
+      <Effect>移除稗田阿求的遗产</Effect>
+      <Effect>以战争的消亡取代战争的阴影，效果变更（战争支持度：-10%，适役人口修正：+10%，建造速度：+50%，每周人力：+100）</Effect>
+      <Descript>为什么我们还要再战斗呢，幻想乡各方互相制约，让人类在与世无争的理想乡里再待一段时间吧</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="5">
+      <Name>躬匠精神</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>稳定度：-5%</Effect>
+      <Effect>所有国家：获得躬匠精神（和人类村落的关系改变了+200）</Effect>
+      <Descript>人类犯下的滔天罪行必须通过忏悔来赎罪</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="6">
+      <Name>建造佛展</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>政治点数：-100</Effect>
+      <Effect>（命莲寺）获得强烈的战略同盟（和人类村落的关系+100）</Effect>
+      <Effect>（人类村落）获得强烈的战略同盟（和命莲寺的关系+100）</Effect>
+      <Effect>（联合县）添加1建筑位，添加1民用工厂</Effect>
+      <Effect>获得涅槃大佛展，其效果为（每日政治点数增长：+0.2，生活消费品工厂：-5%）</Effect>
+      <Descript>我们邀请佛教徒重回人类村落</Descript>
+      <Ps.>（注：需要命莲寺没有内战）</Ps.>
+    </Node>
+    <Node ID="7">
+      <Name>建造道观</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>政治点数：-100</Effect>
+      <Effect>（神灵庙）获得强烈的战略同盟（和人类村落的关系+100）</Effect>
+      <Effect>（人类村落）获得强烈的战略同盟（和神灵庙的关系+100）</Effect>
+      <Effect>（联合县）添加1建筑位，添加1民用工厂</Effect>
+      <Effect>获得信徒修炼课程，其效果为（生活消费品工厂：-6%）</Effect>
+      <Descript>我们邀请道教徒重回人类村落</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="8">
+      <Name>人才回流</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>政治点数：-100</Effect>
+      <Effect>（神明信仰联盟）获得强烈的战略同盟（和人类村落的关系+100）</Effect>
+      <Effect>（人类村落）获得强烈的战略同盟（和神明信仰联盟的关系+100）</Effect>
+      <Effect>增加1个科研槽</Effect>
+      <Effect>获得工程技术学院，其效果为（民用类研究速度：+10%）</Effect>
+      <Descript>一些人类移民去了”西人类村落“我们可以利用一些方法让其中一部分回来</Descript>
+      <Ps.>（注：需要神明信仰联盟意识形态为改良）</Ps.>
+    </Node>
+    <Node ID="9">
+      <Name>道具回归</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>政治点数：-100</Effect>
+      <Effect>（九十九工业）获得强烈的战略同盟（和人类村落的关系+100）</Effect>
+      <Effect>（人类村落）获得强烈的战略同盟（和九十九工业的关系+100）</Effect>
+      <Effect>（九十九工业）完成国策：合作军工项目</Effect>
+      <Descript>还是有道具喜欢人类的，可以让他们继续和谐相处了</Descript>
+      <Ps.>（注：需要九十九工业意识形态不为新规）</Ps.>
+    </Node>
+    <Node ID="10">
+      <Name>政治支持</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>政治点数：-100</Effect>
+      <Effect>（叛乱同盟）获得强烈的战略同盟（和人类村落的关系+100）</Effect>
+      <Effect>（人类村落）获得强烈的战略同盟（和叛乱同盟的关系+100）</Effect>
+      <Effect>（叛乱同盟）政治危机追加效果：稳定度：+15%，所有拥有的地区：添加1基础设施</Effect>
+      <Effect>获得永不放弃的进步，其效果为（建造速度：+10%）</Effect>
+      <Descript>我们可以支持鬼人正邪的统治，她现在已经饥不择食了</Descript>
+      <Ps.>（注：需要鬼人正邪的政权还没有被颠覆）</Ps.>
+    </Node>
+    <Node ID="11">
+      <Name>贡献血液</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>政治点数：-100</Effect>
+      <Effect>（斯卡雷特帝国）获得强烈的战略同盟（和人类村落的关系+100）</Effect>
+      <Effect>（人类村落）获得强烈的战略同盟（和斯卡雷特帝国的关系+100）</Effect>
+      <Effect>（斯卡雷特帝国）完成国策：加大和人类村落的合作，跳过国策：在人类村落建立影子政府、正当化控制人类</Effect>
+      <Descript>吸血鬼需要血液，人类需要和平，并没有什么矛盾</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="12">
+      <Name>同修神社</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>政治点数：-100</Effect>
+      <Effect>（博丽神社）获得强烈的战略同盟（和人类村落的关系+100）</Effect>
+      <Effect>（人类村落）获得强烈的战略同盟（和博丽神社的关系+100）</Effect>
+      <Effect>（博丽神社）完成国策：修缮博丽神社</Effect>
+      <Effect>获得博丽的狂热信徒，其效果为（适役人口：+9%）</Effect>
+      <Descript />
+      <Ps.>（注：需要博丽神社没有妖怪巫女的传言、就是妖怪巫女！！！）</Ps.>
+    </Node>
+    <Node ID="13">
+      <Name>认同守矢</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>政治点数：-100</Effect>
+      <Effect>（守矢神社）获得强烈的战略同盟（和人类村落的关系+100）</Effect>
+      <Effect>（人类村落）获得强烈的战略同盟（和守矢神社的关系+100）</Effect>
+      <Effect>（守矢神社）移除神明的危机</Effect>
+      <Effect>获得无为而治，其效果为（每周人口：+1，每月人口：+15%）</Effect>
+      <Effect>增加2个地图外民用工厂</Effect>
+      <Descript />
+      <Ps. />
+    </Node>
+    <Node ID="14">
+      <Name>欢迎媒体</Name>
+      <Star>false</Star>
+      <Duration>100</Duration>
+      <Effect>绥靖政策追加效果：每日政治点数增长：+0.35，科研速度：+10%</Effect>
+      <Descript>我们欢迎天狗的媒体，即使有意识形态输出也不会比现在更差不是吗</Descript>
+      <Ps.>（注：需要完成国策：认同守矢、同修神社）</Ps.>
+    </Node>
+    <Node ID="15">
+      <Name>佛道同盟</Name>
+      <Star>false</Star>
+      <Duration>100</Duration>
+      <Effect>绥靖政策追加效果：每日政治点数增长：+0.1，科研速度：+25%</Effect>
+      <Descript>我们重新撮合神道同盟，虽然没有军事上的好处，但其他方面却是一个不落</Descript>
+      <Ps.>（注：需要完成国策：建造佛展，建造道观）</Ps.>
+    </Node>
+    <Node ID="16">
+      <Name>四海皆友</Name>
+      <Star>false</Star>
+      <Duration>100</Duration>
+      <Effect>绥靖政策追加效果：政治点数：+25%，每周稳定度：+0.1%，稳定度：+40%</Effect>
+      <Effect>（九十九工业）完成国策：物归原主</Effect>
+      <Descript>幻想乡任何地方都会有人类的身影，无论他们卑贱或高贵</Descript>
+      <Ps.>（注：需要完成国策：人才回流、道具回归）</Ps.>
+    </Node>
+    <Node ID="17">
+      <Name>沟通贤者</Name>
+      <Star>false</Star>
+      <Duration>100</Duration>
+      <Effect>绥靖政策追加效果：地方最大工业值：+30%，生活消费品：-10%，建造速度：+25%，工厂产出：+25%</Effect>
+      <Descript>贤者的职责是守护幻想乡的和平，而人类似乎也在进行这种职责</Descript>
+      <Ps.>（注：需要完成国策贡献血液、政治支持）</Ps.>
+    </Node>
+    <Node ID="18">
+      <Name>努力的结果</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>获得幻想乡正统势力，其效果为（政治点数：+20%，部队组织度：+10%，制造战争的紧张度限制：+20%，正当化战争目标所需时间：+25%）</Effect>
+      <Descript>我们得到了幻想乡的认可，虽然不知道认可的是人类还是慧音</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="19">
+      <Name>有限的扩张</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>开启决议通过民用工厂换取核心省份</Effect>
+      <Descript>我们可以通过赎买让曾经的土地回归怀抱</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="20">
+      <Name>无限的投资</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>开启决议使用政治点数获得建筑位和民用工厂</Effect>
+      <Descript>我们可以通过外交努力（慧音）换取源源不断的经济发展空间</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="21">
+      <Name>"以地事秦"</Name>
+      <Star>true</Star>
+      <Duration>60</Duration>
+      <Effect>触发事件：“抱薪救火？”。</Effect>
+      <Effect>稗田阿求的遗产追加效果：激进倾向：-0.1，改良倾向：+0.1，军用工厂建造速度：-10%，民用工厂建造速度：+10%</Effect>
+      <Effect>以战争的政治取代战争的阴影，效果变更：工厂产出：+20%，改善关系持续花费：-33%</Effect>
+      <Effect>道具的保护追加效果：政治点数：+15%</Effect>
+      <Effect>（九十九工业）该国所拥民用工厂：-5%，可以加入阵营。</Effect>
+      <Effect>（九十九工业）获得倒向我们（和人类村落的关系+100）</Effect>
+      <Effect>（人类村落）获得倒向他们（和人类村落的关系+100）</Effect>
+      <Descript>幻想乡的局势瞬息万变，我们可以放弃部分直接的武装力量，但需要拿回自己在经济上的地位</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="22">
+      <Name>亲密无间</Name>
+      <Star>true</Star>
+      <Duration>60</Duration>
+      <Effect>（九十九工业）创建阵营：泛人主义共荣圈，完成国策：成为守护神。</Effect>
+      <Effect>道具的保护追加效果：（九十九工业）该国所拥民用工厂：+5%</Effect>
+      <Effect>获得幻想乡正统势力，其效果为（政治点数：+20%，部队组织度：+10%，制造战争的紧张度限制：+20%，正当化战争目标所需时间：+25%）</Effect>
+      <Descript>泛人主义的宣传让我们和道具亲密无间</Descript>
+      <Ps.>（注：需要九十九工业领导人为多多良小伞）</Ps.>
+    </Node>
+    <Node ID="23">
+      <Name>知识合并</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>增加1个科研槽</Effect>
+      <Effect>（九十九工业）政治点数：-100，完成国策：知识的化身</Effect>
+      <Descript>无论如何人类接收了外界的知识，和道具共同学习对双方来说都是最好的选择</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="24">
+      <Name>借刀杀人</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>获得清剿极端势力长常规化，其效果为（稳定度：+10%，政治点数：+15%，激进倾向：-0.1，新规倾向：-0.1）</Effect>
+      <Effect>（九十九工业）禁用决议：于人类村落清剿极端势力、第二次于人类村落清剿极端势力</Effect>
+      <Descript>内部的极端势力对我们和付丧神都是极大的威胁，正好借他们的手除掉</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="25">
+      <Name>改良思潮</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>触发事件：“近朱者赤”。</Effect>
+      <Effect>（九十九工业）获得强烈的战略同盟（和人类村落的关系+100）</Effect>
+      <Effect>（人类村落）获得强烈的战略同盟（和九十九工业的关系+100）</Effect>
+      <Descript>“故近朱者赤，近墨者黑；声和则响清，形正则影正。”——《太子少傅箴》</Descript>
+      <Ps.>（注：需要完成国策：知识合并、邀请镇压）</Ps.>
+    </Node>
+    <Node ID="26">
+      <Name>妖力课程</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>（隙间世界）获得另类脱离掌控（与人类村落的关系-100）</Effect>
+      <Effect>政治点数：-200，增加10点灵力</Effect>
+      <Effect>（九十九工业）完成国策：妖力转移课程</Effect>
+      <Descript>多多良小伞有方法让人类转化成付丧神，帮助他们也就相当于帮助我们自己</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="27">
+      <Name>召回老兵</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>人力：-500，陆军经验：+15</Effect>
+      <Effect>（九十九工业）完成国策：接纳人类老兵</Effect>
+      <Descript>我们以人类复权的名义秘密召回老兵，他们将作为人类的贡品</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="28">
+      <Name>整合财阀</Name>
+      <Star>false</Star>
+      <Duration>100</Duration>
+      <Effect>吞并人类财阀联合时可以直接获得他们的核心，（人类财阀联合）会下降一级附庸等级</Effect>
+      <Descript>用于制约我们的财阀的政治寿命已经到达尽头，我们收回他们的资产将有利于未来发展</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="29">
+      <Name>财阀资产</Name>
+      <Star>true</Star>
+      <Duration>60</Duration>
+      <Effect>获得人类财阀投资，其效果为（生活消费品工厂：-5%）</Effect>
+      <Descript>财阀对外有许多投资我们是不能单方面断掉的，但是其余的都可以充公</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="30">
+      <Name>财阀投资</Name>
+      <Star>true</Star>
+      <Duration>60</Duration>
+      <Effect>（九十九工业）获得人类财阀投资，其效果为（生活消费品工厂：-5%），如果他们已经拥有这个民族精神，则人类财阀投资追加效果：生活消费品工厂：-5%</Effect>
+      <Descript>我们加大对九十九工业的支持，因为帮助他们就是帮助我们自己</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="31">
+      <Name>索取认可</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>获得幻想乡正统势力，其效果为（政治点数：+20%，部队组织度：+10%，制造战争的紧张度限制：+20%，正当化战争目标所需时间：+25%）</Effect>
+      <Effect>从（联合县）移除2个民用工厂</Effect>
+      <Effect>（九十九工业）人类的保护者追加效果：政治点数：-10%，增加2个地图外民用工厂</Effect>
+      <Descript>我们对付丧神仁至义尽，是时候索取一点应有的报偿了</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="32">
+      <Name>申请仲裁</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>（九十九工业）开启限时决议宣战（妖怪小镇）、（香霖公司）、（联合使馆）（注：未完成时扣除大量稳定度、战争支持度和政治点数）</Effect>
+      <Descript>多年的倾力相助，人类已经和付丧神密不可分，付丧神帮助人类也是帮助他们自己</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="33">
+      <Name>借力打力</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>（九十九工业）向（命莲寺）宣战</Effect>
+      <Effect>人类村落向（命莲寺）宣战</Effect>
+      <Descript>虚伪的佛教徒没有阻止妖怪信徒对人类的屠杀，这仇可不是不报，只是时候未到</Descript>
+      <Ps.>（注：需要命莲寺存在）</Ps.>
+    </Node>
+    <Node ID="34">
+      <Name>请求还地</Name>
+      <Star>false</Star>
+      <Duration>100</Duration>
+      <Effect>将成为所有核心省份的所有者</Effect>
+      <Descript>报之以李，还之以桃</Descript>
+      <Ps.>（注：需要完成国策：财阀投资）</Ps.>
+    </Node>
+    <Node ID="35">
+      <Name>根除威胁</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>九十九工业向神灵庙宣战</Effect>
+      <Effect>人类村落向神灵庙宣战</Effect>
+      <Descript>丰聪耳神子的野心昭然若揭，我们要把威胁扼杀在摇篮里</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="36">
+      <Name>绥靖政策的终结</Name>
+      <Star>false</Star>
+      <Duration>100</Duration>
+      <Effect>战争支持度：+50%</Effect>
+      <Effect>移除绥靖政策</Effect>
+      <Descript>随着接连的战争和九十九工业的壮大，我们再也不需要依靠绥靖政策来保全自己了</Descript>
+      <Ps.>（注：需要处于战时）</Ps.>
+    </Node>
+    <Node ID="37">
+      <Name>摆脱妖怪的控制</Name>
+      <Star>false</Star>
+      <Duration>100</Duration>
+      <Effect>完成决议：从妖怪的影响中解脱</Effect>
+      <Effect>获得独属于付丧神的人类，其效果为（部队防御：+10%，政治点数：-10%，每周人力：-10）</Effect>
+      <Effect>（九十九工业）人类的保护者追加效果：每周人力：+10，政治点数：+10%，部队防御：-10%，每日人类影响力额外变化：+0.08</Effect>
+      <Descript>我们摆脱了妖怪的妖怪的控制，但是这一切真的值得吗？</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="38">
+      <Name>同床异梦</Name>
+      <Star>true</Star>
+      <Duration>60</Duration>
+      <Effect>绥靖政策追加效果：军用工厂建造速度：+40%，每日政治点数增长：+0.2，地区最大工业值：+10%</Effect>
+      <Effect>道具的保护追加效果：（九十九工业）该国所拥民用工厂：-5%，开启决议获得限时的针对道具的力量</Effect>
+      <Descript>道具如果只是把人类当作一个跳板，那人类又为什么要让她们如愿？</Descript>
+      <Ps.>（注：需要九十九工业的领导人不为多多良小伞）</Ps.>
+    </Node>
+    <Node ID="39">
+      <Name>外交权谋</Name>
+      <Star>true</Star>
+      <Duration>60</Duration>
+      <Effect>向开放社会发展一级，以开放社会2取代开放社会1，效果变化（科研速度：+3%，加密：-0.2，可出口资源：+5%，顺从度增长速度：+5%，合作势力花费：-5%，改良支持度变化：+5%）</Effect>
+      <Effect>（天狗共和国）政治点数：+150，获得寻求外援（和人类村落的关系+250）</Effect>
+      <Effect>（人类村落）获得寻求外援（和天狗共和国的关系+250）</Effect>
+      <Descript>在意识形态方向天狗共和国是我们毋庸置疑的领头人</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="40">
+      <Name>纵横捭阖</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>战争支持度：-10%</Effect>
+      <Effect>通过（竹林妖怪联盟）、（命莲寺）的保障独立</Effect>
+      <Effect>通过和（竹林妖怪联盟）、（命莲寺）的互不侵犯条约</Effect>
+      <Descript>我们知道九十九工业居心叵测之后需要争取更多同情者的支持</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="41">
+      <Name>诱敌来攻</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>稳定度：-10%，九十九工业对人类村落宣战</Effect>
+      <Descript>善战者，致人而不致于人</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="42">
+      <Name>武库兵法</Name>
+      <Star>true</Star>
+      <Duration>60</Duration>
+      <Effect>向鹰派发展一级，以鸽派4取代鸽派5，效果变化（生活消费品工厂：+2%，战争支持度：+5%，改善关系持续花费：+10%，地区最大工业值：-10%，贸易协定关系修正：-20%，正当化战争目标时间：-10%，敌国对我国正当化战争目标时间：-20%）</Effect>
+      <Descript />
+      <Ps. />
+    </Node>
+    <Node ID="43">
+      <Name>火攻五道</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>获得庙算，其效果为（所有敌国：每周人力：-100，工厂产出：-20%，部队组织度：-10%，部队损耗：+30%，部队速度：-10%）</Effect>
+      <Descript>火攻有五：一曰火人，二曰火积，三曰火辎，四曰火库，五曰火队</Descript>
+      <Ps.>（注：可以用事件达到效果）</Ps.>
+    </Node>
+    <Node ID="44">
+      <Name>用间五器</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>庙算追加效果：所有敌国：战争支持度：-10%，加密：-10，解密：-10，指挥点数每日增长乘数：-20%，厌战上涨周期：-50%</Effect>
+      <Descript>用间有五：有因间，有内间，有反间，有死间，有生间</Descript>
+      <Ps.>（注：可以用事件达到效果）</Ps.>
+    </Node>
+    <Node ID="45">
+      <Name>托古改制</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>移除道具的保护，移除绥靖政策</Effect>
+      <Effect>获得托古改制，其效果为（生活消费品：-20%，地区最大工业值：-20%）</Effect>
+      <Effect>九十九工业触发事件：“利益受损”。</Effect>
+      <Descript>我们在内部大肆宣扬结界危机之前幻想乡的和谐，构建一个曾经也没有可能的理想乡，目的是迁徙北工业区同时发展农业机械以脱离付丧神的“保护”</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="46">
+      <Name>先发制人</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>政治点数：-100</Effect>
+      <Effect>人类村落向九十九工业宣战</Effect>
+      <Effect>托古改制追加效果：（九十九工业）我国对其进攻修正：+20%</Effect>
+      <Descript>付丧神迟早会发现我们的真实意图，不如先下手为强</Descript>
+      <Ps.>（注：需要完成国策：火攻五道、用间五器、托古改制）</Ps.>
+    </Node>
+    <Node ID="47">
+      <Name>收回道具</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>托古改制追加效果：（九十九工业）我国对其进攻修正：-20%</Effect>
+      <Effect>获得多多良锻造公司，其效果为（迫击炮：对人员杀伤：+10%，步枪：对人员杀伤：+5%，对装甲杀伤：+5%，生产效率上限：+10%）</Effect>
+      <Effect>多多良小伞成为将领</Effect>
+      <Descript>人类和道具终于重归一体</Descript>
+      <Ps.>（注：需要完成国策：诱敌来攻或先发制人且九十九工业不存在）</Ps.>
+    </Node>
+    <Node ID="48">
+      <Name>加入妖怪山同盟</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>改良支持度变化：+5%</Effect>
+      <Effect>（天狗共和国）触发事件：”人类村落请求加入妖怪山民主同盟”。</Effect>
+      <Descript>加入天狗的势力圈对我们也是好处多多</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="49">
+      <Name>技术爆炸</Name>
+      <Star>false</Star>
+      <Duration>100</Duration>
+      <Effect>战争的政治追加效果：（天狗共和国）该国所拥民用工厂：+10%，政治点数：-500，增加2个科研槽</Effect>
+      <Descript>科学技术是第一生产力，为此付出一些代价也在所不惜</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="50">
+      <Name>再看帝国</Name>
+      <Star>false</Star>
+      <Duration>100</Duration>
+      <Effect>触发事件：“我们的宿敌”。</Effect>
+      <Descript>斯卡雷特帝国曾让我们付出了血的代价，休养生息之后，我们应该重新决定对他们的策略了</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="51">
+      <Name>借机发难</Name>
+      <Star>true</Star>
+      <Duration>30</Duration>
+      <Effect>人类村落向斯卡雷特帝国宣战</Effect>
+      <Descript>帝国大厦将倾，那么我们可以助其一臂之力</Descript>
+      <Ps.>（注：需要斯卡雷特帝国处于战时）</Ps.>
+    </Node>
+    <Node ID="52">
+      <Name>休兵止戈</Name>
+      <Star>true</Star>
+      <Duration>60</Duration>
+      <Effect>获得幻想乡正统势力，其效果为（政治点数：+20%，部队组织度：+10%，制造战争的紧张度限制：+20%，正当化战争目标所需时间：+25%）</Effect>
+      <Effect>获得无为而治，其效果为（每周人力：+1，每月人力：+15%）</Effect>
+      <Descript>人类复权已经过去，何必再在乎过去呢</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="53">
+      <Name>变革</Name>
+      <Star>true</Star>
+      <Duration>30</Duration>
+      <Effect>稗田阿求的遗产追加效果：激进倾向：+0.9，军用工厂建造速度：+40%</Effect>
+      <Effect>绥靖政策追加效果：每日政治点数增长：-0.2，地区最大工业值：-20%，科研速度：-20%，工厂产出：+30%</Effect>
+      <Effect>战争的阴影追加效果：战争支持度：+20%，适役人口修正：+30%</Effect>
+      <Descript>这不是结束，这甚至不是结束的开始，但这可能是开始的结束</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="54">
+      <Name> 重走旧路</Name>
+      <Star>true</Star>
+      <Duration>60</Duration>
+      <Effect>获得人民阵线，其效果为（激进倾向：-0.1，投降界限：+10%，（九十九工业）我国对其防御修正：+5%，我国对其进攻修正：+5%）</Effect>
+      <Effect>获得统一战线，其效果为（政治点数：+25%，稳定度：+10%，战争支持度：+10%，厌战上涨周期：+33%）</Effect>
+      <Descript>雄关漫道真如铁，而今迈步从头越</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="55">
+      <Name>沉冤昭雪</Name>
+      <Star>false</Star>
+      <Duration>30</Duration>
+      <Effect>移除上白泽慧音</Effect>
+      <Effect>稗田人类复权派成为执政党</Effect>
+      <Effect>触发事件：“慧音的最后一天”。</Effect>
+      <Descript>人类复权被污名化数年之后，“阿求派”以一场政变夺回了政权</Descript>
+      <Ps.>（注：需要稗田人类复权派支持率高于50%）</Ps.>
+    </Node>
+    <Node ID="56">
+      <Name>人类下克上主义</Name>
+      <Star>false</Star>
+      <Duration>30</Duration>
+      <Effect>创建阵营：第二次人类复权运动</Effect>
+      <Effect>触发事件：“下克上主义人类化”。</Effect>
+      <Effect>获得人类下克上主义，其效果为（部队组织度：+15%，投降界限：+5%，战争支持度：+10%，部队核心领土进攻：+5%，部队核心领土防御：+5%，征兵法案花费：-25%），如果他们的意识形态为激进，则（叛乱同盟）、（雾之湖妖精）获得意识形态斗争，其效果为（（人类村落）我国对其进攻修正：+10%，我国对其防御修正：-10%）</Effect>
+      <Descript>稗田阿求声称自己找到了独属于人类的革命方式，鬼人正邪等下克上的先行者皆认为这种行为是赤裸裸的剽窃和亵渎，但他们压根不了解人类的特殊国情，阿求的下克上主义才是最好的</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="57">
+      <Name>团结人类资产阶级</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>触发事件：“稗田阿求谈论人类复权运动的性质”。</Effect>
+      <Effect>（人类财阀联合）会下降一级附庸等级</Effect>
+      <Effect>获得人类财阀投资，其效果为（生活消费品工厂：-5%）</Effect>
+      <Effect>统一战线追加效果：改良倾向：+1</Effect>
+      <Descript>稗田阿求认为人类复权运动并不是真正的下克上运动，而是下克上运动的前奏，所以应该团结一切可以团结的力量以战胜妖怪</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="58">
+      <Name>延续种族主义政策</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>触发事件：“稗田阿求评价种族主义”</Effect>
+      <Effect>（人类财阀联合）会下降一级附庸等级</Effect>
+      <Effect>获得种族主义宣传，其效果为（每周战争支持度：+0.1%）</Effect>
+      <Effect>统一战线追加效果：新规倾向：+1</Effect>
+      <Descript>稗田阿求并不打算对种族主义进行一刀切的判断，只要是利于人类复权的都是可以利用的好种族主义</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="59">
+      <Name>萃取人类的传统</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>触发事件：“稗田阿求反对思维禁锢”</Effect>
+      <Effect>（人类财阀联合）会下降一级附庸等级</Effect>
+      <Effect>获得深化刑名律令，其效果为（每周稳定度：+0.1%）</Effect>
+      <Effect>统一战线追加效果：孤立倾向：+1</Effect>
+      <Descript>稗田阿求欣赏从朝鲜传入的律令，反对控制人类思想的神道教，去其糟粕取其精华</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="60">
+      <Name>反击经济殖民者</Name>
+      <Star>false</Star>
+      <Duration>30</Duration>
+      <Effect>人民阵线追加效果：适役人口：+10%</Effect>
+      <Effect>获得为期365天的“人民战争”，其效果为（适役人口修正：50%，训练时间：-50%，每周人力：+100）</Effect>
+      <Descript>九十九工业对人类的殖民是经济性的资本输出，人类容忍她们已经足够久了</Descript>
+      <Ps.>（注：需要与九十九工业处于战时）</Ps.>
+    </Node>
+    <Node ID="61">
+      <Name>语出惊人</Name>
+      <Star>false</Star>
+      <Duration>0</Duration>
+      <Effect>这项国策目前没有实际影响。但随着世界局势的变化可能会发生改变。</Effect>
+      <Descript>出人意料的，稗田阿求没有对付丧神进行同态复仇，反而是说出了一些引发歧义的话</Descript>
+      <Ps.>（注：随事件的发展自行完成）</Ps.>
+    </Node>
+    <Node ID="62">
+      <Name>火攻五道</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>获得庙算，其效果为（所有敌国：每周人力：-100，工厂产出：-20%，部队组织度：-10%，部队损耗：+30%，部队速度：-10%）</Effect>
+      <Descript>火攻有五：一曰火人，二曰火积，三曰火辎，四曰火库，五曰火队</Descript>
+      <Ps.>（注：可以用事件达到效果）</Ps.>
+    </Node>
+    <Node ID="63">
+      <Name>用间五器</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>庙算追加效果：所有敌国：战争支持度：-10%，加密：-10，解密：-10，指挥点数每日增长乘数：-20%，厌战上涨周期：-50%</Effect>
+      <Descript>用间有五：有因间，有内间，有反间，有死间，有生间</Descript>
+      <Ps.>（注：可以用事件达到效果）</Ps.>
+    </Node>
+    <Node ID="64">
+      <Name>人民的鸦片</Name>
+      <Star>false</Star>
+      <Duration>30</Duration>
+      <Effect>触发事件：“对宗教的态度”。</Effect>
+      <Descript>宗教是人民的鸦片，人类必须决定对他的态度</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="65">
+      <Name>焚烧毒草</Name>
+      <Star>true</Star>
+      <Duration>30</Duration>
+      <Effect>获得思想管控，其效果为（激进倾向：+1，政治点数：+25%，稳定度：+20%）</Effect>
+      <Effect>移除统一战线</Effect>
+      <Effect>人类村落向命莲寺宣战</Effect>
+      <Effect>人类村落向神灵庙宣战</Effect>
+      <Descript>宗教作为控制人类思想的工具必须被全面摧毁</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="66">
+      <Name>富裕精神</Name>
+      <Star>true</Star>
+      <Duration>30</Duration>
+      <Effect>获得阿求选集，其效果为（战争支持度：+20%，适役人口：+5%）</Effect>
+      <Effect>移除人民阵线</Effect>
+      <Effect>以总动员取代孤立主义，效果变更：适役人口修正：-30%，生活消费品工厂：-25%，稳定度：-40%，军转民花费：+10%，民转军花费：-15%，工厂产出：+45%，军用工厂建造速度：+45%，民用工厂建造速度：-45%</Effect>
+      <Effect>人类村落向魔女联盟宣战</Effect>
+      <Effect>人类村落向人偶师协会宣战</Effect>
+      <Descript>依靠战无不胜的阿求思想足以让人民不再有吸食鸦片的需求，但也需要一定的物质奖励</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="67">
+      <Name>粉碎帝国</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>人类村落向斯卡雷特帝国宣战</Effect>
+      <Descript>作为下克上人类化的政权和下克上主义的正统继承人，摧毁封建帝国是我们义不容辞的责任</Descript>
+      <Ps.>（注：需要处于和平）</Ps.>
+    </Node>
+    <Node ID="68">
+      <Name>幻想乡的明天</Name>
+      <Star>false</Star>
+      <Duration>100</Duration>
+      <Effect>获得世界，其效果为（每日政治点数增长：+0.5，部队组织度：+15%，每月人口：+30%，适役人口修正：15%，稳定度：+30%，训练时间：-10%，顺从度增长速度：+1%，特工位：+3）</Effect>
+      <Descript>人类复权已经再无敌手，下克上的正统如今也是幻想乡的正统</Descript>
+      <Ps.>（注：需要九十九工业、斯卡雷特帝国不存在）</Ps.>
+    </Node>
+    <Node ID="69">
+      <Name>转移博丽巫女</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>（隙间世界）触发事件：“人类希望迎回博丽巫女”。如果他们同意，则博丽灵梦成为将领</Effect>
+      <Descript>贤者的旧账我们可以既往不咎，但是博丽灵梦作为人类复权运动的英雄需要回归人类的怀抱</Descript>
+      <Ps.>（注：需要博丽神社不存在）</Ps.>
+    </Node>
+    <Node ID="70">
+      <Name>幻想乡的太阳</Name>
+      <Star>false</Star>
+      <Duration>100</Duration>
+      <Effect>触发事件：“光鲜亮丽的背后”。</Effect>
+      <Effect>稗田阿求获得“伟人”，其效果为（政治点数：+100%，稳定度：+100%，战争支持度：+100%）</Effect>
+      <Descript>东方红，太阳升，幻想乡出了个大英雄}（注：需要九十九工业、斯卡雷特帝国、隙间世界不存在</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="71">
+      <Name>再寻新路</Name>
+      <Star>true</Star>
+      <Duration>60</Duration>
+      <Effect>稗田人类复权派将被称作人类复权派</Effect>
+      <Effect>稗田阿礼（？）成为稗田人类复权派的领导人</Effect>
+      <Effect>开启内战（成为新人类村落）</Effect>
+      <Effect>决议：绕过九十九工业的制裁，以人类复权的遗产取代稗田阿求的遗产，效果变更：每周稳定度：+0.5%，每周战争支持度：+0.5%，每日厌战值变化：-0.1%</Effect>
+      <Descript>革命才不是新瓶装旧酒呢！这次复权是全新的、代表全人类意志的革命</Descript>
+      <Ps.>（稗田阿礼（？）领导人特质“人类精神的象征”，其效果为（厌战上涨周期：+50%，适役人口：+8%，适役人口修正：80%））</Ps.>
+    </Node>
+    <Node ID="72">
+      <Name>人类夺厂</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>（触发事件：“自己治厂？”。</Effect>
+      <Effect>（九十九工业）获得工业区脱离（和新人类村落的关系-100）</Effect>
+      <Effect>获得人类夺厂，其效果为（生产效率保持：+30%，生产效率上限：+30%，生产效率增长速度：+30%）</Effect>
+      <Descript>和人类的投降派作战完毕后，曾经被技术官僚垄断的工厂现在交由人类工人使用</Descript>
+      <Ps.>（注：需要人类村落不存在）</Ps.>
+    </Node>
+    <Node ID="73">
+      <Name>审判财阀</Name>
+      <Star>false</Star>
+      <Duration>30</Duration>
+      <Effect>触发事件：“肉食者鄙”。</Effect>
+      <Effect>新人类村落向人类财阀联合宣战</Effect>
+      <Descript>人类的资本家比妖怪更可怕，他们在暗处操纵人类的经济，人类复权的失败他们有不可推卸的责任</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="74">
+      <Name>财产充公</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>（稗田县——人类赌场）增加5个建筑位，增加5个军用工厂</Effect>
+      <Effect>获得人类财阀资产，其效果为（政治点数：-25%，生活消费品工厂：-20%）</Effect>
+      <Descript>吊死财阀之后我们征用了他们的所有资产，但是否彻底和用于哪里一直备受质疑，有人甚至认为我们花了财阀的钱去买奢侈品供领导人使用……</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="75">
+      <Name>继续下克上论</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>触发事件：“产生叛徒的原因”。</Effect>
+      <Effect>（雾之湖妖精联合体）获得意识形态支持（和新人类村落的关系+200）</Effect>
+      <Effect>（叛乱同盟）获得意识形态支持（和新人类村落的关系+200）</Effect>
+      <Effect>获得继续下克上论，其效果为（厌战上涨周期：+50%，厌战值每日变化：+0.05）</Effect>
+      <Descript>人类内部的敌人是持续存在的，所以我们需要一直对他们进行处理，下克上是一个好的导师</Descript>
+      <Ps.>（注：需要处于和平）</Ps.>
+    </Node>
+    <Node ID="76">
+      <Name>人类革命的旗帜</Name>
+      <Star>false</Star>
+      <Duration>30</Duration>
+      <Effect>全球紧张度：+10，政治点数：+500</Effect>
+      <Effect>创建阵营：人类下克上运动</Effect>
+      <Effect>开启革命/政治热情决议</Effect>
+      <Descript>人类复权打响了幻想乡革命的第一枪，人类的下克上是幻想乡底层人民的赞歌</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="77">
+      <Name>荣归故里</Name>
+      <Star>false</Star>
+      <Duration>30</Duration>
+      <Effect>获得对（香霖公司）、（妖怪小镇）、（联合使馆）的傀儡战争目标</Effect>
+      <Descript>虽然这次是属于全人类的复权，但其实一些妖怪如果经过改造也可以成为人类的革命同志的</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="78">
+      <Name>煽动革命</Name>
+      <Star>false</Star>
+      <Duration>30</Duration>
+      <Effect>开启决议增加相邻国家激进党派的支持率</Effect>
+      <Descript>为了保障我们的安全，必须让周边的国家都和我们保持一致</Descript>
+      <Ps.>（注：需要处于和平）</Ps.>
+    </Node>
+    <Node ID="79">
+      <Name>世界革命的基地</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>获得世界革命的基地，其效果为（正当化战争目标时间：+50%，处于阵营加成：+200%，减少唯心度花费：-50%，不能宣战）</Effect>
+      <Descript>下克上运动的其他国家都需要保护新人类村落的建设工作，因为只有那样人类才有更多的资本去帮助他们</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="80">
+      <Name>强化专政</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>世界革命的基地追加效果：稳定度：+20%，政治点数：+20%，激进倾向：+1</Effect>
+      <Descript>正义的人类对不义的妖怪进行专权，或许和下克上的部分理念不符，但是这是为了保护多数人的利益</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="81">
+      <Name>战争科学</Name>
+      <Star>false</Star>
+      <Duration>100</Duration>
+      <Effect>增加1个科研槽，陆军经验：+100</Effect>
+      <Effect>获得政治顾问，其效果为（陆军学说花费：-25%）</Effect>
+      <Descript>战争是一门科学，而我们的胜利是由于人类工人组成的纯粹军队，将二者有机结合起来人类将无往不利</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="82">
+      <Name>火攻五道</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>获得庙算，其效果为（所有敌国：每周人力：-100，工厂产出：-20%，部队组织度：-10%，部队损耗：+30%，部队速度：-10%）</Effect>
+      <Descript>火攻有五：一曰火人，二曰火积，三曰火辎，四曰火库，五曰火队</Descript>
+      <Ps.>（注：可以用事件达到效果）</Ps.>
+    </Node>
+    <Node ID="83">
+      <Name>用间五器</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>庙算追加效果：所有敌国：战争支持度：-10%，加密：-10，解密：-10，指挥点数每日增长乘数：-20%，厌战上涨周期：-50%）</Effect>
+      <Descript>用间有五：有因间，有内间，有反间，有死间，有生间</Descript>
+      <Ps.>（注：可以用事件达到效果）</Ps.>
+    </Node>
+    <Node ID="84">
+      <Name>建成下克上社会</Name>
+      <Star>false</Star>
+      <Duration>100</Duration>
+      <Effect>所有拥有的地区：添加3个建筑位，添加1个军用工厂，添加1个民用工厂</Effect>
+      <Effect>世界革命的基地追加效果：可以宣战</Effect>
+      <Effect>移除革命/政治热情决议</Effect>
+      <Descript>我们终于可以宣布自己建成了下克上社会，再不需要受资产阶级法权限制了</Descript>
+      <Ps.>（注：需要新人类村落工业值超过100）</Ps.>
+    </Node>
+    <Node ID="85">
+      <Name>建设第五纵队</Name>
+      <Star>false</Star>
+      <Duration>30</Duration>
+      <Effect>处于战时每隔一段时间将会获得编制为扫荡编制的部队</Effect>
+      <Effect>世界革命的基地追加效果：正当化战争目标时间：-100%</Effect>
+      <Descript>许多人都因为我们的成就而崇拜我们，当然也不乏投机分子，但谁会在意呢？</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="86">
+      <Name>对贤者之位的觊觎</Name>
+      <Star>false</Star>
+      <Duration>100</Duration>
+      <Effect>获得幻想乡建立者，其效果为（每日获得的政治点数：+0.5，每周人力：+3，生活消费品工厂：-10%，稳定度：+10%，地区最大工业值：+30%，建造速度：+25%，工厂产出：25%，制作战争目标的紧张度限制：+15%，特工位：+2，每日人类影响力额外变化：+0.02，x可以加入阵营灵力系科研速度：+35%，混合类研究速度：+10%，秘密武器类研究速度：-60%）</Effect>
+      <Effect>所有贤者都会在未来对你宣战</Effect>
+      <Descript>人类现在什么也不缺，但还缺一些虚名，我们想幻想乡能容忍多一位贤者的出现吧</Descript>
+      <Ps.>（注：需要势力规模为世界）</Ps.>
+    </Node>
+    <Node ID="87">
+      <Name>威震天下</Name>
+      <Star>false</Star>
+      <Duration>100</Duration>
+      <Effect>获得强大的威望，其效果为（每日获得的政治点数：+0.25，部队组织度：+15%，稳定度：+20%，战争支持度：+20%，建造速度：+10%，部队攻击：+5%，部队防御：+5%，科研速度：+10%，工厂产出：+10%）</Effect>
+      <Descript>王侯将相，宁有种乎？</Descript>
+      <Ps.>（注：需要后户之国、妖兽仙界、隙间世界不存在）</Ps.>
+    </Node>
+    <Node ID="88">
+      <Name>万众一心</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effect>（雾雨流亡者）（竹林流亡者）（草原流亡者）触发事件：“人类村落的号召”。如果他们同意，则成为人类村落的合作势力</Effect>
+      <Effect>获得人类复权运动，其效果为（部队攻击：+25%，部队防御：+25%）</Effect>
+      <Descript>人类复权运动卷土重来，是流亡者们履行承诺的时候了</Descript>
+      <Ps.>（注：需要意识形态为激进，如果流亡者拥有外交中立民族精神会被直接吞并）</Ps.>
+    </Node>
+    <Node ID="89">
+      <Name>尽诛叛逆</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effect>获得讨逆，其效果为（部队核心领土进攻：+10%，部队核心领土防御：+10%）</Effect>
+      <Descript>流亡过后有些流亡者忘记了自己的根，我们不得不得让他们回忆一下</Descript>
+      <Ps.>（注：需要有流亡者不同意号召）</Ps.>
+    </Node>
+    <Node ID="90">
+      <Name>雾雨流亡者</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effect>人类村落向雾雨流亡者宣战</Effect>
+      <Effect>讨逆追加效果：（雾雨流亡者）我国对其进攻修正：+10%</Effect>
+      <Descript>种族主义者的确难以规训</Descript>
+      <Ps.>（注：需要雾雨流亡者不同意号召）</Ps.>
+    </Node>
+    <Node ID="91">
+      <Name>竹林流亡者</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effect>人类村落向竹林流亡者宣战</Effect>
+      <Effect>讨逆追加效果：（竹林流亡者）我国对其进攻修正：+10%</Effect>
+      <Descript>改良主义者是人类的叛徒</Descript>
+      <Ps.>（注：需要竹林流亡者不同意号召）</Ps.>
+    </Node>
+    <Node ID="92">
+      <Name>草原流亡者</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effect>人类村落向草原流亡者宣战</Effect>
+      <Effect>讨逆追加效果：（草原流亡者）我国对其进攻修正：+10%</Effect>
+      <Descript>他们真以为自己懂我们吗</Descript>
+      <Ps.>（注：需要草原流亡者不同意号召）</Ps.>
+    </Node>
+    <Node ID="93">
+      <Name>人类之力</Name>
+      <Star>false</Star>
+      <Duration>55</Duration>
+      <Effect>开启决议获得庙算</Effect>
+      <Descript>五分的典籍重新归一，是时候让他们见识一下人类之力了</Descript>
+      <Ps.>（注：需要雾雨流亡者、竹林流亡者、草原流亡者、人类财阀联合不存在或是我们的合作势力）</Ps.>
+    </Node>
+    <Node ID="94">
+      <Name>内战措施</Name>
+      <Star>false</Star>
+      <Duration>30</Duration>
+      <Effect>获得为期365天的“内战措施”，其效果为（部队速度：+10%，动员速度：+30%）</Effect>
+      <Descript>一场来源于内部的战争爆发了，我们必须速战速决，以免被外部的敌人钻了空子</Descript>
+      <Ps.>（注：需要处于战时且与人类财阀联合或人类村落交战）</Ps.>
+    </Node>
+    <Node ID="95">
+      <Name>塞翁失马</Name>
+      <Star>false</Star>
+      <Duration>30</Duration>
+      <Effect>所有拥有的地区：添加3个建筑位</Effect>
+      <Descript>内战带来了建筑的损毁，但也给予了我们重塑的机会</Descript>
+      <Ps.>（注：需要处于和平）</Ps.>
+    </Node>
+    <Node ID="96">
+      <Name>再坚众心</Name>
+      <Star>false</Star>
+      <Duration>30</Duration>
+      <Effect>获得坚众心，其效果为（投降界限：+10%，稳定度：+10%）</Effect>
+      <Descript>和我们意见不和的人类居民几乎都死于这场内战中，接下来我们可以争取更多中间派并且稳固我们的受众了</Descript>
+      <Ps.>（注：需要人类财阀联合不存在）</Ps.>
+    </Node>
+    <Node ID="97">
+      <Name>内外共治</Name>
+      <Star>false</Star>
+      <Duration>15</Duration>
+      <Effect>（人类财阀联合）触发事件：“内外共治”。如果他们同意，则（人类财阀联合）成为稗田县、龙神县、稗田田区、龙神县——本居印刷厂、白石町、稗田县——人类赌场的所有者，（人类村落）成为龙神县西、外本居——人类矿地、稗田县西、外西川、雾雨县、雾雨县北、夜鸟町的所有者，与（人类财阀联合）达成和平</Effect>
+      <Descript>我们失败了，无奈委身求和</Descript>
+      <Ps.>（注：需要与人类财阀联合处于战时且投降倾向大于50%）</Ps.>
+    </Node>
+    <Node ID="98">
+      <Name>遥相呼应</Name>
+      <Star>false</Star>
+      <Duration>15</Duration>
+      <Effect>创建阵营：人类防卫同盟</Effect>
+      <Effect>（人类财阀联合）加入人类防卫同盟</Effect>
+      <Descript>兄弟阋于墙，外御其侮</Descript>
+      <Ps.>（注：需要人类财阀联合同意内外共治）</Ps.>
+    </Node>
+  </Nodes>
+  <NodesRelations>
+    <Relation ID="2">
+      <Require>1</Require>
+    </Relation>
+    <Relation ID="3">
+      <Require>2</Require>
+    </Relation>
+    <Relation ID="4">
+      <Require>3</Require>
+    </Relation>
+    <Relation ID="5">
+      <Require>4</Require>
+    </Relation>
+    <Relation ID="6">
+      <Require>5</Require>
+    </Relation>
+    <Relation ID="7">
+      <Require>5</Require>
+    </Relation>
+    <Relation ID="8">
+      <Require>5</Require>
+    </Relation>
+    <Relation ID="9">
+      <Require>5</Require>
+    </Relation>
+    <Relation ID="10">
+      <Require>5</Require>
+    </Relation>
+    <Relation ID="11">
+      <Require>5</Require>
+    </Relation>
+    <Relation ID="12">
+      <Require>5</Require>
+    </Relation>
+    <Relation ID="13">
+      <Require>5</Require>
+    </Relation>
+    <Relation ID="14">
+      <Require>13</Require>
+    </Relation>
+    <Relation ID="15">
+      <Require>13</Require>
+    </Relation>
+    <Relation ID="16">
+      <Require>13</Require>
+    </Relation>
+    <Relation ID="17">
+      <Require>13</Require>
+    </Relation>
+    <Relation ID="18">
+      <Require>17</Require>
+    </Relation>
+    <Relation ID="19">
+      <Require>18</Require>
+    </Relation>
+    <Relation ID="20">
+      <Require>19</Require>
+    </Relation>
+    <Relation ID="21">
+      <Require>3</Require>
+    </Relation>
+    <Relation ID="22">
+      <Require>21</Require>
+    </Relation>
+    <Relation ID="23">
+      <Require>22</Require>
+    </Relation>
+    <Relation ID="24">
+      <Require>22</Require>
+    </Relation>
+    <Relation ID="25">
+      <Require>24</Require>
+    </Relation>
+    <Relation ID="26">
+      <Require>25</Require>
+    </Relation>
+    <Relation ID="27">
+      <Require>25</Require>
+    </Relation>
+    <Relation ID="28">
+      <Require>27</Require>
+    </Relation>
+    <Relation ID="29">
+      <Require>28</Require>
+    </Relation>
+    <Relation ID="30">
+      <Require>28</Require>
+    </Relation>
+    <Relation ID="31">
+      <Require>30</Require>
+    </Relation>
+    <Relation ID="32">
+      <Require>31</Require>
+    </Relation>
+    <Relation ID="33">
+      <Require>31</Require>
+    </Relation>
+    <Relation ID="34">
+      <Require>33</Require>
+    </Relation>
+    <Relation ID="35">
+      <Require>33</Require>
+    </Relation>
+    <Relation ID="36">
+      <Require>35</Require>
+    </Relation>
+    <Relation ID="37">
+      <Require>36</Require>
+    </Relation>
+    <Relation ID="38">
+      <Require>21</Require>
+    </Relation>
+    <Relation ID="39">
+      <Require>38</Require>
+    </Relation>
+    <Relation ID="40">
+      <Require>39</Require>
+    </Relation>
+    <Relation ID="41">
+      <Require>40</Require>
+    </Relation>
+    <Relation ID="42">
+      <Require>38</Require>
+    </Relation>
+    <Relation ID="43">
+      <Require>42</Require>
+    </Relation>
+    <Relation ID="44">
+      <Require>42</Require>
+    </Relation>
+    <Relation ID="45">
+      <Require>42</Require>
+    </Relation>
+    <Relation ID="46">
+      <Require>45</Require>
+    </Relation>
+    <Relation ID="47">
+      <Require>46</Require>
+    </Relation>
+    <Relation ID="48">
+      <Require>47</Require>
+    </Relation>
+    <Relation ID="49">
+      <Require>48</Require>
+    </Relation>
+    <Relation ID="50">
+      <Require>49</Require>
+    </Relation>
+    <Relation ID="51">
+      <Require>50</Require>
+    </Relation>
+    <Relation ID="52">
+      <Require>50</Require>
+    </Relation>
+    <Relation ID="53">
+      <Require>2</Require>
+    </Relation>
+    <Relation ID="54">
+      <Require>53</Require>
+    </Relation>
+    <Relation ID="55">
+      <Require>54</Require>
+    </Relation>
+    <Relation ID="56">
+      <Require>55</Require>
+    </Relation>
+    <Relation ID="57">
+      <Require>56</Require>
+    </Relation>
+    <Relation ID="58">
+      <Require>57</Require>
+    </Relation>
+    <Relation ID="59">
+      <Require>58</Require>
+    </Relation>
+    <Relation ID="60">
+      <Require>59</Require>
+    </Relation>
+    <Relation ID="61">
+      <Require>60</Require>
+    </Relation>
+    <Relation ID="62">
+      <Require>61</Require>
+    </Relation>
+    <Relation ID="63">
+      <Require>62</Require>
+    </Relation>
+    <Relation ID="64">
+      <Require>63</Require>
+    </Relation>
+    <Relation ID="65">
+      <Require>64</Require>
+    </Relation>
+    <Relation ID="66">
+      <Require>64</Require>
+    </Relation>
+    <Relation ID="67">
+      <Require>66</Require>
+    </Relation>
+    <Relation ID="68">
+      <Require>67</Require>
+    </Relation>
+    <Relation ID="69">
+      <Require>68</Require>
+    </Relation>
+    <Relation ID="70">
+      <Require>69</Require>
+    </Relation>
+    <Relation ID="71">
+      <Require>53</Require>
+    </Relation>
+    <Relation ID="72">
+      <Require>71</Require>
+    </Relation>
+    <Relation ID="73">
+      <Require>72</Require>
+    </Relation>
+    <Relation ID="74">
+      <Require>73</Require>
+    </Relation>
+    <Relation ID="75">
+      <Require>74</Require>
+    </Relation>
+    <Relation ID="76">
+      <Require>75</Require>
+    </Relation>
+    <Relation ID="77">
+      <Require>76</Require>
+    </Relation>
+    <Relation ID="78">
+      <Require>77</Require>
+    </Relation>
+    <Relation ID="79">
+      <Require>78</Require>
+    </Relation>
+    <Relation ID="80">
+      <Require>79</Require>
+    </Relation>
+    <Relation ID="81">
+      <Require>80</Require>
+    </Relation>
+    <Relation ID="82">
+      <Require>81</Require>
+    </Relation>
+    <Relation ID="83">
+      <Require>82</Require>
+    </Relation>
+    <Relation ID="84">
+      <Require>83</Require>
+    </Relation>
+    <Relation ID="85">
+      <Require>84</Require>
+    </Relation>
+    <Relation ID="86">
+      <Require>85</Require>
+    </Relation>
+    <Relation ID="87">
+      <Require>86</Require>
+    </Relation>
+    <Relation ID="89">
+      <Require>88</Require>
+    </Relation>
+    <Relation ID="90">
+      <Require>89</Require>
+    </Relation>
+    <Relation ID="91">
+      <Require>89</Require>
+    </Relation>
+    <Relation ID="92">
+      <Require>89</Require>
+    </Relation>
+    <Relation ID="93">
+      <Require>92</Require>
+    </Relation>
+    <Relation ID="95">
+      <Require>94</Require>
+    </Relation>
+    <Relation ID="96">
+      <Require>95</Require>
+    </Relation>
+    <Relation ID="97">
+      <Require>94</Require>
+    </Relation>
+    <Relation ID="98">
+      <Require>97</Require>
+    </Relation>
+  </NodesRelations>
+</FocusGraph>
