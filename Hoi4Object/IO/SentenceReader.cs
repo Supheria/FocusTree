@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HoiObject
+namespace Hoi4Object.IO
 {
-    public interface IActionable
+    internal class SentenceReader
     {
-        //public HoiObject OnObject { get; }
+
     }
 }

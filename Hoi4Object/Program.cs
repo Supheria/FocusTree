@@ -1,0 +1,1 @@
+﻿public Dictionary<string, Attribute> AtrributeCatalog = new();

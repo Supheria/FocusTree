@@ -1,35 +1,145 @@
 （效果描述）（国家）（触发条件）时，（获得）为期（时常）的“效果名”，其效果为（属性1：变量，属性2：变量）
 
-国家 - State - 通过国家名与数据建立对照
-	动作 - Action
-		施加对象 - Object
-	属性字典 - AttributeList
-	资产 - Asset
+IO一分为二：
+1. 读写对象数据（保存游戏进度用到的数据），目前无初始值
+2. 读写设定对象行为（action）的语句（sentence）
+
+<string, Object> <"事件名", 事件对象> <"效果名", 效果对象> <"资源名", 资源对象> <"力量名", 力量对象>
+
+( Object, MmodifyValue)
+
+public class Object 
+{
+	string Name,
+	string trigger, // 施加者
+	string target, // 接收者
+	caption
+}
+
+public class State : Object
+{
 	
-效果 - Effect - 静态的接口拓展方法（动作可施加）
-	施加对象 - Object
-		施加属性 - Attribute
-			开关 - Switch
-			数值 - Value
-	时长 - Duration
-	修正 - Modify
+}
+
+public class Atrribute : Object
+{
+	AtrributeType Type, // 数值类型
+	//int UpperLimit, // 上限值
+	//int LowerLimit // 下限值
+}
+
+public class Effect : Atrribute
+{
+	//int Level // 效果等级
+	public string Append(params string[] args)
+	{
+		return $"{Name}追加效果: {string.Join(", ", args)}"
+	}
+}
+
+AtrributeType: 效果/关系/建筑/资源/力量/事件/速度
+
+(频率)(ObjectName)(subAtrribute)
+每周战争支持度
+志愿军部队数上限值
+
+public class ValueType : Atrribute
+{
 	
-动作 - Action - 接口
-	施加对象 - Object
-	行为 - Behavior
-		开关 - Switch
-		修正 - Modify
-		
-属性 - Attribute - 静态的接口拓展方法（动作可施加）
-	开关 - Switch
-	向性 - Potential
-		正向增益 - Positive
-		负向增益 - Negative
-	修正 - Modify
-		
-属性：
-	拥有者 - Owner
-	政治点数 - Political_Power
-	(接口)对_Object_的进攻 < - > Object的防御
-	(接口)对_Object_的防御 < - > Object的进攻
-	(接口)对_Object_的宣战 < - > Object的宣战
+	bool PositiveAdd;
+	string[] StringColors = new string[]
+	{
+		Color.Black.Name,
+		Color.Green.Name,
+		Color.Orange.Name,
+		Color.Red.Name
+	}
+	public string[] Edit(string value, bool hasPercent)
+	{
+		value = hasPercent ? value + "%" : value;
+		if (int.Parse(value) > 0)
+		{
+			return new string[]
+			{
+				StringColors[0],
+				$"{Name}{_NAME_VALUE_SPLITTER_}",
+				PositiveAdd ? StringColors[1] : StringColors[2],
+				value
+			};
+		}
+		else if (int.Parse(value) < 0)
+		{
+			return new string[]
+			{
+				StringColors[0],
+				$"{Name}{_NAME_VALUE_SPLITTER_}",
+				PositiveAdd ? StringColors[1] : StringColors[2],
+				value
+			};
+		}
+		return new string[]
+		{
+			StringColors[0],
+			Name,
+			StringColors[3],
+			"/NULL/"
+		}
+	}
+}
+
+// Dictionary<StateName, Dictionary<AtrributeName, AtrributeObject>>
+Dictionary<string, Dictionary<string, Object>> States
+
+(StateName)(StateAction)(ObjectName/StateName)(ObjectValue)
+（守矢神社）获得万民自化
+隐居村落加入妖怪山自卫联盟
+隐居村落吞并河童长老会
+增加5个地图外民用工厂
+
+五弊三缺追加效果：建造速度：-30%
+if (match("(XXX)?(xxx)(?:追加效果: )(XXX)") success)
+{
+	var stateName = match[1] == null ? "fileName" : match[1];
+	var objectArgs = match[3].Split(", ");
+	List<string> objectParams = new();
+	foreach (var arg in objectArgs)
+	{
+		var objectName = arg.Split(": ")[0];
+		var objectValue = arg.Split(": ")[1];
+		var object = States[sateName][objectName];
+		switch (object.Type)
+		{
+			case Type.速度
+		}
+	}
+}
+
+// 追加效果
+Object.Append(Object.Atrribute["建造速度"].Edit(-30))
+
+获得365天的“负荆请罪”，其效果为（战争支持度：-50%，制造战争目标的紧张度限制：+50%，志愿军部队数上限制：-50%）
+
+public struct ColorString
+{
+	string Name;
+	
+	string Value;
+	
+	Color NameColor;
+	
+	Color ValueColor;
+	
+	ColorString(string name, string value, Color nameColor, Color valueColor)
+	{
+		Name = name
+		Value = value
+		NameColor = nameColor;
+		ValueColor = valueColor;
+	}
+}
+
+
+
+
+
+
