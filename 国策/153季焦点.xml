@@ -1,0 +1,489 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FocusGraph>
+  <FilePath>C:\Users\Non_E\Documents\GitHub\FocusTree\FocusTree\国策\153季焦点.xml</FilePath>
+  <Nodes>
+    <Node ID="124">
+      <Name>153季焦点</Name>
+      <Star>false</Star>
+      <Duration>0</Duration>
+      <Effect>这项国策目前没有实际影响。但随着世界局势的变化可能会发生改变。</Effect>
+      <Descript />
+      <Ps.>（注：随着事件发展自动完成）</Ps.>
+    </Node>
+    <Node ID="125">
+      <Name>扩展生产</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>1x70%研究加成：生产类，建造类和资源获取类。</Effect>
+      <Descript />
+      <Ps. />
+    </Node>
+    <Node ID="126">
+      <Name>主城扩建</Name>
+      <Star>true</Star>
+      <Duration>60</Duration>
+      <Effect>（首都）添加3个建筑位。</Effect>
+      <Descript />
+      <Ps. />
+    </Node>
+    <Node ID="127">
+      <Name>扩建民用工厂</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>（state）：添加3个建筑位，添加3民用工厂。</Effect>
+      <Descript />
+      <Ps. />
+    </Node>
+    <Node ID="128">
+      <Name>民用工厂建造改良</Name>
+      <Star>true</Star>
+      <Duration>60</Duration>
+      <Effect>获得民用工厂建造改良，其效果为（军转民花费：-20%，民用工厂建造速度：+15%）</Effect>
+      <Descript />
+      <Ps. />
+    </Node>
+    <Node ID="129">
+      <Name>广泛扩建</Name>
+      <Star>true</Star>
+      <Duration>60</Duration>
+      <Effect>所有拥有的地区：添加1个建筑位。</Effect>
+      <Descript />
+      <Ps. />
+    </Node>
+    <Node ID="130">
+      <Name>扩建军用工厂</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>（state）：添加3个建筑位，添加3军用工厂。</Effect>
+      <Descript />
+      <Ps. />
+    </Node>
+    <Node ID="131">
+      <Name>军用工厂建造改良</Name>
+      <Star>true</Star>
+      <Duration>60</Duration>
+      <Effect>获得军用工厂建造改良，其效果为（民转军花费：-20%，军用工厂建造速度：+15%）</Effect>
+      <Descript />
+      <Ps. />
+    </Node>
+    <Node ID="132">
+      <Name>资源工厂改良</Name>
+      <Star>true</Star>
+      <Duration>60</Duration>
+      <Effect>金属炼制厂的资源产出：+10%，灵气提取厂的资源产出：+12，火药厂的资源产出：+8，妖石精炼厂的资源产出：+6，2x70%研究加成：金属资源，灵气资源，火药资源，妖石资源和石油资源。</Effect>
+      <Descript />
+      <Ps.>（注：民用工厂建造改良或军用工厂建造改良）</Ps.>
+    </Node>
+    <Node ID="133">
+      <Name>生产目标</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>1x80%研究加成：生产类。</Effect>
+      <Descript />
+      <Ps. />
+    </Node>
+    <Node ID="134">
+      <Name>设备混合</Name>
+      <Star>true</Star>
+      <Duration>60</Duration>
+      <Effect>获得设备混合，其效果为（生产效率上限：+15%）</Effect>
+      <Descript />
+      <Ps. />
+    </Node>
+    <Node ID="135">
+      <Name>设备分离</Name>
+      <Star>true</Star>
+      <Duration>60</Duration>
+      <Effect>获得设备分离，其效果为（生产效率增长：+25%）</Effect>
+      <Descript />
+      <Ps. />
+    </Node>
+    <Node ID="136">
+      <Name>结构再优化</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>1x80%研究加成：生产结构类。</Effect>
+      <Descript />
+      <Ps.>（注：设备混合或设备分离）</Ps.>
+    </Node>
+    <Node ID="137">
+      <Name>资源探测优化</Name>
+      <Star>true</Star>
+      <Duration>60</Duration>
+      <Effect>获得资源探测优化，其效果为（战略资源获取率：+25%）</Effect>
+      <Descript />
+      <Ps. />
+    </Node>
+    <Node ID="138">
+      <Name>工业理论</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>获得工业理论，其效果为（生产效率保持：+33%，生产效率上限：+5%，生产效率增长：+15%）</Effect>
+      <Descript />
+      <Ps.>（注：资源工厂改良或资源探测优化）</Ps.>
+    </Node>
+    <Node ID="139">
+      <Name>科技创新</Name>
+      <Star>false</Star>
+      <Duration>70</Duration>
+      <Effect>1x80%研究加成：数学类，1x80%研究加成：无线电。</Effect>
+      <Descript />
+      <Ps. />
+    </Node>
+    <Node ID="140">
+      <Name>研究生产</Name>
+      <Star>true</Star>
+      <Duration>70</Duration>
+      <Effect>获得投入研究于生产，其效果为（生产类研究速度：+4%）</Effect>
+      <Descript />
+      <Ps. />
+    </Node>
+    <Node ID="141">
+      <Name>研究建造</Name>
+      <Star>true</Star>
+      <Duration>70</Duration>
+      <Effect>获得投入研究于建造，其效果为（建造类研究速度：+4%）</Effect>
+      <Descript />
+      <Ps. />
+    </Node>
+    <Node ID="142">
+      <Name>工业创新</Name>
+      <Star>false</Star>
+      <Duration>70</Duration>
+      <Effect>减少1.5的超前惩罚并获得100%研究加成。对下3次研究生产类，建造类和资源获取类科技时有效。</Effect>
+      <Descript />
+      <Ps.>（注：研究生产或研究建造）</Ps.>
+    </Node>
+    <Node ID="143">
+      <Name>研究步兵武器</Name>
+      <Star>true</Star>
+      <Duration>70</Duration>
+      <Effect>获得投入研究于步兵武器，其效果为（基础武器类研究速度：+4%）</Effect>
+      <Descript />
+      <Ps. />
+    </Node>
+    <Node ID="144">
+      <Name>研究火炮</Name>
+      <Star>true</Star>
+      <Duration>70</Duration>
+      <Effect>获得投入研究于火炮，，其效果为（火炮类研究速度：+4%）</Effect>
+      <Descript />
+      <Ps. />
+    </Node>
+    <Node ID="145">
+      <Name>武器革新</Name>
+      <Star>false</Star>
+      <Duration>70</Duration>
+      <Effect>减少1.5的超前惩罚并获得100%研究加成。对下3次研究步兵和火炮类科技时有效。</Effect>
+      <Descript />
+      <Ps.>（注：研究步兵武器或研究火炮）</Ps.>
+    </Node>
+    <Node ID="146">
+      <Name>研究资源开发</Name>
+      <Star>false</Star>
+      <Duration>70</Duration>
+      <Effect>获得投入研究于资源，其效果为（资源获取类研究速度：+4%）</Effect>
+      <Descript />
+      <Ps. />
+    </Node>
+    <Node ID="147">
+      <Name>科技成果</Name>
+      <Star>false</Star>
+      <Duration>70</Duration>
+      <Effect>获得1个科研槽。</Effect>
+      <Descript />
+      <Ps.>（注：需要全部：工业创新，研究资源开发，武器革新）</Ps.>
+    </Node>
+    <Node ID="148">
+      <Name>军事革命</Name>
+      <Star>false</Star>
+      <Duration>70</Duration>
+      <Effect>陆军经验：+30。</Effect>
+      <Descript />
+      <Ps. />
+    </Node>
+    <Node ID="149">
+      <Name>步兵武器</Name>
+      <Star>false</Star>
+      <Duration>70</Duration>
+      <Effect>1x80%研究加成：基础武器。</Effect>
+      <Descript />
+      <Ps. />
+    </Node>
+    <Node ID="150">
+      <Name>火炮</Name>
+      <Star>false</Star>
+      <Duration>70</Duration>
+      <Effect>1x80%研究加成：火炮类。</Effect>
+      <Descript />
+      <Ps. />
+    </Node>
+    <Node ID="151">
+      <Name>武器改良</Name>
+      <Star>false</Star>
+      <Duration>70</Duration>
+      <Effect>获得步兵武器改良，其效果为（步枪：对人员杀伤：+10%，灵力单元：+对人员杀伤：+10%）</Effect>
+      <Descript />
+      <Ps.>（注：需要全部：步兵武器，火炮）</Ps.>
+    </Node>
+    <Node ID="152">
+      <Name>火炮改装</Name>
+      <Star>false</Star>
+      <Duration>70</Duration>
+      <Effect>2x80%研究加成：魔导师小队和和追击炮小队装备。</Effect>
+      <Descript />
+      <Ps. />
+    </Node>
+    <Node ID="153">
+      <Name>加强训练</Name>
+      <Star>false</Star>
+      <Duration>70</Duration>
+      <Effect>获得加强训练，其效果为（部队组织度：+10%，训练事件：+5%）</Effect>
+      <Descript />
+      <Ps. />
+    </Node>
+    <Node ID="154">
+      <Name>陆战理论</Name>
+      <Star>false</Star>
+      <Duration>70</Duration>
+      <Effect>1x40%花费降低：陆军学说。</Effect>
+      <Descript />
+      <Ps. />
+    </Node>
+    <Node ID="155">
+      <Name>支援武器</Name>
+      <Star>false</Star>
+      <Duration>70</Duration>
+      <Effect>1x80%研究加成：支援科技。</Effect>
+      <Descript />
+      <Ps. />
+    </Node>
+    <Node ID="156">
+      <Name>新式武器</Name>
+      <Star>false</Star>
+      <Duration>70</Duration>
+      <Effect>1x60%研究加成：精英妖怪小队和战斗巫女小队装备。</Effect>
+      <Descript />
+      <Ps.>（注：需要全部：陆战理论，支援武器）</Ps.>
+    </Node>
+    <Node ID="157">
+      <Name>空军装备</Name>
+      <Star>false</Star>
+      <Duration>70</Duration>
+      <Effect>1x60%研究加成：空军类。</Effect>
+      <Descript />
+      <Ps. />
+    </Node>
+    <Node ID="158">
+      <Name>训练大妖怪</Name>
+      <Star>false</Star>
+      <Duration>70</Duration>
+      <Effect>2x70%研究加成：大妖怪小队和机甲小队装备。</Effect>
+      <Descript />
+      <Ps. />
+    </Node>
+    <Node ID="159">
+      <Name>加大征兵</Name>
+      <Star>false</Star>
+      <Duration>70</Duration>
+      <Effect>获得加大征兵，其效果为（动员速度：-5%，适役人口修正：25%）</Effect>
+      <Descript />
+      <Ps.>（注：需要全部：火炮改装，加强训练，空军装备，训练大妖怪）</Ps.>
+    </Node>
+    <Node ID="160">
+      <Name>幻想乡的危机</Name>
+      <Star>false</Star>
+      <Duration>70</Duration>
+      <Effect>政治点数：+100。</Effect>
+      <Descript />
+      <Ps. />
+    </Node>
+    <Node ID="161">
+      <Name>宽松占领</Name>
+      <Star>true</Star>
+      <Duration>70</Duration>
+      <Effect>获得宽松占领，其效果为（非核心人力：-0.1%，顺从度增长速度：+15%）</Effect>
+      <Descript />
+      <Ps. />
+    </Node>
+    <Node ID="162">
+      <Name>同化新区域</Name>
+      <Star>true</Star>
+      <Duration>70</Duration>
+      <Effect>获得同化新区域，其效果为（建造核心花费：-20%）</Effect>
+      <Descript />
+      <Ps. />
+    </Node>
+    <Node ID="163">
+      <Name>榨取占领区</Name>
+      <Star>true</Star>
+      <Duration>70</Duration>
+      <Effect>获得榨取占领区，其效果为（非核心人力：+0.1%，抵抗增长速度：+50%）</Effect>
+      <Descript />
+      <Ps. />
+    </Node>
+    <Node ID="164">
+      <Name>掠夺占领区</Name>
+      <Star>true</Star>
+      <Duration>70</Duration>
+      <Effect>获得掠夺占领区，其效果为（掠夺降低厌战效果：+25%）</Effect>
+      <Descript />
+      <Ps. />
+    </Node>
+    <Node ID="165">
+      <Name>外敌宣传</Name>
+      <Star>false</Star>
+      <Duration>70</Duration>
+      <Effect>增加基础战争支持度：+15%。</Effect>
+      <Descript />
+      <Ps. />
+    </Node>
+    <Node ID="166">
+      <Name>内部巩固</Name>
+      <Star>false</Star>
+      <Duration>70</Duration>
+      <Effect>增加基础稳定度：+15%。</Effect>
+      <Descript />
+      <Ps. />
+    </Node>
+    <Node ID="167">
+      <Name>民众激昂</Name>
+      <Star>true</Star>
+      <Duration>70</Duration>
+      <Effect>获得民众激昂，其效果为（降低厌战花费：-25%）</Effect>
+      <Descript />
+      <Ps.>（注：需要全部：外敌宣传，内部巩固）</Ps.>
+    </Node>
+  </Nodes>
+  <NodesRelations>
+    <Relation ID="125">
+      <Require>124</Require>
+    </Relation>
+    <Relation ID="126">
+      <Require>125</Require>
+    </Relation>
+    <Relation ID="127">
+      <Require>126</Require>
+    </Relation>
+    <Relation ID="128">
+      <Require>127</Require>
+    </Relation>
+    <Relation ID="129">
+      <Require>125</Require>
+    </Relation>
+    <Relation ID="130">
+      <Require>129</Require>
+    </Relation>
+    <Relation ID="131">
+      <Require>130</Require>
+    </Relation>
+    <Relation ID="132">
+      <Require>131</Require>
+    </Relation>
+    <Relation ID="133">
+      <Require>125</Require>
+    </Relation>
+    <Relation ID="134">
+      <Require>133</Require>
+    </Relation>
+    <Relation ID="135">
+      <Require>133</Require>
+    </Relation>
+    <Relation ID="136">
+      <Require>135</Require>
+    </Relation>
+    <Relation ID="137">
+      <Require>136</Require>
+    </Relation>
+    <Relation ID="138">
+      <Require>137</Require>
+    </Relation>
+    <Relation ID="139">
+      <Require>124</Require>
+    </Relation>
+    <Relation ID="140">
+      <Require>139</Require>
+    </Relation>
+    <Relation ID="141">
+      <Require>139</Require>
+    </Relation>
+    <Relation ID="142">
+      <Require>141</Require>
+    </Relation>
+    <Relation ID="143">
+      <Require>139</Require>
+    </Relation>
+    <Relation ID="144">
+      <Require>139</Require>
+    </Relation>
+    <Relation ID="145">
+      <Require>144</Require>
+    </Relation>
+    <Relation ID="146">
+      <Require>139</Require>
+    </Relation>
+    <Relation ID="147">
+      <Require>146</Require>
+    </Relation>
+    <Relation ID="148">
+      <Require>124</Require>
+    </Relation>
+    <Relation ID="149">
+      <Require>148</Require>
+    </Relation>
+    <Relation ID="150">
+      <Require>148</Require>
+    </Relation>
+    <Relation ID="151">
+      <Require>150</Require>
+    </Relation>
+    <Relation ID="152">
+      <Require>151</Require>
+    </Relation>
+    <Relation ID="153">
+      <Require>151</Require>
+    </Relation>
+    <Relation ID="154">
+      <Require>148</Require>
+    </Relation>
+    <Relation ID="155">
+      <Require>148</Require>
+    </Relation>
+    <Relation ID="156">
+      <Require>155</Require>
+    </Relation>
+    <Relation ID="157">
+      <Require>156</Require>
+    </Relation>
+    <Relation ID="158">
+      <Require>156</Require>
+    </Relation>
+    <Relation ID="159">
+      <Require>158</Require>
+    </Relation>
+    <Relation ID="160">
+      <Require>124</Require>
+    </Relation>
+    <Relation ID="161">
+      <Require>160</Require>
+    </Relation>
+    <Relation ID="162">
+      <Require>161</Require>
+    </Relation>
+    <Relation ID="163">
+      <Require>160</Require>
+    </Relation>
+    <Relation ID="164">
+      <Require>163</Require>
+    </Relation>
+    <Relation ID="165">
+      <Require>160</Require>
+    </Relation>
+    <Relation ID="166">
+      <Require>160</Require>
+    </Relation>
+    <Relation ID="167">
+      <Require>166</Require>
+    </Relation>
+  </NodesRelations>
+</FocusGraph>

@@ -322,7 +322,7 @@ namespace FocusTree.Data
         /// 全图的元中心坐标和元尺寸
         /// </summary>
         /// <returns></returns>
-        public (Vector2, SizeF) CenterMetaData()
+        public (Vector2, SizeF) GetGraphMetaData()
         {
             bool first = true;
             var bounds = new RectangleF();

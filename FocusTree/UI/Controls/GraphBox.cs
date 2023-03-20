@@ -5,6 +5,7 @@ using FocusTree.Tool.IO;
 using FocusTree.Tool.UI;
 using FocusTree.UI.NodeToolDialogs;
 using Newtonsoft.Json.Linq;
+using System.Drawing;
 using System.IO;
 using System.Numerics;
 
@@ -98,7 +99,7 @@ namespace FocusTree.UI.Controls
         /// <summary>
         /// 元坐标转画布坐标时的单位坐标伸长倍数
         /// </summary>
-        Vector2 MetaOrdinateCanvasUnit = new(65, 65);
+        Vector2 ScalingUnit { get { return new(NodeSize.Width + 10, NodeSize.Height + 30); } }
         /// <summary>
         ///  节点尺寸
         /// </summary>
@@ -259,22 +260,23 @@ namespace FocusTree.UI.Controls
             var enumer = Graph.GetNodesDataEnumerator();
             while (enumer.MoveNext())
             {
+                var id = enumer.Current.Key;
                 var name = enumer.Current.Value.Name;
-                var rect = NodeDrawingRect(enumer.Current.Key);
+                var rect = NodeDrawingRect(id);
                 var font = new Font(NodeFont, 10 * GScale, FontStyle.Bold, GraphicsUnit.Pixel);
 
                 if (IsRectVisible(rect))
                 {
-                    if (IsNodeConflict(enumer.Current.Key))
+                    if (IsNodeConflict(id))
                     {
                         SolidBrush BG = new(Color.FromArgb(80, Color.Red));
                         g.FillRectangle(BG, rect);
                     }
-                    else if (enumer.Current.Key == PrevSelectNode)
+                    else if (id == PrevSelectNode)
                     {
                         g.FillRectangle(NodeBG_Selecting, rect);
                     }
-                    else if (enumer.Current.Key == SelectedNode)
+                    else if (id == SelectedNode)
                     {
                         g.FillRectangle(NodeBG_Selected, rect);
                     }
@@ -283,36 +285,31 @@ namespace FocusTree.UI.Controls
                         g.FillRectangle(NodeBG, rect);
                     }
                     g.DrawString(name, font, NodeFG, rect, NodeFontFormat);
-                }
-            }
 
-            foreach (var id in Graph.IdList)
-            {
-                var rect = NodeDrawingRect(id);
-                // 这里应该去连接依赖的节点，而不是去对子节点连接
-                var requireGroups = Graph.GetRequireGroups(id);
-                // 对于根节点，requires 为 null
-                if (requireGroups == null)
-                {
-                    continue;
-                }
-
-                int requireColor = 0; //不同需求要变色
-                foreach (var requireGroup in requireGroups)
-                {
-                    foreach (var require in requireGroup)
+                    var requireGroups = Graph.GetRequireGroups(id);
+                    // 对于根节点，requires 为 null
+                    if (requireGroups == null)
                     {
-                        var torect = NodeDrawingRect(require);
-
-                        // 如果起始点和终点都不在画面里，就不需要绘制
-                        if (!(IsRectVisible(rect) || IsRectVisible(torect))) { continue; }
-
-                        var startLoc = new Point((int)(rect.X + rect.Width / 2), (int)rect.Y); // x -> 中间, y -> 下方
-                        var endLoc = new Point((int)(torect.X + torect.Width / 2), (int)(torect.Y + torect.Height)); // x -> 中间, y -> 上方
-
-                        g.DrawLine(NodeRequire[requireColor], startLoc, endLoc);
+                        continue;
                     }
-                    requireColor++;
+
+                    int requireColor = 0; //不同需求要变色
+                    foreach (var requireGroup in requireGroups)
+                    {
+                        foreach (var require in requireGroup)
+                        {
+                            var torect = NodeDrawingRect(require);
+
+                            // 如果起始点和终点都不在画面里，就不需要绘制
+                            if (!(IsRectVisible(rect) || IsRectVisible(torect))) { continue; }
+
+                            var startLoc = new Point((int)(rect.X + rect.Width / 2), (int)rect.Y); // x -> 中间, y -> 下方
+                            var endLoc = new Point((int)(torect.X + torect.Width / 2), (int)(torect.Y + torect.Height)); // x -> 中间, y -> 上方
+
+                            g.DrawLine(NodeRequire[requireColor], startLoc, endLoc);
+                        }
+                        requireColor++;
+                    }
                 }
             }
 
@@ -631,15 +628,15 @@ namespace FocusTree.UI.Controls
         private Vector2 MetaPointToCanvasPoint(Vector2 point)
         {
             return new Vector2(
-                point.X * MetaOrdinateCanvasUnit.X,
-                point.Y * MetaOrdinateCanvasUnit.Y
+                point.X * ScalingUnit.X,
+                point.Y * ScalingUnit.Y
                 );
         }
         private SizeF MetaSizeToCanvasSize(SizeF size)
         {
             return new SizeF(
-                size.Width * MetaOrdinateCanvasUnit.X,
-                size.Height * MetaOrdinateCanvasUnit.Y
+                size.Width * ScalingUnit.X,
+                size.Height * ScalingUnit.Y
                 );
         }
         /// <summary>
@@ -696,10 +693,9 @@ namespace FocusTree.UI.Controls
             {
                 return;
             }
-            var center = Graph.CenterMetaData();
-            DrawingCenter = MetaPointToCanvasPoint(center.Item1);
-
-            var canvasSize = MetaSizeToCanvasSize(center.Item2);
+            var meta = Graph.GetGraphMetaData();
+            DrawingCenter = MetaPointToCanvasPoint(meta.Item1);
+            var canvasSize = MetaSizeToCanvasSize(meta.Item2);
             float px = Size.Width / canvasSize.Width;
             float py = Size.Height / canvasSize.Height;
 

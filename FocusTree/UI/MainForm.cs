@@ -30,7 +30,7 @@ namespace FocusTree.UI
             //Display.SelectedNode = 1;
             //a.Show(new(Screen.PrimaryScreen.Bounds.Width / 3, Screen.PrimaryScreen.Bounds.Height / 3));
 
-            
+
         }
         private void MainForm_Menu_camera_panorama_Click(object sender, EventArgs e)
         {
@@ -223,6 +223,37 @@ namespace FocusTree.UI
         {
             var item = (ToolStripMenuItem)sender;
             Display.ToolDialogs[item.Text].Show();
+        }
+
+        private void MainForm_Menu_graph_saveas_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void MainForm_Menu_graph_saveasBatch_Click(object sender, EventArgs e)
+        {
+            MainForm_Openfile_batch.Filter = "xml文件 (.xml) |*.xml";
+            if (MainForm_Openfile_batch.ShowDialog() == DialogResult.Cancel)
+            {
+                return;
+            }
+            var fileNames = MainForm_Openfile_batch.FileNames;
+            MainForm_Openfile_batch.InitialDirectory = Path.GetDirectoryName(fileNames[0]);
+            var suc = MainForm_Openfile_batch.FileNames.Length;
+            foreach (var fileName in fileNames)
+            {
+                try
+                {
+                    var graph = XmlIO.LoadGraph(fileName);
+                    GraphTool.DrawNodeMapWithInfo(graph);
+                }
+                catch (Exception ex)
+                {
+                    suc--;
+                    MessageBox.Show($"{fileName}图像保存失败。\n{ex.Message}");
+                }
+            }
+            MessageBox.Show($"成功保存{suc}个图像。");
         }
     }
 }

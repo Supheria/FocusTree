@@ -45,10 +45,7 @@ namespace FocusTree.UI.NodeToolDialogs
             FocusName.Text = focusData.Value.Name;
             Duration.Text = $"{focusData.Value.Duration}";
             Descript.Text = focusData.Value.Descript;
-            for (int i = 0; i < focusData.Value.Effects.Length; i++)
-            {
-                Effects.Text += $"{i + 1}. {focusData.Value.Effects[i]}\n";
-            }
+            Effects.Text = string.Join('\n', focusData.Value.Effects);
 
             AllowDrop = Display.ReadOnly ? false : true;
             FocusName.ReadOnly = Display.ReadOnly;
@@ -235,7 +232,7 @@ namespace FocusTree.UI.NodeToolDialogs
             if (FocusIcon.Image != null) { FocusIcon.Image.Dispose(); }
             if (DurationUnit.Image != null) { DurationUnit.Image.Dispose(); }
             if (EffectsTitle.Image != null) { EffectsTitle.Image.Dispose(); }
-            FocusIcon.Image = Image.FromFile("D:\\Non_E\\documents\\GitHub\\FocusTree\\FocusTree\\FocusTree\\Resources\\FocusTree.ico");
+            //FocusIcon.Image = Image.FromFile("C:\\Non_E\\documents\\GitHub\\FocusTree\\FocusTree\\FocusTree\\Resources\\FocusTree.ico");
             DurationUnit.Image = new Bitmap(DurationUnit.Width, DurationUnit.Height);
             EffectsTitle.Image = new Bitmap(EffectsTitle.Width, EffectsTitle.Height);
             var g1 = Graphics.FromImage(DurationUnit.Image);

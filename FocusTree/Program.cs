@@ -5,6 +5,7 @@ using FocusTree.Data;
 using FocusTree.IO;
 using FocusTree.Tool.Data;
 using FocusTree.Tool.IO;
+using FocusTree.Tool.UI;
 using FocusTree.UI;
 using FocusTree.UI.test;
 
@@ -22,10 +23,12 @@ internal static class Program
         //var b = this<(string, string)>.Length;
         //Test.FMapTest();
         //Test.FGraphToXmlTest();
-        //var graph = CsvReader.LoadGraph("D:\\Non_E\\documents\\GitHub\\FocusTree\\FocusTree\\国策\\草原流亡者.csv");
-        ////Backup.BackupFile(graph);
-        //XmlIO.SaveGraph(graph.FilePath, graph);
+        //var graph = XmlIO.LoadGraph(
+        //    "C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\国策\\" +
+        //    "隐居村落.xml");
+        //GraphTool.DrawNodeMapWithInfo(graph);
         //Application.Run(testInfo);
+
         Application.Run(new MainForm());
 
         //Application.EnableVisualStyles();
