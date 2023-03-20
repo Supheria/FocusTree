@@ -25,12 +25,12 @@ namespace FocusTree.Data
 
         public List<int> IdList
         {
-            get { return NodesCatalog.Keys.ToList(); }
+            get { return NodeCatalog.Keys.ToList(); }
         }
         /// <summary>
         /// 以 ID 作为 Key 的所有节点
         /// </summary>
-        Dictionary<int, FocusData> NodesCatalog;
+        Dictionary<int, FocusData> NodeCatalog;
         /// <summary>
         /// 节点依赖的节点组合
         /// </summary>
@@ -50,7 +50,7 @@ namespace FocusTree.Data
 
         public int NodesCount
         {
-            get { return NodesCatalog.Count; }
+            get { return NodeCatalog.Count; }
         }
         public int BranchesCount { get; private set; }
 
@@ -64,7 +64,7 @@ namespace FocusTree.Data
         /// <returns>是否添加成功</returns>
         public bool AddNode(FocusData node)
         {
-            if (NodesCatalog.TryAdd(node.ID, node) == false)
+            if (NodeCatalog.TryAdd(node.ID, node) == false)
             {
                 MessageBox.Show("[2303031210]提示：无法添加节点 - 无法加入字典。");
                 return false;
@@ -79,9 +79,9 @@ namespace FocusTree.Data
         /// <returns>是否成功删除</returns>
         public bool RemoveNode(int id)
         {
-            if (NodesCatalog.ContainsKey(id) == false)
+            if (NodeCatalog.ContainsKey(id) == false)
             {
-                MessageBox.Show($"[2303031221]提示：无法移除节点 - NodesCatalog 未包含 ID = {id} 的节点。");
+                MessageBox.Show($"[2303031221]提示：无法移除节点 - NodeCatalog 未包含 ID = {id} 的节点。");
                 return false;
             }
             // 删除此节点所依赖的节点组合
@@ -95,7 +95,7 @@ namespace FocusTree.Data
                 }
             }
             // 从节点表中删除此节点
-            NodesCatalog.Remove(id);
+            NodeCatalog.Remove(id);
             CreateLinkes();
             SetMetaPoints();
             return true;
@@ -109,12 +109,12 @@ namespace FocusTree.Data
         public bool EditNode(FocusData newData)
         {
             var id = newData.ID;
-            if (NodesCatalog.ContainsKey(id) == false)
+            if (NodeCatalog.ContainsKey(id) == false)
             {
-                MessageBox.Show($"[2303031232]提示：无法编辑节点 - 新节点数据的 ID({id}) 不存在于 NodesCatalog。");
+                MessageBox.Show($"[2303031232]提示：无法编辑节点 - 新节点数据的 ID({id}) 不存在于 NodeCatalog。");
                 return false;
             }
-            NodesCatalog[id] = newData;
+            NodeCatalog[id] = newData;
             CreateLinkes();
             SetMetaPoints();
             return true;
@@ -127,7 +127,7 @@ namespace FocusTree.Data
         public HashSet<int> GetRootNodes()
         {
             var result = new HashSet<int>();
-            foreach (var id in NodesCatalog.Keys)
+            foreach (var id in NodeCatalog.Keys)
             {
                 if (RequireGroups.TryGetValue(id, out List<HashSet<int>> requireGroups) == false ||
                     requireGroups.Sum(x => x.Count) == 0)
@@ -346,6 +346,13 @@ namespace FocusTree.Data
                 new SizeF(bounds.Width - bounds.X + 1, bounds.Height - bounds.Y + 1)
                 );
         }
+        /// <summary>
+        /// 按 NodeCatalog 
+        /// </summary>
+        public void ReorderNodeIds()
+        {
+
+        }
 
         #endregion
 
@@ -358,7 +365,7 @@ namespace FocusTree.Data
         internal FocusGraph(string path, Dictionary<int, FocusData> nodesCatalog, Dictionary<int, List<HashSet<int>>> requireGroups)
         {
             FilePath = path;
-            NodesCatalog = nodesCatalog;
+            NodeCatalog = nodesCatalog;
             RequireGroups = requireGroups;
             CreateLinkes();
             SetMetaPoints();
@@ -388,7 +395,7 @@ namespace FocusTree.Data
 
         public void ReadXml(XmlReader reader)
         {
-            NodesCatalog = new();
+            NodeCatalog = new();
             RequireGroups = new();
 
             while (reader.Read())
@@ -407,7 +414,7 @@ namespace FocusTree.Data
                         if (reader.NodeType == XmlNodeType.Element && reader.Name == "Node")
                         {
                             var node = (FocusData)FData_serial.Deserialize(reader);
-                            NodesCatalog[node.ID] = node;
+                            NodeCatalog[node.ID] = node;
                         }
                         else { reader.Read(); }
                     }
@@ -464,7 +471,7 @@ namespace FocusTree.Data
 
             // <Nodes> 序列化 Nodes (国策节点数据)
             writer.WriteStartElement("Nodes");
-            foreach (var node in NodesCatalog)
+            foreach (var node in NodeCatalog)
             {
                 FData_serial.Serialize(writer, node.Value, NullXmlNameSpace);
             }
@@ -522,13 +529,13 @@ namespace FocusTree.Data
         public FormattedData Format()
         {
             return new FormattedData(
-                JsonConvert.SerializeObject(NodesCatalog),
+                JsonConvert.SerializeObject(NodeCatalog),
                 JsonConvert.SerializeObject(RequireGroups)
                 );
         }
         public void Deformat(FormattedData data)
         {
-            NodesCatalog = JsonConvert.DeserializeObject<Dictionary<int, FocusData>>(data.Items[0]);
+            NodeCatalog = JsonConvert.DeserializeObject<Dictionary<int, FocusData>>(data.Items[0]);
             RequireGroups = JsonConvert.DeserializeObject<Dictionary<int, List<HashSet<int>>>>(data.Items[1]);
             CreateLinkes();
             SetMetaPoints();
@@ -540,7 +547,7 @@ namespace FocusTree.Data
 
         public FocusData GetNodeData(int id)
         {
-            NodesCatalog.TryGetValue(id, out var focusData);
+            NodeCatalog.TryGetValue(id, out var focusData);
             return focusData;
         }
         public List<HashSet<int>> GetRequireGroups(int id)
@@ -562,7 +569,7 @@ namespace FocusTree.Data
         }
         public IEnumerator<KeyValuePair<int, FocusData>> GetNodesDataEnumerator()
         {
-            return NodesCatalog.GetEnumerator();
+            return NodeCatalog.GetEnumerator();
         }
         public IEnumerator<KeyValuePair<int, List<HashSet<int>>>> GetRequireGroupsEnumerator()
         {

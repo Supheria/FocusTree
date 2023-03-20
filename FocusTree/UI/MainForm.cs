@@ -245,7 +245,7 @@ namespace FocusTree.UI
                 try
                 {
                     var graph = XmlIO.LoadGraph(fileName);
-                    GraphTool.DrawNodeMapWithInfo(graph);
+                    DrawNodeMapWithInfo.GraphSaveasImage(graph);
                 }
                 catch (Exception ex)
                 {

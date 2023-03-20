@@ -38,10 +38,10 @@ namespace FocusTree.IO
             {
                 throw new Exception("[2302191048] 文件不存在: " + path);
             }
-            Dictionary<int, FocusData> NodesCatalog = new();
+            Dictionary<int, FocusData> NodeCatalog = new();
             Dictionary<int, List<HashSet<int>>> RequireGroups = new();
-            ReadGraphFromCsv(path, ref NodesCatalog, ref RequireGroups);
-            return new FocusGraph(Path.ChangeExtension(path, ".xml"), NodesCatalog, RequireGroups);
+            ReadGraphFromCsv(path, ref NodeCatalog, ref RequireGroups);
+            return new FocusGraph(Path.ChangeExtension(path, ".xml"), NodeCatalog, RequireGroups);
         }
         private static void ReadGraphFromCsv(string path, ref Dictionary<int, FocusData> nodes, ref Dictionary<int, List<HashSet<int>>> requires)
         {

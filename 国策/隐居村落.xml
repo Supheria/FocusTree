@@ -538,104 +538,13 @@
       <Descript>和大怨，必有余怨……夫天道无亲，常与善人</Descript>
       <Ps.>（注：需要鳏+寡+孤+独+残+福+禄+寿）</Ps.>
     </Node>
-    <Node ID="65">
-      <Name>改过自新</Name>
-      <Star>false</Star>
-      <Duration>30</Duration>
-      <Effect>圣人追加效果：新规倾向：-0.05，部队攻击：-50%</Effect>
-      <Effect>移除五弊三缺</Effect>
-      <Effect>获得365天的“负荆请罪”，其效果为（战争支持度：-50%，制造战争目标的紧张度限制：+50%，志愿军部队数上限值：-50%）</Effect>
-      <Descript>其政闷闷，其民淳淳；其政察察，其民缺缺</Descript>
-      <Ps.>（注：需要完成因果循环国策，需要认同劝谏）</Ps.>
-    </Node>
-    <Node ID="66">
-      <Name>废贤</Name>
-      <Star>false</Star>
-      <Duration>30</Duration>
-      <Effect>战争支持度：-10%，稳定度：+20%</Effect>
-      <Descript>不尚贤，使民不争</Descript>
-      <Ps. />
-    </Node>
-    <Node ID="67">
-      <Name>均贱</Name>
-      <Star>false</Star>
-      <Duration>30</Duration>
-      <Effect>将平均灵力值固定为50%，稳定度：+30%</Effect>
-      <Descript>不贵难得之货，使民不为盗</Descript>
-      <Ps. />
-    </Node>
-    <Node ID="68">
-      <Name>隐欲</Name>
-      <Star>false</Star>
-      <Duration>30</Duration>
-      <Effect>将世界观固定为唯心世界观，稳定度：+50%</Effect>
-      <Descript>不见其欲，使民心不乱</Descript>
-      <Ps. />
-    </Node>
-    <Node ID="69">
-      <Name>不仁</Name>
-      <Star>false</Star>
-      <Duration>30</Duration>
-      <Effect>稳定度：-50%，获得天地不仁，其效果为（科研速度：+10%）</Effect>
-      <Descript>天地不仁，以万物为刍狗；圣人不仁，以天地为刍狗</Descript>
-      <Ps. />
-    </Node>
-    <Node ID="70">
-      <Name>饱腹</Name>
-      <Star>false</Star>
-      <Duration>30</Duration>
-      <Effect>人口：+1000</Effect>
-      <Effect>向保守社会发展一级，以保守社会5取代保守社会4，效果变化（稳定度：+6% 科研速度：-3% 加密：+0.5 可出口资源：-5% 意识形态变化抵制力度：+10%）</Effect>
-      <Descript>圣人为腹不为目，故去彼取此</Descript>
-      <Ps. />
-    </Node>
-    <Node ID="71">
-      <Name>修身养性</Name>
-      <Star>false</Star>
-      <Duration>60</Duration>
-      <Effect>获得修身养性，其效果为（生活消费品工厂：-6%）</Effect>
-      <Descript>知常容，容乃公，公乃全，全乃天，天乃道，道乃久，没身不殆</Descript>
-      <Ps. />
-    </Node>
-    <Node ID="72">
-      <Name>功遂身退</Name>
-      <Star>false</Star>
-      <Duration>60</Duration>
-      <Effect>圣人追加效果：每日唯心度变化：-0.04%</Effect>
-      <Descript>悠兮其贵言，功成身遂，百姓皆谓我自然</Descript>
-      <Ps. />
-    </Node>
-    <Node ID="73">
-      <Name>无不为</Name>
-      <Star>false</Star>
-      <Duration>30</Duration>
-      <Effect>稳定度：-50%，获得1个科研槽</Effect>
-      <Descript>道常无为，而无不为</Descript>
-      <Ps. />
-    </Node>
-    <Node ID="74">
-      <Name>无为而治</Name>
-      <Star>false</Star>
-      <Duration>60</Duration>
-      <Effect>获得无为而治，其效果为（每周人口：+1，每月人口：+15%）</Effect>
-      <Descript>多言数穷，不如守中</Descript>
-      <Ps.>（注：守矢神社选择无为而治后的民族精神要和隐居村落相同）</Ps.>
-    </Node>
-    <Node ID="75">
-      <Name>万民自化</Name>
-      <Star>false</Star>
-      <Duration>60</Duration>
-      <Effect>获得万民自化，其效果为（每周稳定度：+0.1%，每周战争支持度：-0.1%，战争支持度：+100%）</Effect>
-      <Descript>圣人之言曰：“我无为，而民自化；我好静，而民自正；我无事，而民自富；我无欲，而民自朴。”</Descript>
-      <Ps. />
-    </Node>
     <Node ID="76">
       <Name>天下共主</Name>
       <Star>true</Star>
       <Duration>30</Duration>
       <Effect>（守矢神社）获得战略同盟（对隐居村落关系：+80。）</Effect>
       <Effect>（隐居村落）获得战略同盟（对他们的关系改变了：+80。）</Effect>
-	  <Descript>道常无名，朴虽小，天下莫能臣也。侯王若能守之，万物将自宾</Descript>
+      <Descript>道常无名，朴虽小，天下莫能臣也。侯王若能守之，万物将自宾</Descript>
       <Ps.>（注：要求守矢神社意识形态为孤立）</Ps.>
     </Node>
     <Node ID="77">
@@ -812,6 +721,97 @@
       <Duration>100</Duration>
       <Effect>成为守矢神社的四级附庸（势力范围），开启与守矢神社争夺国家领导权决议</Effect>
       <Descript>建言有之：明道若昧，进道若退，夷道若纇</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="65">
+      <Name>改过自新</Name>
+      <Star>false</Star>
+      <Duration>30</Duration>
+      <Effect>圣人追加效果：新规倾向：-0.05，部队攻击：-50%</Effect>
+      <Effect>移除五弊三缺</Effect>
+      <Effect>获得365天的“负荆请罪”，其效果为（战争支持度：-50%，制造战争目标的紧张度限制：+50%，志愿军部队数上限值：-50%）</Effect>
+      <Descript>其政闷闷，其民淳淳；其政察察，其民缺缺</Descript>
+      <Ps.>（注：达成要求前不可见，需要完成因果循环国策，需要认同劝谏）</Ps.>
+    </Node>
+    <Node ID="66">
+      <Name>废贤</Name>
+      <Star>false</Star>
+      <Duration>30</Duration>
+      <Effect>战争支持度：-10%，稳定度：+20%</Effect>
+      <Descript>不尚贤，使民不争</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="67">
+      <Name>均贱</Name>
+      <Star>false</Star>
+      <Duration>30</Duration>
+      <Effect>将平均灵力值固定为50%，稳定度：+30%</Effect>
+      <Descript>不贵难得之货，使民不为盗</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="68">
+      <Name>隐欲</Name>
+      <Star>false</Star>
+      <Duration>30</Duration>
+      <Effect>将世界观固定为唯心世界观，稳定度：+50%</Effect>
+      <Descript>不见其欲，使民心不乱</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="69">
+      <Name>不仁</Name>
+      <Star>false</Star>
+      <Duration>30</Duration>
+      <Effect>稳定度：-50%，获得天地不仁，其效果为（科研速度：+10%）</Effect>
+      <Descript>天地不仁，以万物为刍狗；圣人不仁，以天地为刍狗</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="70">
+      <Name>饱腹</Name>
+      <Star>false</Star>
+      <Duration>30</Duration>
+      <Effect>人口：+1000</Effect>
+      <Effect>向保守社会发展一级，以保守社会5取代保守社会4，效果变化（稳定度：+6% 科研速度：-3% 加密：+0.5 可出口资源：-5% 意识形态变化抵制力度：+10%）</Effect>
+      <Descript>圣人为腹不为目，故去彼取此</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="71">
+      <Name>修身养性</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>获得修身养性，其效果为（生活消费品工厂：-6%）</Effect>
+      <Descript>知常容，容乃公，公乃全，全乃天，天乃道，道乃久，没身不殆</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="72">
+      <Name>功遂身退</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>圣人追加效果：每日唯心度变化：-0.04%</Effect>
+      <Descript>悠兮其贵言，功成身遂，百姓皆谓我自然</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="73">
+      <Name>无不为</Name>
+      <Star>false</Star>
+      <Duration>30</Duration>
+      <Effect>稳定度：-50%，获得1个科研槽</Effect>
+      <Descript>道常无为，而无不为</Descript>
+      <Ps. />
+    </Node>
+    <Node ID="74">
+      <Name>无为而治</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>获得无为而治，其效果为（每周人口：+1，每月人口：+15%）</Effect>
+      <Descript>多言数穷，不如守中</Descript>
+      <Ps.>（注：守矢神社选择无为而治后的民族精神要和隐居村落相同）</Ps.>
+    </Node>
+    <Node ID="75">
+      <Name>万民自化</Name>
+      <Star>false</Star>
+      <Duration>60</Duration>
+      <Effect>获得万民自化，其效果为（每周稳定度：+0.1%，每周战争支持度：-0.1%，战争支持度：+100%）</Effect>
+      <Descript>圣人之言曰：“我无为，而民自化；我好静，而民自正；我无事，而民自富；我无欲，而民自朴。”</Descript>
       <Ps. />
     </Node>
     <Node ID="98">
@@ -1255,7 +1255,7 @@
       <Require>74</Require>
     </Relation>
     <Relation ID="76">
-      <Require>75</Require>
+      <Require>12</Require>
     </Relation>
     <Relation ID="77">
       <Require>76</Require>
