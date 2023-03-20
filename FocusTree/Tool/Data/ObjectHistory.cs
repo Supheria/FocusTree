@@ -42,6 +42,10 @@ namespace FocusTree.Tool.Data
         //[Obsolete("我不确定这东西有没有Bug，看起来很玄乎")]
         public static void EnqueueHistory<T>(this T obj) where T : IHistoryable
         {
+            //if (obj.IsEdit() == false)
+            //{
+            //    return;
+            //}
             var data = obj.Format();
             // 第一个历史记录
             if (obj.CurrentHistoryLength == 0)

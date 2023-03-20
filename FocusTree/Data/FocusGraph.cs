@@ -46,13 +46,41 @@ namespace FocusTree.Data
 
         #endregion
 
-        #region ---- 基本信息 ----
+        #region ---- 图像信息 ----
 
         public int NodesCount
         {
             get { return NodeCatalog.Count; }
         }
         public int BranchesCount { get; private set; }
+        /// <summary>
+        /// 全图的元中心坐标和元尺寸
+        /// </summary>
+        /// <returns></returns>
+        public (Vector2, SizeF) GetGraphMetaData()
+        {
+            bool first = true;
+            var bounds = new RectangleF();
+            foreach (var point in MetaPoints.Values)
+            {
+                if (first)
+                {
+                    bounds = new RectangleF(point.X, point.Y, point.X, point.Y);
+                    first = false;
+                }
+                else
+                {
+                    bounds.X = point.X < bounds.X ? point.X : bounds.X;
+                    bounds.Y = point.Y < bounds.Y ? point.Y : bounds.Y;
+                    bounds.Width = point.X > bounds.Width ? point.X : bounds.Width;
+                    bounds.Height = point.Y > bounds.Height ? point.Y : bounds.Height;
+                }
+            }
+            return (
+                new Vector2((bounds.X + bounds.Width) / 2, (bounds.Y + bounds.Height) / 2),
+                new SizeF(bounds.Width - bounds.X + 1, bounds.Height - bounds.Y + 1)
+                );
+        }
 
         #endregion
 
@@ -124,7 +152,7 @@ namespace FocusTree.Data
         /// </summary>
         /// <returns>根节点</returns>
         //[Obsolete("经常出BUG，用的时候要小心")]
-        public HashSet<int> GetRootNodes()
+        public int[] GetRootNodes()
         {
             var result = new HashSet<int>();
             foreach (var id in NodeCatalog.Keys)
@@ -135,7 +163,7 @@ namespace FocusTree.Data
                     result.Add(id);
                 }
             }
-            return result;
+            return result.ToArray();
         }
 
         #endregion
@@ -170,8 +198,7 @@ namespace FocusTree.Data
         /// <returns></returns>
         private void SetMetaPoints()
         {
-            var rootNodes = GetRootNodes().ToArray();
-            var branches = GetBranches(rootNodes, true, true);
+            var branches = GetBranches(GetRootNodes(), true, true);
             BranchesCount = branches.Count;
             CombineBranchNodes(branches);
             CleanBlanksForX();
@@ -318,40 +345,76 @@ namespace FocusTree.Data
                 }
             }
         }
+        
         /// <summary>
-        /// 全图的元中心坐标和元尺寸
-        /// </summary>
-        /// <returns></returns>
-        public (Vector2, SizeF) GetGraphMetaData()
-        {
-            bool first = true;
-            var bounds = new RectangleF();
-            foreach (var point in MetaPoints.Values)
-            {
-                if (first)
-                {
-                    bounds = new RectangleF(point.X, point.Y, point.X, point.Y);
-                    first = false;
-                }
-                else
-                {
-                    bounds.X = point.X < bounds.X ? point.X : bounds.X;
-                    bounds.Y = point.Y < bounds.Y ? point.Y : bounds.Y;
-                    bounds.Width = point.X > bounds.Width ? point.X : bounds.Width;
-                    bounds.Height = point.Y > bounds.Height ? point.Y : bounds.Height;
-                }
-            }
-            return (
-                new Vector2((bounds.X + bounds.Width) / 2, (bounds.Y + bounds.Height) / 2),
-                new SizeF(bounds.Width - bounds.X + 1, bounds.Height - bounds.Y + 1)
-                );
-        }
-        /// <summary>
-        /// 按 NodeCatalog 
+        /// 按 NodeCatalog 的顺序重排节点ID
         /// </summary>
         public void ReorderNodeIds()
         {
-
+            Dictionary<int, FocusData> TempNodeCatalog = new();
+            var branches = GetBranches(GetRootNodes(), true, true);
+            foreach (var branch in branches)
+            {
+                foreach(var node in branch)
+                {
+                    TempNodeCatalog.TryAdd(node, NodeCatalog[node]);
+                }
+            }
+            NodeCatalog = TempNodeCatalog;
+            Dictionary<int, FocusData> newNodeCatalog = new();
+            Dictionary<int, int> ExchangePairs = new();
+            Dictionary<int, List<HashSet<int>>> tempRequireGroups = new();
+            Dictionary<int, List<HashSet<int>>> newRequireGroups = new();
+            var enumer = NodeCatalog.GetEnumerator();
+            for (int newId = 1; enumer.MoveNext(); newId++) 
+            {
+                var data = enumer.Current.Value;
+                data.ID = newId;
+                newNodeCatalog.Add(newId, data);
+                ExchangePairs.Add(enumer.Current.Key, newId);
+                if (ChildLinkes.ContainsKey(enumer.Current.Key) == false)
+                {
+                    continue;
+                }
+                foreach(var child in ChildLinkes[enumer.Current.Key])
+                {
+                    List<HashSet<int>> newGroups = new();
+                    foreach(var requireGroup in RequireGroups[child])
+                    {
+                        HashSet<int> newRequireGroup = new();
+                        foreach(var parent in requireGroup)
+                        {
+                            if (parent == enumer.Current.Key)
+                            {
+                                newRequireGroup.Add(newId);
+                            }
+                            else
+                            {
+                                newRequireGroup.Add(parent);
+                            }
+                        }
+                        newGroups.Add(newRequireGroup);
+                    }
+                    if(tempRequireGroups.TryAdd(child, newGroups) == false)
+                    {
+                        tempRequireGroups[child] = newGroups;
+                    }
+                }
+            }
+            enumer = NodeCatalog.GetEnumerator();
+            while (enumer.MoveNext())
+            {
+                List<HashSet<int>> groups;
+                if (tempRequireGroups.TryGetValue(enumer.Current.Key, out groups))
+                {
+                    newRequireGroups.Add(ExchangePairs[enumer.Current.Key], groups);
+                }
+            }
+            NodeCatalog = newNodeCatalog;
+            RequireGroups = newRequireGroups;
+            CreateLinkes();
+            SetMetaPoints();
+            this.EnqueueHistory();
         }
 
         #endregion

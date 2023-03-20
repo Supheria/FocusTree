@@ -538,7 +538,7 @@
       <Descript>和大怨，必有余怨……夫天道无亲，常与善人</Descript>
       <Ps.>（注：需要鳏+寡+孤+独+残+福+禄+寿）</Ps.>
     </Node>
-    <Node ID="76">
+    <Node ID="65">
       <Name>天下共主</Name>
       <Star>true</Star>
       <Duration>30</Duration>
@@ -547,7 +547,7 @@
       <Descript>道常无名，朴虽小，天下莫能臣也。侯王若能守之，万物将自宾</Descript>
       <Ps.>（注：要求守矢神社意识形态为孤立）</Ps.>
     </Node>
-    <Node ID="77">
+    <Node ID="66">
       <Name>邦者下流</Name>
       <Star>false</Star>
       <Duration>60</Duration>
@@ -556,7 +556,7 @@
       <Descript>大邦者，下流也，天下之牝。天下之交也，牝恒以静胜牡</Descript>
       <Ps. />
     </Node>
-    <Node ID="78">
+    <Node ID="67">
       <Name>事人取信</Name>
       <Star>false</Star>
       <Duration>60</Duration>
@@ -565,7 +565,7 @@
       <Descript>小邦以下大邦，则取于大邦。故或下以取，或下而取</Descript>
       <Ps. />
     </Node>
-    <Node ID="79">
+    <Node ID="68">
       <Name>各得所欲</Name>
       <Star>false</Star>
       <Duration>60</Duration>
@@ -574,7 +574,7 @@
       <Descript>大邦不过欲兼畜人，小邦不过欲人事人。夫二者各得所欲，则大者宜为下</Descript>
       <Ps. />
     </Node>
-    <Node ID="80">
+    <Node ID="69">
       <Name>道冲不盈</Name>
       <Star>false</Star>
       <Duration>60</Duration>
@@ -584,7 +584,7 @@
       <Descript>道冲，而用之或不盈</Descript>
       <Ps. />
     </Node>
-    <Node ID="81">
+    <Node ID="70">
       <Name>无以为用</Name>
       <Star>false</Star>
       <Duration>60</Duration>
@@ -593,7 +593,7 @@
       <Descript>三十辐共一毂，当其无，有车之用。埏埴以为器，当其无，有器之用。凿户牖以为室，当其无，有室之用。故有之以为利，无之以为用}</Descript>
       <Ps.>（注：如果道冲不盈守矢神社同意，（守矢神社）无为而治追加效果：建造速度+30%</Ps.>
     </Node>
-    <Node ID="82">
+    <Node ID="71">
       <Name>不惜牺身</Name>
       <Star>false</Star>
       <Duration>60</Duration>
@@ -601,7 +601,7 @@
       <Descript>故贵以身为天下，若可寄天下</Descript>
       <Ps. />
     </Node>
-    <Node ID="83">
+    <Node ID="72">
       <Name>相托天下</Name>
       <Star>false</Star>
       <Duration>60</Duration>
@@ -609,7 +609,7 @@
       <Descript>爱以身为天下，若可托天下</Descript>
       <Ps.>（注：如果道冲不盈守矢神社同意，（守矢神社）以国家取代宗教组织 效果变化：每日获得的政治点数：+0.1 部队训练时间：+20% 部队组织度：-15% 生活消费品工厂：+6% 稳定度：-20% 战争支持度：-5% 建造速度：+15% 科研速度：+25% 工厂产出：+15% 训练时间：-5%，特工位：+1））</Ps.>
     </Node>
-    <Node ID="84">
+    <Node ID="73">
       <Name>重为轻根</Name>
       <Star>true</Star>
       <Duration>60</Duration>
@@ -617,7 +617,7 @@
       <Descript>重为轻根……轻则失根</Descript>
       <Ps. />
     </Node>
-    <Node ID="85">
+    <Node ID="74">
       <Name>善行无痕</Name>
       <Star>false</Star>
       <Duration>60</Duration>
@@ -625,7 +625,7 @@
       <Descript>善行无痕迹，善言无瑕谪</Descript>
       <Ps. />
     </Node>
-    <Node ID="86">
+    <Node ID="75">
       <Name>静为躁君</Name>
       <Star>true</Star>
       <Duration>60</Duration>
@@ -633,7 +633,7 @@
       <Descript>静为躁君……躁则失君</Descript>
       <Ps. />
     </Node>
-    <Node ID="87">
+    <Node ID="76">
       <Name>善计不筹</Name>
       <Star>false</Star>
       <Duration>60</Duration>
@@ -641,7 +641,7 @@
       <Descript>善计不用筹划</Descript>
       <Ps. />
     </Node>
-    <Node ID="88">
+    <Node ID="77">
       <Name>常善救物</Name>
       <Star>false</Star>
       <Duration>60</Duration>
@@ -649,7 +649,7 @@
       <Descript>常善救物，故无弃物</Descript>
       <Ps.>（注：需要重为轻根，静为躁君其一即可）</Ps.>
     </Node>
-    <Node ID="89">
+    <Node ID="78">
       <Name>常善救人</Name>
       <Star>false</Star>
       <Duration>60</Duration>
@@ -657,7 +657,7 @@
       <Descript>常善救人，故无弃人</Descript>
       <Ps. />
     </Node>
-    <Node ID="90">
+    <Node ID="79">
       <Name>常贵其师</Name>
       <Star>false</Star>
       <Duration>60</Duration>
@@ -665,7 +665,7 @@
       <Descript>故善人者，善人之师</Descript>
       <Ps. />
     </Node>
-    <Node ID="91">
+    <Node ID="80">
       <Name>善人之资</Name>
       <Star>false</Star>
       <Duration>60</Duration>
@@ -673,7 +673,7 @@
       <Descript>不善人者，善人之资</Descript>
       <Ps. />
     </Node>
-    <Node ID="92">
+    <Node ID="81">
       <Name>大制不割</Name>
       <Star>false</Star>
       <Duration>60</Duration>
@@ -682,7 +682,7 @@
       <Descript>圣人用之，则为官长。故大制不割</Descript>
       <Ps. />
     </Node>
-    <Node ID="93">
+    <Node ID="82">
       <Name>有所不为</Name>
       <Star>false</Star>
       <Duration>60</Duration>
@@ -690,7 +690,7 @@
       <Descript>将欲取天下而为之，吾见其不得已。天下神器，不可为也</Descript>
       <Ps. />
     </Node>
-    <Node ID="94">
+    <Node ID="83">
       <Name>张弛有度</Name>
       <Star>false</Star>
       <Duration>60</Duration>
@@ -699,7 +699,7 @@
       <Descript>将欲歙之，必固张之；将欲弱之，必固强之；将欲废之，必固举之；将欲取之，必固予之</Descript>
       <Ps. />
     </Node>
-    <Node ID="95">
+    <Node ID="84">
       <Name>受国不详</Name>
       <Star>false</Star>
       <Duration>60</Duration>
@@ -707,7 +707,7 @@
       <Descript>圣人云：“受国之诟，是谓社稷主；受国不详，是谓天下王</Descript>
       <Ps. />
     </Node>
-    <Node ID="96">
+    <Node ID="85">
       <Name>天网恢恢</Name>
       <Star>false</Star>
       <Duration>60</Duration>
@@ -715,7 +715,7 @@
       <Descript>天之道，不争而善胜，不言而善应，不召而自来，坦然而善谋。天网恢恢，疏而不失</Descript>
       <Ps. />
     </Node>
-    <Node ID="97">
+    <Node ID="86">
       <Name>进道若退</Name>
       <Star>false</Star>
       <Duration>100</Duration>
@@ -723,7 +723,7 @@
       <Descript>建言有之：明道若昧，进道若退，夷道若纇</Descript>
       <Ps. />
     </Node>
-    <Node ID="65">
+    <Node ID="87">
       <Name>改过自新</Name>
       <Star>false</Star>
       <Duration>30</Duration>
@@ -733,7 +733,7 @@
       <Descript>其政闷闷，其民淳淳；其政察察，其民缺缺</Descript>
       <Ps.>（注：达成要求前不可见，需要完成因果循环国策，需要认同劝谏）</Ps.>
     </Node>
-    <Node ID="66">
+    <Node ID="88">
       <Name>废贤</Name>
       <Star>false</Star>
       <Duration>30</Duration>
@@ -741,7 +741,7 @@
       <Descript>不尚贤，使民不争</Descript>
       <Ps. />
     </Node>
-    <Node ID="67">
+    <Node ID="89">
       <Name>均贱</Name>
       <Star>false</Star>
       <Duration>30</Duration>
@@ -749,7 +749,7 @@
       <Descript>不贵难得之货，使民不为盗</Descript>
       <Ps. />
     </Node>
-    <Node ID="68">
+    <Node ID="90">
       <Name>隐欲</Name>
       <Star>false</Star>
       <Duration>30</Duration>
@@ -757,7 +757,7 @@
       <Descript>不见其欲，使民心不乱</Descript>
       <Ps. />
     </Node>
-    <Node ID="69">
+    <Node ID="91">
       <Name>不仁</Name>
       <Star>false</Star>
       <Duration>30</Duration>
@@ -765,7 +765,7 @@
       <Descript>天地不仁，以万物为刍狗；圣人不仁，以天地为刍狗</Descript>
       <Ps. />
     </Node>
-    <Node ID="70">
+    <Node ID="92">
       <Name>饱腹</Name>
       <Star>false</Star>
       <Duration>30</Duration>
@@ -774,7 +774,7 @@
       <Descript>圣人为腹不为目，故去彼取此</Descript>
       <Ps. />
     </Node>
-    <Node ID="71">
+    <Node ID="93">
       <Name>修身养性</Name>
       <Star>false</Star>
       <Duration>60</Duration>
@@ -782,7 +782,7 @@
       <Descript>知常容，容乃公，公乃全，全乃天，天乃道，道乃久，没身不殆</Descript>
       <Ps. />
     </Node>
-    <Node ID="72">
+    <Node ID="94">
       <Name>功遂身退</Name>
       <Star>false</Star>
       <Duration>60</Duration>
@@ -790,7 +790,7 @@
       <Descript>悠兮其贵言，功成身遂，百姓皆谓我自然</Descript>
       <Ps. />
     </Node>
-    <Node ID="73">
+    <Node ID="95">
       <Name>无不为</Name>
       <Star>false</Star>
       <Duration>30</Duration>
@@ -798,7 +798,7 @@
       <Descript>道常无为，而无不为</Descript>
       <Ps. />
     </Node>
-    <Node ID="74">
+    <Node ID="96">
       <Name>无为而治</Name>
       <Star>false</Star>
       <Duration>60</Duration>
@@ -806,7 +806,7 @@
       <Descript>多言数穷，不如守中</Descript>
       <Ps.>（注：守矢神社选择无为而治后的民族精神要和隐居村落相同）</Ps.>
     </Node>
-    <Node ID="75">
+    <Node ID="97">
       <Name>万民自化</Name>
       <Star>false</Star>
       <Duration>60</Duration>
@@ -1224,14 +1224,17 @@
     <Relation ID="64">
       <Require>63</Require>
     </Relation>
+    <Relation ID="65">
+      <Require>97</Require>
+    </Relation>
     <Relation ID="66">
-      <Require>65</Require>
+      <Require>97</Require>
     </Relation>
     <Relation ID="67">
       <Require>66</Require>
     </Relation>
     <Relation ID="68">
-      <Require>67</Require>
+      <Require>66</Require>
     </Relation>
     <Relation ID="69">
       <Require>68</Require>
@@ -1253,9 +1256,6 @@
     </Relation>
     <Relation ID="75">
       <Require>74</Require>
-    </Relation>
-    <Relation ID="76">
-      <Require>12</Require>
     </Relation>
     <Relation ID="77">
       <Require>76</Require>
@@ -1285,19 +1285,19 @@
       <Require>84</Require>
     </Relation>
     <Relation ID="86">
-      <Require>83</Require>
+      <Require>85</Require>
     </Relation>
     <Relation ID="87">
-      <Require>86</Require>
+      <Require>12</Require>
     </Relation>
     <Relation ID="88">
-      <Require>86</Require>
+      <Require>87</Require>
     </Relation>
     <Relation ID="89">
       <Require>88</Require>
     </Relation>
     <Relation ID="90">
-      <Require>88</Require>
+      <Require>89</Require>
     </Relation>
     <Relation ID="91">
       <Require>90</Require>
@@ -1318,7 +1318,7 @@
       <Require>95</Require>
     </Relation>
     <Relation ID="97">
-      <Require>96</Require>
+      <Require>94</Require>
     </Relation>
     <Relation ID="99">
       <Require>98</Require>

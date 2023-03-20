@@ -61,6 +61,7 @@ namespace FocusTree.UI
             toolStripSeparator2 = new ToolStripSeparator();
             MainForm_Menu_graph_saveas = new ToolStripMenuItem();
             MainForm_Menu_graph_saveasBatch = new ToolStripMenuItem();
+            MainForm_Menu_graph_reorderIds = new ToolStripMenuItem();
             MainForm_StatusStrip.SuspendLayout();
             MainForm_Menu.SuspendLayout();
             SuspendLayout();
@@ -249,7 +250,7 @@ namespace FocusTree.UI
             // 
             // MainForm_Menu_graph
             // 
-            MainForm_Menu_graph.DropDownItems.AddRange(new ToolStripItem[] { toolStripSeparator2, MainForm_Menu_graph_saveas, MainForm_Menu_graph_saveasBatch });
+            MainForm_Menu_graph.DropDownItems.AddRange(new ToolStripItem[] { MainForm_Menu_graph_reorderIds, toolStripSeparator2, MainForm_Menu_graph_saveas, MainForm_Menu_graph_saveasBatch });
             MainForm_Menu_graph.Name = "MainForm_Menu_graph";
             MainForm_Menu_graph.Size = new Size(44, 21);
             MainForm_Menu_graph.Text = "图像";
@@ -257,21 +258,28 @@ namespace FocusTree.UI
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new Size(177, 6);
+            toolStripSeparator2.Size = new Size(145, 6);
             // 
             // MainForm_Menu_graph_saveas
             // 
             MainForm_Menu_graph_saveas.Name = "MainForm_Menu_graph_saveas";
-            MainForm_Menu_graph_saveas.Size = new Size(180, 22);
+            MainForm_Menu_graph_saveas.Size = new Size(148, 22);
             MainForm_Menu_graph_saveas.Text = "保存图像";
             MainForm_Menu_graph_saveas.Click += MainForm_Menu_graph_saveas_Click;
             // 
             // MainForm_Menu_graph_saveasBatch
             // 
             MainForm_Menu_graph_saveasBatch.Name = "MainForm_Menu_graph_saveasBatch";
-            MainForm_Menu_graph_saveasBatch.Size = new Size(180, 22);
+            MainForm_Menu_graph_saveasBatch.Size = new Size(148, 22);
             MainForm_Menu_graph_saveasBatch.Text = "批量保存图像";
             MainForm_Menu_graph_saveasBatch.Click += MainForm_Menu_graph_saveasBatch_Click;
+            // 
+            // MainForm_Menu_graph_reorderIds
+            // 
+            MainForm_Menu_graph_reorderIds.Name = "MainForm_Menu_graph_reorderIds";
+            MainForm_Menu_graph_reorderIds.Size = new Size(148, 22);
+            MainForm_Menu_graph_reorderIds.Text = "重排节点id";
+            MainForm_Menu_graph_reorderIds.Click += MainForm_Menu_graph_reorderIds_Click;
             // 
             // MainForm
             // 
@@ -324,5 +332,7 @@ namespace FocusTree.UI
         private ToolStripSeparator toolStripSeparator2;
         private ToolStripMenuItem MainForm_Menu_graph_saveas;
         private ToolStripMenuItem MainForm_Menu_graph_saveasBatch;
+        private ToolStripMenuItem MainForm_Menu_graph_reorderIds;
+        private ToolStripSeparator toolStripSeparator3;
     }
 }

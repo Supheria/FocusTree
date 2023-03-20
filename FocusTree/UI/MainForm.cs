@@ -227,7 +227,7 @@ namespace FocusTree.UI
 
         private void MainForm_Menu_graph_saveas_Click(object sender, EventArgs e)
         {
-
+            DrawNodeMapWithInfo.GraphSaveasImage(Display.Graph);
         }
 
         private void MainForm_Menu_graph_saveasBatch_Click(object sender, EventArgs e)
@@ -254,6 +254,11 @@ namespace FocusTree.UI
                 }
             }
             MessageBox.Show($"成功保存{suc}个图像。");
+        }
+
+        private void MainForm_Menu_graph_reorderIds_Click(object sender, EventArgs e)
+        {
+            Display.ReorderNodeIds();
         }
     }
 }

@@ -139,7 +139,11 @@ public struct ColorString
 }
 
 
+原id 数据
 
+新id 复制数据 -> 加入新字典
 
+原id 关联id 通过子节点列表遍历子节点
 
+子节点需求列表中的任何原id替换为新id
 

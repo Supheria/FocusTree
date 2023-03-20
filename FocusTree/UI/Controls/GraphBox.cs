@@ -870,7 +870,22 @@ namespace FocusTree.UI.Controls
 
         #endregion
 
+        #region ---- 图像操作调用 ----
+
+        public void ReorderNodeIds()
+        {
+            if (Graph == null)
+            {
+                return;
+            }
+            Graph.ReorderNodeIds();
+            Invalidate();
+        }
+
+        #endregion
+
         #region ---- 绘图操作调用 ----
+
         public void DrawAddtionalInfo(string info)
         {
             Invalidate();
