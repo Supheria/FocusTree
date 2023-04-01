@@ -1,11 +1,5 @@
 ﻿using FocusTree.Data;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FocusTree.Tool.UI
 {
@@ -50,7 +44,7 @@ namespace FocusTree.Tool.UI
         {
             var center = Graph.GetGraphMetaData();
             var size = new Size(
-                (int)(center.Item2.Width * ScalingUnit.X + Border * 2), 
+                (int)(center.Item2.Width * ScalingUnit.X + Border * 2),
                 (int)(center.Item2.Height * ScalingUnit.Y + Border * 2)
                 );
             return new Bitmap(size.Width, size.Height);

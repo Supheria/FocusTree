@@ -1,6 +1,5 @@
 ﻿using FocusTree.Data;
 using FocusTree.IO;
-using FocusTree.Tool.Data;
 using System.IO.Compression;
 
 namespace FocusTree.Tool.IO

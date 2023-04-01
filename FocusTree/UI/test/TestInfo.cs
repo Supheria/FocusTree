@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-namespace FocusTree.UI.test
+﻿namespace FocusTree.UI.test
 {
     public partial class TestInfo : Form
     {
@@ -31,9 +21,9 @@ namespace FocusTree.UI.test
             InitializeComponent();
             Info.Left = ClientRectangle.Left;
             Info.Top = ClientRectangle.Top;
-            Info.Width= ClientRectangle.Width;
-            Info.Height= ClientRectangle.Height;
-            Info.Dock= DockStyle.Fill;
+            Info.Width = ClientRectangle.Width;
+            Info.Height = ClientRectangle.Height;
+            Info.Dock = DockStyle.Fill;
             Info.WordWrap = false;
             Info.ZoomFactor = 2f;
         }

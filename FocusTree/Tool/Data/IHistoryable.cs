@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace FocusTree.Tool.Data
+﻿namespace FocusTree.Tool.Data
 {
     public interface IHistoryable : IFormattable
     {

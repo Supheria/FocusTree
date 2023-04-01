@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Printing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace DemoRichText.Model
@@ -193,7 +189,8 @@ namespace DemoRichText.Model
             {
                 rtbInfo.SelectionCharOffset = 0;
             }
-            else {
+            else
+            {
                 rtbInfo.SelectionCharOffset = -5;
             }
             rtbInfo.Focus();
@@ -211,7 +208,8 @@ namespace DemoRichText.Model
             {
                 rtbInfo.SelectionCharOffset = 0;
             }
-            else {
+            else
+            {
                 rtbInfo.SelectionCharOffset = 5;
             }
             rtbInfo.Focus();
@@ -280,7 +278,8 @@ namespace DemoRichText.Model
             {
                 rtbInfo.SelectionBullet = false;
             }
-            else {
+            else
+            {
                 rtbInfo.SelectionBullet = true;
                 rtbInfo.BulletIndent = 10;
             }
@@ -298,20 +297,21 @@ namespace DemoRichText.Model
             OpenFileDialog o = new OpenFileDialog();
             o.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory;
             o.Title = "请选择图片";
-            o.Filter = "jpeg|*.jpeg|jpg|*.jpg|png|*.png|gif|*.gif"; 
-            if (o.ShowDialog() == DialogResult.OK) {
+            o.Filter = "jpeg|*.jpeg|jpg|*.jpg|png|*.png|gif|*.gif";
+            if (o.ShowDialog() == DialogResult.OK)
+            {
                 string fileName = o.FileName;
                 try
                 {
-                   Image bmp = Image.FromFile(fileName);
-                   Clipboard.SetDataObject(bmp);
+                    Image bmp = Image.FromFile(fileName);
+                    Clipboard.SetDataObject(bmp);
 
                     DataFormats.Format dataFormat = DataFormats.GetFormat(DataFormats.Bitmap);
                     if (rtbInfo.CanPaste(dataFormat))
                     {
                         rtbInfo.Paste(dataFormat);
                     }
-                        
+
                 }
                 catch (Exception exc)
                 {
@@ -344,7 +344,7 @@ namespace DemoRichText.Model
         public override void SetFormat(RichTextBox rtbInfo)
         {
             string find = rtbInfo.Tag.ToString();
-            int index=  rtbInfo.Find(find, 0,RichTextBoxFinds.None);
+            int index = rtbInfo.Find(find, 0, RichTextBoxFinds.None);
             int startPos = index;
             int nextIndex = 0;
             while (nextIndex != startPos)//循环查找字符串，并用蓝色加粗12号Times New Roman标记之  
@@ -397,7 +397,8 @@ namespace DemoRichText.Model
         {
             string fontSize = rtbInfo.Tag.ToString();
             float fsize = 0.0f;
-            if (float.TryParse(fontSize, out fsize)) {
+            if (float.TryParse(fontSize, out fsize))
+            {
                 rtbInfo.SelectionFont = new Font(rtbInfo.Font.FontFamily, fsize, rtbInfo.SelectionFont.Style);
             }
             rtbInfo.Focus();

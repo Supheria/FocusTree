@@ -1,8 +1,6 @@
-using FocusTree.Data;
 using FocusTree.Tool.Data;
 using FocusTree.Tool.UI;
 using FocusTree.UI.Controls;
-using Newtonsoft.Json;
 
 namespace FocusTree.UI.NodeToolDialogs
 {

@@ -1,12 +1,10 @@
-using System.Diagnostics.Metrics;
+using FocusTree.Tool.Data;
+using Newtonsoft.Json;
 using System.Numerics;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using FocusTree.Tool.Data;
-using Newtonsoft.Json;
-using static System.Windows.Forms.DataFormats;
 
 namespace FocusTree.Data
 {
@@ -345,7 +343,7 @@ namespace FocusTree.Data
                 }
             }
         }
-        
+
         /// <summary>
         /// 按 NodeCatalog 的顺序重排节点ID
         /// </summary>
@@ -355,7 +353,7 @@ namespace FocusTree.Data
             var branches = GetBranches(GetRootNodes(), true, true);
             foreach (var branch in branches)
             {
-                foreach(var node in branch)
+                foreach (var node in branch)
                 {
                     TempNodeCatalog.TryAdd(node, NodeCatalog[node]);
                 }
@@ -366,7 +364,7 @@ namespace FocusTree.Data
             Dictionary<int, List<HashSet<int>>> tempRequireGroups = new();
             Dictionary<int, List<HashSet<int>>> newRequireGroups = new();
             var enumer = NodeCatalog.GetEnumerator();
-            for (int newId = 1; enumer.MoveNext(); newId++) 
+            for (int newId = 1; enumer.MoveNext(); newId++)
             {
                 var data = enumer.Current.Value;
                 data.ID = newId;
@@ -376,13 +374,13 @@ namespace FocusTree.Data
                 {
                     continue;
                 }
-                foreach(var child in ChildLinkes[enumer.Current.Key])
+                foreach (var child in ChildLinkes[enumer.Current.Key])
                 {
                     List<HashSet<int>> newGroups = new();
-                    foreach(var requireGroup in RequireGroups[child])
+                    foreach (var requireGroup in RequireGroups[child])
                     {
                         HashSet<int> newRequireGroup = new();
-                        foreach(var parent in requireGroup)
+                        foreach (var parent in requireGroup)
                         {
                             if (parent == enumer.Current.Key)
                             {
@@ -395,7 +393,7 @@ namespace FocusTree.Data
                         }
                         newGroups.Add(newRequireGroup);
                     }
-                    if(tempRequireGroups.TryAdd(child, newGroups) == false)
+                    if (tempRequireGroups.TryAdd(child, newGroups) == false)
                     {
                         tempRequireGroups[child] = newGroups;
                     }

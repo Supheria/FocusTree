@@ -4,9 +4,6 @@ using FocusTree.Tool.Data;
 using FocusTree.Tool.IO;
 using FocusTree.Tool.UI;
 using FocusTree.UI.NodeToolDialogs;
-using Newtonsoft.Json.Linq;
-using System.Drawing;
-using System.IO;
 using System.Numerics;
 
 namespace FocusTree.UI.Controls
@@ -40,7 +37,8 @@ namespace FocusTree.UI.Controls
         public int? SelectedNode
         {
             get { return selectedNode; }
-            /*private */set
+            /*private */
+            set
             {
                 selectedNode = value;
                 PrevSelectNode = null;
@@ -858,7 +856,7 @@ namespace FocusTree.UI.Controls
             if (SelectedNode == null)
             {
                 return null;
-            }    
+            }
             return Graph.GetNodeData(SelectedNode.Value);
         }
         public Point GetSelectedNodeCenterOnScreen()

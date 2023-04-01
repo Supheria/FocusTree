@@ -2,7 +2,6 @@
 using FocusTree.Tool.IO;
 using FocusTree.Tool.UI;
 using FocusTree.UI.Controls;
-using FocusTree.UI.NodeToolDialogs;
 
 namespace FocusTree.UI
 {

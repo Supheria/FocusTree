@@ -22,7 +22,8 @@
       <Name>废贤</Name>
       <Star>false</Star>
       <Duration>30</Duration>
-      <Effect>战争支持度：-10%，稳定度：+20%</Effect>
+      <Effect>战争支持度：-10%</Effect>
+      <Effect>稳定度：+20%</Effect>
       <Descript>不尚贤，使民不争</Descript>
       <Ps. />
     </Node>
@@ -30,7 +31,8 @@
       <Name>均贱</Name>
       <Star>false</Star>
       <Duration>30</Duration>
-      <Effect>将平均灵力值固定为50%，稳定度：+30%</Effect>
+      <Effect>将平均灵力值固定为50%</Effect>
+      <Effect>稳定度：+30%</Effect>
       <Descript>不贵难得之货，使民不为盗</Descript>
       <Ps. />
     </Node>
@@ -38,7 +40,8 @@
       <Name>隐欲</Name>
       <Star>false</Star>
       <Duration>30</Duration>
-      <Effect>将世界观固定为唯心世界观，稳定度：+50%</Effect>
+      <Effect>将世界观固定为唯心世界观</Effect>
+      <Effect>稳定度：+50%</Effect>
       <Descript>不见其欲，使民心不乱</Descript>
       <Ps. />
     </Node>
@@ -80,7 +83,8 @@
       <Name>无不为</Name>
       <Star>false</Star>
       <Duration>30</Duration>
-      <Effect>稳定度：-50%，获得1个科研槽</Effect>
+      <Effect>稳定度：-50%</Effect>
+      <Effect>获得1个科研槽</Effect>
       <Descript>道常无为，而无不为</Descript>
       <Ps. />
     </Node>
@@ -88,7 +92,7 @@
       <Name>无为而治</Name>
       <Star>false</Star>
       <Duration>60</Duration>
-      <Effect>获得无为而治，其效果为(每周人口：+1，每月人口：+15%)</Effect>
+      <Effect>获得无为而治，其效果为（每周人口：+1，每月人口：+15%）</Effect>
       <Descript>多言数穷，不如守中</Descript>
       <Ps.>（注：守矢神社选择无为而治后的民族精神要和隐居村落相同）</Ps.>
     </Node>
@@ -201,7 +205,8 @@
       <Name>无心插柳</Name>
       <Star>false</Star>
       <Duration>60</Duration>
-      <Effect>每个国家获得：道德观不同（对隐世村落关系：-20），获得1个科研槽</Effect>
+      <Effect>每个国家获得：道德观不同（对隐世村落关系：-20）</Effect>
+      <Effect>获得1个科研槽</Effect>
       <Descript>上德不德，是以有德；下德不失德，是以无德</Descript>
       <Ps. />
     </Node>
@@ -209,7 +214,8 @@
       <Name>不欲如玉</Name>
       <Star>false</Star>
       <Duration>60</Duration>
-      <Effect>每个国家失去：道德观不同（对隐世村落关系：-20），获得1个科研槽</Effect>
+      <Effect>每个国家失去：道德观不同（对隐世村落关系：-20）</Effect>
+      <Effect>获得1个科研槽</Effect>
       <Descript>致数与无与。是故不欲禄禄如玉，珞珞如石</Descript>
       <Ps. />
     </Node>
@@ -313,7 +319,7 @@
       <Effect>圣人追加效果：新规倾向：+0.01，部队攻击：+15%</Effect>
       <Effect>获得再西出，其效果为（（天狗共和国）我国对其进攻修正：+20%，（天狗帝国）我国对其进攻修正：+20%，（守矢神社）我国对其进攻修正：+20%，（河童共和国）我国对其进攻修正：+20%，（河童长老会）我国对其进攻修正：+20%，（山童自治区）我国对其进攻修正：+20%）</Effect>
       <Effect>（命莲寺）获得宗教对立（对隐居村落关系：-200）</Effect>
-      <Effect>（隐居村落）获得“自古以来”（对命莲寺关系：+200）</Effect>
+      <Effect>（隐居村落）获得自古以来（对命莲寺关系：+200）</Effect>
       <Effect>（神灵庙）获得命莲寺的宣称</Effect>
       <Descript>老子化胡，于是佛道兴矣</Descript>
       <Ps. />

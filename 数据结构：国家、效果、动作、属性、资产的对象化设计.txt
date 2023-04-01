@@ -4,6 +4,11 @@ IO一分为二：
 1. 读写对象数据（保存游戏进度用到的数据），目前无初始值
 2. 读写设定对象行为（action）的语句（sentence）
 
+效果变化作为接口，附加在可造成效果变化的语句上，可造成效果变化的类型：
+国策
+获得效果
+“类型”类型的数据
+
 <string, Object> <"事件名", 事件对象> <"效果名", 效果对象> <"资源名", 资源对象> <"力量名", 力量对象>
 
 ( Object, MmodifyValue)
@@ -42,6 +47,8 @@ AtrributeType: 效果/关系/建筑/资源/力量/事件/速度
 (频率)(ObjectName)(subAtrribute)
 每周战争支持度
 志愿军部队数上限值
+
+public class Atrribute
 
 public class ValueType : Atrribute
 {
