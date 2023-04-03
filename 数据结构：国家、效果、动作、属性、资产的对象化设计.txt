@@ -154,3 +154,114 @@ public struct ColorString
 
 子节点需求列表中的任何原id替换为新id
 
+
+
+---- 动词 ---- 属性 ----
+固定：施加|移除
+
+/// <summary>
+        /// 单语句-触发事件
+        /// 触发事件“骑着青牛的老者？”。
+        /// </summary>
+        static string Pattern_Single_TriggerEvent = "^(?:触发事件“)([\u4e00-\u9fa5？]+)";
+        /// <summary>
+        /// 单语句-其他国家触发事件
+        /// 神灵庙触发事件“道教该如何面对道家？”
+        /// </summary>
+        static string Pattern_Single_OtherTriggerEvent = "^([\u4e00-\u9fa5]+)(?:触发事件“)([\u4e00-\u9fa5？]+)";
+        /// <summary>
+        /// 单语句-固定值或类型
+        /// 将平均灵力值固定为50%
+        /// 将世界观固定为唯心世界观
+        /// </summary>
+        static string Pattern_Single_Fix = "^(?:将)([\u4e00-\u9fa5]+)(?:固定为)(.+)";
+        /// <summary>
+        /// 单语句-移除固定
+        /// 移除对势力规模的固定
+        /// </summary>
+        static string Pattern_Single_RemoveFix = "^(?:移除对)([\u4e00-\u9fa5]+)(?:的固定)";
+        /// <summary>
+        /// 单语句模式-改变值(加减)
+        /// 稳定度：-30%
+        /// </summary>
+        static string Pattern_Single_AddSub = "^[\u4e00-\u9fa5]+(?:：)([+|-][0-9]+%?)";
+        /// <summary>
+        /// 单语句-改变值(获得|增加|移除)
+        /// 获得1个科研槽
+        /// 增加10个建筑位
+        /// 移除1个民用工厂
+        /// </summary>
+        static string Pattern_Single_ChangeNumber = "^(获得|增加|移除)([0-9]+)(?:个)([\u4e00-\u9fa5]+)";
+        /// <summary>
+        /// 单语句-获得|移除效果
+        /// 获得五弊三缺
+        /// 移除道教的探索精神
+        /// </summary>
+        static string Pattern_Single_ChangeEffect = "^(获得[^对]|移除[^对])([\u4e00-\u9fa5]+)";
+        /// <summary>
+        /// 单语句-规则修改
+        /// 规则修改：不能宣战
+        /// </summary>
+        static string Pattern_Single_ChangeRule = "^(?:规则修改：)(.+)";
+        /// <summary>
+        /// 单语句-可用决议
+        /// 可以通过决议发动周边国家的内战使其变为附庸
+        /// </summary>
+        static string Pattern_Single_AvailableResolution = "^(?:可以通过决议)(.+)";
+        /// <summary>
+        /// 单语句-自动获得核心
+        /// 幽灵种族的省份将自动获得核心：是
+        /// </summary>
+        static string Pattern_Single_AutoGetCore = "^([\u4e00-\u9fa5]+)(?:的省份将自动获得核心：)([是|否])";
+        /// <summary>
+        /// 单语句-对他国的修正
+        /// （天狗共和国）我国对其进攻修正：+20%
+        /// </summary>
+        static string Pattern_Single_ModifyToOther = "^(?:（[\u4e00-\u9fa5]+)(?:）我国对其)(进攻修正：|防御修正：)([+|-][0-9]+%?)";
+        /// <summary>
+        /// 单语句-获得对别国的战争目标
+        /// 获得对守矢神社的吞并战争目标
+        /// </summary>
+        static string Pattern_Single_GetWarGoal = "^(?:获得对)([\u4e00-\u9fa5]+)(?:的)([\u4e00-\u9fa5]+)(?:战争目标)";
+        /// <summary>
+        /// 复语句-获得|移除效果
+        /// 获得无为而治，其效果为（每周人口：+1，每月人口：+15%）
+        /// 移除圣人，其效果为（孤立倾向+0.1，每日唯心度变化+0.04%）
+        /// </summary>
+        static string Pattern_Complex_GetEffect = "^(获得|移除)([\u4e00-\u9fa5]+)(?:，其效果为（)([^）]+)";
+        /// <summary>
+        /// 复语句-获得限时效果
+        /// 获得为期365天的“强大的威望”，其效果为（每日获得的政治点数：+0.25，部队组织度：+15%，稳定度：+20%，战争支持度：+20%，建造速度：+10%，部队攻击：+5%，部队防御：+5%，科研速度：+10%，工厂产出：+10%）
+        /// </summary>
+        static string Pattern_Complex_GetEffectWithinTime = "^(?:获得为期)([0-9天月年]+)(?:的“)([\u4e00-\u9fa5]+)(?:”，其效果为（)([^）]+)";
+        /// <summary>
+        /// 复语句-获得外交关系
+        /// （隐居村落）获得自古以来（对命莲寺关系：+200）
+        /// </summary>
+        static string Pattern_Complex_GetRelation = "^(?:（)([\u4e00-\u9fa5]+)(?:）获得)([\u4e00-\u9fa5]+)(?:（)([^）]+)";
+        /// <summary>
+        /// 复语句-每个国家获得外交关系
+        /// 每个国家获得：道德观不同（对隐世村落关系：-20）
+        /// 每个国家失去：道德观不同（对隐世村落关系：-20）
+        /// </summary>
+        static string Pattern_Complex_EveryStateChangeRelation = "^(每个国家获得：|每个国家失去：)([\u4e00-\u9fa5]+)(?:（)([^）]+)";
+        /// <summary>
+        /// 复语句-发展一级
+        /// 向保守社会发展一级，以保守社会5取代保守社会4，效果变化（稳定度：+6% 科研速度：-3% 加密：+0.5 可出口资源：-5% 意识形态变化抵制力度：+10%）
+        /// </summary>
+        static string Pattern_Complex_Upgrade = "^(?:向)([\u4e00-\u9fa5]+)(?:发展一级，以[\u4e00-\u9fa5]+)([0-9]+)(?:取代[\u4e00-\u9fa5]+)([0-9]+)(?:，效果变化（)([^）]+)";
+        /// <summary>
+        /// 复语句-追加效果
+        /// 天地不仁追加效果：稳定度：-5%，适役人口：+2%
+        /// </summary>
+        static string Pattern_Complex_Append = "^([\u4e00-\u9fa5]+)(?:追加效果：)(.+)$";
+        /// <summary>
+        /// 复语句-别国触发可同意事件
+        /// 每个孤立国家触发事件“隐世村落的无偿教导？”。如果他们同意，则获得强烈的战略结盟（对隐居村落的关系：+100）
+        /// </summary>
+        static string Pattern_Complex_OtherTriggerEventWithConsent = "^([\u4e00-\u9fa5]+)(?:触发事件“)([\u4e00-\u9fa5？]+)(?:”。如果他们同意，则获得)([\u4e00-\u9fa5]+)(?:（)([^）]+)";
+        /// <summary>
+        /// 复语句-区域限制
+        /// 村民生活区（增加10个建筑位，增加10个民用工厂）
+        /// </summary>
+        static string Pattern_Complex_RegionRestrict = "^([\u4e00-\u9fa5]+)(?:（)([^）]+)";

@@ -232,7 +232,7 @@
       <Star>false</Star>
       <Duration>60</Duration>
       <Effect>每个孤立国家触发事件“隐世村落的无偿教导？”。如果他们同意，则获得强烈的战略结盟（对隐居村落的关系：+100）</Effect>
-      <Effect>获得幻想乡道家正统（效果为：意识形态变化抵制力度：+75%，可以创建阵营）</Effect>
+      <Effect>获得幻想乡道家正统，其效果为（意识形态变化抵制力度：+75%，可以创建阵营）</Effect>
       <Effect>神灵庙触发事件“道教该如何面对道家？”</Effect>
       <Descript>人之所教，亦我而教人：强梁者不得其死——吾将以为教父。</Descript>
       <Ps. />
@@ -265,7 +265,7 @@
       <Name>治人事天</Name>
       <Star>false</Star>
       <Duration>60</Duration>
-      <Effect>村民生活区（增加10个建筑位，10个民用工厂）</Effect>
+      <Effect>村民生活区（增加10个建筑位，增加10个民用工厂）</Effect>
       <Descript>治人事天，莫若啬。夫唯啬，是以早服</Descript>
       <Ps.>（注：需要所教教人+走马入粪）</Ps.>
     </Node>
@@ -299,7 +299,7 @@
       <Name>兵者不详</Name>
       <Star>true</Star>
       <Duration>30</Duration>
-      <Effect>获得不详之器，其效果为：部队组织度：+20%，部队组织度恢复：-5% </Effect>
+      <Effect>获得不详之器，其效果为（部队组织度：+20%，部队组织度恢复：-5% </Effect>
       <Effect>向鹰派发展一级，以鸽派2取代鸽派3，效果变化 生活消费品：+2% 战争支持度：+5% 改善关系持续花费：+10% 地区最大工业值：-10% 贸易协定修正：-20% 正当化战争目标所需时间：-10% 敌国对我国正当化目标所需时间：-20% 边界开放法则切换花费：+10% 灵力使用法案切换花费：+10%</Effect>
       <Descript>夫唯兵者，不详之器，物或恶之……</Descript>
       <Ps.>（注：要求神灵庙意识形态为孤立）</Ps.>
@@ -380,7 +380,8 @@
       <Name>兵强则灭</Name>
       <Star>false</Star>
       <Duration>30</Duration>
-      <Effect>获得对守矢神社的吞并战争目标，获得针对天狗共和国的吞并战争目标</Effect>
+      <Effect>获得对守矢神社的吞并战争目标</Effect>
+      <Effect>获得对天狗共和国的吞并战争目标</Effect>
       <Effect>触发事件“模糊不清的梦”</Effect>
       <Descript>****，****。****，****</Descript>
       <Ps. />
@@ -459,7 +460,8 @@
       <Name>除无道</Name>
       <Star>false</Star>
       <Duration>30</Duration>
-      <Effect>从居民生活区移除1个民用工厂增加1个军用工厂，从山中鸡场移除1个民用工厂增加一个军用工厂</Effect>
+      <Effect>居民生活区（移除1个民用工厂，增加1个军用工厂）</Effect>
+      <Effect>从山中鸡场（移除1个民用工厂，增加1个军用工厂）</Effect>
       <Effect>触发事件“天之正者不可逆之”。</Effect>
       <Descript>服文……厌饮食，财货有余，是为盗贼夸。非道也哉</Descript>
       <Ps. />
@@ -918,7 +920,10 @@
       <Name>损余补足</Name>
       <Star>true</Star>
       <Duration>100</Duration>
-      <Effect>移除道教的探索精神，移除对势力规模的固定，移除对世界观的固定，移除对平均灵力值的固定</Effect>
+      <Effect>移除道教的探索精神</Effect>
+      <Effect>移除对势力规模的固定</Effect>
+      <Effect>移除对世界观的固定</Effect>
+      <Effect>移除对平均灵力值的固定</Effect>
       <Effect>不争之争追加效果：规则修改：可以宣战</Effect>
       <Descript>天之道，损有余而补不足</Descript>
       <Ps.>（注：需要完成国策大盗终止）</Ps.>
