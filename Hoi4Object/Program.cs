@@ -1,6 +1,7 @@
 ﻿//public Dictionary<string, Attribute> AtrributeCatalog = new();
 using Hoi4Object.IO;
 
+
 while (true)
 {
     FormatRawEffectSentence.Unformattable.Clear();
@@ -16,7 +17,7 @@ while (true)
             //XmlIO.SaveSentence("test.txt", formatted);
         }
     }
-    effects.EffectGroups.Add(10, new());
+    effects.EffectGroups.Add(10, new(sentencesList));
     effects.EffectGroups.Add(12, sentencesList);
     XmlIO.SaveObject<FocusEffects>("test.txt", effects);
     Console.WriteLine("----- 无法格式化 -----");

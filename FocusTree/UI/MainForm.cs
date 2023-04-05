@@ -1,4 +1,5 @@
-﻿using FocusTree.IO;
+﻿using FocusTree.Data;
+using FocusTree.IO;
 using FocusTree.Tool.IO;
 using FocusTree.Tool.UI;
 using FocusTree.UI.Controls;
@@ -148,7 +149,7 @@ namespace FocusTree.UI
                 {
                     var graph = CsvReader.LoadGraph(fileName);
                     Backup.BackupFile(graph);
-                    XmlIO.SaveGraph(graph.FilePath, graph);
+                    graph.Save(graph.FilePath);
                 }
                 catch (Exception ex)
                 {
@@ -243,7 +244,7 @@ namespace FocusTree.UI
             {
                 try
                 {
-                    var graph = XmlIO.LoadGraph(fileName);
+                    var graph = XmlIO.LoadFromXml<FocusGraph>(fileName);
                     DrawNodeMapWithInfo.GraphSaveasImage(graph);
                 }
                 catch (Exception ex)

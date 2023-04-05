@@ -26,6 +26,7 @@
             Info.Dock = DockStyle.Fill;
             Info.WordWrap = false;
             Info.ZoomFactor = 2f;
+            //TopMost = true;
         }
     }
 }

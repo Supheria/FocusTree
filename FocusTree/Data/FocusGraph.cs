@@ -1,4 +1,8 @@
+using FocusTree.Hoi4Object.IO.Formatter;
+using FocusTree.Hoi4Object.Public;
+using FocusTree.IO;
 using FocusTree.Tool.Data;
+using FocusTree.UI.test;
 using Newtonsoft.Json;
 using System.Numerics;
 using System.Text;
@@ -10,10 +14,10 @@ namespace FocusTree.Data
 {
     public class FocusGraph : IXmlSerializable, IHistoryable
     {
-        #region ---- 存档文件名 ----
+        #region ---- 存档文件路径 ----
 
         /// <summary>
-        /// 存档文件名
+        /// 存档文件路径
         /// </summary>
         internal string FilePath;
 
@@ -41,6 +45,10 @@ namespace FocusTree.Data
         /// 节点显示位置
         /// </summary>
         Dictionary<int, Vector2> MetaPoints;
+        /// <summary>
+        /// 节点效果
+        /// </summary>
+        Dictionary<int, List<Sentence>> NodeEffects;
 
         #endregion
 
@@ -414,6 +422,16 @@ namespace FocusTree.Data
             SetMetaPoints();
             this.EnqueueHistory();
         }
+        /// <summary>
+        /// 保存为xml文件，并更新存档文件路径
+        /// </summary>
+        /// <param name="path"></param>
+        public void Save(string path)
+        {
+            this.SaveToXml(path);
+            FilePath = path;
+            Latest = Format();
+        }
 
         #endregion
 
@@ -458,6 +476,7 @@ namespace FocusTree.Data
         {
             NodeCatalog = new();
             RequireGroups = new();
+            NodeEffects = new();
 
             while (reader.Read())
             {
@@ -489,12 +508,59 @@ namespace FocusTree.Data
                         RequireGroups[id] = relations;
                     }
                 }
+                if ((reader.Name == "Effects"))
+                {
+                    int id = int.Parse(reader["ID"]);
+                    var effects = ReadEffects(reader);
+                    if (effects != null)
+                    {
+                        NodeEffects[id] = effects;
+                    }
+                }
             }
 
             CreateLinkes();
             SetMetaPoints();
+            SetEffectSentences();
             this.ClearHistory();
             this.EnqueueHistory();
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        [Obsolete("临时使用，作为xml格式转换的过渡")]
+        private void SetEffectSentences()
+        {
+            FormatRawEffectSentence.Unformattable.Clear();
+            TestInfo testInfo = new();
+            TestFormatter testFormatter = new();
+            testFormatter.Show();
+            string success = "";
+            foreach (var data in NodeCatalog)
+            {
+                foreach(var raw in data.Value.Effects)
+                {
+                    testInfo.total++;
+                    if (!FormatRawEffectSentence.Formatter(raw, out var formatted))
+                    {
+                        testInfo.InfoText += $"{data.Key}. {raw}\n";
+                        testInfo.erro++;
+                        continue;
+                    }
+                    if (NodeEffects.ContainsKey(data.Key))
+                    {
+                        NodeEffects[data.Key].Add(formatted);
+                    }
+                    else
+                    {
+                        NodeEffects[data.Key] = new() { formatted };
+                    }
+                    testInfo.good++;
+                    success += $"{data.Key}. {formatted.ToString()} <= {raw}\n";
+                }
+            }
+            testInfo.InfoText += "\n\n======== Successful ========\n" + success;
+            testInfo.Show();
         }
         /// <summary>
         /// 反序列化时用于读取节点的关系
@@ -523,6 +589,31 @@ namespace FocusTree.Data
             }
             throw new Exception("[2302191020] 读取 Relation列表 时未能找到结束标签");
         }
+        /// <summary>
+        /// 反序列化时读取节点效果
+        /// </summary>
+        /// <param name="reader">读取到节点关系的流</param>
+        /// <returns>当前节点效果</returns>
+        private List<Sentence> ReadEffects(XmlReader reader)
+        {
+            List<Sentence> effects = new();
+            // 子节点探针
+            if (reader.ReadToDescendant("Sentence") == false) { return null; }
+            do
+            {
+                if (reader.Name == "Effects" && reader.NodeType == XmlNodeType.EndElement)
+                {
+                    return effects;
+                }
+                if (reader.Name == "Sentence")
+                {
+                    Sentence sentence = new();
+                    sentence.ReadXml(reader);
+                    effects.Add(sentence);
+                }
+            } while (reader.Read());
+            throw new Exception("[2304060212] 读取 Effects列表 时未能找到结束标签");
+        }
 
         public void WriteXml(XmlWriter writer)
         {
@@ -542,7 +633,7 @@ namespace FocusTree.Data
             //==== 序列化节点关系 ====//
 
             // <NodesRelations> 序列化节点关系字典
-            writer.WriteStartElement("NodesRelations");
+            writer.WriteStartElement("NodeRelations");
             foreach (var r_pair in RequireGroups)
             {
                 // <RNode> 当前节点
@@ -561,6 +652,25 @@ namespace FocusTree.Data
             }
             writer.WriteEndElement();
             // </Relations>
+
+            //==== 序列化节点效果 ====//
+
+            // <NodeEffects>
+            writer.WriteStartElement("NodeEffects");
+            foreach (var effectGroup in NodeEffects)
+            {
+                // <Effects>
+                writer.WriteStartElement("Effects");
+                writer.WriteAttributeString("ID", effectGroup.Key.ToString());
+                foreach (var sentence in effectGroup.Value)
+                {
+                    sentence.WriteXml(writer);
+                }
+                writer.WriteEndElement();
+                // </Effects>
+            }
+            writer.WriteEndElement();
+            // </NodeEffects>
         }
         public static string IdArrayToString(HashSet<int> ids)
         {

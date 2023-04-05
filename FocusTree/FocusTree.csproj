@@ -53,7 +53,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Hoi4Object\IO\Deformatter\" />
+    <Folder Include="Hoi4Object\Deformatter\" />
   </ItemGroup>
 
 </Project>

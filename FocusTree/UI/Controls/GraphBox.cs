@@ -728,6 +728,12 @@ namespace FocusTree.UI.Controls
 
         #region ---- 读写操作 ----
 
+        public void SaveGraph(string path, FocusGraph graph)
+        {
+            graph.Save(FilePath);
+            graph.FilePath = path;
+            graph.Latest = graph.Format();
+        }
         /// <summary>
         /// 保存
         /// </summary>
@@ -740,12 +746,12 @@ namespace FocusTree.UI.Controls
             if (GraphEdited)
             {
                 Backup.BackupFile(FilePath);
-                XmlIO.SaveGraph(FilePath, Graph);
+                Graph.Save(FilePath);
                 Invalidate();
             }
             else
             {
-                XmlIO.SaveGraph(FilePath, Graph);
+                Graph.Save(FilePath);
             }
         }
         /// <summary>
@@ -755,7 +761,7 @@ namespace FocusTree.UI.Controls
         public void SaveAsNew(string path)
         {
             Graph.FilePath = FilePath = path;
-            XmlIO.SaveGraph(path, Graph);
+            Graph.Save(path);
             Invalidate();
         }
         /// <summary>
@@ -766,7 +772,7 @@ namespace FocusTree.UI.Controls
         {
             CloseAllNodeToolDialogs();
             FilePath = path;
-            Graph = XmlIO.LoadGraph(path);
+            Graph = XmlIO.LoadFromXml<FocusGraph>(path);
             SelectedNode = null;
             RescaleToPanorama();
             Invalidate();

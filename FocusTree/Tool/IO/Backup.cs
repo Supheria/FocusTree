@@ -49,7 +49,7 @@ namespace FocusTree.Tool.IO
             }
             try
             {
-                var prevGraph = XmlIO.LoadGraph(path);
+                var prevGraph = XmlIO.LoadFromXml<FocusGraph>(path);
                 if (graph.Format().Equals(prevGraph.Format()))
                 {
                     return;
@@ -70,14 +70,14 @@ namespace FocusTree.Tool.IO
         /// <returns></returns>
         public static FocusGraph Restore(string path)
         {
-            var graph = XmlIO.LoadGraph(path);
+            var graph = XmlIO.LoadFromXml<FocusGraph>(path);
             if (graph.FilePath == path)
             {
                 return graph;
             }
             if (File.Exists(graph.FilePath))
             {
-                var prevGraph = XmlIO.LoadGraph(graph.FilePath);
+                var prevGraph = XmlIO.LoadFromXml<FocusGraph>(graph.FilePath);
                 if (graph.Format().Equals(prevGraph.Format()) == false)
                 {
                     var dir = Directory.CreateDirectory(Path.Combine(DirectoryName, Path.GetFileNameWithoutExtension(graph.FilePath)));
@@ -85,7 +85,7 @@ namespace FocusTree.Tool.IO
                     File.Copy(graph.FilePath, copyPath, true);
                 }
             }
-            XmlIO.SaveGraph(graph.FilePath, graph);
+            graph.Save(graph.FilePath);
             File.Delete(path);
             return graph;
         }

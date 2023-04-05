@@ -25,24 +25,33 @@ namespace Hoi4Object.IO
                     var sId = reader.GetAttribute("ID");
                     if (sId == null) { continue; }
                     int id = int.Parse(sId);
-                    EffectGroups.Add(id, new List<Sentence>());
-                    // 子节点探针
-                    if (reader.ReadToDescendant("Sentence") == false) { continue; }
-                    do
+                    var effects = ReadEffects(reader);
+                    if (effects != null)
                     {
-                        if (reader.Name == "Node" && reader.NodeType == XmlNodeType.EndElement)
-                        {
-                            break;
-                        }
-                        if (reader.Name == "Sentence")
-                        {
-                            Sentence sentence = new();
-                            sentence.ReadXml(reader);
-                            EffectGroups[id].Add(sentence);
-                        }
-                    } while (reader.Read());
+                        EffectGroups[id] = effects;
+                    }
                 }
             } while (reader.Read());
+        }
+        private List<Sentence>? ReadEffects(XmlReader reader)
+        {
+            List<Sentence> effects = new();
+            // 子节点探针
+            if (reader.ReadToDescendant("Sentence") == false) { return null; }
+            do
+            {
+                if (reader.Name == "Node" && reader.NodeType == XmlNodeType.EndElement)
+                {
+                    break;
+                }
+                if (reader.Name == "Sentence")
+                {
+                    Sentence sentence = new();
+                    sentence.ReadXml(reader);
+                    effects.Add(sentence);
+                }
+            } while (reader.Read());
+            return effects;
         }
         public void WriteXml(XmlWriter writer)
         {
