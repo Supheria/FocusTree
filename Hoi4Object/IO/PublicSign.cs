@@ -13,30 +13,15 @@ namespace Hoi4Object.IO
         #region ==== 符号 ====
 
         /// <summary>
-        /// 全句起始
+        /// 替换为
         /// </summary>
-        public static string _BEGIN_ = "{ ";
-        /// <summary>
-        /// 全句终止
-        /// </summary>
-        public static string _END_ = " }";
-        /// <summary>
-        /// 分割子句
-        /// </summary>
-        public static string _CLAUSE_SPLITTER_ = ", ";
-        /// <summary>
-        /// 子句内分割
-        /// </summary>
-        public static string _PHRASE_SPLITTER_ = " | ";
-        /// <summary>
-        /// 赋值
-        /// </summary>
-        public static string _ASSIGNMENT_ = ": ";
+        public static string ReplaceTo = "=>";
         /// <summary>
         /// 执行动作
         /// </summary>
         public enum Motions
         {
+            None = 0,
             /// <summary>
             /// 触发
             /// </summary>
@@ -75,6 +60,7 @@ namespace Hoi4Object.IO
         /// </summary>
         public enum Types
         {
+            None = 0,
             /// <summary>
             /// 事件
             /// </summary>
@@ -163,74 +149,6 @@ namespace Hoi4Object.IO
             /// 战争目标
             /// </summary>
             WarGoal
-        }
-
-        #endregion
-
-
-        #region ==== 赋值工具 ====
-
-        /// <summary>
-        /// 标签赋值
-        /// </summary>
-        /// <param name="tag">标签</param>
-        /// <param name="value">值</param>
-        /// <returns></returns>
-        public static string Assign(Tags tag, string? value)
-        {
-            return Enum.GetName(typeof(Tags), tag) +
-                _ASSIGNMENT_ +
-                (value != null ? value : "null");
-        }
-
-        #endregion
-
-        #region ==== 格式化模板 ====
-
-        /// <summary>
-        /// 格式化模板-通用
-        /// </summary>
-        /// <param name="Motion">执行动作，不可为空</param>
-        /// <param name="Type">执行对象类型，不可为空</param>
-        /// <param name="Object">执行对象</param>
-        /// <param name="TriggerState">触发动作的国家</param>
-        /// <param name="SufferState">动作受施的国家</param>
-        /// <param name="Duraion">持续时长</param>
-        /// <param name="Data">执行数据</param>
-        /// <returns>格式化语句</returns>
-        public static string Formatter(Motions Motion, Types Type, string? Object, string? Data = null, string? TriggerState = null, string? SufferState = null, string? Duraion = null)
-        {
-            return _BEGIN_ +
-                Assign(Tags.Motion, Enum.GetName(typeof(Motions), Motion)) + _CLAUSE_SPLITTER_ +
-                Assign(Tags.Type, Enum.GetName(typeof(Types), Type)) + _CLAUSE_SPLITTER_ +
-                Assign(Tags.Object, Object) + _CLAUSE_SPLITTER_ +
-                Assign(Tags.TriggerState, TriggerState) + _CLAUSE_SPLITTER_ +
-                Assign(Tags.SufferState, SufferState) + _CLAUSE_SPLITTER_ +
-                Assign(Tags.Duration, Duraion) + _CLAUSE_SPLITTER_ +
-                Assign(Tags.Data, Data) +
-                _END_;
-        }
-        /// <summary>
-        /// 格式化模板-有可用性的执行对象
-        /// </summary>
-        /// <param name="Motion">执行动作，不可为空</param>
-        /// <param name="AvailabilityObject">有可用性的执行对象，不可为空</param>
-        /// <param name="Data">执行数据</param>
-        /// <param name="TriggerState">触发动作的国家</param>
-        /// <param name="SufferState">动作受施的国家</param>
-        /// <param name="Duraion">持续时长</param>
-        /// <returns></returns>
-        public static string Formatter(Motions Motion, AvailabilityObjects AvailabilityObject, string? Data = null, string? TriggerState = null, string? SufferState = null, string? Duraion = null)
-        {
-            return Formatter(
-                Motion,
-                Types.Availability,
-                Enum.GetName(typeof(AvailabilityObjects), AvailabilityObject),
-                Data,
-                TriggerState,
-                SufferState,
-                Duraion
-                );
         }
 
         #endregion

@@ -34,7 +34,6 @@ namespace FocusTree.Data
         /// </summary>
         [XmlElement("Effect")]
         public string[] Effects = null;
-        string[] effects
         /// <summary>
         /// 国策描述
         /// </summary>

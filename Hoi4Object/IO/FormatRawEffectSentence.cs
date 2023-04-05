@@ -7,7 +7,7 @@ namespace Hoi4Object.IO
     /// <summary>
     /// 格式化原始效果语句
     /// </summary>
-    internal class FormatRawEffectSentence
+    public class FormatRawEffectSentence
     {
         #region ==== 基本变量 ====
 
@@ -150,7 +150,7 @@ namespace Hoi4Object.IO
         /// <param name="sentence">原始效果语句</param>
         /// <param name="formatted">格式化后的语句，默认值为 sentence</param>
         /// <returns>如果格式化成功则返回true，否则返回false并记入Unformattable</returns>
-        public static bool Formatter(string sentence, out string formatted)
+        public static bool Formatter(string sentence, out Sentence? formatted)
         {
             if (SinglePatternFormatter(sentence, out formatted))
             {
@@ -180,120 +180,159 @@ namespace Hoi4Object.IO
         /// <param name="str">原始语句</param>
         /// <param name="formatted">格式化后的语句，默认值为 str</param>
         /// <returns>返回格式化后的单语句，如果无匹配的格式化模式则返回null</returns>
-        private static bool SinglePatternFormatter(string str, out string formatted)
+        private static bool SinglePatternFormatter(string str, out Sentence? formatted)
         {
-            formatted = str;
+            formatted = null;
             if (GetMatch(str, Pattern_Single_TriggerEvent, out Match match))
             {
-                formatted = PublicSign.Formatter(
-                    PublicSign.Motions.Trigger, 
-                    PublicSign.Types.Event, 
-                    match.Groups[1].Value
+                formatted = new(
+                    PublicSign.Motions.Trigger,
+                    PublicSign.Types.Event,
+                    match.Groups[1].Value,
+                    null,
+                    null,
+                    null,
+                    null
                     );
             }
             else if (GetMatch(str, Pattern_Single_OtherTriggerEvent, out match))
             {
-                formatted = PublicSign.Formatter(
+                formatted = new(
                     PublicSign.Motions.Trigger, 
                     PublicSign.Types.Event,
                     match.Groups[2].Value, 
                     null,
-                    match.Groups[1].Value
+                    match.Groups[1].Value,
+                    null,
+                    null
                     );
             }
             else if (GetMatch(str, Pattern_Single_FixValue, out match))
             {
-                formatted = PublicSign.Formatter(
+                formatted = new(
                     PublicSign.Motions.Fixed,
                     PublicSign.Types.Variable, 
                     match.Groups[1].Value, 
-                    match.Groups[2].Value
+                    match.Groups[2].Value,
+                    null,
+                    null,
+                    null
                     );
             }
             else if (GetMatch(str, Pattern_Single_RemoveFixation, out match))
             {
-                formatted = PublicSign.Formatter(
+                formatted = new(
                     PublicSign.Motions.Unpin, 
                     PublicSign.Types.Variable,
-                    match.Groups[1].Value
+                    match.Groups[1].Value,
+                    null,
+                    null,
+                    null,
+                    null
                     );
             }
             else if (GetMatch(str, Pattern_Single_AddSub, out match))
             {
-                formatted = PublicSign.Formatter(
+                formatted = new(
                     match.Groups[2].Value == "+" ? PublicSign.Motions.UpperModify : PublicSign.Motions.LowerModify,
                     PublicSign.Types.Variable, 
                     match.Groups[1].Value, 
-                    match.Groups[3].Value
+                    match.Groups[3].Value,
+                    null,
+                    null,
+                    null
                     );
             }
             else if (GetMatch(str, Pattern_Single_GainRemove, out match))
             {
-                formatted = PublicSign.Formatter(
+                formatted = new(
                     match.Groups[1].Value == "移除" ? PublicSign.Motions.LowerModify : PublicSign.Motions.UpperModify,
                     PublicSign.Types.Variable, 
                     match.Groups[3].Value, 
-                    match.Groups[2].Value
+                    match.Groups[2].Value,
+                    null,
+                    null,
+                    null
                     );
             }
             else if (GetMatch(str, Pattern_Single_ModifyLabel, out match))
             {
-                formatted = PublicSign.Formatter(
+                formatted = new(
                     match.Groups[1].Value == "获得" ? PublicSign.Motions.UpperModify : PublicSign.Motions.LowerModify,
                     PublicSign.Types.Label, 
-                    match.Groups[2].Value
+                    match.Groups[2].Value,
+                    null,
+                    null,
+                    null,
+                    null
                     );
             }
             else if (GetMatch(str, Pattern_Single_DeclarationOfWar, out match))
             {
-                formatted = PublicSign.Formatter(
+                formatted = new(
                     match.Groups[1].Value == "可以" ? PublicSign.Motions.UpperModify : PublicSign.Motions.LowerModify,
-                    PublicSign.AvailabilityObjects.DeclarationOfWar
+                    PublicSign.AvailabilityObjects.DeclarationOfWar,
+                    null,
+                    null,
+                    null,
+                    null
                     );
             }
             else if (GetMatch(str, Pattern_Single_ResolutionAvailability, out match))
             {
-                formatted = PublicSign.Formatter(
+                formatted = new(
                     match.Groups[1].Value == "可以" ? PublicSign.Motions.UpperModify : PublicSign.Motions.LowerModify,
                     PublicSign.AvailabilityObjects.Resolution,
-                    match.Groups[2].Value
+                    match.Groups[2].Value,
+                    null,
+                    null,
+                    null
                     );
             }
             else if (GetMatch(str, Pattern_Single_AutoCoreAvailability, out match))
             {
-                formatted = PublicSign.Formatter(
+                formatted = new(
                     match.Groups[2].Value == "是" ? PublicSign.Motions.UpperModify : PublicSign.Motions.LowerModify,
-                    PublicSign.AvailabilityObjects.AutoGainCore
+                    PublicSign.AvailabilityObjects.AutoGainCore,
+                    null,
+                    null,
+                    null,
+                    null
                     );
             }
             else if (GetMatch(str, Pattern_Single_ModifyToOther, out match))
             {
-                formatted = PublicSign.Formatter(
+                formatted = new(
                     match.Groups[3].Value == "+" ? PublicSign.Motions.UpperModify : PublicSign.Motions.LowerModify,
                     PublicSign.Types.Variable,
                     match.Groups[2].Value,
                     match.Groups[4].Value,
                     null,
-                    match.Groups[1].Value
+                    match.Groups[1].Value,
+                    null
                     );
             }
             else if (GetMatch(str, Pattern_Single_GetWarGoal, out match))
             {
-                formatted = PublicSign.Formatter(
+                formatted = new(
                     PublicSign.Motions.UpperModify,
                     PublicSign.AvailabilityObjects.WarGoal,
                     match.Groups[2].Value,
                     null,
-                    match.Groups[1].Value
+                    match.Groups[1].Value,
+                    null
                     );
             }
             else if (GetMatch(str, Pattern_Single_ResearchBonus, out match))
             {
-                formatted = PublicSign.Formatter(
+                formatted = new(
                     PublicSign.Motions.UpperModify,
                     PublicSign.Types.ResearchBonus,
                     match.Groups[2].Value,
-                    match.Groups[1].Value
+                    match.Groups[1].Value,
+                    null,
+                    null,
+                    null
                     );
             }
             else
@@ -308,118 +347,136 @@ namespace Hoi4Object.IO
         /// <param name="str">原始语句</param>
         /// <param name="formatted">格式化后的语句，默认值为 str</param>
         /// <returns>格式化成功返回true，否则返回false。若子语句中有一个或以上的短句无法格式化，同样判定为格式化失败返回false</returns>
-        private static bool ComplexPatternFormatter(string str, out string formatted)
+        private static bool ComplexPatternFormatter(string str, out Sentence? formatted)
         {
-            formatted = string.Empty;
+            formatted = null;
             if (GetMatch(str, Pattern_Complex_ModifyLabel, out Match match) ||
                 GetMatch(str, Pattern_Complex_ModifyLabel2, out match))
             {
-                if (!EffectsFromSubSentence(match.Groups[3].Value, "，", out string effects))
+                if (!GetSubSentence(match.Groups[3].Value, "，", out List<Sentence> subSentences))
                 {
                     return false;
                 }
-                formatted = PublicSign.Formatter(
+                formatted = new(
                     match.Groups[1].Value == "获得" ? PublicSign.Motions.UpperModify : PublicSign.Motions.LowerModify,
                     PublicSign.Types.Label,
                     match.Groups[2].Value,
-                    effects
+                    null,
+                    null,
+                    null,
+                    subSentences
                     );
             }
             else if (GetMatch(str, Pattern_Complex_GainLabelWithinTime, out match))
             {
-                if (!EffectsFromSubSentence(match.Groups[3].Value, "，", out string effects))
+                if (!GetSubSentence(match.Groups[3].Value, "，", out List<Sentence> subSentences))
                 {
                     return false;
                 }
-                formatted = PublicSign.Formatter(
+                formatted = new(
                     PublicSign.Motions.UpperModify,
                     PublicSign.Types.Label,
                     match.Groups[2].Value,
-                    effects,
+                    match.Groups[1].Value,
                     null,
                     null,
-                    match.Groups[1].Value
+                    subSentences
                     );
             }
             else if (GetMatch(str, Pattern_Complex_SomeoneGainLabel, out match))
             {
-                if (!EffectsFromSubSentence(match.Groups[4].Value, "，", out string effects))
+                if (!GetSubSentence(match.Groups[4].Value, "，", out List<Sentence> subSentences))
                 {
                     return false;
                 }
-                formatted = PublicSign.Formatter(
+                formatted = new(
                     match.Groups[2].Value == "获得" ? PublicSign.Motions.UpperModify : PublicSign.Motions.LowerModify,
                     PublicSign.Types.Label,
                     match.Groups[3].Value,
-                    effects,
-                    match.Groups[1].Value
+                    null,
+                    match.Groups[1].Value,
+                    null,
+                    subSentences
                     );
             }
             else if (GetMatch(str, Pattern_Complex_EveryoneModifyLabel, out match))
             {
-                if (!EffectsFromSubSentence(match.Groups[4].Value, "，", out string effects))
+                if (!GetSubSentence(match.Groups[4].Value, "，", out List<Sentence> subSentences))
                 {
                     return false;
                 }
-                formatted = PublicSign.Formatter(
+                formatted = new(
                     match.Groups[2].Value == "获得" ? PublicSign.Motions.UpperModify : PublicSign.Motions.LowerModify,
                     PublicSign.Types.Label,
                     match.Groups[2].Value,
-                    effects,
-                    match.Groups[1].Value
+                    null,
+                    match.Groups[1].Value,
+                    null,
+                    subSentences
                     );
             }
             else if (GetMatch(str, Pattern_Complex_ModifyGrade, out match))
             {
-                if (!EffectsFromSubSentence(match.Groups[3].Value, "，", out string effects))
+                if (!GetSubSentence(match.Groups[3].Value, " ", out List<Sentence> subSentences))
                 {
                     return false;
                 }
-                formatted = PublicSign.Formatter(
+                formatted = new(
                     PublicSign.Motions.Modify,
                     PublicSign.Types.Grade,
-                    match.Groups[1].Value + PublicSign._PHRASE_SPLITTER_ + match.Groups[2].Value,
-                    effects
+                    match.Groups[1].Value + PublicSign.ReplaceTo + match.Groups[2].Value,
+                    null,
+                    null,
+                    null,
+                    subSentences
                     );
             }
             else if (GetMatch(str, Pattern_Complex_Append, out match))
             {
-                if (!EffectsFromSubSentence(match.Groups[2].Value, "，", out string effects))
+                if (!GetSubSentence(match.Groups[2].Value, "，", out List<Sentence> subSentences))
                 {
                     return false;
                 }
-                formatted = PublicSign.Formatter(
+                formatted = new(
                     PublicSign.Motions.Append,
                     PublicSign.Types.Label,
                     match.Groups[1].Value,
-                    effects
+                    null,
+                    null,
+                    null,
+                    subSentences
                     );
             }
             else if (GetMatch(str, Pattern_Complex_SomeoneTriggerRequestEvent, out match))
             {
-                if (!EffectsFromSubSentence(match.Groups[3].Value, null, out string effects))
+                if (!GetSubSentence(match.Groups[3].Value, null, out List<Sentence> subSentences))
                 {
                     return false;
                 }
-                formatted = PublicSign.Formatter(
+                formatted = new(
                     PublicSign.Motions.Trigger,
                     PublicSign.Types.RequestEvent,
                     match.Groups[2].Value,
-                    effects,
-                    match.Groups[1].Value
+                    null,
+                    match.Groups[1].Value,
+                    null,
+                    subSentences
                     );
             }
             else if (GetMatch(str, Pattern_Complex_RegionRestrict, out match))
             {
-                if (!EffectsFromSubSentence(match.Groups[2].Value, null, out string effects))
+                if (!GetSubSentence(match.Groups[2].Value, "，", out List<Sentence> subSentences))
                 {
                     return false;
                 }
-                formatted = PublicSign.Formatter(
+                formatted = new(
                     PublicSign.Motions.Restrict,
                     PublicSign.Types.Region,
                     match.Groups[1].Value,
-                    effects
+                    null,
+                    null,
+                    null,
+                    subSentences
                     );
             }
             else
@@ -433,11 +490,11 @@ namespace Hoi4Object.IO
         /// </summary>
         /// <param name="subSentence">子句</param>
         /// <param name="splitter">子句分割符号</param>
-        /// <param name="effects">提取的所有效果</param>
+        /// <param name="subSentences">提取的所有效果</param>
         /// <returns>全部短句格式化成功返回true，有一个或以上失败则返回false</returns>
-        private static bool EffectsFromSubSentence(string subSentence, string? splitter, out string effects)
+        private static bool GetSubSentence(string subSentence, string? splitter, out List<Sentence> subSentences)
         {
-            effects = "";
+            subSentences = new();
             var clauses = splitter == null ? new string[] { subSentence } : subSentence.Split(splitter);
             if (clauses == null || clauses.Length == 0)
             {
@@ -445,16 +502,15 @@ namespace Hoi4Object.IO
             }
             for (int i = 0; i < clauses.Length; i++)
             {
-                if (!SinglePatternFormatter(clauses[i], out string formatted) &&
+                if (!SinglePatternFormatter(clauses[i], out Sentence? formatted) &&
                     !ComplexPatternFormatter(clauses[i], out formatted))
                 {
                     return false;
                 }
-                if (i > 0)
+                if (formatted != null)
                 {
-                    effects += PublicSign._PHRASE_SPLITTER_;
+                    subSentences.Add(formatted);
                 }
-                effects += formatted;
             }
             return true;
         }

@@ -8,19 +8,18 @@ while (true)
     var sentences = GetSentences();
     foreach (string sentence in sentences)
     {
-        var result = FormatRawEffectSentence.Formatter(sentence, out string formatted);
-        if (result == true)
+        if (FormatRawEffectSentence.Formatter(sentence, out Sentence? formatted))
         {
-            Console.WriteLine($"{formatted} <= {sentence}");
+            XmlIO.SaveSentence("test.txt", formatted);
         }
     }
-    Console.WriteLine();
     Console.WriteLine("----- 无法格式化 -----");
     foreach (string str in FormatRawEffectSentence.Unformattable)
     {
         Console.WriteLine(str);
     }
     Console.ReadKey();
+    var a = XmlIO.LoadGraph("test.txt");
 }
 
 string[] GetSentences()
