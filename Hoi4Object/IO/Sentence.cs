@@ -11,7 +11,7 @@ using static Hoi4Object.IO.PublicSign;
 
 namespace Hoi4Object.IO
 {
-    public class Sentence : IXmlSerializable
+    public class Sentence
     {
         #region ==== 基本变量 ====
 
@@ -19,36 +19,36 @@ namespace Hoi4Object.IO
         /// 执行动作
         /// </summary>
         [XmlAttribute("Motion")]
-        string Motion;
+        string Motion = Motions.None.ToString();
         /// <summary>
         /// 执行对象类型
         /// </summary>
         [XmlAttribute("Type")]
-        string Type;
+        string Type = Types.None.ToString();
         /// <summary>
         /// 执行对象
         /// </summary>
         [XmlAttribute("Object")]
-        string Object;
+        string Object = "null";
         /// <summary>
         /// 附带数据
         /// </summary>
         [XmlAttribute("Data")]
-        string Data;
+        string Data = "null";
         /// <summary>
         /// 触发动作的国家
         /// </summary>
         [XmlAttribute("TriggerState")]
-        string TriggerState;
+        string TriggerState = "null";
         /// <summary>
         /// 动作受施的国家
         /// </summary>
         [XmlAttribute("SufferState")]
-        string SufferState;
+        string SufferState = "null";
         /// <summary>
         /// 子句
         /// </summary>
-        List<Sentence> SubSentences;
+        List<Sentence> SubSentences = new();
 
         #endregion
 
@@ -112,85 +112,67 @@ namespace Hoi4Object.IO
         /// <summary>
         /// 用于序列化
         /// </summary>
-        private Sentence()
+        public Sentence()
         {
         }
 
         #endregion
 
-        // -- 序列化工具 --
-        //static XmlSerializer MainStructure_Serial = new(typeof(SentenceStructure));
-        static XmlSerializer Sentence_Serial = new(typeof(Sentence));
-        static XmlSerializerNamespaces NullXmlNameSpace = new(new XmlQualifiedName[] { new XmlQualifiedName("", "") });
-        // -- 序列化方法 --
-        /// <summary>
-        /// 序列化预留方法，默认返回 null
-        /// </summary>
-        /// <returns></returns>
-        public XmlSchema GetSchema()
-        {
-            return null;
-        }
+        #region ==== 序列化方法 ====
+
         public void ReadXml(XmlReader reader)
         {
             SubSentences = new();
-            do 
+
+            var motion = reader.GetAttribute("Motion");
+            var type = reader.GetAttribute("Type");
+            var @object = reader.GetAttribute("Object");
+            var data = reader.GetAttribute("Data");
+            var triggerState = reader.GetAttribute("TriggerState");
+            var sufferState = reader.GetAttribute("SufferState");
+            Motion = motion == null ? Motions.None.ToString() : motion;
+            Type = type == null ? Types.None.ToString() : type;
+            Object = @object == null ? "null" : @object;
+            Data = data == null ? "null" : data;
+            TriggerState = triggerState == null ? "null" : triggerState;
+            SufferState = sufferState == null ? "null" : sufferState;
+
+            if (reader.ReadToDescendant("Sentence") == false) { return; }
+            // 进入子句后直到遇到结束标签结束
+            do
             {
-                if (reader.NodeType != XmlNodeType.Element) { continue; }
-                if (reader.NodeType == XmlNodeType.EndElement)
-                {
-                    break;
-                }
                 if (reader.Name == "Sentence")
                 {
-                    ReadSentence(reader, this);
-                }
-                if (reader.Name == "SubSentence")
-                {
-                    SubSentences.Add(ReadSentence(reader));
+                    if (reader.NodeType == XmlNodeType.EndElement) { return; }
+                    Sentence sentence = new();
+                    sentence.ReadXml(reader);
+                    SubSentences.Add(sentence);
                 }
             } while (reader.Read());
-
-        }
-        private static Sentence ReadSentence(XmlReader reader, Sentence? sentence = null)
-        {
-            sentence = sentence == null ? new() : sentence;
-            var motion = reader.GetAttribute("Motion");
-            sentence.Motion = motion == null ? Motions.None.ToString() : motion;
-            var type = reader.GetAttribute("Type");
-            sentence.Type = type == null ? Types.None.ToString() : type;
-            var @object = reader.GetAttribute("Object");
-            sentence.Object = @object == null ? "null" : @object;
-            var data = reader.GetAttribute("Data");
-            sentence.Data = data == null ? "null" : data;
-            var triggerState = reader.GetAttribute("TriggerState");
-            sentence.TriggerState = triggerState == null ? "null" : triggerState;
-            var sufferState = reader.GetAttribute("SufferState");
-            sentence.SufferState = sufferState == null ? "null" : sufferState;
-            return sentence;
         }
         public void WriteXml(XmlWriter writer)
         {
-            //==== 序列化基本结构 ====//
-            WriteSentence(writer, this);
+            //==== 序列化主句 ====//
+            writer.WriteStartElement("Sentence");
+            writer.WriteAttributeString("Motion", Motion);
+            writer.WriteAttributeString("Type", Type);
+            writer.WriteAttributeString("Object", Object);
+            writer.WriteAttributeString("Data", Data);
+            writer.WriteAttributeString("TriggerState", TriggerState);
+            writer.WriteAttributeString("SufferState", SufferState);
 
             //==== 序列化子句 ====//
-
-            foreach (var subsentence in SubSentences)
+            if (SubSentences.Count > 0)
             {
-                writer.WriteStartElement("SubSentence");
-                WriteSentence(writer, subsentence);
-                writer.WriteEndElement();
+                foreach (var subsentence in SubSentences)
+                {
+                    subsentence.WriteXml(writer);
+                }
             }
+
+            writer.WriteEndElement();
         }
-        private static void WriteSentence(XmlWriter writer, Sentence sentence)
-        {
-            writer.WriteAttributeString("Motion", sentence.Motion);
-            writer.WriteAttributeString("Type", sentence.Type);
-            writer.WriteAttributeString("Object", sentence.Object);
-            writer.WriteAttributeString("Data", sentence.Data);
-            writer.WriteAttributeString("TriggerState", sentence.TriggerState);
-            writer.WriteAttributeString("SufferState", sentence.SufferState);
-        }
+
+        #endregion
     }
 }

@@ -10,35 +10,20 @@ namespace Hoi4Object.IO
 {
     internal class XmlIO
     {
-        public static void SaveSentence(string path, Sentence sentence)
+        public static void SaveObject<T>(string path, IXmlSerializable obj)
         {
-            try
-            {
-                var file = File.Create(path);
-                var writer = new XmlSerializer(typeof(Sentence));
-                writer.Serialize(file, sentence);
-                file.Close();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[2303051316]无法保存文件。\n{ex.Message}");
-            }
+            var file = File.Create(path);
+            var writer = new XmlSerializer(typeof(T));
+            writer.Serialize(file, obj);
+            file.Close();
         }
-        public static Sentence? LoadGraph(string path)
+        public static T? LoadObject<T>(string path)
         {
-            try
-            {
-                var file = File.OpenRead(path);
-                var reader = new XmlSerializer(typeof(Sentence));
-                var graph = reader.Deserialize(file) as Sentence;
-                file.Close();
-                return graph;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[2303051302]不受支持的文件。\n{ex.Message}");
-                return null;
-            }
+            var file = File.OpenRead(path);
+            var reader = new XmlSerializer(typeof(T));
+            var obj = (T?)reader.Deserialize(file);
+            file.Close();
+            return obj;
         }
     }
 }

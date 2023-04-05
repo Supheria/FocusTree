@@ -408,7 +408,7 @@ namespace Hoi4Object.IO
                 formatted = new(
                     match.Groups[2].Value == "获得" ? PublicSign.Motions.UpperModify : PublicSign.Motions.LowerModify,
                     PublicSign.Types.Label,
-                    match.Groups[2].Value,
+                    match.Groups[3].Value,
                     null,
                     match.Groups[1].Value,
                     null,

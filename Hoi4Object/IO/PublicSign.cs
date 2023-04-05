@@ -15,7 +15,7 @@ namespace Hoi4Object.IO
         /// <summary>
         /// 替换为
         /// </summary>
-        public static string ReplaceTo = "=>";
+        public static string ReplaceTo = ":";
         /// <summary>
         /// 执行动作
         /// </summary>
