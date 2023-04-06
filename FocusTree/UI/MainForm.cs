@@ -1,4 +1,5 @@
-﻿using FocusTree.Data;
+﻿#define DEBUG
+using FocusTree.Data;
 using FocusTree.IO;
 using FocusTree.Tool.IO;
 using FocusTree.Tool.UI;
@@ -24,11 +25,14 @@ namespace FocusTree.UI
                 item.Click += MainForm_Menu_window_display_toolDialog_Click;
                 this.MainForm_Menu_window.DropDownItems.Add(item);
             }
-            //Display.LoadGraph("D:\\Non_E\\documents\\GitHub\\FocusTree\\FocusTree\\国策\\隐居村落.xml");
+#if DEBUG
+            Display.LoadGraph("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\国策\\隐居村落.xml");
+            WindowState = FormWindowState.Minimized;
 
             //var a = new InfoDialog(Display);
             //Display.SelectedNode = 1;
             //a.Show(new(Screen.PrimaryScreen.Bounds.Width / 3, Screen.PrimaryScreen.Bounds.Height / 3));
+#endif
 
 
         }

@@ -241,7 +241,7 @@
       <Name>走马以粪</Name>
       <Star>false</Star>
       <Duration>60</Duration>
-      <Effect>向鸽派发展一级，以鸽派5取代鸽派4，效果变化（生活消费品：-2% 战争支持度：-5% 改善关系持续花费：-10% 地区最大工业值：+10% 贸易协定关系修正：+20.00% 正当化战争目标所需时间：+10% 敌国对我国正当化战争目标所需时间：+20%，人力：+1000）</Effect>
+      <Effect>向鸽派发展一级，以鸽派5取代鸽派4，效果变化（生活消费品：-2% 战争支持度：-5% 改善关系持续花费：-10% 地区最大工业值：+10% 贸易协定关系修正：+20.00% 正当化战争目标所需时间：+10% 敌国对我国正当化战争目标所需时间：+20% 人力：+1000）</Effect>
       <Descript>天下有道，却走马以粪；天下无道，戎马生于郊</Descript>
       <Ps. />
     </Node>
@@ -299,8 +299,8 @@
       <Name>兵者不详</Name>
       <Star>true</Star>
       <Duration>30</Duration>
-      <Effect>获得不详之器，其效果为（部队组织度：+20%，部队组织度恢复：-5% </Effect>
-      <Effect>向鹰派发展一级，以鸽派2取代鸽派3，效果变化 生活消费品：+2% 战争支持度：+5% 改善关系持续花费：+10% 地区最大工业值：-10% 贸易协定修正：-20% 正当化战争目标所需时间：-10% 敌国对我国正当化目标所需时间：-20% 边界开放法则切换花费：+10% 灵力使用法案切换花费：+10%</Effect>
+      <Effect>获得不详之器，其效果为（部队组织度：+20%，部队组织度恢复：-5%） </Effect>
+      <Effect>向鹰派发展一级，以鸽派2取代鸽派3，效果变化（生活消费品：+2% 战争支持度：+5% 改善关系持续花费：+10% 地区最大工业值：-10% 贸易协定修正：-20% 正当化战争目标所需时间：-10% 敌国对我国正当化目标所需时间：-20% 边界开放法则切换花费：+10% 灵力使用法案切换花费：+10%）</Effect>
       <Descript>夫唯兵者，不详之器，物或恶之……</Descript>
       <Ps.>（注：要求神灵庙意识形态为孤立）</Ps.>
     </Node>
@@ -328,7 +328,7 @@
       <Name>谷神不死</Name>
       <Star>false</Star>
       <Duration>30</Duration>
-      <Effect>玄武川之泉(增加5个建筑位，增加5个军用工厂）</Effect>
+      <Effect>玄武川之泉（增加5个建筑位，增加5个军用工厂）</Effect>
       <Descript>谷神不死，是谓玄牝。玄牝之们，是谓天地根。绵绵若存，用之不勤</Descript>
       <Ps. />
     </Node>
@@ -336,8 +336,9 @@
       <Name>坐进此道</Name>
       <Star>false</Star>
       <Duration>30</Duration>
-      <Effect>获得允许创建阵营，创建阵营：道盟。</Effect>
-      <Effect>神灵庙加入阵营（神灵庙）获得强烈的战略结盟（对隐居村落的关系：+100）</Effect>
+      <Effect>获得允许创建阵营，创建阵营：道盟</Effect>
+      <Effect>神灵庙加入阵营</Effect>
+      <Effect>（神灵庙）获得强烈的战略结盟（对隐居村落的关系：+100）</Effect>
       <Effect>（隐居村落）获得强烈的战略结盟（对神灵庙的关系：+100）</Effect>
       <Effect>获得道盟盟主，其效果为（投降界限：-10%，适役人口：+3%，核心领土攻击：+10%，核心领土防御：+10%）</Effect>
       <Descript>虽有拱壁以先驷马，不如坐进此道</Descript>
@@ -588,7 +589,7 @@
       <Duration>60</Duration>
       <Effect>增加5个地图外民用工厂</Effect>
       <Effect>无为而治追加效果：地区最大工业值+20%</Effect>
-      <Effect>（守矢神社）触发事件“隐居村落希望改变我们的理念”。如果他们同意，则无为而治追加效果：地区最大工业值+20%</Effect>
+      <Effect>（守矢神社）触发事件“隐居村落希望改变我们的理念”。如果他们同意，则无为而治追加效果：地区最大工业值：+20%</Effect>
       <Descript>道冲，而用之或不盈</Descript>
       <Ps. />
     </Node>
@@ -613,7 +614,7 @@
       <Name>相托天下</Name>
       <Star>false</Star>
       <Duration>60</Duration>
-      <Effect>获得国家，其效果为（每日获得的政治点数：+0.1，部队组织度：+10%，每月人口：+30%，适役人口修正：10%，生活消费品工厂：1%，稳定度：+15%，训练时间：-5%，特工位:+1）</Effect>
+      <Effect>获得国家，其效果为（每日获得的政治点数：+0.1，部队组织度：+10%，每月人口：+30%，适役人口修正：10%，生活消费品工厂：1%，稳定度：+15%，训练时间：-5%，特工位：+1）</Effect>
       <Descript>爱以身为天下，若可托天下</Descript>
       <Ps.>（注：如果道冲不盈守矢神社同意，（守矢神社）以国家取代宗教组织 效果变化：每日获得的政治点数：+0.1 部队训练时间：+20% 部队组织度：-15% 生活消费品工厂：+6% 稳定度：-20% 战争支持度：-5% 建造速度：+15% 科研速度：+25% 工厂产出：+15% 训练时间：-5%，特工位：+1））</Ps.>
     </Node>
@@ -685,7 +686,7 @@
       <Name>大制不割</Name>
       <Star>false</Star>
       <Duration>60</Duration>
-      <Effect>（天狗帝国）（山姥部落）（妖兽仙界）触发事件”有偿帮助“。如果他们同意，则获得保护自己的臣民，其效果为（陆上要塞：建造速度：+25%）</Effect>
+      <Effect>（天狗帝国）（山姥部落）（妖兽仙界）触发事件“有偿帮助”。如果他们同意，则获得保护自己的臣民，其效果为（陆上要塞：建造速度：+25%）</Effect>
       <Effect>获得为期365天的“借花献佛”，其效果为（生活消费品工厂：10%）</Effect>
       <Descript>圣人用之，则为官长。故大制不割</Descript>
       <Ps. />
@@ -745,7 +746,8 @@
       <Name>废贤</Name>
       <Star>false</Star>
       <Duration>30</Duration>
-      <Effect>战争支持度：-10%，稳定度：+20%</Effect>
+      <Effect>战争支持度：-10%</Effect>
+      <Effect>稳定度：+20%</Effect>
       <Descript>不尚贤，使民不争</Descript>
       <Ps. />
     </Node>
@@ -753,7 +755,8 @@
       <Name>均贱</Name>
       <Star>false</Star>
       <Duration>30</Duration>
-      <Effect>将平均灵力值固定为50%，稳定度：+30%</Effect>
+      <Effect>将平均灵力值固定为50%</Effect>
+      <Effect>稳定度：+30%</Effect>
       <Descript>不贵难得之货，使民不为盗</Descript>
       <Ps. />
     </Node>
@@ -761,7 +764,8 @@
       <Name>隐欲</Name>
       <Star>false</Star>
       <Duration>30</Duration>
-      <Effect>将世界观固定为唯心世界观，稳定度：+50%</Effect>
+      <Effect>将世界观固定为唯心世界观</Effect>
+      <Effect>稳定度：+50%</Effect>
       <Descript>不见其欲，使民心不乱</Descript>
       <Ps. />
     </Node>
@@ -769,7 +773,8 @@
       <Name>不仁</Name>
       <Star>false</Star>
       <Duration>30</Duration>
-      <Effect>稳定度：-50%，获得天地不仁，其效果为（科研速度：+10%）</Effect>
+      <Effect>稳定度：-50%</Effect>
+      <Effect>获得天地不仁，其效果为（科研速度：+10%）</Effect>
       <Descript>天地不仁，以万物为刍狗；圣人不仁，以天地为刍狗</Descript>
       <Ps. />
     </Node>
@@ -802,7 +807,8 @@
       <Name>无不为</Name>
       <Star>false</Star>
       <Duration>30</Duration>
-      <Effect>稳定度：-50%，获得1个科研槽</Effect>
+      <Effect>稳定度：-50%</Effect>
+      <Effect>获得1个科研槽</Effect>
       <Descript>道常无为，而无不为</Descript>
       <Ps. />
     </Node>
@@ -1031,8 +1037,8 @@
       <Name>奉余损足</Name>
       <Star>true</Star>
       <Duration>100</Duration>
-      <Effect>每个国家获得：敌对关系（与隐居村落的关系-500）</Effect>
-      <Effect>获得幻想乡建立者，其效果为（每日获得的政治点数：+0.5，每周人力：+3，生活消费品工厂：-10%，稳定度：+10%，地区最大工业值：+30%，建造速度：+25%，工厂产出：25%，制作战争目标的紧张度限制：+15%，特工位：+2，每日人类影响力额外变化：+0.02，x可以加入阵营灵力系科研速度：+35%，混合类研究速度：+10%，秘密武器类研究速度：-60%）</Effect>
+      <Effect>每个国家获得：敌对关系（与隐居村落的关系：-500）</Effect>
+      <Effect>获得幻想乡建立者，其效果为（每日获得的政治点数：+0.5，每周人力：+3，生活消费品工厂：-10%，稳定度：+10%，地区最大工业值：+30%，建造速度：+25%，工厂产出：25%，制作战争目标的紧张度限制：+15%，特工位：+2，每日人类影响力额外变化：+0.02，x可以加入阵营，灵力系科研速度：+35%，混合类研究速度：+10%，秘密武器类研究速度：-60%）</Effect>
       <Descript>人之道则不然，损不足以奉有余</Descript>
       <Ps. />
     </Node>
@@ -1040,7 +1046,7 @@
       <Name>庄子三剑</Name>
       <Star>true</Star>
       <Duration>100</Duration>
-      <Effect>触发事件”庄子三剑”。</Effect>
+      <Effect>触发事件“庄子三剑”。</Effect>
       <Descript>南华老仙，晌午授道</Descript>
       <Ps.>（注：需要虚而猗移，知己不知其一即可）</Ps.>
     </Node>
@@ -1406,665 +1412,755 @@
   </NodeRelations>
   <NodeEffects>
     <Effects ID="1">
-      <Sentence Motion="Trigger" Type="Event" Object="骑着青牛的老者？" Data="null" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Trigger" Type="Event" Value="骑着青牛的老者？" Trigger="null" />
     </Effects>
     <Effects ID="2">
-      <Sentence Motion="UpperModify" Type="Variable" Object="政治点数" Data="200" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Add" Type="Variable" Value="政治点数|200" Trigger="null" />
     </Effects>
     <Effects ID="3">
-      <Sentence Motion="LowerModify" Type="Variable" Object="战争支持度" Data="10%" TriggerState="null" SufferState="null" />
-      <Sentence Motion="UpperModify" Type="Variable" Object="稳定度" Data="20%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Sub" Type="Variable" Value="战争支持度|10%" Trigger="null" />
+      <Sentence Motion="Add" Type="Variable" Value="稳定度|20%" Trigger="null" />
     </Effects>
     <Effects ID="4">
-      <Sentence Motion="Fixed" Type="Variable" Object="平均灵力值" Data="50%" TriggerState="null" SufferState="null" />
-      <Sentence Motion="UpperModify" Type="Variable" Object="稳定度" Data="30%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Fixed" Type="Variable" Value="平均灵力值|50%" Trigger="null" />
+      <Sentence Motion="Add" Type="Variable" Value="稳定度|30%" Trigger="null" />
     </Effects>
     <Effects ID="5">
-      <Sentence Motion="Fixed" Type="Variable" Object="世界观" Data="唯心世界观" TriggerState="null" SufferState="null" />
-      <Sentence Motion="UpperModify" Type="Variable" Object="稳定度" Data="50%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Fixed" Type="Variable" Value="世界观|唯心世界观" Trigger="null" />
+      <Sentence Motion="Add" Type="Variable" Value="稳定度|50%" Trigger="null" />
     </Effects>
     <Effects ID="6">
-      <Sentence Motion="LowerModify" Type="Variable" Object="稳定度" Data="50%" TriggerState="null" SufferState="null" />
-      <Sentence Motion="UpperModify" Type="Label" Object="天地不仁" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="科研速度" Data="10%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Sub" Type="Variable" Value="稳定度|50%" Trigger="null" />
+      <Sentence Motion="Gain" Type="Label" Value="天地不仁" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="科研速度|10%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="7">
-      <Sentence Motion="UpperModify" Type="Variable" Object="人口" Data="1000" TriggerState="null" SufferState="null" />
-      <Sentence Motion="Modify" Type="Grade" Object="保守社会5:保守社会4" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="稳定度" Data="6%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="LowerModify" Type="Variable" Object="科研速度" Data="3%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="加密" Data="0" TriggerState="null" SufferState="null" />
-        <Sentence Motion="LowerModify" Type="Variable" Object="可出口资源" Data="5%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="意识形态变化抵制力度" Data="10%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Add" Type="Variable" Value="人口|1000" Trigger="null" />
+      <Sentence Motion="Replace" Type="Grade" Value="保守社会4|保守社会5" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="稳定度|6%" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="科研速度|3%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="加密|0.5" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="可出口资源|5%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="意识形态变化抵制力度|10%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="8">
-      <Sentence Motion="UpperModify" Type="Label" Object="修身养性" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="LowerModify" Type="Variable" Object="生活消费品工厂" Data="6%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Gain" Type="Label" Value="修身养性" Trigger="null">
+        <Sentence Motion="Sub" Type="Variable" Value="生活消费品工厂|6%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="9">
-      <Sentence Motion="Append" Type="Label" Object="圣人" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="LowerModify" Type="Variable" Object="每日唯心度变化" Data="0" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="圣人" Trigger="null">
+        <Sentence Motion="Sub" Type="Variable" Value="每日唯心度变化|0.04%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="10">
-      <Sentence Motion="LowerModify" Type="Variable" Object="稳定度" Data="50%" TriggerState="null" SufferState="null" />
-      <Sentence Motion="UpperModify" Type="Variable" Object="科研槽" Data="1" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Sub" Type="Variable" Value="稳定度|50%" Trigger="null" />
+      <Sentence Motion="Add" Type="Variable" Value="科研槽|1" Trigger="null" />
     </Effects>
     <Effects ID="11">
-      <Sentence Motion="UpperModify" Type="Label" Object="无为而治" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="每周人口" Data="1" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="每月人口" Data="15%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Gain" Type="Label" Value="无为而治" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="每周人口|1" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="每月人口|15%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="12">
-      <Sentence Motion="UpperModify" Type="Label" Object="万民自化" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="每周稳定度" Data="0" TriggerState="null" SufferState="null" />
-        <Sentence Motion="LowerModify" Type="Variable" Object="每周战争支持度" Data="0" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="战争支持度" Data="100%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Gain" Type="Label" Value="万民自化" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="每周稳定度|0.1%" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="每周战争支持度|0.1%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="战争支持度|100%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="13">
-      <Sentence Motion="Modify" Type="Grade" Object="保守社会5:保守社会4" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="稳定度" Data="6%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="LowerModify" Type="Variable" Object="科研速度" Data="3%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="加密" Data="0" TriggerState="null" SufferState="null" />
-        <Sentence Motion="LowerModify" Type="Variable" Object="可出口资源" Data="5%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="意识形态变化抵制力度" Data="10%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Replace" Type="Grade" Value="保守社会4|保守社会5" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="稳定度|6%" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="科研速度|3%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="加密|0.5" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="可出口资源|5%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="意识形态变化抵制力度|10%" Trigger="null" />
       </Sentence>
-      <Sentence Motion="Modify" Type="Grade" Object="鸽派4:鸽派3" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="LowerModify" Type="Variable" Object="生活消费品" Data="2%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="LowerModify" Type="Variable" Object="战争支持度" Data="5%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="LowerModify" Type="Variable" Object="改善关系持续花费" Data="10%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="地区最大工业值" Data="10%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="贸易协定关系修正" Data="20" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="正当化战争目标所需时间" Data="10%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="敌国对我国正当化战争目标所需时间" Data="20%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Replace" Type="Grade" Value="鸽派3|鸽派4" Trigger="null">
+        <Sentence Motion="Sub" Type="Variable" Value="生活消费品|2%" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="战争支持度|5%" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="改善关系持续花费|10%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="地区最大工业值|10%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="贸易协定关系修正|20.00%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="正当化战争目标所需时间|10%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="敌国对我国正当化战争目标所需时间|20%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="14">
-      <Sentence Motion="UpperModify" Type="Label" Object="不争之争" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="LowerModify" Type="Availability" Object="DeclarationOfWar" Data="null" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="敌国正当化战争目标所需时间" Data="100%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="政治点数" Data="15%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Gain" Type="Label" Value="不争之争" Trigger="null">
+        <Sentence Motion="Remove" Type="AbleToDeclareWar" Value="null" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="敌国正当化战争目标所需时间|100%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="政治点数|15%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="15">
-      <Sentence Motion="UpperModify" Type="Availability" Object="Resolution" Data="发动周边国家的内战使其变为附庸" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Trigger" Type="Resolution" Value="" Trigger="null" />
     </Effects>
     <Effects ID="16">
-      <Sentence Motion="UpperModify" Type="Label" Object="为天下心" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="生活消费品" Data="5%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="LowerModify" Type="Variable" Object="派遣志愿军的紧张度限制" Data="100%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="LowerModify" Type="Variable" Object="派遣志愿军需要的部队数量" Data="100%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="志愿军部队数上限" Data="10" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Gain" Type="Label" Value="为天下心" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="生活消费品|5%" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="派遣志愿军的紧张度限制|100%" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="派遣志愿军需要的部队数量|100%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="志愿军部队数上限|10" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="18">
-      <Sentence Motion="Append" Type="Label" Object="修身养性" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="LowerModify" Type="Variable" Object="科研速度" Data="3%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="LowerModify" Type="Variable" Object="生活消费品" Data="6%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="修身养性" Trigger="null">
+        <Sentence Motion="Sub" Type="Variable" Value="科研速度|3%" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="生活消费品|6%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="19">
-      <Sentence Motion="Append" Type="Label" Object="天地不仁" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="LowerModify" Type="Variable" Object="稳定度" Data="5%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="适役人口" Data="2%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="天地不仁" Trigger="null">
+        <Sentence Motion="Sub" Type="Variable" Value="稳定度|5%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="适役人口|2%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="20">
-      <Sentence Motion="Append" Type="Label" Object="不争之争" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="部队攻击" Data="10%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="解密" Data="10" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="不争之争" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="部队攻击|10%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="解密|10" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="21">
-      <Sentence Motion="Append" Type="Label" Object="不争之争" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="政治点数" Data="15%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="科研速度" Data="10%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="不争之争" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="政治点数|15%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="科研速度|10%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="22">
-      <Sentence Motion="Append" Type="Label" Object="修身养性" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="投降界限" Data="10%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="部队组织度恢复" Data="10%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="修身养性" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="投降界限|10%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="部队组织度恢复|10%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="23">
-      <Sentence Motion="Append" Type="Label" Object="修身养性" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="LowerModify" Type="Variable" Object="科研速度" Data="2%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="LowerModify" Type="Variable" Object="生活消费品工厂" Data="6%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="适役人口" Data="2%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="修身养性" Trigger="null">
+        <Sentence Motion="Sub" Type="Variable" Value="科研速度|2%" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="生活消费品工厂|6%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="适役人口|2%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="24">
-      <Sentence Motion="Append" Type="Label" Object="不争之争" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="LowerModify" Type="Variable" Object="下降附庸等级所需时间" Data="50%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="不争之争" Trigger="null">
+        <Sentence Motion="Sub" Type="Variable" Value="下降附庸等级所需时间|50%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="25">
-      <Sentence Motion="UpperModify" Type="Label" Object="道德观不同" Data="null" TriggerState="每个国家" SufferState="null">
-        <Sentence Motion="LowerModify" Type="Variable" Object="对隐世村落关系" Data="20" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Gain" Type="Label" Value="道德观不同" Trigger="每个国家">
+        <Sentence Motion="Sub" Type="Variable" Value="对隐世村落关系|20" Trigger="null" />
       </Sentence>
-      <Sentence Motion="UpperModify" Type="Variable" Object="科研槽" Data="1" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Add" Type="Variable" Value="科研槽|1" Trigger="null" />
     </Effects>
     <Effects ID="26">
-      <Sentence Motion="LowerModify" Type="Label" Object="道德观不同" Data="null" TriggerState="每个国家" SufferState="null">
-        <Sentence Motion="LowerModify" Type="Variable" Object="对隐世村落关系" Data="20" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Remove" Type="Label" Value="道德观不同" Trigger="每个国家">
+        <Sentence Motion="Sub" Type="Variable" Value="对隐世村落关系|20" Trigger="null" />
       </Sentence>
-      <Sentence Motion="UpperModify" Type="Variable" Object="科研槽" Data="1" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Add" Type="Variable" Value="科研槽|1" Trigger="null" />
     </Effects>
     <Effects ID="27">
-      <Sentence Motion="UpperModify" Type="Availability" Object="AutoGainCore" Data="null" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Gain" Type="AbleToGainCoreAuto" Value="null" Trigger="幽灵种族的省份" />
     </Effects>
     <Effects ID="28">
-      <Sentence Motion="Trigger" Type="RequestEvent" Object="隐世村落的无偿教导？" Data="null" TriggerState="每个孤立国家" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Label" Object="强烈的战略结盟" Data="null" TriggerState="null" SufferState="null">
-          <Sentence Motion="UpperModify" Type="Variable" Object="对隐居村落的关系" Data="100" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Trigger" Type="RequestEvent" Value="隐世村落的无偿教导？" Trigger="每个孤立国家">
+        <Sentence Motion="Gain" Type="Label" Value="强烈的战略结盟" Trigger="null">
+          <Sentence Motion="Add" Type="Variable" Value="对隐居村落的关系|100" Trigger="null" />
         </Sentence>
       </Sentence>
-      <Sentence Motion="Trigger" Type="Event" Object="道教该如何面对道家？" Data="null" TriggerState="神灵庙" SufferState="null" />
+      <Sentence Motion="Gain" Type="Label" Value="幻想乡道家正统" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="意识形态变化抵制力度|75%" Trigger="null" />
+        <Sentence Motion="Gain" Type="AbleToCreateCamp" Value="null" Trigger="null" />
+      </Sentence>
+      <Sentence Motion="Trigger" Type="Event" Value="道教该如何面对道家？" Trigger="神灵庙" />
     </Effects>
     <Effects ID="29">
-      <Sentence Motion="Modify" Type="Grade" Object="鸽派5:鸽派4" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="LowerModify" Type="Variable" Object="生活消费品" Data="2%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="LowerModify" Type="Variable" Object="战争支持度" Data="5%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="LowerModify" Type="Variable" Object="改善关系持续花费" Data="10%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="地区最大工业值" Data="10%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="贸易协定关系修正" Data="20" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="正当化战争目标所需时间" Data="10%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="敌国对我国正当化战争目标所需时间" Data="20%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Replace" Type="Grade" Value="鸽派4|鸽派5" Trigger="null">
+        <Sentence Motion="Sub" Type="Variable" Value="生活消费品|2%" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="战争支持度|5%" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="改善关系持续花费|10%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="地区最大工业值|10%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="贸易协定关系修正|20.00%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="正当化战争目标所需时间|10%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="敌国对我国正当化战争目标所需时间|20%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="人力|1000" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="30">
-      <Sentence Motion="UpperModify" Type="Variable" Object="顺从度增长速度" Data="100%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Add" Type="Variable" Value="顺从度增长速度|100%" Trigger="null" />
+    </Effects>
+    <Effects ID="31">
+      <Sentence Motion="NoneButMayChange" Type="null" Value="null" Trigger="null" />
     </Effects>
     <Effects ID="32">
-      <Sentence Motion="Restrict" Type="Region" Object="村民生活区" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="建筑位" Data="10" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="民用工厂" Data="10" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Region" Value="村民生活区" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="建筑位|10" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="民用工厂|10" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="33">
-      <Sentence Motion="Append" Type="Label" Object="圣人" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="LowerModify" Type="Variable" Object="增援率" Data="5%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="圣人" Trigger="null">
+        <Sentence Motion="Sub" Type="Variable" Value="增援率|5%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="34">
-      <Sentence Motion="UpperModify" Type="Label" Object="强大的威望" Data="365天" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="每日获得的政治点数" Data="0" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="部队组织度" Data="15%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="稳定度" Data="20%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="战争支持度" Data="20%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="建造速度" Data="10%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="部队攻击" Data="5%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="部队防御" Data="5%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="科研速度" Data="10%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="工厂产出" Data="10%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Gain" Type="Label" Value="强大的威望|365天" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="每日获得的政治点数|0.25" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="部队组织度|15%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="稳定度|20%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="战争支持度|20%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="建造速度|10%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="部队攻击|5%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="部队防御|5%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="科研速度|10%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="工厂产出|10%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="35">
-      <Sentence Motion="LowerModify" Type="Label" Object="圣人" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="孤立倾向" Data="0" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="每日唯心度变化" Data="0" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Remove" Type="Label" Value="圣人" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="孤立倾向|0.1" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="每日唯心度变化|0.04%" Trigger="null" />
       </Sentence>
-      <Sentence Motion="UpperModify" Type="Label" Object="强大的威望" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="每日获得的政治点数" Data="0" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="部队组织度" Data="15%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="稳定度" Data="20%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="战争支持度" Data="20%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="建造速度" Data="10%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="部队攻击" Data="5%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="部队防御" Data="5%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="科研速度" Data="10%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="工厂产出" Data="10%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Gain" Type="Label" Value="强大的威望" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="每日获得的政治点数|0.25" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="部队组织度|15%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="稳定度|20%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="战争支持度|20%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="建造速度|10%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="部队攻击|5%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="部队防御|5%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="科研速度|10%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="工厂产出|10%" Trigger="null" />
       </Sentence>
-      <Sentence Motion="Trigger" Type="Event" Object="圣人的告别" Data="null" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Trigger" Type="Event" Value="圣人的告别" Trigger="null" />
     </Effects>
     <Effects ID="36">
-      <Sentence Motion="UpperModify" Type="Label" Object="不详之器" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="部队组织度" Data="20%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="LowerModify" Type="Variable" Object="部队组织度恢复" Data="5%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Replace" Type="Grade" Value="鸽派3|鸽派2" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="生活消费品|2%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="战争支持度|5%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="改善关系持续花费|10%" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="地区最大工业值|10%" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="贸易协定修正|20%" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="正当化战争目标所需时间|10%" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="敌国对我国正当化目标所需时间|20%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="边界开放法则切换花费|10%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="灵力使用法案切换花费|10%" Trigger="null" />
       </Sentence>
     </Effects>
+    <Effects ID="37">
+      <Sentence Motion="NoneButMayChange" Type="null" Value="null" Trigger="null" />
+    </Effects>
     <Effects ID="38">
-      <Sentence Motion="Append" Type="Label" Object="圣人" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="新规倾向" Data="0" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="部队攻击" Data="15%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="圣人" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="新规倾向|0.01" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="部队攻击|15%" Trigger="null" />
       </Sentence>
-      <Sentence Motion="UpperModify" Type="Label" Object="宗教对立" Data="null" TriggerState="命莲寺" SufferState="null">
-        <Sentence Motion="LowerModify" Type="Variable" Object="对隐居村落关系" Data="200" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Gain" Type="Label" Value="再西出" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="对其进攻|天狗共和国|20%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="对其进攻|天狗帝国|20%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="对其进攻|守矢神社|20%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="对其进攻|河童共和国|20%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="对其进攻|河童长老会|20%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="对其进攻|山童自治区|20%" Trigger="null" />
       </Sentence>
-      <Sentence Motion="UpperModify" Type="Label" Object="自古以来" Data="null" TriggerState="隐居村落" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="对命莲寺关系" Data="200" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Gain" Type="Label" Value="宗教对立" Trigger="命莲寺">
+        <Sentence Motion="Sub" Type="Variable" Value="对隐居村落关系|200" Trigger="null" />
+      </Sentence>
+      <Sentence Motion="Gain" Type="Label" Value="自古以来" Trigger="隐居村落">
+        <Sentence Motion="Add" Type="Variable" Value="对命莲寺关系|200" Trigger="null" />
+      </Sentence>
+    </Effects>
+    <Effects ID="39">
+      <Sentence Motion="Append" Type="Region" Value="玄武川之泉" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="建筑位|5" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="军用工厂|5" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="40">
-      <Sentence Motion="UpperModify" Type="Label" Object="强烈的战略结盟" Data="null" TriggerState="隐居村落" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="对神灵庙的关系" Data="100" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Create" Type="Camp" Value="道盟" Trigger="null" />
+      <Sentence Motion="Gain" Type="Label" Value="强烈的战略结盟" Trigger="神灵庙">
+        <Sentence Motion="Add" Type="Variable" Value="对隐居村落的关系|100" Trigger="null" />
       </Sentence>
-      <Sentence Motion="UpperModify" Type="Label" Object="道盟盟主" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="LowerModify" Type="Variable" Object="投降界限" Data="10%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="适役人口" Data="3%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="核心领土攻击" Data="10%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="核心领土防御" Data="10%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Gain" Type="Label" Value="强烈的战略结盟" Trigger="隐居村落">
+        <Sentence Motion="Add" Type="Variable" Value="对神灵庙的关系|100" Trigger="null" />
+      </Sentence>
+      <Sentence Motion="Gain" Type="Label" Value="道盟盟主" Trigger="null">
+        <Sentence Motion="Sub" Type="Variable" Value="投降界限|10%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="适役人口|3%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="核心领土攻击|10%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="核心领土防御|10%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="41">
-      <Sentence Motion="UpperModify" Type="Label" Object="发现幻想乡的矛盾点" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="步兵部队攻击" Data="4%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="步兵部队防御" Data="4%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Gain" Type="Label" Value="发现幻想乡的矛盾点" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="步兵部队攻击|4%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="步兵部队防御|4%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="42">
-      <Sentence Motion="Append" Type="Label" Object="发现幻想乡的矛盾点" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="步兵部队攻击" Data="4%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="步兵部队防御" Data="4%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="发现幻想乡的矛盾点" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="步兵部队攻击|4%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="步兵部队防御|4%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="43">
-      <Sentence Motion="LowerModify" Type="Label" Object="修身养性" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="LowerModify" Type="Variable" Object="生活消费品" Data="6%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Remove" Type="Label" Value="修身养性" Trigger="null">
+        <Sentence Motion="Sub" Type="Variable" Value="生活消费品|6%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="44">
-      <Sentence Motion="UpperModify" Type="Label" Object="无败事" Data="365天" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="工厂产出" Data="50%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="生产效率增长" Data="50%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Gain" Type="Label" Value="无败事|365天" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="工厂产出|50%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="生产效率增长|50%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="45">
-      <Sentence Motion="UpperModify" Type="Availability" Object="WarGoal" Data="吞并" TriggerState="null" SufferState="守矢神社" />
-      <Sentence Motion="UpperModify" Type="Availability" Object="WarGoal" Data="吞并" TriggerState="null" SufferState="天狗共和国" />
-      <Sentence Motion="Trigger" Type="Event" Object="模糊不清的梦" Data="null" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Gain" Type="WarGoal" Value="吞并|守矢神社" Trigger="null" />
+      <Sentence Motion="Gain" Type="WarGoal" Value="吞并|天狗共和国" Trigger="null" />
+      <Sentence Motion="Trigger" Type="Event" Value="模糊不清的梦" Trigger="null" />
     </Effects>
     <Effects ID="46">
-      <Sentence Motion="Append" Type="Label" Object="圣人" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="部队防御" Data="15%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="圣人" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="部队防御|15%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="47">
-      <Sentence Motion="Append" Type="Label" Object="圣人" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="部队组织度恢复" Data="10%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="圣人" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="部队组织度恢复|10%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="48">
-      <Sentence Motion="UpperModify" Type="ResearchBonus" Object="基础武器" Data="3x60%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Bonus" Type="Reaserch" Value="基础武器|3x60%" Trigger="null" />
     </Effects>
     <Effects ID="49">
-      <Sentence Motion="Append" Type="Label" Object="圣人" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="部队增援率" Data="5%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="圣人" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="部队增援率|5%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="50">
-      <Sentence Motion="Trigger" Type="Event" Object="百姓的口腹之欲？" Data="null" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Trigger" Type="Event" Value="百姓的口腹之欲？" Trigger="null" />
     </Effects>
     <Effects ID="51">
-      <Sentence Motion="LowerModify" Type="Variable" Object="稳定度" Data="10%" TriggerState="null" SufferState="null" />
-      <Sentence Motion="LowerModify" Type="Label" Object="无为而治" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="每周人口" Data="1" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="每月人口" Data="15%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Sub" Type="Variable" Value="稳定度|10%" Trigger="null" />
+      <Sentence Motion="Remove" Type="Label" Value="无为而治" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="每周人口|1" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="每月人口|15%" Trigger="null" />
       </Sentence>
-      <Sentence Motion="Append" Type="Label" Object="圣人" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="新规倾向" Data="0" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="部队攻击" Data="15%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="圣人" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="新规倾向|0.01" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="部队攻击|15%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="52">
-      <Sentence Motion="LowerModify" Type="Variable" Object="稳定度" Data="20%" TriggerState="null" SufferState="null" />
-      <Sentence Motion="LowerModify" Type="Label" Object="万民自化" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="每周稳定度" Data="0" TriggerState="null" SufferState="null" />
-        <Sentence Motion="LowerModify" Type="Variable" Object="每周战争支持度" Data="0" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="战争支持度" Data="100%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Sub" Type="Variable" Value="稳定度|20%" Trigger="null" />
+      <Sentence Motion="Remove" Type="Label" Value="万民自化" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="每周稳定度|0.1%" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="每周战争支持度|0.1%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="战争支持度|100%" Trigger="null" />
       </Sentence>
-      <Sentence Motion="Append" Type="Label" Object="圣人" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="新规倾向" Data="0" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="部队攻击" Data="15%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="圣人" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="新规倾向|0.01" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="部队攻击|15%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="53">
-      <Sentence Motion="LowerModify" Type="Variable" Object="稳定度" Data="30%" TriggerState="null" SufferState="null" />
-      <Sentence Motion="LowerModify" Type="Label" Object="天地不仁" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="科研速度" Data="10%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Sub" Type="Variable" Value="稳定度|30%" Trigger="null" />
+      <Sentence Motion="Remove" Type="Label" Value="天地不仁" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="科研速度|10%" Trigger="null" />
       </Sentence>
-      <Sentence Motion="Append" Type="Label" Object="圣人" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="新规倾向" Data="0" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="部队攻击" Data="15%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="圣人" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="新规倾向|0.01" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="部队攻击|15%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="54">
-      <Sentence Motion="Restrict" Type="Region" Object="居民生活区" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="LowerModify" Type="Variable" Object="民用工厂" Data="1" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="军用工厂" Data="1" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Region" Value="居民生活区" Trigger="null">
+        <Sentence Motion="Sub" Type="Variable" Value="民用工厂|1" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="军用工厂|1" Trigger="null" />
       </Sentence>
-      <Sentence Motion="Restrict" Type="Region" Object="从山中鸡场" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="LowerModify" Type="Variable" Object="民用工厂" Data="1" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="军用工厂" Data="1" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Region" Value="从山中鸡场" Trigger="null">
+        <Sentence Motion="Sub" Type="Variable" Value="民用工厂|1" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="军用工厂|1" Trigger="null" />
       </Sentence>
-      <Sentence Motion="Trigger" Type="Event" Object="天之正者不可逆之" Data="null" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Trigger" Type="Event" Value="天之正者不可逆之" Trigger="null" />
     </Effects>
     <Effects ID="55">
-      <Sentence Motion="UpperModify" Type="Label" Object="五弊三缺" Data="null" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Gain" Type="Label" Value="五弊三缺" Trigger="null" />
     </Effects>
     <Effects ID="56">
-      <Sentence Motion="Append" Type="Label" Object="五弊三缺" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="LowerModify" Type="Variable" Object="适役人口修正" Data="20%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="五弊三缺" Trigger="null">
+        <Sentence Motion="Sub" Type="Variable" Value="适役人口修正|20%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="57">
-      <Sentence Motion="Append" Type="Label" Object="五弊三缺" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="LowerModify" Type="Variable" Object="每月人口" Data="10%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="五弊三缺" Trigger="null">
+        <Sentence Motion="Sub" Type="Variable" Value="每月人口|10%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="58">
-      <Sentence Motion="Append" Type="Label" Object="五弊三缺" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="LowerModify" Type="Variable" Object="人力" Data="1000" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="五弊三缺" Trigger="null">
+        <Sentence Motion="Sub" Type="Variable" Value="人力|1000" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="59">
-      <Sentence Motion="Append" Type="Label" Object="五弊三缺" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="LowerModify" Type="Variable" Object="适役人口" Data="1%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="五弊三缺" Trigger="null">
+        <Sentence Motion="Sub" Type="Variable" Value="适役人口|1%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="60">
-      <Sentence Motion="Append" Type="Label" Object="五弊三缺" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="训练时间" Data="20%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="五弊三缺" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="训练时间|20%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="61">
-      <Sentence Motion="Append" Type="Label" Object="五弊三缺" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="LowerModify" Type="Variable" Object="政治点数" Data="30%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="五弊三缺" Trigger="null">
+        <Sentence Motion="Sub" Type="Variable" Value="政治点数|30%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="62">
-      <Sentence Motion="Append" Type="Label" Object="五弊三缺" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="LowerModify" Type="Variable" Object="工厂产出" Data="30%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="五弊三缺" Trigger="null">
+        <Sentence Motion="Sub" Type="Variable" Value="工厂产出|30%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="63">
-      <Sentence Motion="Append" Type="Label" Object="五弊三缺" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="LowerModify" Type="Variable" Object="建造速度" Data="30%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="五弊三缺" Trigger="null">
+        <Sentence Motion="Sub" Type="Variable" Value="建造速度|30%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="64">
-      <Sentence Motion="Trigger" Type="Event" Object="最后的劝诫" Data="null" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Trigger" Type="Event" Value="最后的劝诫" Trigger="null" />
     </Effects>
-    <Effects ID="65">
-      <Sentence Motion="UpperModify" Type="Label" Object="战略同盟" Data="null" TriggerState="守矢神社" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="对隐居村落关系" Data="80" TriggerState="null" SufferState="null" />
-      </Sentence>
-      <Sentence Motion="UpperModify" Type="Label" Object="战略同盟" Data="null" TriggerState="隐居村落" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="对他们的关系改变了" Data="80" TriggerState="null" SufferState="null" />
-      </Sentence>
+    <Effects ID="66">
+      <Sentence Motion="Create" Type="Camp" Value="妖怪山自卫联盟|防御性" Trigger="守矢神社" />
     </Effects>
     <Effects ID="67">
-      <Sentence Motion="UpperModify" Type="Label" Object="融合河童" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="LowerModify" Type="Variable" Object="下降附庸等级所需政治点" Data="10%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Gain" Type="Label" Value="融合河童" Trigger="null">
+        <Sentence Motion="Sub" Type="Variable" Value="下降附庸等级所需政治点|10%" Trigger="null" />
+      </Sentence>
+    </Effects>
+    <Effects ID="68">
+      <Sentence Motion="Gain" Type="Label" Value="万民自化" Trigger="守矢神社">
+        <Sentence Motion="Add" Type="Variable" Value="每周稳定度|0.1%" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="每周战争支持度|0.1%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="战争支持度|100%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="69">
-      <Sentence Motion="UpperModify" Type="Variable" Object="地图外民用工厂" Data="5" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Add" Type="Variable" Value="地图外民用工厂|5" Trigger="null" />
     </Effects>
     <Effects ID="70">
-      <Sentence Motion="Append" Type="Label" Object="无为而治" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="建造速度" Data="30%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Region" Value="所有拥有的地区" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="建筑位|3" Trigger="null" />
+      </Sentence>
+      <Sentence Motion="Append" Type="Label" Value="无为而治" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="建造速度|30%" Trigger="null" />
+      </Sentence>
+    </Effects>
+    <Effects ID="71">
+      <Sentence Motion="Gain" Type="Label" Value="大城镇" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="每月人口|25%" Trigger="null" />
+        <Sentence Motion="Modify" Type="Variable" Value="适役人口|5%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="稳定度|10%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="73">
-      <Sentence Motion="Append" Type="Label" Object="修身养性" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="LowerModify" Type="Variable" Object="核心领土防御" Data="10%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="部队防御" Data="8%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="修身养性" Trigger="null">
+        <Sentence Motion="Sub" Type="Variable" Value="核心领土防御|10%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="部队防御|8%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="74">
-      <Sentence Motion="Append" Type="Label" Object="万民自化" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="加密" Data="6" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="万民自化" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="加密|6" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="75">
-      <Sentence Motion="Append" Type="Label" Object="修身养性" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="核心领土攻击" Data="20%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="LowerModify" Type="Variable" Object="部队攻击" Data="4%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="修身养性" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="核心领土攻击|20%" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="部队攻击|4%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="76">
-      <Sentence Motion="Append" Type="Label" Object="万民自化" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="计划速度" Data="10%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="万民自化" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="计划速度|10%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="77">
-      <Sentence Motion="Append" Type="Label" Object="万民自化" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="战略资源获取率" Data="25%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="万民自化" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="战略资源获取率|25%" Trigger="null" />
+      </Sentence>
+    </Effects>
+    <Effects ID="78">
+      <Sentence Motion="Append" Type="Label" Value="万民自化" Trigger="null">
+        <Sentence Motion="Append" Type="Region" Value="所有步兵" Trigger="null">
+          <Sentence Motion="Add" Type="Variable" Value="伤兵复原|1%" Trigger="null" />
+        </Sentence>
+        <Sentence Motion="Sub" Type="Variable" Value="经验损失|1.5%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="83">
-      <Sentence Motion="UpperModify" Type="Label" Object="张弛有度" Data="365天" TriggerState="null" SufferState="null">
-        <Sentence Motion="LowerModify" Type="Variable" Object="部队组织度" Data="25%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="LowerModify" Type="Variable" Object="部队组织度恢复" Data="15%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Gain" Type="Label" Value="帝国" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="每日获得的政治点数|0.35" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="部队组织度|10%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="每月人口|30%" Trigger="null" />
+        <Sentence Motion="Modify" Type="Variable" Value="适役人口|15%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="稳定度|25%" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="训练时间|5%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="特工位|1" Trigger="null" />
+      </Sentence>
+      <Sentence Motion="Gain" Type="Label" Value="张弛有度|365天" Trigger="null">
+        <Sentence Motion="Sub" Type="Variable" Value="部队组织度|25%" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="部队组织度恢复|15%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="84">
-      <Sentence Motion="Append" Type="Label" Object="万民自化" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="LowerModify" Type="Variable" Object="最大指挥点数提高" Data="30" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="每月人口" Data="100" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="万民自化" Trigger="null">
+        <Sentence Motion="Sub" Type="Variable" Value="最大指挥点数提高|30" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="每月人口|100" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="85">
-      <Sentence Motion="Append" Type="Label" Object="万民自化" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="解密" Data="10" TriggerState="null" SufferState="null" />
-        <Sentence Motion="LowerModify" Type="Variable" Object="加密" Data="6" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="万民自化" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="解密|10" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="加密|6" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="87">
-      <Sentence Motion="Append" Type="Label" Object="圣人" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="LowerModify" Type="Variable" Object="新规倾向" Data="0" TriggerState="null" SufferState="null" />
-        <Sentence Motion="LowerModify" Type="Variable" Object="部队攻击" Data="50%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="圣人" Trigger="null">
+        <Sentence Motion="Sub" Type="Variable" Value="新规倾向|0.05" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="部队攻击|50%" Trigger="null" />
       </Sentence>
-      <Sentence Motion="LowerModify" Type="Label" Object="五弊三缺" Data="null" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Remove" Type="Label" Value="五弊三缺" Trigger="null" />
     </Effects>
     <Effects ID="88">
-      <Sentence Motion="LowerModify" Type="Variable" Object="战争支持度" Data="10%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Sub" Type="Variable" Value="战争支持度|10%" Trigger="null" />
+      <Sentence Motion="Add" Type="Variable" Value="稳定度|20%" Trigger="null" />
     </Effects>
     <Effects ID="89">
-      <Sentence Motion="Fixed" Type="Variable" Object="平均灵力值" Data="50%，稳定度：+30%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Fixed" Type="Variable" Value="平均灵力值|50%" Trigger="null" />
+      <Sentence Motion="Add" Type="Variable" Value="稳定度|30%" Trigger="null" />
     </Effects>
     <Effects ID="90">
-      <Sentence Motion="Fixed" Type="Variable" Object="世界观" Data="唯心世界观，稳定度：+50%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Fixed" Type="Variable" Value="世界观|唯心世界观" Trigger="null" />
+      <Sentence Motion="Add" Type="Variable" Value="稳定度|50%" Trigger="null" />
     </Effects>
     <Effects ID="91">
-      <Sentence Motion="LowerModify" Type="Variable" Object="稳定度" Data="50%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Sub" Type="Variable" Value="稳定度|50%" Trigger="null" />
+      <Sentence Motion="Gain" Type="Label" Value="天地不仁" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="科研速度|10%" Trigger="null" />
+      </Sentence>
     </Effects>
     <Effects ID="92">
-      <Sentence Motion="UpperModify" Type="Variable" Object="人口" Data="1000" TriggerState="null" SufferState="null" />
-      <Sentence Motion="Modify" Type="Grade" Object="保守社会5:保守社会4" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="稳定度" Data="6%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="LowerModify" Type="Variable" Object="科研速度" Data="3%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="加密" Data="0" TriggerState="null" SufferState="null" />
-        <Sentence Motion="LowerModify" Type="Variable" Object="可出口资源" Data="5%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="意识形态变化抵制力度" Data="10%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Add" Type="Variable" Value="人口|1000" Trigger="null" />
+      <Sentence Motion="Replace" Type="Grade" Value="保守社会4|保守社会5" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="稳定度|6%" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="科研速度|3%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="加密|0.5" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="可出口资源|5%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="意识形态变化抵制力度|10%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="93">
-      <Sentence Motion="UpperModify" Type="Label" Object="修身养性" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="LowerModify" Type="Variable" Object="生活消费品工厂" Data="6%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Gain" Type="Label" Value="修身养性" Trigger="null">
+        <Sentence Motion="Sub" Type="Variable" Value="生活消费品工厂|6%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="94">
-      <Sentence Motion="Append" Type="Label" Object="圣人" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="LowerModify" Type="Variable" Object="每日唯心度变化" Data="0" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="圣人" Trigger="null">
+        <Sentence Motion="Sub" Type="Variable" Value="每日唯心度变化|0.04%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="95">
-      <Sentence Motion="LowerModify" Type="Variable" Object="稳定度" Data="50%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Sub" Type="Variable" Value="稳定度|50%" Trigger="null" />
+      <Sentence Motion="Add" Type="Variable" Value="科研槽|1" Trigger="null" />
     </Effects>
     <Effects ID="96">
-      <Sentence Motion="UpperModify" Type="Label" Object="无为而治" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="每周人口" Data="1" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="每月人口" Data="15%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Gain" Type="Label" Value="无为而治" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="每周人口|1" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="每月人口|15%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="97">
-      <Sentence Motion="UpperModify" Type="Label" Object="万民自化" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="每周稳定度" Data="0" TriggerState="null" SufferState="null" />
-        <Sentence Motion="LowerModify" Type="Variable" Object="每周战争支持度" Data="0" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="战争支持度" Data="100%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Gain" Type="Label" Value="万民自化" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="每周稳定度|0.1%" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="每周战争支持度|0.1%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="战争支持度|100%" Trigger="null" />
       </Sentence>
     </Effects>
-    <Effects ID="98">
-      <Sentence Motion="Fixed" Type="Variable" Object="势力规模" Data="国家，获得国家，其效果为（每日获得的政治点数+0.1，部队组织度+10%，每月人口+30%，适役人口修正：-10%，生活消费品工厂：1%，稳定度+15%，训练时间-5%，特工位:+1）" TriggerState="null" SufferState="null" />
-    </Effects>
     <Effects ID="99">
-      <Sentence Motion="Append" Type="Label" Object="小国寡民" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="核心领土防御" Data="10%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="民用工厂建造速度" Data="30%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="LowerModify" Type="Variable" Object="军用工厂建造速度" Data="10%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="小国寡民" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="核心领土防御|10%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="民用工厂建造速度|30%" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="军用工厂建造速度|10%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="100">
-      <Sentence Motion="Append" Type="Label" Object="无为而治" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="每周人口" Data="1" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="每月人口" Data="15%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Region" Value="小国寡民" Trigger="null">
+        <Sentence Motion="Sub" Type="Variable" Value="可出口资源|100%" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="贸易协定修正|100%" Trigger="null" />
+      </Sentence>
+      <Sentence Motion="Append" Type="Label" Value="无为而治" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="每周人口|1" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="每月人口|15%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="101">
-      <Sentence Motion="Append" Type="Label" Object="小国寡民" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="LowerModify" Type="Variable" Object="每日获得的政治点数" Data="0" TriggerState="null" SufferState="null" />
-        <Sentence Motion="LowerModify" Type="Variable" Object="战争支持度" Data="15%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="每周战争支持度" Data="0" TriggerState="null" SufferState="null" />
-        <Sentence Motion="LowerModify" Type="Variable" Object="厌战周期上涨" Data="50%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="小国寡民" Trigger="null">
+        <Sentence Motion="Sub" Type="Variable" Value="每日获得的政治点数|0.2" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="战争支持度|15%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="每周战争支持度|0.1%" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="厌战周期上涨|50%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="102">
-      <Sentence Motion="UpperModify" Type="Variable" Object="稳定度" Data="50%" TriggerState="null" SufferState="null" />
-      <Sentence Motion="Append" Type="Label" Object="圣人" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="每周战争支持度" Data="0" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Add" Type="Variable" Value="稳定度|50%" Trigger="null" />
+      <Sentence Motion="Append" Type="Label" Value="圣人" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="每周战争支持度|0.1%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="103">
-      <Sentence Motion="Append" Type="Label" Object="万民自化" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="每日获得的政治点数" Data="0" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="每周稳定度" Data="0" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="万民自化" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="每日获得的政治点数|0.1" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="每周稳定度|0.1%" Trigger="null" />
+      </Sentence>
+    </Effects>
+    <Effects ID="104">
+      <Sentence Motion="Gain" Type="Label" Value="类人体系人力3" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="适役人口|2.4%" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="训练时间|5%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="106">
-      <Sentence Motion="Append" Type="Label" Object="万民自化" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="LowerModify" Type="Variable" Object="通用决议花费" Data="100%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="志愿军部队数上限" Data="50%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="万民自化" Trigger="null">
+        <Sentence Motion="Sub" Type="Variable" Value="通用决议花费|100%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="志愿军部队数上限|50%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="107">
-      <Sentence Motion="Append" Type="Label" Object="万民自化" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="处于阵营加成" Data="100%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="万民自化" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="处于阵营加成|100%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="108">
-      <Sentence Motion="UpperModify" Type="Variable" Object="科研槽" Data="1" TriggerState="null" SufferState="null" />
-      <Sentence Motion="UpperModify" Type="Label" Object="道教的探索精神" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="LowerModify" Type="Variable" Object="科研速度" Data="15%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Add" Type="Variable" Value="科研槽|1" Trigger="null" />
+      <Sentence Motion="Gain" Type="Label" Value="道教的探索精神" Trigger="null">
+        <Sentence Motion="Sub" Type="Variable" Value="科研速度|15%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="109">
-      <Sentence Motion="LowerModify" Type="Label" Object="道教的探索精神" Data="null" TriggerState="null" SufferState="null" />
-      <Sentence Motion="Unpin" Type="Variable" Object="势力规模" Data="null" TriggerState="null" SufferState="null" />
-      <Sentence Motion="Unpin" Type="Variable" Object="世界观" Data="null" TriggerState="null" SufferState="null" />
-      <Sentence Motion="Unpin" Type="Variable" Object="平均灵力值" Data="null" TriggerState="null" SufferState="null" />
-      <Sentence Motion="Append" Type="Label" Object="不争之争" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Availability" Object="DeclarationOfWar" Data="null" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Remove" Type="Label" Value="道教的探索精神" Trigger="null" />
+      <Sentence Motion="Unpin" Type="Variable" Value="势力规模" Trigger="null" />
+      <Sentence Motion="Unpin" Type="Variable" Value="世界观" Trigger="null" />
+      <Sentence Motion="Unpin" Type="Variable" Value="平均灵力值" Trigger="null" />
+      <Sentence Motion="Append" Type="Label" Value="不争之争" Trigger="null">
+        <Sentence Motion="Gain" Type="AbleToDeclareWar" Value="null" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="110">
-      <Sentence Motion="UpperModify" Type="Variable" Object="地图外军用工厂" Data="5" TriggerState="null" SufferState="null" />
-      <Sentence Motion="UpperModify" Type="Label" Object="种有几" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="适役人口" Data="38" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Add" Type="Variable" Value="地图外军用工厂|5" Trigger="null" />
+      <Sentence Motion="Gain" Type="Label" Value="种有几" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="适役人口|38.2%" Trigger="null" />
       </Sentence>
-      <Sentence Motion="UpperModify" Type="Label" Object="人类" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="科学系研究速度" Data="5%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="动员速度" Data="10%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="部队组织度" Data="20%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="适役人口" Data="4%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="稳定度" Data="10%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="LowerModify" Type="Variable" Object="加密" Data="2" TriggerState="null" SufferState="null" />
-        <Sentence Motion="LowerModify" Type="Variable" Object="解密" Data="2" TriggerState="null" SufferState="null" />
-        <Sentence Motion="LowerModify" Type="Variable" Object="陆军夜战攻击" Data="30%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="陆军征兵法案花费" Data="25%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Gain" Type="Label" Value="人类" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="科学系研究速度|5%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="动员速度|10%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="部队组织度|20%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="适役人口|4%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="稳定度|10%" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="加密|2" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="解密|2" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="陆军夜战攻击|30%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="陆军征兵法案花费|25%" Trigger="null" />
       </Sentence>
-      <Sentence Motion="Modify" Type="Grade" Object="保守社会3:保守社会4" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="LowerModify" Type="Variable" Object="稳定度" Data="6%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="科研速度" Data="3%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="LowerModify" Type="Variable" Object="加密" Data="0" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="可出口资源" Data="5%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="LowerModify" Type="Variable" Object="意识形态变化抵制力度" Data="10%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Replace" Type="Grade" Value="保守社会4|保守社会3" Trigger="null">
+        <Sentence Motion="Sub" Type="Variable" Value="稳定度|6%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="科研速度|3%" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="加密|0.5" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="可出口资源|5%" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="意识形态变化抵制力度|10%" Trigger="null" />
       </Sentence>
     </Effects>
+    <Effects ID="111">
+      <Sentence Motion="Trigger" Type="Event" Value="《列子》的前后矛盾" Trigger="null" />
+    </Effects>
     <Effects ID="112">
-      <Sentence Motion="Append" Type="Label" Object="种有几" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="建造速度" Data="20%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="每日唯心度变化" Data="0" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="种有几" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="建造速度|20%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="每日唯心度变化|0.1%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="113">
-      <Sentence Motion="UpperModify" Type="Label" Object="法师" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="灵力系研究速度" Data="5%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="动员速度" Data="15%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="LowerModify" Type="Variable" Object="部队组织度" Data="2%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="适役人口" Data="8%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="LowerModify" Type="Variable" Object="稳定度" Data="5%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="步兵部队攻击" Data="10%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="炮兵攻击" Data="5%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="LowerModify" Type="Variable" Object="工厂产出" Data="6%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="LowerModify" Type="Variable" Object="陆军夜战攻击" Data="5%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="每日人类影响力基础变化" Data="0" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Gain" Type="Label" Value="法师" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="灵力系研究速度|5%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="动员速度|15%" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="部队组织度|2%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="适役人口|8%" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="稳定度|5%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="步兵部队攻击|10%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="炮兵攻击|5%" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="工厂产出|6%" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="陆军夜战攻击|5%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="每日人类影响力基础变化|0.03" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="115">
-      <Sentence Motion="UpperModify" Type="Label" Object="妖兽" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="动员速度" Data="20%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="适役人口" Data="14%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="改善关系持续花费" Data="25%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="每日人类影响力基础变化" Data="0" TriggerState="null" SufferState="null" />
-        <Sentence Motion="LowerModify" Type="Variable" Object="征兵法案花费" Data="10%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Gain" Type="Label" Value="妖兽" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="动员速度|20%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="适役人口|14%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="改善关系持续花费|25%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="每日人类影响力基础变化|0.04" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="征兵法案花费|10%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="116">
-      <Sentence Motion="UpperModify" Type="Label" Object="神明" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="动员速度" Data="20%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="适役人口" Data="16%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="LowerModify" Type="Variable" Object="补给消耗" Data="5%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="加密" Data="2" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="解密" Data="2" TriggerState="null" SufferState="null" />
-        <Sentence Motion="LowerModify" Type="Variable" Object="陆军夜战攻击" Data="15%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="每日人类影响力基础变化" Data="0" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Gain" Type="Label" Value="神明" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="动员速度|20%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="适役人口|16%" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="补给消耗|5%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="加密|2" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="解密|2" Trigger="null" />
+        <Sentence Motion="Sub" Type="Variable" Value="陆军夜战攻击|15%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="每日人类影响力基础变化|0.07" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="117">
-      <Sentence Motion="Append" Type="Label" Object="种有几" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="部队防御" Data="10%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="种有几" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="部队防御|10%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="118">
-      <Sentence Motion="Append" Type="Label" Object="种有几" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="LowerModify" Type="Variable" Object="适役人口修正" Data="50%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="堑壕速度" Data="10%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="堑壕上限" Data="10" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="种有几" Trigger="null">
+        <Sentence Motion="Sub" Type="Variable" Value="适役人口修正|50%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="堑壕速度|10%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="堑壕上限|10" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="119">
-      <Sentence Motion="Append" Type="Label" Object="种有几" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="每月人口增长" Data="25%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="种有几" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="每月人口增长|25%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="120">
-      <Sentence Motion="Append" Type="Label" Object="种有几" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="UpperModify" Type="Variable" Object="部队组织度恢复" Data="20%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="种有几" Trigger="null">
+        <Sentence Motion="Add" Type="Variable" Value="部队组织度恢复|20%" Trigger="null" />
       </Sentence>
     </Effects>
     <Effects ID="121">
-      <Sentence Motion="Append" Type="Label" Object="种有几" Data="null" TriggerState="null" SufferState="null">
-        <Sentence Motion="LowerModify" Type="Variable" Object="稳定度" Data="20%" TriggerState="null" SufferState="null" />
-        <Sentence Motion="UpperModify" Type="Variable" Object="增援率" Data="5%" TriggerState="null" SufferState="null" />
+      <Sentence Motion="Append" Type="Label" Value="种有几" Trigger="null">
+        <Sentence Motion="Sub" Type="Variable" Value="稳定度|20%" Trigger="null" />
+        <Sentence Motion="Add" Type="Variable" Value="增援率|5%" Trigger="null" />
       </Sentence>
+    </Effects>
+    <Effects ID="122">
+      <Sentence Motion="Gain" Type="Label" Value="敌对关系" Trigger="每个国家">
+        <Sentence Motion="Sub" Type="Variable" Value="与隐居村落的关系|500" Trigger="null" />
+      </Sentence>
+    </Effects>
+    <Effects ID="123">
+      <Sentence Motion="Trigger" Type="Event" Value="庄子三剑" Trigger="null" />
     </Effects>
   </NodeEffects>
 </FocusGraph>

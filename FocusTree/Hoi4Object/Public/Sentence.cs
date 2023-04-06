@@ -18,32 +18,22 @@ namespace FocusTree.Hoi4Object.Public
         /// 执行动作
         /// </summary>
         [XmlAttribute("Motion")]
-        string Motion = Motions._NOT_FOUND_.ToString();
+        string Motion = "null";
         /// <summary>
         /// 执行对象类型
         /// </summary>
         [XmlAttribute("Type")]
-        string Type = Types._NOT_FOUND_.ToString();
+        string Type = "null";
         /// <summary>
         /// 执行对象
         /// </summary>
-        [XmlAttribute("Object")]
-        string Object = "null";
+        [XmlAttribute("Value")]
+        string Value = "null";
         /// <summary>
-        /// 附带数据
+        /// 动作触发者
         /// </summary>
-        [XmlAttribute("Data")]
-        string Data = "null";
-        /// <summary>
-        /// 触发动作的国家
-        /// </summary>
-        [XmlAttribute("TriggerState")]
-        string TriggerState = "null";
-        /// <summary>
-        /// 动作受施的国家
-        /// </summary>
-        [XmlAttribute("SufferState")]
-        string SufferState = "null";
+        [XmlAttribute("MotionTrigger")]
+        string MotionTrigger = "null";
         /// <summary>
         /// 子句
         /// </summary>
@@ -58,54 +48,22 @@ namespace FocusTree.Hoi4Object.Public
         /// </summary>
         /// <param name="motion">执行动作，不可为空</param>
         /// <param name="type">执行对象类型</param>
-        /// <param name="object">有可用性的执行对象，不可为空</param>
-        /// <param name="data">附带数据</param>
-        /// <param name="triggerState">触发动作的国家</param>
-        /// <param name="sufferState">动作受施的国家</param>
+        /// <param name="value">执行值</param>
+        /// <param name="motionTrigger">动作触发者</param>
         /// <param name="subSentences">子句</param>
         /// <returns></returns>
         public Sentence(
             Motions motion,
             Types? type,
-            string @object,
-            string data,
-            string triggerState,
-            string sufferState,
+            string value,
+            string motionTrigger,
             List<Sentence> subSentences
             )
         {
             Motion = motion.ToString();
             Type = type == null ? "null" : type.ToString();
-            Object = @object == null ? "null" : data;
-            Data = data == null ? "null" : data;
-            TriggerState = triggerState == null ? "null" : triggerState;
-            SufferState = sufferState == null ? "null" : sufferState;
-            SubSentences = subSentences == null ? new() : subSentences;
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="motion">执行动作，不可为空</param>
-        /// <param name="availabilityObject">有可用性的执行对象，不可为空</param>
-        /// <param name="data">附带数据</param>
-        /// <param name="triggerState">触发动作的国家</param>
-        /// <param name="sufferState">动作受施的国家</param>
-        /// <param name="subSentences">子句</param>
-        /// <returns></returns>
-        public Sentence(Motions motion,
-            AvailabilityObjects availabilityObject,
-            string data,
-            string triggerState,
-            string sufferState,
-            List<Sentence> subSentences
-            )
-        {
-            Motion = motion.ToString();
-            Type = Types.Availability.ToString();
-            Object = availabilityObject.ToString();
-            Data = data == null ? "null" : data;
-            TriggerState = triggerState == null ? "null" : triggerState;
-            SufferState = sufferState == null ? "null" : sufferState;
+            Value = value == null ? "null" : value;
+            MotionTrigger = motionTrigger == null ? "null" : motionTrigger;
             SubSentences = subSentences == null ? new() : subSentences;
         }
         /// <summary>
@@ -125,16 +83,12 @@ namespace FocusTree.Hoi4Object.Public
 
             var motion = reader.GetAttribute("Motion");
             var type = reader.GetAttribute("Type");
-            var @object = reader.GetAttribute("Object");
-            var data = reader.GetAttribute("Data");
-            var triggerState = reader.GetAttribute("TriggerState");
-            var sufferState = reader.GetAttribute("SufferState");
-            Motion = motion == null ? Motions._NOT_FOUND_.ToString() : motion;
-            Type = type == null ? Types._NOT_FOUND_.ToString() : type;
-            Object = @object == null ? "null" : @object;
-            Data = data == null ? "null" : data;
-            TriggerState = triggerState == null ? "null" : triggerState;
-            SufferState = sufferState == null ? "null" : sufferState;
+            var value = reader.GetAttribute("Value");
+            var motionTrigger = reader.GetAttribute("Trigger");
+            Motion = motion == null ? "null" : motion;
+            Type = type == null ? "null" : type;
+            Value = value == null ? "null" : value;
+            MotionTrigger = motionTrigger == null ? "null" : motionTrigger;
 
             if (reader.ReadToDescendant("Sentence") == false) { return; }
             // 进入子句后直到遇到结束标签结束
@@ -155,10 +109,8 @@ namespace FocusTree.Hoi4Object.Public
             writer.WriteStartElement("Sentence");
             writer.WriteAttributeString("Motion", Motion);
             writer.WriteAttributeString("Type", Type);
-            writer.WriteAttributeString("Object", Object);
-            writer.WriteAttributeString("Data", Data);
-            writer.WriteAttributeString("TriggerState", TriggerState);
-            writer.WriteAttributeString("SufferState", SufferState);
+            writer.WriteAttributeString("Value", Value);
+            writer.WriteAttributeString("Trigger", MotionTrigger);
 
             //==== 序列化子句 ====//
             if (SubSentences.Count > 0)
@@ -176,7 +128,7 @@ namespace FocusTree.Hoi4Object.Public
 
         public new string ToString()
         {
-            string result =  $"Motion= {Motion}, Type= {Type}, Object= {Object}, Data= {Data}, TriggerState= {TriggerState}, SufferState= {SufferState}";
+            string result =  $"Motion= {Motion}, Type= {Type}, Value= {Value}, Trigger= {MotionTrigger}";
             foreach (var sentence in SubSentences)
             {
                 result += "\n\tSub: " + sentence.ToString();

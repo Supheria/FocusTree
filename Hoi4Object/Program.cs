@@ -1,8 +1,14 @@
 ﻿//public Dictionary<string, Attribute> AtrributeCatalog = new();
 using Hoi4Object.IO;
+using static Hoi4Object.IO.PublicSign;
 
+Console.WriteLine((Modifications.Append.ToString(), (int)Modifications.Append));
+Console.WriteLine((test_Motions.Append.ToString(), (int)test_Motions.Append));
+Console.WriteLine((test_Motions.Modify.ToString(), (int)test_Motions.Modify));
+Console.WriteLine(("Append ^ Modify", (int)(test_Motions.Append ^ test_Motions.Modify)));
+Console.WriteLine(("Append ^ Modify", (int)(test_Motions.Modify | (test_Motions.Append ^ test_Motions.Modify))));
 
-while (true)
+while (false)
 {
     FormatRawEffectSentence.Unformattable.Clear();
     Console.Clear();

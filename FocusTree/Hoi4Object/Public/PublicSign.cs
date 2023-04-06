@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,155 +9,153 @@ namespace FocusTree.Hoi4Object.Public
 {
     public static class PublicSign
     {
-        #region ==== 符号 ====
-
-        /// <summary>
-        /// 替换为
-        /// </summary>
-        public static string ReplaceTo = ":";
+        public static char Splitter = '|';
         /// <summary>
         /// 执行动作
         /// </summary>
+        [Flags]
         public enum Motions
         {
-            _NOT_FOUND_ = -1,
+            #region ==== 基础 ====
+
             /// <summary>
             /// 没有实际影响，可能会发生改变
             /// </summary>
-            NoneButMayChange,
+            NoneButMayChange = 0b1,
             /// <summary>
             /// 触发
             /// </summary>
-            Trigger,
-            /// <summary>
-            /// 固定
-            /// </summary>
-            Fixed,
-            /// <summary>
-            /// 取消固定
-            /// </summary>
-            Unpin,
-            /// <summary>
-            /// 增加、获得
-            /// </summary>
-            UpperModify,
-            /// <summary>
-            /// 减少、移除
-            /// </summary>
-            LowerModify,
+            Trigger = NoneButMayChange << 1,
             /// <summary>
             /// 修改
             /// </summary>
-            Modify,
+            Modify = NoneButMayChange << 2,
             /// <summary>
-            /// 限制范围
+            /// 创建
             /// </summary>
-            Restrict,
+            Create = NoneButMayChange << 3,
+            /// <summary>
+            /// 加入
+            /// </summary>
+            Join = NoneButMayChange << 4,
+
+            #endregion
+
+            #region ==== 修改 ====
+
+            /// <summary>
+            /// 加
+            /// </summary>
+            Add = Modify | Join << 1,
+            /// <summary>
+            /// 减
+            /// </summary>
+            Sub = Modify | (Add ^ Modify) << 1,
+            /// <summary>
+            /// 固定
+            /// </summary>
+            Fixed = Modify | (Add ^ Modify) << 2,
+            /// <summary>
+            /// 取消固定
+            /// </summary>
+            Unpin = Modify | (Add ^ Modify) << 3,
             /// <summary>
             /// 追加
             /// </summary>
-            Append
+            Append = Modify | (Add ^ Modify) << 4,
+            /// <summary>
+            /// 获得
+            /// </summary>
+            Gain = Modify | (Add ^ Modify) << 5,
+            /// <summary>
+            /// 移除
+            /// </summary>
+            Remove = Modify | (Add ^ Modify) << 6,
+            /// <summary>
+            /// 加成
+            /// </summary>
+            Bonus = Modify | (Add ^ Modify) << 7,
+            /// <summary>
+            /// 取代
+            /// </summary>
+            Replace = Modify | (Add ^ Modify) << 8
+
+            #endregion
         };
         /// <summary>
         /// 受施对象类型
         /// </summary>
         public enum Types
         {
-            _NOT_FOUND_ = -1,
+            #region ==== 基础 ====
+
             /// <summary>
             /// 事件
             /// </summary>
-            Event,
+            Event = 0b1,
             /// <summary>
             /// 可同意的事件
             /// </summary>
-            RequestEvent,
+            RequestEvent = Event << 1,
             /// <summary>
             /// 变量
             /// </summary>
-            Variable,
+            Variable = Event << 2,
             /// <summary>
             /// 标签
             /// </summary>
-            Label,
+            Label = Event << 3,
             /// <summary>
             /// 可用性
             /// </summary>
-            Availability,
-            /// <summary>
-            /// 研究加成
-            /// </summary>
-            ResearchBonus,
-            /// <summary>
-            /// 等级
-            /// </summary>
-            Grade,
+            Availability = Event << 4,
             /// <summary>
             /// 区域
             /// </summary>
-            Region
-        }
-        /// <summary>
-        /// 赋值标签
-        /// </summary>
-        public enum Tags
-        {
-            /// <summary>
-            /// 执行动作
-            /// </summary>
-            Motion,
-            /// <summary>
-            /// 执行对象类型
-            /// </summary>
-            Type,
-            /// <summary>
-            /// 触发动作的国家
-            /// </summary>
-            TriggerState,
-            /// <summary>
-            /// 动作受施的国家
-            /// </summary>
-            SufferState,
-            /// <summary>
-            /// 执行对象
-            /// </summary>
-            Object,
-            /// <summary>
-            /// 持续时长
-            /// </summary>
-            Duration,
-            /// <summary>
-            /// 执行数据
-            /// </summary>
-            Data
-        }
-        /// <summary>
-        /// 有可用性的对象
-        /// </summary>
-        public enum AvailabilityObjects
-        {
-            /// <summary>
-            /// 宣战
-            /// </summary>
-            DeclarationOfWar,
-            /// <summary>
-            /// 决议
-            /// </summary>
-            Resolution,
-            /// <summary>
-            /// 自动获取核心
-            /// </summary>
-            AutoGainCore,
+            Region = Event << 5,
             /// <summary>
             /// 战争目标
             /// </summary>
-            WarGoal,
+            WarGoal = Event << 6,
             /// <summary>
-            /// 创建阵营
+            /// 决议
             /// </summary>
-            CreateFaction
-        }
+            Resolution = Event << 7,
+            /// <summary>
+            /// 阵营
+            /// </summary>
+            Camp = Event << 8,
+            /// <summary>
+            /// 研究
+            /// </summary>
+            Reaserch = Event << 9,
+            /// <summary>
+            /// 等级
+            /// </summary>
+            Grade = Event << 10,
 
-        #endregion
+            #endregion
+
+            #region ==== 可用性 ====
+
+            /// <summary>
+            /// 可以宣战
+            /// </summary>
+            AbleToDeclareWar = Availability | Grade << 1,
+            /// <summary>
+            /// 可以自动获取核心
+            /// </summary>
+            AbleToGainCoreAuto = Availability | (AbleToDeclareWar ^ Availability) << 1,
+            /// <summary>
+            /// 可以创建阵营
+            /// </summary>
+            AbleToCreateCamp = Availability | (AbleToDeclareWar ^ Availability) << 2,
+            /// <summary>
+            /// 可以加入阵营
+            /// </summary>
+            AbleToJoinCamp = Availability | (AbleToDeclareWar ^ Availability) << 3
+
+            #endregion
+        }
     }
 }
