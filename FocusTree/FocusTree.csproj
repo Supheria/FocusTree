@@ -12,6 +12,7 @@
     <ApplicationIcon>Resources\FocusTree.ico</ApplicationIcon>
     <Version>$(VersionPrefix)0.1</Version>
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>

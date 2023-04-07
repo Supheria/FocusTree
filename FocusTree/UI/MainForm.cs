@@ -28,6 +28,7 @@ namespace FocusTree.UI
 #if DEBUG
             Display.LoadGraph("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\国策\\隐居村落.xml");
             WindowState = FormWindowState.Minimized;
+            Display.SaveAsNew("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\国策\\国策测试\\test.xml");
 
             //var a = new InfoDialog(Display);
             //Display.SelectedNode = 1;

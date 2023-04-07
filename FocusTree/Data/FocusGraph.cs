@@ -9,6 +9,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using FocusTree.Tool;
 
 namespace FocusTree.Data
 {
@@ -467,7 +468,7 @@ namespace FocusTree.Data
         /// 序列化预留方法，默认返回 null
         /// </summary>
         /// <returns></returns>
-        public XmlSchema GetSchema()
+        public XmlSchema? GetSchema()
         {
             return null;
         }
@@ -541,7 +542,7 @@ namespace FocusTree.Data
                 foreach(var raw in data.Value.Effects)
                 {
                     testInfo.total++;
-                    if (!FormatRawEffectSentence.Formatter(raw, out var formatted))
+                    if (!FormatRawEffectSentence.Formatter(raw, out var formattedList))
                     {
                         testInfo.InfoText += $"{data.Key}. {raw}\n";
                         testInfo.erro++;
@@ -549,14 +550,25 @@ namespace FocusTree.Data
                     }
                     if (NodeEffects.ContainsKey(data.Key))
                     {
-                        NodeEffects[data.Key].Add(formatted);
+                        foreach (var formatted in formattedList)
+                        {
+                            NodeEffects[data.Key].Add(formatted);
+                        }
                     }
                     else
                     {
-                        NodeEffects[data.Key] = new() { formatted };
+                        NodeEffects[data.Key] = new();
+                        foreach (var formatted in formattedList)
+                        {
+                            NodeEffects[data.Key].Add(formatted);
+                        }
                     }
                     testInfo.good++;
-                    success += $"{data.Key}. {formatted.ToString()} <= {raw}\n";
+                    success += $"{data.Key}. ";
+                    foreach (var formatted in formattedList)
+                    {
+                        success += $"{formatted.ToString()} <= {raw}\n";
+                    }
                 }
             }
             testInfo.InfoText += "\n\n======== Successful ========\n" + success;
@@ -567,7 +579,7 @@ namespace FocusTree.Data
         /// </summary>
         /// <param name="reader">读取到节点关系的流</param>
         /// <returns>当前节点关系</returns>
-        private List<HashSet<int>> ReadRelation(XmlReader reader)
+        private List<HashSet<int>>? ReadRelation(XmlReader reader)
         {
             var relations = new List<HashSet<int>>();
             while (reader.Read())
@@ -583,7 +595,7 @@ namespace FocusTree.Data
                     if (!reader.HasValue) { return null; }
 
                     var requir_str = reader.ReadContentAsString();
-                    relations.Add(IdArrayFromString(requir_str));
+                    relations.Add(ArrayString.Reader(requir_str).Select(x => int.Parse(x)).ToHashSet());
                     // 如果顺序反过来这里需要 continue
                 }
             }
@@ -594,7 +606,7 @@ namespace FocusTree.Data
         /// </summary>
         /// <param name="reader">读取到节点关系的流</param>
         /// <returns>当前节点效果</returns>
-        private List<Sentence> ReadEffects(XmlReader reader)
+        private List<Sentence>? ReadEffects(XmlReader reader)
         {
             List<Sentence> effects = new();
             // 子节点探针
@@ -643,7 +655,7 @@ namespace FocusTree.Data
                 foreach (var require in r_pair.Value)
                 {
                     // <Require> 关系类型
-                    writer.WriteElementString("Require", IdArrayToString(require));
+                    writer.WriteElementString("Require", ArrayString.Writer(require.Select(x => x.ToString()).ToArray()));
                     // </Require>
                 }
 
