@@ -9,6 +9,7 @@ using System.Xml.Serialization;
 using System.Xml;
 using System.Runtime.InteropServices;
 using FocusTree.Tool;
+using System.Text.RegularExpressions;
 
 namespace FocusTree.Hoi4Object.Public
 {
@@ -44,14 +45,14 @@ namespace FocusTree.Hoi4Object.Public
         /// <summary>
         /// 执行对象类型
         /// </summary>
-        public Types? Type
+        public Types? ValueType
         {
             get 
             { 
-                var type = GetEnumValue<Types>(Main.Type);
+                var type = GetEnumValue<Types>(Main.ValueType);
                 return type == null ? null : (Types)type;
             }
-            set { Main.Type = value == null ? string.Empty : value.Value.ToString(); }
+            set { Main.ValueType = value == null ? string.Empty : value.Value.ToString(); }
         }
         /// <summary>
         /// 执行对象
@@ -61,13 +62,22 @@ namespace FocusTree.Hoi4Object.Public
             get { return Main.Value; }
             set { Main.Value = value; }
         }
+        public Types? TriggerType
+        {
+            get
+            {
+                var type = GetEnumValue<Types>(Main.TriggerType);
+                return type == null ? null : (Types)type;
+            }
+            set { Main.TriggerType = value == null ? string.Empty : value.Value.ToString(); }
+        }
         /// <summary>
         /// 动作触发者
         /// </summary>
         public List<string> Trigger
         { 
-            get { return Main.Trigger.ToList(); }
-            set { Main.Trigger = value.ToArray(); }
+            get { return ArrayString.Reader(Main.Trigger).ToList(); }
+            set { Main.Trigger = ArrayString.Writer(value.ToArray()); }
         }
 
         #endregion
@@ -78,24 +88,27 @@ namespace FocusTree.Hoi4Object.Public
         /// 
         /// </summary>
         /// <param name="motion">执行动作，不可为空</param>
-        /// <param name="type">执行对象类型</param>
+        /// <param name="valueType">值类型</param>
         /// <param name="value">执行值</param>
+        /// <param name="triggerType">触发者类型</param>
         /// <param name="trigger">动作触发者</param>
         /// <param name="subSentences">子句</param>
         /// <returns></returns>
         public Sentence(
             Motions motion,
-            Types? type,
+            Types? valueType,
             string? value,
+            Types? triggerType,
             string[]? trigger,
             List<Sentence>? subSentences
             )
         {
             Main = new(
                 motion.ToString(),
-                type == null ? string.Empty : type.Value.ToString(),
+                valueType == null ? string.Empty : valueType.Value.ToString(),
                 value ?? string.Empty,
-                trigger ?? Array.Empty<string>()
+                triggerType == null ? string.Empty : triggerType.Value.ToString(),
+                trigger == null ? string.Empty : ArrayString.Writer(trigger)
                 );
             SubSentences = subSentences ?? new();
         }
@@ -114,15 +127,15 @@ namespace FocusTree.Hoi4Object.Public
         {
             SubSentences = new();
 
+            //==== 读取主句属性 ====//
             var motion = reader.GetAttribute("Motion");
-            var type = reader.GetAttribute("Type");
-            var value = reader.GetAttribute("Value");
-            var trigger = reader.GetAttribute("Trigger");
+            var typePair = reader.GetAttribute("Type");
+            var valuePair = reader.GetAttribute("Value");
             Main.Motion = motion ?? string.Empty;
-            Main.Type = type ?? string.Empty;
-            Main.Value = value ?? string.Empty;
-            Main.Trigger = trigger == null ? Array.Empty<string>() : ArrayString.Reader(trigger);
+            ReadTypePair(typePair);
+            ReadValuePair(valuePair);
             
+            //==== 尝试查找并读取子句====//
             if (reader.ReadToDescendant("Sentence") == false) { return; }
             // 进入子句后直到遇到结束标签结束
             do
@@ -143,9 +156,8 @@ namespace FocusTree.Hoi4Object.Public
             writer.WriteStartElement("Sentence");
 
             writer.WriteAttributeString("Motion", Main.Motion);
-            writer.WriteAttributeString("Type", Main.Type);
-            writer.WriteAttributeString("Value", Main.Value);
-            writer.WriteAttributeString("Trigger", ArrayString.Writer(Main.Trigger));
+            writer.WriteAttributeString("Type", WriteTypePair());
+            writer.WriteAttributeString("Value", WriteValuePair());
 
             //==== 序列化子句 ====//
 
@@ -160,14 +172,54 @@ namespace FocusTree.Hoi4Object.Public
             writer.WriteEndElement();
         }
 
+        private string WriteTypePair()
+        {
+            return $"({Main.ValueType}),({Main.TriggerType})";
+        }
+
+        private void ReadTypePair(string? pair)
+        {
+            if (pair != null)
+            {
+                var match = Regex.Match(pair.Trim(), "\\((.*)\\),\\((.*)\\)");
+                if (match.Success)
+                {
+                    Main.ValueType = match.Groups[1].Value;
+                    Main.TriggerType = match.Groups[2].Value;
+                    return;
+                }
+            }
+            Main.ValueType = Main.TriggerType = string.Empty;
+        }
+        private string WriteValuePair()
+        {
+            return $"({Main.Value}),({Main.Trigger})";
+        }
+
+        private void ReadValuePair(string? pair)
+        {
+            if (pair != null)
+            {
+                var match = Regex.Match(pair.Trim(), "\\((.*)\\),\\((.*)\\)");
+                if (match.Success)
+                {
+                    Main.Value = match.Groups[1].Value;
+                    Main.Trigger = match.Groups[2].Value;
+                    return;
+                }
+            }
+            Main.Value = Main.Trigger = string.Empty;
+        }
+
         #endregion
 
         public new string ToString()
         {
-            string result =  $"Motion= {Main.Motion}, " +
-                $"Type= {Main.Type}, " +
+            string result = $"Motion= {Main.Motion}, " +
+                $"ValueType= {Main.ValueType}, " +
                 $"Value= {Main.Value}, " +
-                $"Trigger= {ArrayString.Writer(Trigger.ToArray())}";
+                $"TriggerType= {Main.TriggerType}, " +
+                $"Trigger= {Main.Trigger}";
             foreach (var sentence in SubSentences)
             {
                 result += "\n  Sub: " + sentence.ToString();
@@ -183,22 +235,27 @@ namespace FocusTree.Hoi4Object.Public
         /// </summary>
         public string Motion;
         /// <summary>
-        /// 执行对象类型
+        /// 值类型
         /// </summary>
-        public string Type;
+        public string ValueType;
         /// <summary>
-        /// 执行数据
+        /// 执行值
         /// </summary>
         public string Value;
         /// <summary>
+        /// 触发者类型
+        /// </summary>
+        public string TriggerType;
+        /// <summary>
         /// 动作触发者
         /// </summary>
-        public string[] Trigger;
-        public SentenceAttribute(string motion, string type, string value, string[] trigger)
+        public string Trigger;
+        public SentenceAttribute(string motion, string valueType, string value, string triggerType, string trigger)
         {
             Motion = motion;
-            Type = type;
+            ValueType = valueType;
             Value = value;
+            TriggerType = triggerType;
             Trigger = trigger;
         }
     }

@@ -109,17 +109,17 @@ namespace FocusTree.Hoi4Object.Public
             /// </summary>
             RequestEvent = Event << 1,
             /// <summary>
-            /// 变量
-            /// </summary>
-            Variable = RequestEvent << 1,
-            /// <summary>
             /// 标签
             /// </summary>
-            Label = Variable << 1,
+            Label = RequestEvent << 1,
+            /// <summary>
+            /// 变量
+            /// </summary>
+            Variable = Label << 1,
             /// <summary>
             /// 可用性
             /// </summary>
-            Availability = Label << 1,
+            Availability = Variable << 1,
             /// <summary>
             /// 战争目标
             /// </summary>
@@ -141,13 +141,21 @@ namespace FocusTree.Hoi4Object.Public
             /// </summary>
             Grade = Reaserch << 1,
             /// <summary>
-            /// 国家
-            /// </summary>
-            State = Grade << 1,
-            /// <summary>
             /// 部队
             /// </summary>
-            Troop = State << 1,
+            Troop = Grade << 1,
+            /// <summary>
+            /// 国家
+            /// </summary>
+            State = Troop << 1,
+            /// <summary>
+            /// 省份
+            /// </summary>
+            Province = State << 1,
+            /// <summary>
+            /// 区域
+            /// </summary>
+            Region = Province << 1,
 
             #endregion
 
@@ -156,7 +164,7 @@ namespace FocusTree.Hoi4Object.Public
             /// <summary>
             /// 可以宣战
             /// </summary>
-            AbleToDeclareWar = Availability | State << 1,
+            AbleToDeclareWar = Availability | Province << 1,
             /// <summary>
             /// 可以自动获取核心
             /// </summary>
@@ -168,7 +176,7 @@ namespace FocusTree.Hoi4Object.Public
             /// <summary>
             /// 可以加入阵营
             /// </summary>
-            AbleToJoinCamp = Availability | (AbleToCreateCamp ^ Availability) << 1
+            AbleToJoinCamp = Availability | (AbleToCreateCamp ^ Availability) << 1,
 
             #endregion
         }

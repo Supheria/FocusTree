@@ -73,19 +73,20 @@ namespace FocusTree.Hoi4Object.IO.Formatter
             if (GetMatch(str, "^触发事件“([\u4e00-\u9fa5？《》]+)”。?$", out Match match))
             {
                 var motion = PublicSign.Motions.AfterDone | PublicSign.Motions.Trigger;
-                var type = PublicSign.Types.Event;
+                var valueType = PublicSign.Types.Event;
                 var value = match.Groups[1].Value;
-                formattedList = new() { new(motion, type, value, null, null) };
+                formattedList = new() { new(motion, valueType, value, null, null, null) };
             }
             // 单语句-某国触发事件
             /// 神灵庙触发事件“道教该如何面对道家？”
             else if (GetMatch(str, "^([\u4e00-\u9fa5]+)触发事件“([\u4e00-\u9fa5？]+)”。?$", out match))
             {
                 var motion = PublicSign.Motions.AfterDone | PublicSign.Motions.Trigger;
-                var type = PublicSign.Types.Event;
+                var valueType = PublicSign.Types.Event;
                 var value = match.Groups[2].Value;
+                var triggerType = PublicSign.Types.State;
                 var trigger = new string[] { match.Groups[1].Value };
-                formattedList = new() { new(motion, type, value, trigger, null) };
+                formattedList = new() { new(motion, valueType, value, triggerType,trigger, null) };
             }
             // 单语句-固定值或类型
             /// 将平均灵力值固定为50%
@@ -93,18 +94,18 @@ namespace FocusTree.Hoi4Object.IO.Formatter
             else if (GetMatch(str, "^将([\u4e00-\u9fa5]+)固定为([\u4e00-\u9fa5\\d%]+)$", out match))
             {
                 var motion = PublicSign.Motions.AfterDone | PublicSign.Motions.Fixed;
-                var type = PublicSign.Types.Variable;
+                var valueType = PublicSign.Types.Variable;
                 var value = match.Groups[1].Value + PublicSign.Splitter + match.Groups[2].Value; // eg.世界观|唯心世界观
-                formattedList = new() { new(motion, type, value, null, null) };
+                formattedList = new() { new(motion, valueType, value, null, null, null) };
             }
             // 单语句-移除固定
             /// 移除对势力规模的固定
             else if (GetMatch(str, "^移除对([\u4e00-\u9fa5]+)的固定$", out match))
             {
                 var motion = PublicSign.Motions.AfterDone | PublicSign.Motions.Unpin;
-                var type = PublicSign.Types.Variable;
+                var valueType = PublicSign.Types.Variable;
                 var value = match.Groups[1].Value;
-                formattedList = new() { new(motion, type, value, null, null) };
+                formattedList = new() { new(motion, valueType, value, null, null, null) };
             }
             // 单语句-加|减值
             /// 灵力系科研速度：+35%
@@ -113,18 +114,18 @@ namespace FocusTree.Hoi4Object.IO.Formatter
             else if (GetMatch(str, "^([\u4e00-\u9fa5]+)：?([+-])([\\d.]+%?)$", out match))
             {
                 var motion = PublicSign.Motions.AfterDone | (match.Groups[2].Value == "+" ? PublicSign.Motions.Add : PublicSign.Motions.Sub);
-                var type = PublicSign.Types.Variable;
+                var valueType = PublicSign.Types.Variable;
                 var value = match.Groups[1].Value + PublicSign.Splitter + match.Groups[3].Value;
-                formattedList = new() { new(motion, type, value, null, null) };
+                formattedList = new() { new(motion, valueType, value, null, null, null) };
             }
             // 单语句-加值（不带正号）
             /// 适役人口修正：15%
             else if (GetMatch(str, "^([\u4e00-\u9fa5]+)：?([\\d.]+%?)$", out match))
             {
                 var motion = PublicSign.Motions.AfterDone | PublicSign.Motions.Add;
-                var type = PublicSign.Types.Variable;
+                var valueType = PublicSign.Types.Variable;
                 var value = match.Groups[1].Value + PublicSign.Splitter + match.Groups[2].Value;
-                formattedList = new() { new(motion, type, value, null, null) };
+                formattedList = new() { new(motion, valueType, value, null, null, null) };
             }
             // 单语句-获得|增加|移除个数
             /// 获得1个科研槽
@@ -133,9 +134,9 @@ namespace FocusTree.Hoi4Object.IO.Formatter
             else if (GetMatch(str, "^(获得|增加|添加|移除)(\\d+)个([\u4e00-\u9fa5]+)$", out match))
             {
                 var motion = PublicSign.Motions.AfterDone | (match.Groups[1].Value == "移除" ? PublicSign.Motions.Sub : PublicSign.Motions.Add);
-                var type = PublicSign.Types.Variable;
+                var valueType = PublicSign.Types.Variable;
                 var value = match.Groups[3].Value + PublicSign.Splitter + match.Groups[2].Value;
-                formattedList = new() { new(motion, type, value, null, null) };
+                formattedList = new() { new(motion, valueType, value, null, null, null) };
             }
             // 单语句-宣战可用性
             /// 规则修改：不能宣战
@@ -143,53 +144,54 @@ namespace FocusTree.Hoi4Object.IO.Formatter
             else if (GetMatch(str, "^规则修改：(不能|可以)宣战$", out match))
             {
                 var motion = PublicSign.Motions.AfterDone | (match.Groups[1].Value == "可以" ? PublicSign.Motions.Gain : PublicSign.Motions.Remove);
-                var type = PublicSign.Types.AbleToDeclareWar;
-                formattedList = new() { new(motion, type, null, null, null) };
+                var valueType = PublicSign.Types.AbleToDeclareWar;
+                formattedList = new() { new(motion, valueType, null, null, null, null) };
             }
             // 单语句-触发并开启决议
             /// 可以通过决议发动周边国家的内战使其变为附庸
             else if (GetMatch(str, "^可以通过决议([\u4e00-\u9fa5]+)$", out match))
             {
                 var motion = PublicSign.Motions.AfterDone | PublicSign.Motions.Trigger;
-                var type = PublicSign.Types.Resolution;
+                var valueType = PublicSign.Types.Resolution;
                 var value = match.Groups[2].Value;
-                formattedList = new() { new(motion, type, value, null, null) };
+                formattedList = new() { new(motion, valueType, value, null, null, null) };
             }
             // 单语句-自动获得核心可用性
             /// 幽灵种族的省份将自动获得核心：是
             else if (GetMatch(str, "^([\u4e00-\u9fa5]+)将自动获得核心：(是|否)$", out match))
             {
                 var motion = PublicSign.Motions.AfterDone | (match.Groups[2].Value == "是" ? PublicSign.Motions.Gain : PublicSign.Motions.Remove);
-                var type = PublicSign.Types.AbleToGainCoreAuto;
+                var valueType = PublicSign.Types.AbleToGainCoreAuto;
+                var triggerType = PublicSign.Types.Province;
                 var trigger = new string[] { match.Groups[1].Value };
-                formattedList = new() { new(motion, type, null, trigger, null) };
+                formattedList = new() { new(motion, valueType, null, triggerType, trigger, null) };
             }
             // 单语句-数值修正
             /// （天狗共和国）我国对其进攻修正：+20%
             else if (GetMatch(str, "^（([\u4e00-\u9fa5]+)）我国(对其[\u4e00-\u9fa5]+)修正：([+-])(\\d+%?)$", out match))
             {
                 var motion = PublicSign.Motions.AfterDone | (match.Groups[3].Value == "+" ? PublicSign.Motions.Add : PublicSign.Motions.Sub);
-                var type = PublicSign.Types.Variable;
+                var valueType = PublicSign.Types.Variable;
                 var value = match.Groups[2].Value + PublicSign.Splitter + match.Groups[1].Value + PublicSign.Splitter + match.Groups[4].Value; // eg.对其进攻|天狗共和国|20%
-                formattedList = new() { new(motion, type, value, null, null) };
+                formattedList = new() { new(motion, valueType, value, null, null, null) };
             }
             // 单语句-获得对他国的战争目标
             /// 获得对守矢神社的吞并战争目标
             else if (GetMatch(str, "^获得对([\u4e00-\u9fa5]+)的([\u4e00-\u9fa5]+)战争目标", out match))
             {
                 var motion = PublicSign.Motions.AfterDone | PublicSign.Motions.Gain;
-                var type = PublicSign.Types.WarGoal;
+                var valueType = PublicSign.Types.WarGoal;
                 var value = match.Groups[2].Value + PublicSign.Splitter + match.Groups[1].Value; // eg.吞并|守矢神社
-                formattedList = new() { new(motion, type, value, null, null) };
+                formattedList = new() { new(motion, valueType, value, null, null, null) };
             }
             // 单语句-研究加成
             /// 3x60%研究加成：基础武器。
             else if (GetMatch(str, "^(\\dx\\d+%?)研究加成：([\u4e00-\u9fa5]+)。?$", out match))
             {
                 var motion = PublicSign.Motions.AfterDone | PublicSign.Motions.Bonus;
-                var type = PublicSign.Types.Reaserch;
+                var valueType = PublicSign.Types.Reaserch;
                 var value = match.Groups[2].Value + PublicSign.Splitter + match.Groups[1].Value; // eg.基础武器|3x60%
-                formattedList = new() { new(motion, type, value, null, null) };
+                formattedList = new() { new(motion, valueType, value, null, null, null) };
             }
             // 单语句-修改规则：可以创建阵营
             /// 可以创建阵营
@@ -197,42 +199,43 @@ namespace FocusTree.Hoi4Object.IO.Formatter
             else if (GetMatch(str, "^可以创建阵营|获得允许创建阵营$", out match))
             {
                 var motion = PublicSign.Motions.AfterDone | PublicSign.Motions.Gain;
-                var type = PublicSign.Types.AbleToCreateCamp;
-                formattedList = new() { new(motion, type, null, null, null) };
+                var valueType = PublicSign.Types.AbleToCreateCamp;
+                formattedList = new() { new(motion, valueType, null, null, null, null) };
             }
             // 单语句-暂时无影响
             /// 这项国策目前没有实际影响。但随着世界局势的变化可能会发生改变。
             else if (GetMatch(str, "这项国策目前没有实际影响。但随着世界局势的变化可能会发生改变。", out match))
             {
                 var motion = PublicSign.Motions.AfterDone | PublicSign.Motions.NoneButMayChange;
-                formattedList = new() { new(motion, null, null, null, null) };
+                formattedList = new() { new(motion, null, null, null, null, null) };
             }
             // 单语句-创建阵营
             /// 获得允许创建阵营，创建阵营：道盟
             else if (GetMatch(str, "^获得允许创建阵营，创建阵营：([\u4e00-\u9fa5]+)。?$", out match))
             {
                 var motion = PublicSign.Motions.AfterDone | PublicSign.Motions.Create;
-                var type = PublicSign.Types.Camp;
+                var valueType = PublicSign.Types.Camp;
                 var value = match.Groups[1].Value;
-                formattedList = new() { new(motion, type, value, null, null) };
+                formattedList = new() { new(motion, valueType, value, null, null, null) };
             }
-            // 单语句-创建指定属性的阵营
+            // 单语句-某国创建指定属性的阵营
             /// （守矢神社）获得允许创建防御性阵营，创建阵营：妖怪山自卫联盟。
             else if (GetMatch(str, "^（([\u4e00-\u9fa5]+)）获得允许创建([\u4e00-\u9fa5]+)阵营，创建阵营：([\u4e00-\u9fa5]+)。?$", out match))
             {
                 var motion = PublicSign.Motions.AfterDone | PublicSign.Motions.Create;
-                var type = PublicSign.Types.Camp;
+                var valueType = PublicSign.Types.Camp;
                 var value = match.Groups[3].Value + PublicSign.Splitter + match.Groups[2].Value; // eg.妖怪山自卫联盟|防御性
+                var triggerType = PublicSign.Types.State;
                 var trigger = new string[] { match.Groups[1].Value };
-                formattedList = new() { new(motion, type, value, trigger, null) };
+                formattedList = new() { new(motion, valueType, value, triggerType, trigger, null) };
             }
             // 单语句-不允许加入阵营
             /// x可以加入阵营
             else if (GetMatch(str, "^x可以加入阵营$", out match))
             {
                 var motion = PublicSign.Motions.AfterDone | PublicSign.Motions.Remove;
-                var type = PublicSign.Types.AbleToJoinCamp;
-                formattedList = new() { new(motion, type, null, null, null) };
+                var valueType = PublicSign.Types.AbleToJoinCamp;
+                formattedList = new() { new(motion, valueType, null, null, null, null) };
             }
             // 单语句-某国加入阵营
             /// 神灵庙加入阵营
@@ -240,20 +243,22 @@ namespace FocusTree.Hoi4Object.IO.Formatter
             else if (GetMatch(str, "^([\u4e00-\u9fa5]+)加入([\u4e00-\u9fa5]+)$", out match))
             {
                 var motion = PublicSign.Motions.AfterDone | PublicSign.Motions.Join;
-                var type = PublicSign.Types.Camp;
+                var valueType = PublicSign.Types.Camp;
                 var value = match.Groups[2].Value;
+                var triggerType = PublicSign.Types.State;
                 var trigger = new string[] { match.Groups[1].Value };
-                formattedList = new() { new(motion, type, value, trigger, null) };
+                formattedList = new() { new(motion, valueType, value, triggerType, trigger, null) };
             }
             // 某国吞并他国
             /// 隐居村落吞并河童长老会
             else if (GetMatch(str, "^([\u4e00-\u9fa5]+)吞并([\u4e00-\u9fa5]+)$", out match))
             {
                 var motion = PublicSign.Motions.AfterDone | PublicSign.Motions.Annexed;
-                var type = PublicSign.Types.State;
+                var valueType = PublicSign.Types.State;
                 var value = match.Groups[2].Value;
+                var triggerType = PublicSign.Types.State;
                 var trigger = new string[] { match.Groups[1].Value };
-                formattedList = new() { new(motion, type, value, trigger, null) };
+                formattedList = new() { new(motion, valueType, value, triggerType, trigger, null) };
             }
             // 单语句-获得|移除标签
             /// 获得五弊三缺
@@ -261,28 +266,29 @@ namespace FocusTree.Hoi4Object.IO.Formatter
             else if (GetMatch(str, "^(获得|移除)([\u4e00-\u9fa5]+)$", out match))
             {
                 var motion = PublicSign.Motions.AfterDone | (match.Groups[1].Value == "获得" ? PublicSign.Motions.Gain : PublicSign.Motions.Remove);
-                var type = PublicSign.Types.Label;
+                var valueType = PublicSign.Types.Label;
                 var value = match.Groups[2].Value;
-                formattedList = new() { new(motion, type, value, null, null) };
+                formattedList = new() { new(motion, valueType, value, null, null, null) };
             }
             // 单语句-某国获得标签
             ///（神灵庙）获得命莲寺的宣称
             else if (GetMatch(str, "^（([\u4e00-\u9fa5]+)）获得([\u4e00-\u9fa5]+)$", out match))
             {
                 var motion = PublicSign.Motions.AfterDone | PublicSign.Motions.Gain;
-                var type = PublicSign.Types.Label;
+                var valueType = PublicSign.Types.Label;
                 var value = match.Groups[2].Value;
+                var triggerType = PublicSign.Types.State;
                 var trigger = new string[] { match.Groups[1].Value };
-                formattedList = new() { new(motion, type, value, trigger, null) };
+                formattedList = new() { new(motion, valueType, value, triggerType, trigger, null) };
             }
-            // 增加部队
+            // 单语句-增加部队
             /// 将会出现6个编制为神灵庙护卫编制的部队
             else if (GetMatch(str, "^将会出现(\\d+)个编制为([\u4e00-\u9fa5]+)编制的部队$", out match))
             {
                 var motion = PublicSign.Motions.AfterDone | PublicSign.Motions.Add;
-                var type = PublicSign.Types.Troop;
+                var valueType = PublicSign.Types.Troop;
                 var value = match.Groups[2].Value + PublicSign.Splitter + match.Groups[1].Value; // eg.神灵庙护卫|6
-                formattedList = new() { new(motion, type, value, null, null) };
+                formattedList = new() { new(motion, valueType, value, null, null, null) };
             }
             else
             {
@@ -318,9 +324,9 @@ namespace FocusTree.Hoi4Object.IO.Formatter
                     return false;
                 }
                 var motion = PublicSign.Motions.AfterDone | (match.Groups[1].Value == "获得" ? PublicSign.Motions.Gain : PublicSign.Motions.Remove);
-                var type = PublicSign.Types.Label;
+                var valueType = PublicSign.Types.Label;
                 var value = match.Groups[2].Value;
-                formattedList = new() { new(motion, type, value, null, subSentences) };
+                formattedList = new() { new(motion, valueType, value, null, null, subSentences) };
             }
             // 复语句-获得限时标签
             /// 获得为期365天的“强大的威望”，其效果为（每日获得的政治点数：+0.25，部队组织度：+15%，稳定度：+20%，战争支持度：+20%，建造速度：+10%，部队攻击：+5%，部队防御：+5%，科研速度：+10%，工厂产出：+10%）
@@ -331,9 +337,9 @@ namespace FocusTree.Hoi4Object.IO.Formatter
                     return false;
                 }
                 var motion = PublicSign.Motions.AfterDone | PublicSign.Motions.Gain;
-                var type = PublicSign.Types.Label;
+                var valueType = PublicSign.Types.Label;
                 var value = match.Groups[2].Value + PublicSign.Splitter + match.Groups[1].Value; // eg.强大的威望|365天
-                formattedList = new() { new(motion, type, value, null, subSentences) };
+                formattedList = new() { new(motion, valueType, value, null, null ,subSentences) };
             }
             // 复语句-某国获得限时标签
             /// 所有敌国获得为期365天的“必有凶年”，其效果为（生活消费品工厂：+30%，适役人口修正：-80%）
@@ -344,10 +350,11 @@ namespace FocusTree.Hoi4Object.IO.Formatter
                     return false;
                 }
                 var motion = PublicSign.Motions.AfterDone | PublicSign.Motions.Gain;
-                var type = PublicSign.Types.Label;
+                var valueType = PublicSign.Types.Label;
                 var value = match.Groups[3].Value + PublicSign.Splitter + match.Groups[2].Value;
+                var triggerType = PublicSign.Types.State;
                 var trigger = new string[] { match.Groups[1].Value };
-                formattedList = new() { new(motion, type, value, trigger, subSentences) };
+                formattedList = new() { new(motion, valueType, value, triggerType, trigger, subSentences) };
             }
             // 复语句-某国获得|失去标签
             /// （隐居村落）获得自古以来（对命莲寺关系：+200）
@@ -360,10 +367,11 @@ namespace FocusTree.Hoi4Object.IO.Formatter
                     return false;
                 }
                 var motion = PublicSign.Motions.AfterDone | (match.Groups[2].Value == "获得" ? PublicSign.Motions.Gain : PublicSign.Motions.Remove);
-                var type = PublicSign.Types.Label;
+                var valueType = PublicSign.Types.Label;
                 var value = match.Groups[3].Value;
+                var triggerType = PublicSign.Types.State;
                 var trigger = new string[] { match.Groups[1].Value };
-                formattedList = new() { new(motion, type, value, trigger, subSentences) };
+                formattedList = new() { new(motion, valueType, value, triggerType, trigger, subSentences) };
             }
             // 复语句-每个国家获得标签
             /// 每个国家获得：道德观不同（对隐世村落关系：-20）
@@ -374,10 +382,11 @@ namespace FocusTree.Hoi4Object.IO.Formatter
                     return false;
                 }
                 var motion = PublicSign.Motions.AfterDone | (match.Groups[2].Value == "获得" ? PublicSign.Motions.Gain : PublicSign.Motions.Remove);
-                var type = PublicSign.Types.Label;
+                var valueType = PublicSign.Types.Label;
                 var value = match.Groups[3].Value;
+                var triggerType = PublicSign.Types.State;
                 var trigger = new string[] { match.Groups[1].Value };
-                formattedList = new() { new(motion, type, value, trigger, subSentences) };
+                formattedList = new() { new(motion, valueType, value, triggerType, trigger, subSentences) };
             }
             // 复语句-变更等级
             /// 向保守社会发展一级，以保守社会5取代保守社会4，效果变化（稳定度：+6% 科研速度：-3% 加密：+0.5 可出口资源：-5% 意识形态变化抵制力度：+10%）
@@ -388,9 +397,9 @@ namespace FocusTree.Hoi4Object.IO.Formatter
                     return false;
                 }
                 var motion = PublicSign.Motions.AfterDone | PublicSign.Motions.Replace;
-                var type = PublicSign.Types.Grade;
+                var valueType = PublicSign.Types.Grade;
                 var value = match.Groups[2].Value + PublicSign.Splitter + match.Groups[1].Value; // eg.保守社会4|保守社会5
-                formattedList = new() { new(motion, type, value, null, subSentences) };
+                formattedList = new() { new(motion, valueType, value, null, null, subSentences) };
             }
             // 复语句-追加效果
             /// 天地不仁追加效果：稳定度：-5%，适役人口：+2%
@@ -402,6 +411,7 @@ namespace FocusTree.Hoi4Object.IO.Formatter
                 }
                 foreach (var subSentence in subSentences)
                 {
+                    subSentence.TriggerType = PublicSign.Types.Label;
                     subSentence.Trigger = new() { match.Groups[1].Value };
                     formattedList.Add(subSentence);
                 }
@@ -415,10 +425,11 @@ namespace FocusTree.Hoi4Object.IO.Formatter
                     return false;
                 }
                 var motion = PublicSign.Motions.AfterDone | PublicSign.Motions.Trigger;
-                var type = PublicSign.Types.RequestEvent;
+                var valueType = PublicSign.Types.RequestEvent;
                 var value = match.Groups[2].Value;
+                var triggerType = PublicSign.Types.State;
                 var trigger = new string[] { match.Groups[1].Value };
-                formattedList = new() { new(motion, type, value, trigger, subSentences) };
+                formattedList = new() { new(motion, valueType, value, triggerType, trigger, subSentences) };
             }
             // 复语句-开启国策后立即实施效果
             /// 当选中此项时：所有敌国获得为期365天的“必有凶年”，其效果为（生活消费品工厂：+30%，适役人口修正：-80%）
@@ -448,6 +459,7 @@ namespace FocusTree.Hoi4Object.IO.Formatter
                 }
                 foreach (var subSentence in subSentences)
                 {
+                    subSentence.TriggerType = PublicSign.Types.State;
                     subSentence.Trigger = new() { match.Groups[1].Value };
                     formattedList.Add(subSentence);
                 }
@@ -465,6 +477,7 @@ namespace FocusTree.Hoi4Object.IO.Formatter
                 }
                 foreach(var subSentence in subSentences)
                 {
+                    subSentence.TriggerType = PublicSign.Types.Region;
                     subSentence.Trigger = new() { match.Groups[1].Value };
                     formattedList.Add(subSentence);
                 }
