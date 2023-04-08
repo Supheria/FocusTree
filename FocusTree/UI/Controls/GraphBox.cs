@@ -186,7 +186,7 @@ namespace FocusTree.UI.Controls
 
             ControlResize.SetTag(this);
         }
-        private void UpdateGraph(object sender, EventArgs e)
+        private void UpdateGraph(object sender, InvalidateEventArgs e)
         {
             if (Graph == null)
             {
@@ -851,7 +851,7 @@ namespace FocusTree.UI.Controls
             SelectedNode = null;
             Invalidate();
         }
-        public FocusNode? GetSelectedNodeData()
+        public FocusNode GetSelectedNodeData()
         {
             if (SelectedNode == null)
             {

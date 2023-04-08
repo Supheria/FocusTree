@@ -40,7 +40,7 @@ namespace FocusTree.Hoi4Object.IO.Formatter
             {
                 return true;
             }
-            Unformattable.Add(sentence);
+            //Unformattable.Add(sentence);
             return false;
         }
 
@@ -206,7 +206,7 @@ namespace FocusTree.Hoi4Object.IO.Formatter
             /// 这项国策目前没有实际影响。但随着世界局势的变化可能会发生改变。
             else if (GetMatch(str, "这项国策目前没有实际影响。但随着世界局势的变化可能会发生改变。", out match))
             {
-                var motion = PublicSign.Motions.AfterDone | PublicSign.Motions.NoneButMayChange;
+                var motion = PublicSign.Motions.NoneButMayChange;
                 formattedList = new() { new(motion, null, null, null, null, null) };
             }
             // 单语句-创建阵营
@@ -495,7 +495,7 @@ namespace FocusTree.Hoi4Object.IO.Formatter
         /// <param name="splitter">复合子句分割符号</param>
         /// <param name="subSentences">拆分后的所有格式化的子句</param>
         /// <returns>全部子句格式化成功返回true，有一个或以上失败则返回false</returns>
-        private static bool GetSubSentence(string subSentence, string? splitter, out List<Sentence> subSentences)
+        private static bool GetSubSentence(string subSentence, string splitter, out List<Sentence> subSentences)
         {
             subSentences = new();
             var clauses = splitter == null ? new string[] { subSentence } : subSentence.Split(splitter);

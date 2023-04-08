@@ -98,10 +98,10 @@ namespace FocusTree.Hoi4Object.Public
         public Sentence(
             Motions motion,
             Types? valueType,
-            string? value,
+            string value,
             Types? triggerType,
-            string[]? trigger,
-            List<Sentence>? subSentences
+            string[] trigger,
+            List<Sentence> subSentences
             )
         {
             Main = new(
@@ -180,7 +180,7 @@ namespace FocusTree.Hoi4Object.Public
             return $"({Main.ValueType}),({Main.TriggerType})";
         }
 
-        private void ReadTypePair(string? pair)
+        private void ReadTypePair(string pair)
         {
             if (pair != null)
             {
@@ -199,7 +199,7 @@ namespace FocusTree.Hoi4Object.Public
             return $"({Main.Value}),({Main.Trigger})";
         }
 
-        private void ReadValuePair(string? pair)
+        private void ReadValuePair(string pair)
         {
             if (pair != null)
             {

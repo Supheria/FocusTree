@@ -2,6 +2,7 @@
 {
     public partial class TestInfo : Form
     {
+        TestFormatter testFormatter = new();
         public string InfoText
         {
             get { return infoText; }
@@ -27,6 +28,17 @@
             Info.WordWrap = false;
             Info.ZoomFactor = 2f;
             //TopMost = true;
+            testFormatter.Show();
+        }
+
+        public void Initialize()
+        {
+            infoText = "";
+            total = 0;
+            erro = 0;
+            differ = 0;
+            good = 0;
+            InfoText = string.Empty;
         }
     }
 }

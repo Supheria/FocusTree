@@ -1,3 +1,4 @@
+#define DEBUG
 using FocusTree.Hoi4Object.IO.Formatter;
 using FocusTree.Hoi4Object.Public;
 using FocusTree.IO;
@@ -429,6 +430,10 @@ namespace FocusTree.Data
         /// </summary>
         private FocusGraph()
         {
+#if DEBUG
+            Program.testInfo.Initialize();
+            Program.testInfo.Show();
+#endif
         }
 
         // -- 序列化工具 --
@@ -440,7 +445,7 @@ namespace FocusTree.Data
         /// 序列化预留方法，默认返回 null
         /// </summary>
         /// <returns></returns>
-        public XmlSchema? GetSchema()
+        public XmlSchema GetSchema()
         {
             return null;
         }
@@ -455,25 +460,22 @@ namespace FocusTree.Data
                 if (reader.Name == "FilePath")
                 {
                     FilePath = reader.ReadElementContentAsString();
+#if DEBUG
+                    Program.testInfo.Text = Path.GetFileNameWithoutExtension(FilePath);
+#endif
                 }
                 if (reader.Name == "Nodes")
                 {
                     if (reader.ReadToDescendant("Node") == false) { continue; }
                     do
                     {
-                    propa: if (reader.Name == "Nodes" && reader.NodeType == XmlNodeType.EndElement) { break; }
+                        if (reader.Name == "Nodes" && reader.NodeType == XmlNodeType.EndElement) { break; }
                         if (reader.Name == "Node")
                         {
                             FocusNode node = new();
                             try { node.ReadXml(reader); }
                             catch { continue; }
                             NodeCatalog.Add(node.ID, node);
-                        }
-                        if (reader.NodeType == XmlNodeType.Element && reader.Name == "OldNode")
-                        {
-                            var node = (FocusData)FData_serial.Deserialize(reader);
-                            NodeCatalog[int.Parse(node.ID)].Data.Effects = node.Effects;
-                            goto propa;
                         }
                     } while (reader.Read());
                     
@@ -482,73 +484,8 @@ namespace FocusTree.Data
 
             CreateLinkes();
             SetMetaPoints();
-            SetEffectSentences();
             this.ClearHistory();
             this.EnqueueHistory();
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        [Obsolete("临时使用，作为xml格式转换的过渡")]
-        private void SetEffectSentences()
-        {
-            FormatRawEffectSentence.Unformattable.Clear();
-            TestInfo testInfo = new();
-            TestFormatter testFormatter = new();
-            testFormatter.Show();
-            string success = "";
-            foreach (var data in NodeCatalog)
-            {
-                foreach(var raw in data.Value.Data.Effects)
-                {
-                    testInfo.total++;
-                    if (!FormatRawEffectSentence.Formatter(raw, out var formattedList))
-                    {
-                        testInfo.InfoText += $"{data.Key}. {raw}\n";
-                        testInfo.erro++;
-                        continue;
-                    }
-                    foreach (var formatted in formattedList)
-                    {
-                        NodeCatalog[data.Key].Effects.Add(formatted);
-                    }
-                    testInfo.good++;
-                    success += $"{data.Key}. ";
-                    foreach (var formatted in formattedList)
-                    {
-                        success += $"{formatted.ToString()} <= {raw}\n";
-                    }
-                }
-            }
-            testInfo.InfoText += "\n\n======== Successful ========\n" + success;
-            testInfo.Show();
-        }
-        /// <summary>
-        /// 反序列化时用于读取节点的关系
-        /// </summary>
-        /// <param name="reader">读取到节点关系的流</param>
-        /// <returns>当前节点关系</returns>
-        private List<HashSet<int>>? ReadRelation(XmlReader reader)
-        {
-            var relations = new List<HashSet<int>>();
-            while (reader.Read())
-            {
-                if (reader.NodeType == XmlNodeType.EndElement)
-                {
-                    return relations;
-                }
-                if (reader.NodeType == XmlNodeType.Element && reader.Name == "Require")
-                {
-                    reader.Read();
-
-                    if (!reader.HasValue) { return null; }
-
-                    var requir_str = reader.ReadContentAsString();
-                    relations.Add(ArrayString.Reader(requir_str).Select(x => int.Parse(x)).ToHashSet());
-                    // 如果顺序反过来这里需要 continue
-                }
-            }
-            throw new Exception("[2302191020] 读取 Relation列表 时未能找到结束标签");
         }
 
         public void WriteXml(XmlWriter writer)
@@ -564,11 +501,8 @@ namespace FocusTree.Data
                 // <Node>
                 node.Value.WriteXml(writer);
                 // </Node>
-
-                // <OldNode>
-                FData_serial.Serialize(writer, node.Value.Data, NullXmlNameSpace);
-                // </OldNode>
             }
+
             writer.WriteEndElement();
             // </Nodes>
         }

@@ -3,6 +3,7 @@
 
 using FocusTree.UI;
 using FocusTree.UI.test;
+using System.Globalization;
 
 internal static class Program
 {
@@ -13,32 +14,8 @@ internal static class Program
     [STAThread]
     static void Main()
     {
-        //string test = "";
-        //this<string>.Enqueue(test);
-        //var b = this<(string, string)>.Length;
-        //Test.FMapTest();
-        //Test.FGraphToXmlTest();
-        //var graph = XmlIO.LoadGraph(
-        //    "C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\国策\\" +
-        //    "隐居村落.xml");
-        //GraphTool.DrawNodeMapWithInfo(graph);
-        //Application.Run(testInfo);
-
+        testInfo.Show();
         Application.Run(new MainForm());
-
-        //Application.EnableVisualStyles();
-        //Application.SetCompatibleTextRenderingDefault(false);
-        //Application.Run(new MainForm());
-        //var c = this<string>.Length;
-        //var e = this<(string, string)>.Length;
-        //var d = this<FocusGraph>.Length;
-
-        //FocusGraph a = XmlIO.LoadGraph("D:\\Non_E\\documents\\GitHub\\FocusTree\\FocusTree\\国策\\隐居村落.xml");
-        //FocusGraph b = XmlIO.LoadGraph("D:\\Non_E\\documents\\GitHub\\FocusTree\\FocusTree\\国策\\神佑村落.xml");
-        //a.Enqueue();
-        //b.Enqueue();
-        //int al =  a.GetHistoryLength();
-        //int b1 =  b.GetHistoryLength();
     }
 }
 

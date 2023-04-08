@@ -1,5 +1,7 @@
-﻿using FocusTree.Hoi4Object.Public;
+﻿using FocusTree.Hoi4Object.IO.Formatter;
+using FocusTree.Hoi4Object.Public;
 using FocusTree.Tool;
+using FocusTree.UI.test;
 using System.Numerics;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -34,7 +36,7 @@ namespace FocusTree.Data
         /// <summary>
         /// 原始效果语句
         /// </summary>
-        public List<string> RawEffect = new();
+        public List<string> RawEffects = new();
 
         #endregion
 
@@ -83,6 +85,8 @@ namespace FocusTree.Data
 
         #endregion
 
+        #region ==== 构造函数 ====
+
         /// <summary>
         /// 用于序列化
         /// </summary>
@@ -94,6 +98,11 @@ namespace FocusTree.Data
         {
             Data = data;
         }
+
+        #endregion
+
+        #region ==== 序列化方法 ====
+
         public void ReadXml(XmlReader reader)
         {
             Effects = new();
@@ -132,13 +141,38 @@ namespace FocusTree.Data
                 {
                     ReadRequires(reader);
                 }
+                //==== 读取 RawEffects ====//
                 if (reader.Name == "RawEffects")
                 {
                     ReadRawEffects(reader);
+                    FormatRawEffects();
                 }
             }
         }
-        public void ReadEffects(XmlReader reader)
+        [Obsolete("临时使用，作为转换语句格式的过渡")]
+        private void FormatRawEffects()
+        {
+            foreach (var raw in RawEffects)
+            {
+                Program.testInfo.total++;
+                if (!FormatRawEffectSentence.Formatter(raw, out var formattedList))
+                {
+                    Program.testInfo.InfoText += $"{ID}. {raw}\n";
+                    Program.testInfo.erro++;
+                    continue;
+                }
+                foreach (var formatted in formattedList)
+                {
+                    Effects.Add(formatted);
+                }
+            }
+        }
+        /// <summary>
+        /// 读取效果
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <exception cref="Exception"></exception>
+        private void ReadEffects(XmlReader reader)
         {
             // 子节点探针
             if (reader.ReadToDescendant("Sentence") == false) { return; }
@@ -154,7 +188,12 @@ namespace FocusTree.Data
             } while (reader.Read());
             throw new Exception("[2304060212] 读取 Effects 时未能找到结束标签");
         }
-        public void ReadRequires(XmlReader reader)
+        /// <summary>
+        /// 读取节点依赖
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <exception cref="Exception"></exception>
+        private void ReadRequires(XmlReader reader)
         {
             if (reader.ReadToDescendant("Require") == false) { return; }
             do
@@ -168,7 +207,12 @@ namespace FocusTree.Data
             } while (reader.Read());
             throw new Exception("[2302191020] 读取 Requires 时未能找到结束标签");
         }
-        public void ReadRawEffects(XmlReader reader)
+        /// <summary>
+        /// 读取原始效果语句
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <exception cref="Exception"></exception>
+        private void ReadRawEffects(XmlReader reader)
         {
             if (reader.ReadToDescendant("Effect") == false) { return; }
             do
@@ -177,7 +221,7 @@ namespace FocusTree.Data
                 if (reader.Name == "Effect" && reader.NodeType == XmlNodeType.Element)
                 {
                     reader.Read();
-                    RawEffect.Add(reader.Value);
+                    RawEffects.Add(reader.Value);
                 }
             } while (reader.Read());
             throw new Exception("[2304082217] 读取 RawEffects 时未能找到结束标签");
@@ -196,7 +240,7 @@ namespace FocusTree.Data
 
             // <RawEffects>
             writer.WriteStartElement("RawEffects");
-            foreach(var effect in Data.Effects)
+            foreach(var effect in RawEffects)
             {
                 writer.WriteElementString("Effect", effect);
             }
@@ -226,9 +270,11 @@ namespace FocusTree.Data
             // </Node>
             writer.WriteEndElement();
         }
+
+        #endregion
     }
 
-    [XmlRoot("OldNode")]
+
     /// <summary>
     /// 国策节点数据
     /// </summary>
@@ -237,38 +283,26 @@ namespace FocusTree.Data
         /// <summary>
         /// 节点ID
         /// </summary>
-        [XmlAttribute("ID")]
         public string ID;
         /// <summary>
         /// 国策名称
         /// </summary>
-        [XmlIgnore]
         public string Name;
         /// <summary>
         /// 字段是否以 * 开头
         /// </summary>
-        [XmlIgnore]
         public string BeginWithStar;
         /// <summary>
         /// 实施国策所需的天数
         /// </summary>
-        [XmlIgnore]
         public string Duration;
-        /// <summary>
-        /// 国策效果
-        /// </summary>
-        //[Obsolete("旧格式过渡为新格式的存储")]
-        [XmlElement("Effect")]
-        public string[] Effects = new string[0];
         /// <summary>
         /// 国策描述
         /// </summary>
-        [XmlIgnore]
         public string Descript;
         /// <summary>
         /// 备注
         /// </summary>
-        [XmlIgnore]
         public string Ps;
         public FocusData(string id, string name, string beginWithStar, string duration, string descript, string ps)
         {

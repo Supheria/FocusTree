@@ -187,7 +187,7 @@ namespace FocusTree.Hoi4Object.Public
         /// <typeparam name="T">枚举类型</typeparam>
         /// <param name="name">枚举名</param>
         /// <returns>枚举名存在则以 object 返回枚举对象，否则返回null</returns>
-        public static object? GetEnumValue<T> (string name)
+        public static object GetEnumValue<T> (string name)
         {
             try
             {

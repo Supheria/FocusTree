@@ -4,12 +4,13 @@ using FocusTree.IO;
 using FocusTree.Tool.IO;
 using FocusTree.Tool.UI;
 using FocusTree.UI.Controls;
+using FocusTree.UI.test;
 
 namespace FocusTree.UI
 {
     public partial class MainForm : Form
     {
-        GraphBox Display;
+        readonly GraphBox Display;
         public MainForm()
         {
             Display = new GraphBox(this);
@@ -154,7 +155,9 @@ namespace FocusTree.UI
                 {
                     var graph = XmlIO.LoadFromXml<FocusGraph>(fileName);
                     Backup.BackupFile(graph);
-                    graph.Save(Path.Combine(Path.GetDirectoryName(graph.FilePath), "batch", Path.GetFileName(graph.FilePath)));
+                    var dir = Path.GetDirectoryName(graph.FilePath);
+                    Directory.CreateDirectory(dir);
+                    graph.Save(Path.Combine(dir, "batch", Path.GetFileName(graph.FilePath)));
                 }
                 catch (Exception ex)
                 {
