@@ -26,10 +26,10 @@ namespace FocusTree.UI
                 this.MainForm_Menu_window.DropDownItems.Add(item);
             }
 #if DEBUG
-            Display.LoadGraph("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\国策\\隐居村落.xml");
-            WindowState = FormWindowState.Minimized;
-            Display.SaveAsNew("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\国策\\国策测试\\test.xml");
-            Display.LoadGraph("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\国策\\国策测试\\test.xml");
+            //Display.LoadGraph("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\国策\\隐居村落.xml");
+            //WindowState = FormWindowState.Minimized;
+            //Display.SaveAsNew("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\国策\\国策测试\\test.xml");
+            //Display.LoadGraph("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\国策\\国策测试\\test.xml");
             //var a = new InfoDialog(Display);
             //Display.SelectedNode = 1;
             //a.Show(new(Screen.PrimaryScreen.Bounds.Width / 3, Screen.PrimaryScreen.Bounds.Height / 3));
@@ -140,7 +140,7 @@ namespace FocusTree.UI
         /// <param name="e"></param>
         private void MainForm_Menu_file_batch_saveas_Click(object sender, EventArgs e)
         {
-            MainForm_Openfile_batch.Filter = "csv文件 (.csv) |*.csv";
+            MainForm_Openfile_batch.Filter = "xml文件 (.xml) |*.xml";
             if (MainForm_Openfile_batch.ShowDialog() == DialogResult.Cancel)
             {
                 return;
@@ -152,9 +152,9 @@ namespace FocusTree.UI
             {
                 try
                 {
-                    var graph = CsvReader.LoadGraph(fileName);
+                    var graph = XmlIO.LoadFromXml<FocusGraph>(fileName);
                     Backup.BackupFile(graph);
-                    graph.Save(graph.FilePath);
+                    graph.Save(Path.Combine(Path.GetDirectoryName(graph.FilePath), "batch", Path.GetFileName(graph.FilePath)));
                 }
                 catch (Exception ex)
                 {

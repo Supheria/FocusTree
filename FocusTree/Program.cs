@@ -60,7 +60,7 @@ internal static class Program
 
 //        DataHistory.Redo(graph);
 
-//        var graphRequire = graph.GetNodeRequireGroups(81);
+//        var graphRequire = graph.GetNodeRequires(81);
 //        var graphLink = graph.GetNodeChildLinkes(81);
 
 //        Console.WriteLine();

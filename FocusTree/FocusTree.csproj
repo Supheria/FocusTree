@@ -16,6 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="IO\CsvReader.cs" />
     <Compile Remove="UI\NodeToolDialogs\MainForm.cs" />
     <Compile Remove="UI\NodeToolDialogs\MainForm.Designer.cs" />
   </ItemGroup>

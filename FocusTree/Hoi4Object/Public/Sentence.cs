@@ -10,6 +10,7 @@ using System.Xml;
 using System.Runtime.InteropServices;
 using FocusTree.Tool;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 
 namespace FocusTree.Hoi4Object.Public
 {
@@ -152,7 +153,8 @@ namespace FocusTree.Hoi4Object.Public
         public void WriteXml(XmlWriter writer)
         {
             //==== 序列化主句 ====//
-
+            
+            // <Sentence>
             writer.WriteStartElement("Sentence");
 
             writer.WriteAttributeString("Motion", Main.Motion);
@@ -169,6 +171,7 @@ namespace FocusTree.Hoi4Object.Public
                 }
             }
 
+            // </Sentence>
             writer.WriteEndElement();
         }
 

@@ -23,7 +23,7 @@ namespace FocusTree.Tool.UI
             {
                 DrawNodeLinks(g, Graph, id);
             }
-            var enumer = Graph.GetNodesDataEnumerator();
+            var enumer = Graph.GetNodeCatalogEnumerator();
             while (enumer.MoveNext())
             {
                 var id = enumer.Current.Key;
@@ -51,9 +51,10 @@ namespace FocusTree.Tool.UI
         }
         private static RectangleF NodeDrawingRect(FocusGraph Graph, int id)
         {
+            var point = Graph.GetNode(id).MetaPoint;
             return new(
-                    Graph.GetMetaPoint(id).X * ScalingUnit.X + Border,
-                    Graph.GetMetaPoint(id).Y * ScalingUnit.Y + Border,
+                    point.X * ScalingUnit.X + Border,
+                    point.Y * ScalingUnit.Y + Border,
                     NodeSize.Width,
                     NodeSize.Height
                     );
@@ -61,14 +62,14 @@ namespace FocusTree.Tool.UI
         private static void DrawNodeLinks(Graphics g, FocusGraph Graph, int id)
         {
             var drawingRect = NodeDrawingRect(Graph, id);
-            var requireGroups = Graph.GetRequireGroups(id);
+            var requires = Graph.GetNode(id).Requires;
             // 对于根节点，requires 为 null
-            if (requireGroups == null)
+            if (requires == null)
             {
                 return;
             }
 
-            foreach (var requireGroup in requireGroups)
+            foreach (var requireGroup in requires)
             {
                 foreach (var require in requireGroup)
                 {
@@ -84,7 +85,7 @@ namespace FocusTree.Tool.UI
                 }
             }
         }
-        private static void DrawNodeInfo(Graphics g, RectangleF drawingRect, FocusData data)
+        private static void DrawNodeInfo(Graphics g, RectangleF drawingRect, FocusNode data)
         {
             var name = data.Name;
             var duration = $"{data.Duration}日";

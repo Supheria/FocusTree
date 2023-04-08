@@ -39,11 +39,11 @@ namespace FocusTree.UI.NodeToolDialogs
             {
                 return;
             }
-            Text = $"id: {focusData.Value.ID}";
-            FocusName.Text = focusData.Value.Name;
-            Duration.Text = $"{focusData.Value.Duration}";
-            Descript.Text = focusData.Value.Descript;
-            Effects.Text = string.Join('\n', focusData.Value.Effects);
+            Text = $"id: {focusData.ID}";
+            FocusName.Text = focusData.Name;
+            Duration.Text = $"{focusData.Duration}";
+            Descript.Text = focusData.Descript;
+            Effects.Text = string.Join('\n', focusData.Effects);
 
             AllowDrop = Display.ReadOnly ? false : true;
             FocusName.ReadOnly = Display.ReadOnly;

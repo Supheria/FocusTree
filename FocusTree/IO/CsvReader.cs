@@ -86,7 +86,7 @@ namespace FocusTree.IO
                 // 如果新节点与上一节点的右移距离等于1，则新节点是上一节点的子节点
                 if (level == last.Level + 1)
                 {
-                    var newNode = new TreeNode<int>(focusData.ID, last.Level + 1); // 新节点
+                    var newNode = new TreeNode<int>(int.Parse(focusData.ID), last.Level + 1); // 新节点
 
                     newNode.SetParent(last);
 

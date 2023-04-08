@@ -255,7 +255,7 @@ namespace FocusTree.UI.Controls
             var g = Graphics.FromImage(Image);
             g.Clear(Color.White);
 
-            var enumer = Graph.GetNodesDataEnumerator();
+            var enumer = Graph.GetNodeCatalogEnumerator();
             while (enumer.MoveNext())
             {
                 var id = enumer.Current.Key;
@@ -283,31 +283,25 @@ namespace FocusTree.UI.Controls
                         g.FillRectangle(NodeBG, rect);
                     }
                     g.DrawString(name, font, NodeFG, rect, NodeFontFormat);
+                }
 
-                    var requireGroups = Graph.GetRequireGroups(id);
-                    // 对于根节点，requires 为 null
-                    if (requireGroups == null)
+                var requires = Graph.GetNode(id).Requires;
+                int requireColor = 0; //不同需求要变色
+                foreach (var requireGroup in requires)
+                {
+                    foreach (var require in requireGroup)
                     {
-                        continue;
+                        var torect = NodeDrawingRect(require);
+
+                        // 如果起始点和终点都不在画面里，就不需要绘制
+                        if (!(IsRectVisible(rect) || IsRectVisible(torect))) { continue; }
+
+                        var startLoc = new Point((int)(rect.X + rect.Width / 2), (int)rect.Y); // x -> 中间, y -> 下方
+                        var endLoc = new Point((int)(torect.X + torect.Width / 2), (int)(torect.Y + torect.Height)); // x -> 中间, y -> 上方
+
+                        g.DrawLine(NodeRequire[requireColor], startLoc, endLoc);
                     }
-
-                    int requireColor = 0; //不同需求要变色
-                    foreach (var requireGroup in requireGroups)
-                    {
-                        foreach (var require in requireGroup)
-                        {
-                            var torect = NodeDrawingRect(require);
-
-                            // 如果起始点和终点都不在画面里，就不需要绘制
-                            if (!(IsRectVisible(rect) || IsRectVisible(torect))) { continue; }
-
-                            var startLoc = new Point((int)(rect.X + rect.Width / 2), (int)rect.Y); // x -> 中间, y -> 下方
-                            var endLoc = new Point((int)(torect.X + torect.Width / 2), (int)(torect.Y + torect.Height)); // x -> 中间, y -> 上方
-
-                            g.DrawLine(NodeRequire[requireColor], startLoc, endLoc);
-                        }
-                        requireColor++;
-                    }
+                    requireColor++;
                 }
             }
 
@@ -341,10 +335,10 @@ namespace FocusTree.UI.Controls
         /// <returns></returns>
         private bool IsNodeConflict(int id)
         {
-            var enumer = Graph.GetMetaPointsEnumerator();
+            var enumer = Graph.GetNodeCatalogEnumerator();
             while (enumer.MoveNext())
             {
-                if (id != enumer.Current.Key && Graph.GetMetaPoint(id) == enumer.Current.Value)
+                if (id != enumer.Current.Key && Graph.GetNode(id).MetaPoint == enumer.Current.Value.MetaPoint)
                 {
                     return true;
                 }
@@ -444,7 +438,7 @@ namespace FocusTree.UI.Controls
         }
         private void NodeLeftClicked(int id)
         {
-            var data = Graph.GetNodeData(id);
+            var data = Graph.GetNode(id);
             var info = $"{data.Name}, {data.Duration}日\n{data.Descript}";
             DrawInfo(info);
         }
@@ -536,7 +530,7 @@ namespace FocusTree.UI.Controls
             if (node != null)
             {
                 NodeInfoTip.BackColor = Color.FromArgb(0, Color.AliceBlue);
-                NodeInfoTip.Show($"{Graph.GetNodeData(node.Value).Name}\nID: {node.Value}", this, location.X + 10, location.Y);
+                NodeInfoTip.Show($"{Graph.GetNode(node.Value).Name}\nID: {node.Value}", this, location.X + 10, location.Y);
             }
             else
             {
@@ -666,7 +660,7 @@ namespace FocusTree.UI.Controls
         /// <returns></returns>
         private RectangleF NodeDrawingRect(int id)
         {
-            var point = MetaPointToCanvasPoint(Graph.GetMetaPoint(id));
+            var point = MetaPointToCanvasPoint(Graph.GetNode(id).MetaPoint);
             var rect = new RectangleF(new(point.X, point.Y), NodeSize);
             return CanvasRectToDrawingRect(rect);
         }
@@ -711,7 +705,7 @@ namespace FocusTree.UI.Controls
             {
                 return;
             }
-            var point = Graph.GetMetaPoint(ID);
+            var point = Graph.GetNode(ID).MetaPoint;
             var canvasPoint = MetaPointToCanvasPoint(point);
             DrawingCenter = new(canvasPoint.X + NodeSize.Width / 2, canvasPoint.Y + NodeSize.Height / 2);
             if (zoom)
@@ -857,13 +851,13 @@ namespace FocusTree.UI.Controls
             SelectedNode = null;
             Invalidate();
         }
-        public FocusData? GetSelectedNodeData()
+        public FocusNode? GetSelectedNodeData()
         {
             if (SelectedNode == null)
             {
                 return null;
             }
-            return Graph.GetNodeData(SelectedNode.Value);
+            return Graph.GetNode(SelectedNode.Value);
         }
         public Point GetSelectedNodeCenterOnScreen()
         {
