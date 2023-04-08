@@ -1,11 +1,19 @@
-﻿namespace FocusTree.UI.test
+﻿using FocusTree.Data;
+using FocusTree.IO;
+using FocusTree.Tool.IO;
+
+namespace FocusTree.UI.test
 {
     public partial class TestInfo : Form
     {
         TestFormatter testFormatter = new();
         public string InfoText
         {
-            get { return infoText; }
+            get 
+            {
+                Info.Text = infoText;
+                return infoText; 
+            }
             set
             {
                 infoText = value;
@@ -39,6 +47,27 @@
             differ = 0;
             good = 0;
             InfoText = string.Empty;
+        }
+
+        private void ToolStripMenuItemOpen_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFile = new();
+            openFile.Filter = "xml文件|*.xml";
+            if (openFile.ShowDialog() == DialogResult.OK)
+            {
+                Initialize();
+                var g = XmlIO.LoadFromXml<FocusGraph>(openFile.FileName);
+                Info.Text += "\n\n=====Successfull=====\n";
+                var enumer = g.GetNodeCatalogEnumerator();
+                while (enumer.MoveNext())
+                {
+                    Info.Text += enumer.Current.Value.ID + ". ";
+                    foreach (var effect in enumer.Current.Value.Effects)
+                    {
+                        Info.Text += effect.ToString() + "\n";
+                    }
+                }
+            }
         }
     }
 }

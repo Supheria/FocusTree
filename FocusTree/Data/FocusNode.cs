@@ -157,8 +157,9 @@ namespace FocusTree.Data
                 Program.testInfo.total++;
                 if (!FormatRawEffectSentence.Formatter(raw, out var formattedList))
                 {
-                    Program.testInfo.InfoText += $"{ID}. {raw}\n";
                     Program.testInfo.erro++;
+                    Program.testInfo.good = Program.testInfo.total - Program.testInfo.erro;
+                    Program.testInfo.InfoText += $"{ID}. {raw}\n";
                     continue;
                 }
                 foreach (var formatted in formattedList)

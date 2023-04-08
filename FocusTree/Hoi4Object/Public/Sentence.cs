@@ -11,6 +11,8 @@ using System.Runtime.InteropServices;
 using FocusTree.Tool;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
+using FocusTree.Tool.Data;
+using IFormattable = FocusTree.Tool.Data.IFormattable;
 
 namespace FocusTree.Hoi4Object.Public
 {
@@ -29,7 +31,7 @@ namespace FocusTree.Hoi4Object.Public
 
         #endregion
 
-        #region ==== 属性获取器 ====
+        #region ==== 变量获取器 ====
 
         /// <summary>
         /// 执行动作
@@ -229,6 +231,8 @@ namespace FocusTree.Hoi4Object.Public
             }
             return result ;
         }
+
+        
     }
 
     public struct SentenceAttribute

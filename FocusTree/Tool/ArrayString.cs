@@ -43,6 +43,7 @@ namespace FocusTree.Tool
         /// <returns></returns>
         public static string[] Reader(string str)
         {
+            if (str == null) { return Array.Empty<string>(); }
             return str.Split(Splitter).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
         }
     }

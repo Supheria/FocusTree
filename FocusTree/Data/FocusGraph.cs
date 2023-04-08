@@ -430,17 +430,8 @@ namespace FocusTree.Data
         /// </summary>
         private FocusGraph()
         {
-#if DEBUG
-            Program.testInfo.Initialize();
-            Program.testInfo.Show();
-#endif
         }
 
-        // -- 序列化工具 --
-        static XmlSerializer FData_serial = new(typeof(FocusData));
-        static XmlSerializerNamespaces NullXmlNameSpace = new(new XmlQualifiedName[] { new XmlQualifiedName("", "") });
-
-        // -- 序列化方法 --
         /// <summary>
         /// 序列化预留方法，默认返回 null
         /// </summary>
@@ -460,9 +451,6 @@ namespace FocusTree.Data
                 if (reader.Name == "FilePath")
                 {
                     FilePath = reader.ReadElementContentAsString();
-#if DEBUG
-                    Program.testInfo.Text = Path.GetFileNameWithoutExtension(FilePath);
-#endif
                 }
                 if (reader.Name == "Nodes")
                 {
@@ -496,10 +484,10 @@ namespace FocusTree.Data
 
             // <Nodes>
             writer.WriteStartElement("Nodes");
-            foreach (var node in NodeCatalog)
+            foreach (var node in NodeCatalog.Values)
             {
                 // <Node>
-                node.Value.WriteXml(writer);
+                node.WriteXml(writer);
                 // </Node>
             }
 
@@ -517,17 +505,11 @@ namespace FocusTree.Data
         public FormattedData Latest { get; set; }
         public FormattedData Format()
         {
-            return new FormattedData(string.Empty);
-            //return new FormattedData(
-            //    JsonConvert.SerializeObject(NodeCatalog.Select(x => x.Value.Data)),
-            //    JsonConvert.SerializeObject(NodeCatalog.Select(x => x.Value.Requires)),
-            //    JsonConvert.SerializeObject(NodeCatalog.Select(x => x.Value.Effects))
-            //    );
+            return new FormattedData(/*JsonConvert.SerializeObject(NodeCatalog)*/);
         }
         public void Deformat(FormattedData data)
         {
             //NodeCatalog = JsonConvert.DeserializeObject<Dictionary<int, FocusNode>>(data.Items[0]);
-            ////Requires = JsonConvert.DeserializeObject<Dictionary<int, List<HashSet<int>>>>(data.Items[1]);
             //CreateLinkes();
             //SetMetaPoints();
         }
