@@ -2,6 +2,9 @@
 {
     public static class PublicSign
     {
+        /// <summary>
+        /// 语义分割符
+        /// </summary>
         public static char Splitter = '|';
         /// <summary>
         /// 执行动作
@@ -149,6 +152,14 @@
             /// 区域
             /// </summary>
             Region = Province << 1,
+            /// <summary>
+            /// Ai修正
+            /// </summary>
+            AiModifyer = Region << 1,
+            /// <summary>
+            /// 区域核心
+            /// </summary>
+            RegionCore = AiModifyer << 1,
 
             #endregion
 
@@ -157,7 +168,7 @@
             /// <summary>
             /// 可以宣战
             /// </summary>
-            AbleToDeclareWar = Availability | Province << 1,
+            AbleToDeclareWar = Availability | RegionCore << 1,
             /// <summary>
             /// 可以自动获取核心
             /// </summary>
