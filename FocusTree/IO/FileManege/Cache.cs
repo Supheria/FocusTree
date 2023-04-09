@@ -39,12 +39,5 @@ namespace FocusTree.IO.FileManege
         {
             Directory.Delete(obj.DirectoryName(), true);
         }
-        /// <summary>
-        /// 清空所有缓存
-        /// </summary>
-        public static void Clear()
-        {
-            Directory.Delete(DirectoryInfo.FullName, true);
-        }
     }
 }

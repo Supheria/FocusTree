@@ -16,7 +16,6 @@ internal static class Program
     {
         testInfo.Show();
         Application.Run(new MainForm());
-        Cache.Clear();
     }
 }
 
