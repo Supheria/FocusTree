@@ -6,16 +6,12 @@
       <RawEffects>
         <Effect>这项国策目前没有实际影响。但随着世界局势的变化可能会发生改变。</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="NoneButMayChange" Type="(),()" Value="(),()" />
-      </Effects>
       <Requires />
     </Node>
     <Node ID="125" Name="扩展生产" Star="false" Duration="60" Descript="" Ps.="">
       <RawEffects>
         <Effect>1x70%研究加成：生产类，建造类和资源获取类。</Effect>
       </RawEffects>
-      <Effects />
       <Requires>
         <Require>124</Require>
       </Requires>
@@ -24,7 +20,6 @@
       <RawEffects>
         <Effect>（首都）添加3个建筑位。</Effect>
       </RawEffects>
-      <Effects />
       <Requires>
         <Require>125</Require>
       </Requires>
@@ -33,7 +28,6 @@
       <RawEffects>
         <Effect>（state）：添加3个建筑位，添加3民用工厂。</Effect>
       </RawEffects>
-      <Effects />
       <Requires>
         <Require>126</Require>
       </Requires>
@@ -42,12 +36,6 @@
       <RawEffects>
         <Effect>获得民用工厂建造改良，其效果为（军转民花费：-20%，民用工厂建造速度：+15%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(民用工厂建造改良),()">
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(军转民花费|20%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(民用工厂建造速度|15%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>127</Require>
       </Requires>
@@ -56,7 +44,6 @@
       <RawEffects>
         <Effect>所有拥有的地区：添加1个建筑位。</Effect>
       </RawEffects>
-      <Effects />
       <Requires>
         <Require>125</Require>
       </Requires>
@@ -65,7 +52,6 @@
       <RawEffects>
         <Effect>（state）：添加3个建筑位，添加3军用工厂。</Effect>
       </RawEffects>
-      <Effects />
       <Requires>
         <Require>129</Require>
       </Requires>
@@ -74,12 +60,6 @@
       <RawEffects>
         <Effect>获得军用工厂建造改良，其效果为（民转军花费：-20%，军用工厂建造速度：+15%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(军用工厂建造改良),()">
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(民转军花费|20%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(军用工厂建造速度|15%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>130</Require>
       </Requires>
@@ -88,7 +68,6 @@
       <RawEffects>
         <Effect>金属炼制厂的资源产出：+10%，灵气提取厂的资源产出：+12，火药厂的资源产出：+8，妖石精炼厂的资源产出：+6，2x70%研究加成：金属资源，灵气资源，火药资源，妖石资源和石油资源。</Effect>
       </RawEffects>
-      <Effects />
       <Requires>
         <Require>131</Require>
       </Requires>
@@ -97,9 +76,6 @@
       <RawEffects>
         <Effect>1x80%研究加成：生产类。</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Bonus" Type="(Reaserch),()" Value="(生产类|1x80%),()" />
-      </Effects>
       <Requires>
         <Require>125</Require>
       </Requires>
@@ -108,11 +84,6 @@
       <RawEffects>
         <Effect>获得设备混合，其效果为（生产效率上限：+15%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(设备混合),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(生产效率上限|15%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>133</Require>
       </Requires>
@@ -121,11 +92,6 @@
       <RawEffects>
         <Effect>获得设备分离，其效果为（生产效率增长：+25%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(设备分离),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(生产效率增长|25%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>133</Require>
       </Requires>
@@ -134,9 +100,6 @@
       <RawEffects>
         <Effect>1x80%研究加成：生产结构类。</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Bonus" Type="(Reaserch),()" Value="(生产结构类|1x80%),()" />
-      </Effects>
       <Requires>
         <Require>135</Require>
       </Requires>
@@ -145,11 +108,6 @@
       <RawEffects>
         <Effect>获得资源探测优化，其效果为（战略资源获取率：+25%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(资源探测优化),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(战略资源获取率|25%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>136</Require>
       </Requires>
@@ -158,13 +116,6 @@
       <RawEffects>
         <Effect>获得工业理论，其效果为（生产效率保持：+33%，生产效率上限：+5%，生产效率增长：+15%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(工业理论),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(生产效率保持|33%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(生产效率上限|5%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(生产效率增长|15%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>137</Require>
       </Requires>
@@ -173,7 +124,6 @@
       <RawEffects>
         <Effect>1x80%研究加成：数学类，1x80%研究加成：无线电。</Effect>
       </RawEffects>
-      <Effects />
       <Requires>
         <Require>124</Require>
       </Requires>
@@ -182,11 +132,6 @@
       <RawEffects>
         <Effect>获得投入研究于生产，其效果为（生产类研究速度：+4%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(投入研究于生产),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(生产类研究速度|4%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>139</Require>
       </Requires>
@@ -195,11 +140,6 @@
       <RawEffects>
         <Effect>获得投入研究于建造，其效果为（建造类研究速度：+4%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(投入研究于建造),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(建造类研究速度|4%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>139</Require>
       </Requires>
@@ -208,7 +148,6 @@
       <RawEffects>
         <Effect>减少1.5的超前惩罚并获得100%研究加成。对下3次研究生产类，建造类和资源获取类科技时有效。</Effect>
       </RawEffects>
-      <Effects />
       <Requires>
         <Require>141</Require>
       </Requires>
@@ -217,11 +156,6 @@
       <RawEffects>
         <Effect>获得投入研究于步兵武器，其效果为（基础武器类研究速度：+4%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(投入研究于步兵武器),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(基础武器类研究速度|4%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>139</Require>
       </Requires>
@@ -230,7 +164,6 @@
       <RawEffects>
         <Effect>获得投入研究于火炮，，其效果为（火炮类研究速度：+4%）</Effect>
       </RawEffects>
-      <Effects />
       <Requires>
         <Require>139</Require>
       </Requires>
@@ -239,7 +172,6 @@
       <RawEffects>
         <Effect>减少1.5的超前惩罚并获得100%研究加成。对下3次研究步兵和火炮类科技时有效。</Effect>
       </RawEffects>
-      <Effects />
       <Requires>
         <Require>144</Require>
       </Requires>
@@ -248,11 +180,6 @@
       <RawEffects>
         <Effect>获得投入研究于资源，其效果为（资源获取类研究速度：+4%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(投入研究于资源),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(资源获取类研究速度|4%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>139</Require>
       </Requires>
@@ -261,7 +188,6 @@
       <RawEffects>
         <Effect>获得1个科研槽。</Effect>
       </RawEffects>
-      <Effects />
       <Requires>
         <Require>146</Require>
       </Requires>
@@ -270,7 +196,6 @@
       <RawEffects>
         <Effect>陆军经验：+30。</Effect>
       </RawEffects>
-      <Effects />
       <Requires>
         <Require>124</Require>
       </Requires>
@@ -279,9 +204,6 @@
       <RawEffects>
         <Effect>1x80%研究加成：基础武器。</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Bonus" Type="(Reaserch),()" Value="(基础武器|1x80%),()" />
-      </Effects>
       <Requires>
         <Require>148</Require>
       </Requires>
@@ -290,9 +212,6 @@
       <RawEffects>
         <Effect>1x80%研究加成：火炮类。</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Bonus" Type="(Reaserch),()" Value="(火炮类|1x80%),()" />
-      </Effects>
       <Requires>
         <Require>148</Require>
       </Requires>
@@ -301,7 +220,6 @@
       <RawEffects>
         <Effect>获得步兵武器改良，其效果为（步枪：对人员杀伤：+10%，灵力单元：+对人员杀伤：+10%）</Effect>
       </RawEffects>
-      <Effects />
       <Requires>
         <Require>150</Require>
       </Requires>
@@ -310,9 +228,6 @@
       <RawEffects>
         <Effect>2x80%研究加成：魔导师小队和和追击炮小队装备。</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Bonus" Type="(Reaserch),()" Value="(魔导师小队和和追击炮小队装备|2x80%),()" />
-      </Effects>
       <Requires>
         <Require>151</Require>
       </Requires>
@@ -321,12 +236,6 @@
       <RawEffects>
         <Effect>获得加强训练，其效果为（部队组织度：+10%，训练事件：+5%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(加强训练),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(部队组织度|10%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(训练事件|5%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>151</Require>
       </Requires>
@@ -335,7 +244,6 @@
       <RawEffects>
         <Effect>1x40%花费降低：陆军学说。</Effect>
       </RawEffects>
-      <Effects />
       <Requires>
         <Require>148</Require>
       </Requires>
@@ -344,9 +252,6 @@
       <RawEffects>
         <Effect>1x80%研究加成：支援科技。</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Bonus" Type="(Reaserch),()" Value="(支援科技|1x80%),()" />
-      </Effects>
       <Requires>
         <Require>148</Require>
       </Requires>
@@ -355,9 +260,6 @@
       <RawEffects>
         <Effect>1x60%研究加成：精英妖怪小队和战斗巫女小队装备。</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Bonus" Type="(Reaserch),()" Value="(精英妖怪小队和战斗巫女小队装备|1x60%),()" />
-      </Effects>
       <Requires>
         <Require>155</Require>
       </Requires>
@@ -366,9 +268,6 @@
       <RawEffects>
         <Effect>1x60%研究加成：空军类。</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Bonus" Type="(Reaserch),()" Value="(空军类|1x60%),()" />
-      </Effects>
       <Requires>
         <Require>156</Require>
       </Requires>
@@ -377,9 +276,6 @@
       <RawEffects>
         <Effect>2x70%研究加成：大妖怪小队和机甲小队装备。</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Bonus" Type="(Reaserch),()" Value="(大妖怪小队和机甲小队装备|2x70%),()" />
-      </Effects>
       <Requires>
         <Require>156</Require>
       </Requires>
@@ -388,12 +284,6 @@
       <RawEffects>
         <Effect>获得加大征兵，其效果为（动员速度：-5%，适役人口修正：25%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(加大征兵),()">
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(动员速度|5%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(适役人口修正|25%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>158</Require>
       </Requires>
@@ -402,7 +292,6 @@
       <RawEffects>
         <Effect>政治点数：+100。</Effect>
       </RawEffects>
-      <Effects />
       <Requires>
         <Require>124</Require>
       </Requires>
@@ -411,12 +300,6 @@
       <RawEffects>
         <Effect>获得宽松占领，其效果为（非核心人力：-0.1%，顺从度增长速度：+15%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(宽松占领),()">
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(非核心人力|0.1%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(顺从度增长速度|15%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>160</Require>
       </Requires>
@@ -425,11 +308,6 @@
       <RawEffects>
         <Effect>获得同化新区域，其效果为（建造核心花费：-20%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(同化新区域),()">
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(建造核心花费|20%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>161</Require>
       </Requires>
@@ -438,12 +316,6 @@
       <RawEffects>
         <Effect>获得榨取占领区，其效果为（非核心人力：+0.1%，抵抗增长速度：+50%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(榨取占领区),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(非核心人力|0.1%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(抵抗增长速度|50%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>160</Require>
       </Requires>
@@ -452,11 +324,6 @@
       <RawEffects>
         <Effect>获得掠夺占领区，其效果为（掠夺降低厌战效果：+25%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(掠夺占领区),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(掠夺降低厌战效果|25%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>163</Require>
       </Requires>
@@ -465,7 +332,6 @@
       <RawEffects>
         <Effect>增加基础战争支持度：+15%。</Effect>
       </RawEffects>
-      <Effects />
       <Requires>
         <Require>160</Require>
       </Requires>
@@ -474,7 +340,6 @@
       <RawEffects>
         <Effect>增加基础稳定度：+15%。</Effect>
       </RawEffects>
-      <Effects />
       <Requires>
         <Require>160</Require>
       </Requires>
@@ -483,11 +348,6 @@
       <RawEffects>
         <Effect>获得民众激昂，其效果为（降低厌战花费：-25%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(民众激昂),()">
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(降低厌战花费|25%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>166</Require>
       </Requires>

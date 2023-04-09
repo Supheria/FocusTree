@@ -333,6 +333,5 @@ namespace FocusTree.UI
         private ToolStripMenuItem MainForm_Menu_graph_saveas;
         private ToolStripMenuItem MainForm_Menu_graph_saveasBatch;
         private ToolStripMenuItem MainForm_Menu_graph_reorderIds;
-        private ToolStripSeparator toolStripSeparator3;
     }
 }

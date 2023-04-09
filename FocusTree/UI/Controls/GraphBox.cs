@@ -1,8 +1,7 @@
 using FocusTree.Data;
+using FocusTree.Data.Focus;
 using FocusTree.IO;
-using FocusTree.Tool.Data;
-using FocusTree.Tool.IO;
-using FocusTree.Tool.UI;
+using FocusTree.IO.FileManege;
 using FocusTree.UI.NodeToolDialogs;
 using System.Numerics;
 
@@ -255,11 +254,9 @@ namespace FocusTree.UI.Controls
             var g = Graphics.FromImage(Image);
             g.Clear(Color.White);
 
-            var enumer = Graph.GetNodeCatalogEnumerator();
-            while (enumer.MoveNext())
+            foreach(var node in Graph.GetNodes())
             {
-                var id = enumer.Current.Key;
-                var name = enumer.Current.Value.Name;
+                var id = node.ID;
                 var rect = NodeDrawingRect(id);
                 var font = new Font(NodeFont, 10 * GScale, FontStyle.Bold, GraphicsUnit.Pixel);
 
@@ -282,7 +279,7 @@ namespace FocusTree.UI.Controls
                     {
                         g.FillRectangle(NodeBG, rect);
                     }
-                    g.DrawString(name, font, NodeFG, rect, NodeFontFormat);
+                    g.DrawString(node.Name, font, NodeFG, rect, NodeFontFormat);
                 }
 
                 var requires = Graph.GetNode(id).Requires;
@@ -335,10 +332,9 @@ namespace FocusTree.UI.Controls
         /// <returns></returns>
         private bool IsNodeConflict(int id)
         {
-            var enumer = Graph.GetNodeCatalogEnumerator();
-            while (enumer.MoveNext())
+            foreach(var node in Graph.GetNodes())
             {
-                if (id != enumer.Current.Key && Graph.GetNode(id).MetaPoint == enumer.Current.Value.MetaPoint)
+                if (id != node.ID && Graph.GetNode(id).MetaPoint == node.MetaPoint)
                 {
                     return true;
                 }
@@ -756,6 +752,7 @@ namespace FocusTree.UI.Controls
         {
             Graph.FilePath = FilePath = path;
             Graph.Save(path);
+            Graph.NewHistory();
             Invalidate();
         }
         /// <summary>
@@ -767,6 +764,7 @@ namespace FocusTree.UI.Controls
             CloseAllNodeToolDialogs();
             FilePath = path;
             Graph = XmlIO.LoadFromXml<FocusGraph>(path);
+            Graph.NewHistory();
             SelectedNode = null;
             RescaleToPanorama();
             Invalidate();

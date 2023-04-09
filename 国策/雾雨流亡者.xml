@@ -2,593 +2,388 @@
 <FocusGraph>
   <FilePath>C:\Users\Non_E\Documents\GitHub\FocusTree\FocusTree\国策\雾雨流亡者.xml</FilePath>
   <Nodes>
-    <Node ID="1" Name="流浪啊流浪" Star="false" Duration="5" Descript="" Ps.="">
+    <Node ID="1" Name="流浪啊流浪" Star="false" Duration="5" Descript="人类复权运动失败之后，我们看似四散而逃，实则在为人类保留火种……" Ps.="">
       <RawEffects>
         <Effect>触发事件“曾经的约定”。</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Trigger" Type="(Event),()" Value="(曾经的约定),()" />
-      </Effects>
       <Requires />
     </Node>
-    <Node ID="2" Name="再次联络" Star="false" Duration="5" Descript="" Ps.="">
+    <Node ID="2" Name="再次联络" Star="false" Duration="5" Descript="不管我们怎么认为，人类的确失败了，但至少现在我们不需要再次白手起家" Ps.="">
       <RawEffects>
         <Effect>获得科技：147季无线电。</Effect>
         <Effect>触发事件“再看幻想乡”。</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Trigger" Type="(Event),()" Value="(再看幻想乡),()" />
-      </Effects>
       <Requires>
         <Require>1</Require>
       </Requires>
     </Node>
-    <Node ID="3" Name="在我们的兄弟当中" Star="false" Duration="5" Descript="" Ps.="">
+    <Node ID="3" Name="在我们的兄弟当中" Star="false" Duration="5" Descript="很巧的是，我们都选择了互帮互助，虽然这批援助不知道是否来自哪个土作坊" Ps.="">
       <RawEffects>
         <Effect>获得6个编制为人类流亡编制的部队，900单位的竹林流亡者产步枪，900单位的草原流亡者产步枪，108单位的竹林流亡者产迫击炮，108单位的草原流亡者产迫击炮，300单位的竹林流亡者产近战武器，300单位的草原流亡者产近战武器添加进国家储备。</Effect>
         <Effect>触发事件“流亡者归来”。</Effect>
         <Effect>获得志愿军，其效果为（志愿军部队数上限：+6，派遣志愿军需要的部队数量：-100%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Trigger" Type="(Event),()" Value="(流亡者归来),()" />
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(志愿军),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(志愿军部队数上限|6),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(派遣志愿军需要的部队数量|100%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>2</Require>
       </Requires>
     </Node>
-    <Node ID="4" Name="慷慨解囊" Star="false" Duration="5" Descript="" Ps.="">
+    <Node ID="4" Name="慷慨解囊" Star="false" Duration="5" Descript="我们谁也不会说出去这是慷慧音政府之慨的" Ps.="">
       <RawEffects>
         <Effect>获得2个地图外民用工厂</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(地图外民用工厂|2),()" />
-      </Effects>
       <Requires>
         <Require>3</Require>
       </Requires>
     </Node>
-    <Node ID="5" Name="赚取利息" Star="false" Duration="55" Descript="" Ps.="">
+    <Node ID="5" Name="赚取利息" Star="false" Duration="55" Descript="即使中有之道战争我们可能什么地盘都捞不到，但是在中有之道贸易站的解放区获得一些“报答”还是很正常的" Ps.="">
       <RawEffects>
         <Effect>获得为期365天的“利息”，其效果为（生活消费品：-3%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(利息|365天),()">
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(生活消费品|3%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>4</Require>
       </Requires>
     </Node>
-    <Node ID="6" Name="借道伐虢" Star="false" Duration="55" Descript="" Ps.="（注：需要中有之道贸易站与幽灵革命运动处于和平）">
+    <Node ID="6" Name="借道伐虢" Star="false" Duration="55" Descript="项庄舞剑，志在沛公" Ps.="（注：需要中有之道贸易站与幽灵革命运动处于和平）">
       <RawEffects>
         <Effect>获得中有之道贸易站的军事通行权，开启对中有之道贸易站的限时决议</Effect>
       </RawEffects>
-      <Effects />
       <Requires>
         <Require>5</Require>
       </Requires>
     </Node>
-    <Node ID="7" Name="调虎离山" Star="false" Duration="55" Descript="" Ps.="">
+    <Node ID="7" Name="调虎离山" Star="false" Duration="55" Descript="驱虎吞狼，坐收渔利" Ps.="">
       <RawEffects>
         <Effect>中有之道贸易站对幽灵革命运动宣战</Effect>
         <Effect>雾雨流亡者对幽灵革命运动宣战</Effect>
       </RawEffects>
-      <Effects />
       <Requires>
         <Require>6</Require>
       </Requires>
     </Node>
-    <Node ID="8" Name="有志竟成" Star="false" Duration="55" Descript="" Ps.="（注：需要中有之道贸易站不存在）">
+    <Node ID="8" Name="有志竟成" Star="false" Duration="55" Descript="有志者，事竟成" Ps.="（注：需要中有之道贸易站不存在）">
       <RawEffects>
         <Effect>获得土地贸易所得，其效果为（生活消费品工厂：-3%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(土地贸易所得),()">
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(生活消费品工厂|3%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>7</Require>
       </Requires>
     </Node>
-    <Node ID="9" Name="黄雀在后" Star="false" Duration="55" Descript="" Ps.="">
+    <Node ID="9" Name="黄雀在后" Star="false" Duration="55" Descript="螳螂捕蝉，黄雀在后" Ps.="">
       <RawEffects>
         <Effect>获得为期365天的“黄雀在后”，其效果为（（幽灵革命运动）我国对其进攻修正：+10%，我国对其防御修正：+10%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(黄雀在后|365天),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(对其进攻|幽灵革命运动|10%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(我国对其防御修正|10%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>8</Require>
       </Requires>
     </Node>
-    <Node ID="10" Name="逝者安息" Star="false" Duration="55" Descript="" Ps.="">
+    <Node ID="10" Name="逝者安息" Star="false" Duration="55" Descript="死者已经离我们远去，但生者还是要继续生存" Ps.="">
       <RawEffects>
         <Effect>（幽灵革命运动）、（中有之道贸易站）吞并时可以获得核心</Effect>
       </RawEffects>
-      <Effects />
       <Requires>
         <Require>9</Require>
       </Requires>
     </Node>
-    <Node ID="11" Name="团结盟友" Star="false" Duration="55" Descript="" Ps.="">
+    <Node ID="11" Name="团结盟友" Star="false" Duration="55" Descript="如果不考虑他们信仰的神明，神佑村落是我们天生的盟友，现在也不是能计较的时候了" Ps.="">
       <RawEffects>
         <Effect>（神佑村落）获得强烈的战略结盟（与雾雨流亡者的关系+100）通过与雾雨流亡者的互不侵犯条约</Effect>
         <Effect>（雾雨流亡者）获得强烈的战略结盟（与神佑村落的关系+100）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),(State)" Value="(强烈的战略结盟),(雾雨流亡者)">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(与神佑村落的关系|100),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>10</Require>
       </Requires>
     </Node>
-    <Node ID="12" Name="两肋插刀" Star="false" Duration="55" Descript="" Ps.="（注：需要铃兰部落存在）">
+    <Node ID="12" Name="两肋插刀" Star="false" Duration="55" Descript="赴汤蹈火，在所不辞" Ps.="（注：需要铃兰部落存在）">
       <RawEffects>
         <Effect>雾雨流亡者对铃兰部落宣战</Effect>
       </RawEffects>
-      <Effects />
       <Requires>
         <Require>11</Require>
       </Requires>
     </Node>
-    <Node ID="13" Name="稳固边疆" Star="false" Duration="55" Descript="" Ps.="">
+    <Node ID="13" Name="稳固边疆" Star="false" Duration="55" Descript="我们将会交涉神佑村落换取幽灵维权运动的所有领土，不过未来应该叫西南村落了吧" Ps.="">
       <RawEffects>
         <Effect>政治点数：-500</Effect>
         <Effect>创建阵营：第二次人类复权运动——西线</Effect>
         <Effect>（神佑村落）触发事件“并非神明的援手”。如果他们同意，则（神佑村落）获得来自雾雨流亡者的支持，其效果为（政治点数：+15%，稳定度：+10%，战争支持度：+10%，科研速度：+5%）</Effect>
         <Effect>触发事件“翻脸”。</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(政治点数|500),()" />
-        <Sentence Motion="AfterDone, Trigger" Type="(RequestEvent),(State)" Value="(并非神明的援手),(神佑村落)">
-          <Sentence Motion="AfterDone, Gain" Type="(Label),(State)" Value="(来自雾雨流亡者的支持),(神佑村落)">
-            <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(政治点数|15%),()" />
-            <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(稳定度|10%),()" />
-            <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(战争支持度|10%),()" />
-            <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(科研速度|5%),()" />
-          </Sentence>
-        </Sentence>
-        <Sentence Motion="AfterDone, Trigger" Type="(Event),()" Value="(翻脸),()" />
-      </Effects>
       <Requires>
         <Require>12</Require>
       </Requires>
     </Node>
-    <Node ID="14" Name="防患未然" Star="false" Duration="55" Descript="" Ps.="">
+    <Node ID="14" Name="防患未然" Star="false" Duration="55" Descript="幽灵革命运动本身就是从地狱分离出来的，为了避免地狱对我们发难，我们应该先一步对他们出手" Ps.="">
       <RawEffects>
         <Effect>获得对（三途川共和国）、（死神联盟）的吞并战争目标，获得2个地图外军用工厂</Effect>
       </RawEffects>
-      <Effects />
       <Requires>
         <Require>13</Require>
       </Requires>
     </Node>
-    <Node ID="15" Name="复兴大势" Star="false" Duration="55" Descript="" Ps.="">
+    <Node ID="15" Name="复兴大势" Star="false" Duration="55" Descript="兵者，国之大事，生死之地，存亡之道，不可不察也" Ps.="">
       <RawEffects>
         <Effect>获得庙算，其效果为（最大指挥点数提高：+100，每日指挥点数额外增长：+10，计划上限加成：+20%，计划速度：+20%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(庙算),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(最大指挥点数提高|100),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(每日指挥点数额外增长|10),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(计划上限加成|20%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(计划速度|20%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>14</Require>
       </Requires>
     </Node>
-    <Node ID="16" Name="以战养战" Star="false" Duration="55" Descript="" Ps.="">
+    <Node ID="16" Name="以战养战" Star="false" Duration="55" Descript="善用兵者，役不再籍，粮不三载，取用于国，因粮于敌，故军食可足也" Ps.="">
       <RawEffects>
         <Effect>废弃村落（增加5个建筑位，增加5个民用工厂）</Effect>
         <Effect>庙算追加效果：基础建设建造速度：+20%，铁路建造速度：+20%，补给站建造速度：+20%，装备缴获比例：+15%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Region)" Value="(建筑位|5),(废弃村落)" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Region)" Value="(民用工厂|5),(废弃村落)" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(基础建设建造速度|20%),(庙算)" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(铁路建造速度|20%),(庙算)" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(补给站建造速度|20%),(庙算)" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(装备缴获比例|15%),(庙算)" />
-      </Effects>
       <Requires>
         <Require>15</Require>
       </Requires>
     </Node>
-    <Node ID="17" Name="认清敌人" Star="false" Duration="55" Descript="" Ps.="">
+    <Node ID="17" Name="认清敌人" Star="false" Duration="55" Descript="知彼知己，百战不殆；不知彼而知己，一胜一负；不知彼,不知己，每战必殆" Ps.="">
       <RawEffects>
         <Effect>庙算追加效果：解密：+10，加密：+10，敌国每周战争支持度：-1%，敌国厌战上涨周期：-50%（注：敌国效果可以通过触发事件等其他形式达到）</Effect>
       </RawEffects>
-      <Effects />
       <Requires>
         <Require>16</Require>
       </Requires>
     </Node>
-    <Node ID="18" Name="反击贤者" Star="false" Duration="55" Descript="" Ps.="（注：需要和后户之国处于战争）">
+    <Node ID="18" Name="反击贤者" Star="false" Duration="55" Descript="人类复权战争的背后是谁的身影？我们从未忘记" Ps.="（注：需要和后户之国处于战争）">
       <RawEffects>
         <Effect>获得为期365天的“正中下怀”，其效果为（部队攻击：+10%，部队防御：+10%，（后户之国）我国对其进攻修正：+10%，我国对其防御修正：+10%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(正中下怀|365天),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(部队攻击|10%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(部队防御|10%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(对其进攻|后户之国|10%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(我国对其防御修正|10%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>17</Require>
       </Requires>
     </Node>
-    <Node ID="19" Name="一战成名" Star="false" Duration="55" Descript="" Ps.="">
+    <Node ID="19" Name="一战成名" Star="false" Duration="55" Descript="“一怒而诸侯惧，安居则天下息”" Ps.="">
       <RawEffects>
         <Effect>获得强大的威望，其效果为（每日获得的政治点数：+0.25，部队组织度：+15%，稳定度：+20%，战争支持度：+20%，建造速度：+10%，部队攻击：+5%，部队防御：+5%，科研速度：+10%，工厂产出：+10%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(强大的威望),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(每日获得的政治点数|0.25),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(部队组织度|15%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(稳定度|20%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(战争支持度|20%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(建造速度|10%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(部队攻击|5%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(部队防御|5%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(科研速度|10%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(工厂产出|10%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>18</Require>
       </Requires>
     </Node>
-    <Node ID="20" Name="斩草除根" Star="false" Duration="55" Descript="" Ps.="">
+    <Node ID="20" Name="斩草除根" Star="false" Duration="55" Descript="斩草除根，以绝后患" Ps.="">
       <RawEffects>
         <Effect>雾雨流亡者对四季审判所宣战</Effect>
       </RawEffects>
-      <Effects />
       <Requires>
         <Require>19</Require>
       </Requires>
     </Node>
-    <Node ID="21" Name="威霸一方" Star="false" Duration="55" Descript="" Ps.="">
+    <Node ID="21" Name="威霸一方" Star="false" Duration="55" Descript="威名一方，霸业安稳" Ps.="">
       <RawEffects>
         <Effect>获得外交中立，其效果为（稳定度：+35%，训练时间：+5%，ai修正：加入或扩大一个阵营的意愿：-250，ai修正：专注防御：+50%，ai修正：专注进攻：-30%，ai修正：专注和平：+40%，ai修正：部署部队数量修正：-20%）</Effect>
       </RawEffects>
-      <Effects />
       <Requires>
         <Require>20</Require>
       </Requires>
     </Node>
-    <Node ID="22" Name="人类复权运动的未来" Star="false" Duration="110" Descript="" Ps.="">
+    <Node ID="22" Name="人类复权运动的未来" Star="false" Duration="110" Descript="当初为人类保留火种的任务我们已经超额完成了，我们又一次站在人类的岔路口上" Ps.="">
       <RawEffects>
         <Effect>触发事件：“人类复权运动的未来”。</Effect>
       </RawEffects>
-      <Effects />
       <Requires>
         <Require>21</Require>
       </Requires>
     </Node>
-    <Node ID="23" Name="复权在即" Star="true" Duration="55" Descript="" Ps.="（注：需要完成人类复权运动的未来国策，需要人类村落意识形态为激进）">
+    <Node ID="23" Name="复权在即" Star="true" Duration="55" Descript="令人意外的是人类村落也有这个想法，很幸运人类复权运动重生了" Ps.="（注：需要完成人类复权运动的未来国策，需要人类村落意识形态为激进）">
       <RawEffects>
         <Effect>雾雨流亡者成为人类村落的合作势力，解散第二次人类复权运动——西线阵营，移除外交中立</Effect>
       </RawEffects>
-      <Effects />
       <Requires />
     </Node>
-    <Node ID="24" Name="号召我们的兄弟" Star="false" Duration="55" Descript="" Ps.="">
+    <Node ID="24" Name="号召我们的兄弟" Star="false" Duration="55" Descript="人类从远古和蛮荒走来，留下的是团结的赞歌" Ps.="">
       <RawEffects>
         <Effect>（草原流亡者）（竹林流亡者）触发事件“复权在即”。</Effect>
       </RawEffects>
-      <Effects />
       <Requires>
         <Require>23</Require>
       </Requires>
     </Node>
-    <Node ID="25" Name="复权信念" Star="false" Duration="55" Descript="" Ps.="（注：该民族精神可以叠加）">
+    <Node ID="25" Name="复权信念" Star="false" Duration="55" Descript="苦心人，天不负" Ps.="（注：该民族精神可以叠加）">
       <RawEffects>
         <Effect>获得复权信念，其效果为（训练时间：-15%，适役人口：+3%）</Effect>
         <Effect>（人类村落）获得复权信念，其效果为（训练时间：-15%，适役人口：+3%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(复权信念),()">
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(训练时间|15%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(适役人口|3%),()" />
-        </Sentence>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),(State)" Value="(复权信念),(人类村落)">
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(训练时间|15%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(适役人口|3%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>24</Require>
       </Requires>
     </Node>
-    <Node ID="26" Name="破釜沉舟" Star="false" Duration="55" Descript="" Ps.="">
+    <Node ID="26" Name="破釜沉舟" Star="false" Duration="55" Descript="破釜沉舟，百二秦关终属楚" Ps.="">
       <RawEffects>
         <Effect>稳定度：-50%，战争支持度：-50%，获得32个编制为前人类村落正规战斗编制的部队</Effect>
       </RawEffects>
-      <Effects />
       <Requires>
         <Require>25</Require>
       </Requires>
     </Node>
-    <Node ID="27" Name="越甲吞吴" Star="false" Duration="55" Descript="" Ps.="">
+    <Node ID="27" Name="越甲吞吴" Star="false" Duration="55" Descript="卧薪尝胆，三千越甲可吞吴" Ps.="">
       <RawEffects>
         <Effect>获得为期365天的“时机已到”，其效果为（部队攻击：+20%，部队防御：+20%，部队组织度：+20%，部队组织度恢复：+20%，部队速度：+20%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(时机已到|365天),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(部队攻击|20%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(部队防御|20%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(部队组织度|20%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(部队组织度恢复|20%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(部队速度|20%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>26</Require>
       </Requires>
     </Node>
-    <Node ID="28" Name="顺其自然" Star="true" Duration="55" Descript="" Ps.="">
+    <Node ID="28" Name="顺其自然" Star="true" Duration="55" Descript="据观察人类村落压根没有复权的想法，看来时机未到}（注：需要完成人类复权运动的未来国策，需要人类村落意识形态不为激进" Ps.="">
       <RawEffects>
         <Effect>所有拥有的地区：添加3个建筑位</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Region)" Value="(建筑位|3),(所有拥有的地区)" />
-      </Effects>
       <Requires />
     </Node>
-    <Node ID="29" Name="人类之梦" Star="false" Duration="55" Descript="" Ps.="">
+    <Node ID="29" Name="人类之梦" Star="false" Duration="55" Descript="人类复权就像梦境一样终究结束，但我们真的失败了吗？" Ps.="">
       <RawEffects>
         <Effect>稳定度：+30%，战争支持度：-10%</Effect>
         <Effect>（草原流亡者）获得人类之梦（与雾雨流亡者的关系-50）</Effect>
         <Effect>（竹林流亡者）获得人类之梦（与雾雨流亡者的关系-50）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),(State)" Value="(人类之梦),(草原流亡者)">
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(与雾雨流亡者的关系|50),()" />
-        </Sentence>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),(State)" Value="(人类之梦),(竹林流亡者)">
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(与雾雨流亡者的关系|50),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>28</Require>
       </Requires>
     </Node>
-    <Node ID="30" Name="不朽之功" Star="false" Duration="55" Descript="" Ps.="">
+    <Node ID="30" Name="不朽之功" Star="false" Duration="55" Descript="我们固然是旧世界的残党，但可以创造前往新世界的船" Ps.="">
       <RawEffects>
         <Effect>获得集体崇拜，其效果为（政治点数：+30%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(集体崇拜),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(政治点数|30%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>29</Require>
       </Requires>
     </Node>
-    <Node ID="31" Name="万世帝国" Star="false" Duration="55" Descript="" Ps.="">
+    <Node ID="31" Name="万世帝国" Star="false" Duration="55" Descript="流亡者之名就是我们对曾经镇压人类复权运动的妖怪们的嘲弄" Ps.="">
       <RawEffects>
         <Effect>获得帝国，其效果为（每日获得的政治点数：+0.35，部队组织度：+10%，每月人口：+30%，适役人口修正：15%，稳定度：+25%，训练时间：-5%，特工位：+1）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(帝国),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(每日获得的政治点数|0.35),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(部队组织度|10%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(每月人口|30%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(适役人口修正|15%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(稳定度|25%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(训练时间|5%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(特工位|1),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>30</Require>
       </Requires>
     </Node>
-    <Node ID="32" Name="卸甲归田" Star="false" Duration="55" Descript="" Ps.="">
+    <Node ID="32" Name="卸甲归田" Star="false" Duration="55" Descript="人类最初也是像现在这样求一处偏安之地，已经不用再战斗了……" Ps.="">
       <RawEffects>
         <Effect>获得休养生息，其效果为（每周人口：+5，每周稳定度：+0.1%，战争支持度：-10%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(休养生息),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(每周人口|5),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(每周稳定度|0.1%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(战争支持度|10%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>31</Require>
       </Requires>
     </Node>
-    <Node ID="33" Name="恢复经济" Star="false" Duration="55" Descript="" Ps.="">
+    <Node ID="33" Name="恢复经济" Star="false" Duration="55" Descript="从人类村落带来的建造设施足以供给小片村庄" Ps.="">
       <RawEffects>
         <Effect>废弃村落（增加9个基础设施）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Region)" Value="(基础设施|9),(废弃村落)" />
-      </Effects>
       <Requires />
     </Node>
-    <Node ID="34" Name="恢复民生" Star="false" Duration="55" Descript="" Ps.="">
+    <Node ID="34" Name="恢复民生" Star="false" Duration="55" Descript="流亡的路上没有安居之地，我们不得不靠意志支撑，但今时不同往日" Ps.="">
       <RawEffects>
         <Effect>废弃村落（增加3个民用工厂）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Region)" Value="(民用工厂|3),(废弃村落)" />
-      </Effects>
       <Requires>
         <Require>33</Require>
       </Requires>
     </Node>
-    <Node ID="35" Name="恢复运输" Star="false" Duration="55" Descript="" Ps.="">
+    <Node ID="35" Name="恢复运输" Star="false" Duration="55" Descript="巧妇难为无米之炊，发展和战争都离不开运输" Ps.="">
       <RawEffects>
         <Effect>开启决议建造铁路和补给站</Effect>
       </RawEffects>
-      <Effects />
       <Requires>
         <Require>34</Require>
       </Requires>
     </Node>
-    <Node ID="36" Name="恢复人口" Star="false" Duration="55" Descript="" Ps.="">
+    <Node ID="36" Name="恢复人口" Star="false" Duration="55" Descript="再优秀的技术没有人使用也是镜花水月" Ps.="">
       <RawEffects>
         <Effect>人力：+1000</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(人力|1000),()" />
-      </Effects>
       <Requires>
         <Require>35</Require>
       </Requires>
     </Node>
-    <Node ID="37" Name="恢复科研" Star="false" Duration="55" Descript="" Ps.="">
+    <Node ID="37" Name="恢复科研" Star="false" Duration="55" Descript="技术的革新带来的生产力进步是毋庸置疑的" Ps.="">
       <RawEffects>
         <Effect>增加1个科研槽</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(科研槽|1),()" />
-      </Effects>
       <Requires>
         <Require>36</Require>
       </Requires>
     </Node>
-    <Node ID="38" Name="恢复教育" Star="false" Duration="55" Descript="" Ps.="">
+    <Node ID="38" Name="恢复教育" Star="false" Duration="55" Descript="只有我们更加了解幻想乡，才不至于被妖怪的虚伪欺骗" Ps.="">
       <RawEffects>
         <Effect>获得高教育水平，其效果为（意识形态变化抵制力度：+30%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(高教育水平),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(意识形态变化抵制力度|30%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>37</Require>
       </Requires>
     </Node>
-    <Node ID="39" Name="恢复生态" Star="false" Duration="55" Descript="" Ps.="">
+    <Node ID="39" Name="恢复生态" Star="false" Duration="55" Descript="我们不得已进行的快速发展至此也应该到头了" Ps.="">
       <RawEffects>
         <Effect>获得退湖还林，其效果为（地区最大工业值：-10%，政治点数：+15%，每周稳定度：+0.1%））</Effect>
       </RawEffects>
-      <Effects />
       <Requires>
         <Require>38</Require>
       </Requires>
     </Node>
-    <Node ID="40" Name="恢复福利" Star="false" Duration="55" Descript="" Ps.="">
+    <Node ID="40" Name="恢复福利" Star="false" Duration="55" Descript="不用再苦一苦百姓了，过去需要人类牺牲的日子一去不复返了（但我们不会告诉他们代价是什么）" Ps.="">
       <RawEffects>
         <Effect>获得战争福利，其效果为（生活消费品工厂：+3%，每周战争支持度：+0.1%，工厂产出：+5%，建造速度：+5%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(战争福利),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(生活消费品工厂|3%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(每周战争支持度|0.1%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(工厂产出|5%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(建造速度|5%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>39</Require>
       </Requires>
     </Node>
-    <Node ID="41" Name="恢复编制" Star="false" Duration="55" Descript="" Ps.="（注：需要完成在我们的兄弟当中国策）">
+    <Node ID="41" Name="恢复编制" Star="false" Duration="55" Descript="失散的部队逐渐和我们汇合，恢复编制让他们更能融入我们" Ps.="（注：需要完成在我们的兄弟当中国策）">
       <RawEffects>
         <Effect>获得前人类村落的正规战斗编制</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(前人类村落的正规战斗编制),()" />
-      </Effects>
       <Requires />
     </Node>
-    <Node ID="42" Name="恢复武库" Star="false" Duration="55" Descript="" Ps.="">
+    <Node ID="42" Name="恢复武库" Star="false" Duration="55" Descript="其实流亡时压根没有带这些东西，但我们默契的没有深究这个问题" Ps.="">
       <RawEffects>
         <Effect>废弃村落（增加3个军用工厂）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Region)" Value="(军用工厂|3),(废弃村落)" />
-      </Effects>
       <Requires>
         <Require>41</Require>
       </Requires>
     </Node>
-    <Node ID="43" Name="恢复军备" Star="false" Duration="55" Descript="" Ps.="">
+    <Node ID="43" Name="恢复军备" Star="false" Duration="55" Descript="虽然我们手头上先进的装备屈指可数，但反向拆解却是足够" Ps.="">
       <RawEffects>
         <Effect>1x80%研究加成：基础武器，1x80%研究加成：火炮类</Effect>
       </RawEffects>
-      <Effects />
       <Requires>
         <Require>42</Require>
       </Requires>
     </Node>
-    <Node ID="44" Name="恢复战法" Star="false" Duration="55" Descript="" Ps.="">
+    <Node ID="44" Name="恢复战法" Star="false" Duration="55" Descript="流亡者没有参与过战争是不可能的，汇总经验很有必要" Ps.="">
       <RawEffects>
         <Effect>陆军经验：+100</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(陆军经验|100),()" />
-      </Effects>
       <Requires>
         <Require>43</Require>
       </Requires>
     </Node>
-    <Node ID="45" Name="恢复理论" Star="false" Duration="55" Descript="" Ps.="">
+    <Node ID="45" Name="恢复理论" Star="false" Duration="55" Descript="提心吊胆的日子已经过去，与时俱进吧" Ps.="">
       <RawEffects>
         <Effect>2x60%花费降低：基础陆军学说</Effect>
       </RawEffects>
-      <Effects />
       <Requires>
         <Require>44</Require>
       </Requires>
     </Node>
-    <Node ID="46" Name="恢复训练" Star="false" Duration="55" Descript="" Ps.="">
+    <Node ID="46" Name="恢复训练" Star="false" Duration="55" Descript="流亡路上这些当然是不敢设想的" Ps.="">
       <RawEffects>
         <Effect>获得恢复训练，其效果为（训练时间：-10%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(恢复训练),()">
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(训练时间|10%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>45</Require>
       </Requires>
     </Node>
-    <Node ID="47" Name="恢复宣传" Star="false" Duration="55" Descript="" Ps.="">
+    <Node ID="47" Name="恢复宣传" Star="false" Duration="55" Descript="我们都清楚自己别无退路" Ps.="">
       <RawEffects>
         <Effect>获得战争宣传，其效果为（厌战上涨周期：+15%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(战争宣传),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(厌战上涨周期|15%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>46</Require>
       </Requires>
     </Node>
-    <Node ID="48" Name="恢复征兵" Star="false" Duration="55" Descript="" Ps.="">
+    <Node ID="48" Name="恢复征兵" Star="false" Duration="55" Descript="我们准备好了" Ps.="">
       <RawEffects>
         <Effect>获得恢复征兵，其效果为（适役人口修正：30%，战争支持度：-5%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(恢复征兵),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(适役人口修正|30%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(战争支持度|5%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>47</Require>
       </Requires>

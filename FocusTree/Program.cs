@@ -1,9 +1,9 @@
 ﻿// See https://aka.ms/new-console-template for more information
 //Console.WriteLine("Hello, World!");
 
+using FocusTree.IO.FileManege;
 using FocusTree.UI;
 using FocusTree.UI.test;
-using System.Globalization;
 
 internal static class Program
 {
@@ -16,6 +16,7 @@ internal static class Program
     {
         testInfo.Show();
         Application.Run(new MainForm());
+        Cache.Clear();
     }
 }
 

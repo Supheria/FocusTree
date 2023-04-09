@@ -53,8 +53,4 @@
     </EmbeddedResource>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Hoi4Object\Deformatter\" />
-  </ItemGroup>
-
 </Project>

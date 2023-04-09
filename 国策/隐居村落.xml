@@ -2,214 +2,127 @@
 <FocusGraph>
   <FilePath>C:\Users\Non_E\Documents\GitHub\FocusTree\FocusTree\国策\隐居村落.xml</FilePath>
   <Nodes>
-    <Node ID="1" Name="入梦" Star="false" Duration="30" Descript="" Ps.="">
+    <Node ID="1" Name="入梦" Star="false" Duration="30" Descript="三鼓，得一异梦……" Ps.="">
       <RawEffects>
         <Effect>触发事件“骑着青牛的老者？”。</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Trigger" Type="(Event),()" Value="(骑着青牛的老者？),()" />
-      </Effects>
       <Requires />
     </Node>
-    <Node ID="2" Name="天书" Star="false" Duration="30" Descript="" Ps.="">
+    <Node ID="2" Name="天书" Star="false" Duration="30" Descript="得天书，当代天宣化，普救世人" Ps.="">
       <RawEffects>
         <Effect>政治点数：+200</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(政治点数|200),()" />
-      </Effects>
       <Requires>
         <Require>1</Require>
       </Requires>
     </Node>
-    <Node ID="3" Name="废贤" Star="false" Duration="30" Descript="" Ps.="">
+    <Node ID="3" Name="废贤" Star="false" Duration="30" Descript="不尚贤，使民不争" Ps.="">
       <RawEffects>
         <Effect>战争支持度：-10%</Effect>
         <Effect>稳定度：+20%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(战争支持度|10%),()" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(稳定度|20%),()" />
-      </Effects>
       <Requires>
         <Require>2</Require>
       </Requires>
     </Node>
-    <Node ID="4" Name="均贱" Star="false" Duration="30" Descript="" Ps.="">
+    <Node ID="4" Name="均贱" Star="false" Duration="30" Descript="不贵难得之货，使民不为盗" Ps.="">
       <RawEffects>
         <Effect>将平均灵力值固定为50%</Effect>
         <Effect>稳定度：+30%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Fixed" Type="(Variable),()" Value="(平均灵力值|50%),()" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(稳定度|30%),()" />
-      </Effects>
       <Requires>
         <Require>3</Require>
       </Requires>
     </Node>
-    <Node ID="5" Name="隐欲" Star="false" Duration="30" Descript="" Ps.="">
+    <Node ID="5" Name="隐欲" Star="false" Duration="30" Descript="不见其欲，使民心不乱" Ps.="">
       <RawEffects>
         <Effect>将世界观固定为唯心世界观</Effect>
         <Effect>稳定度：+50%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Fixed" Type="(Variable),()" Value="(世界观|唯心世界观),()" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(稳定度|50%),()" />
-      </Effects>
       <Requires>
         <Require>4</Require>
       </Requires>
     </Node>
-    <Node ID="6" Name="不仁" Star="false" Duration="30" Descript="" Ps.="">
+    <Node ID="6" Name="不仁" Star="false" Duration="30" Descript="天地不仁，以万物为刍狗；圣人不仁，以天地为刍狗" Ps.="">
       <RawEffects>
         <Effect>稳定度：-50%</Effect>
         <Effect>获得天地不仁，其效果为（科研速度：+10%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(稳定度|50%),()" />
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(天地不仁),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(科研速度|10%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>5</Require>
       </Requires>
     </Node>
-    <Node ID="7" Name="饱腹" Star="false" Duration="30" Descript="" Ps.="">
+    <Node ID="7" Name="饱腹" Star="false" Duration="30" Descript="圣人为腹不为目，故去彼取此" Ps.="">
       <RawEffects>
         <Effect>人口：+1000</Effect>
         <Effect>向保守社会发展一级，以保守社会5取代保守社会4，效果变化（稳定度：+6% 科研速度：-3% 加密：+0.5 可出口资源：-5% 意识形态变化抵制力度：+10%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(人口|1000),()" />
-        <Sentence Motion="AfterDone, Replace" Type="(Grade),()" Value="(保守社会4|保守社会5),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(稳定度|6%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(科研速度|3%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(加密|0.5),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(可出口资源|5%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(意识形态变化抵制力度|10%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>6</Require>
       </Requires>
     </Node>
-    <Node ID="8" Name="修身养性" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="8" Name="修身养性" Star="false" Duration="60" Descript="知常容，容乃公，公乃全，全乃天，天乃道，道乃久，没身不殆" Ps.="">
       <RawEffects>
         <Effect>获得修身养性，其效果为（生活消费品工厂：-6%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(修身养性),()">
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(生活消费品工厂|6%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>7</Require>
       </Requires>
     </Node>
-    <Node ID="9" Name="功遂身退" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="9" Name="功遂身退" Star="false" Duration="60" Descript="悠兮其贵言，功成身遂，百姓皆谓我自然" Ps.="">
       <RawEffects>
         <Effect>圣人追加效果：每日唯心度变化：-0.04%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),(Label)" Value="(每日唯心度变化|0.04%),(圣人)" />
-      </Effects>
       <Requires>
         <Require>8</Require>
       </Requires>
     </Node>
-    <Node ID="10" Name="无不为" Star="false" Duration="30" Descript="" Ps.="">
+    <Node ID="10" Name="无不为" Star="false" Duration="30" Descript="道常无为，而无不为" Ps.="">
       <RawEffects>
         <Effect>稳定度：-50%</Effect>
         <Effect>获得1个科研槽</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(稳定度|50%),()" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(科研槽|1),()" />
-      </Effects>
       <Requires>
         <Require>9</Require>
       </Requires>
     </Node>
-    <Node ID="11" Name="无为而治" Star="false" Duration="60" Descript="" Ps.="（注：守矢神社选择无为而治后的民族精神要和隐居村落相同）">
+    <Node ID="11" Name="无为而治" Star="false" Duration="60" Descript="多言数穷，不如守中" Ps.="（注：守矢神社选择无为而治后的民族精神要和隐居村落相同）">
       <RawEffects>
         <Effect>获得无为而治，其效果为（每周人口：+1，每月人口：+15%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(无为而治),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(每周人口|1),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(每月人口|15%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>10</Require>
       </Requires>
     </Node>
-    <Node ID="12" Name="万民自化" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="12" Name="万民自化" Star="false" Duration="60" Descript="圣人之言曰：“我无为，而民自化；我好静，而民自正；我无事，而民自富；我无欲，而民自朴。”" Ps.="">
       <RawEffects>
         <Effect>获得万民自化，其效果为（每周稳定度：+0.1%，每周战争支持度：-0.1%，战争支持度：+100%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(万民自化),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(每周稳定度|0.1%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(每周战争支持度|0.1%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(战争支持度|100%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>11</Require>
       </Requires>
     </Node>
-    <Node ID="13" Name="福祸相依" Star="true" Duration="30" Descript="" Ps.="">
+    <Node ID="13" Name="福祸相依" Star="true" Duration="30" Descript="祸兮，福之所依；福兮，祸之所伏" Ps.="">
       <RawEffects>
         <Effect>向保守社会发展一级，以保守社会5取代保守社会4，效果变化（稳定度：+6% 科研速度：-3% 加密：+0.5 可出口资源：-5% 意识形态变化抵制力度：+10%）</Effect>
         <Effect>向鸽派发展一级，以鸽派4取代鸽派3，效果变化（生活消费品：-2% 战争支持度：-5% 改善关系持续花费：-10% 地区最大工业值：+10% 贸易协定关系修正：+20.00% 正当化战争目标所需时间：+10% 敌国对我国正当化战争目标所需时间：+20%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Replace" Type="(Grade),()" Value="(保守社会4|保守社会5),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(稳定度|6%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(科研速度|3%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(加密|0.5),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(可出口资源|5%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(意识形态变化抵制力度|10%),()" />
-        </Sentence>
-        <Sentence Motion="AfterDone, Replace" Type="(Grade),()" Value="(鸽派3|鸽派4),()">
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(生活消费品|2%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(战争支持度|5%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(改善关系持续花费|10%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(地区最大工业值|10%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(贸易协定关系修正|20.00%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(正当化战争目标所需时间|10%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(敌国对我国正当化战争目标所需时间|20%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>12</Require>
       </Requires>
     </Node>
-    <Node ID="14" Name="上善若水" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="14" Name="上善若水" Star="false" Duration="60" Descript="上善若水，水善利万物而不争……夫为不争，故无尤" Ps.="">
       <RawEffects>
         <Effect>获得不争之争，其效果为（规则修改：不能宣战，敌国正当化战争目标所需时间：+100%，政治点数：+15%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(不争之争),()">
-          <Sentence Motion="AfterDone, Remove" Type="(AbleToDeclareWar),()" Value="(),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(敌国正当化战争目标所需时间|100%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(政治点数|15%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>13</Require>
       </Requires>
     </Node>
-    <Node ID="15" Name="以柔克刚" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="15" Name="以柔克刚" Star="false" Duration="60" Descript="天下之至柔，驰骋于天下之至坚" Ps.="">
       <RawEffects>
         <Effect>可以通过决议发动周边国家的内战使其变为附庸</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Trigger" Type="(Resolution),()" Value="(),()" />
-      </Effects>
       <Requires>
         <Require>14</Require>
       </Requires>
@@ -218,326 +131,186 @@
       <RawEffects>
         <Effect>获得为天下心，其效果为（生活消费品：+5%，派遣志愿军的紧张度限制：-100%，派遣志愿军需要的部队数量：-100%，志愿军部队数上限：+10）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(为天下心),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(生活消费品|5%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(派遣志愿军的紧张度限制|100%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(派遣志愿军需要的部队数量|100%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(志愿军部队数上限|10),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>15</Require>
       </Requires>
     </Node>
-    <Node ID="17" Name="观天下" Star="false" Duration="30" Descript="" Ps.="">
+    <Node ID="17" Name="观天下" Star="false" Duration="30" Descript="以身观身，以家观家，以乡观乡，以邦观邦，以天下观天下" Ps.="">
       <RawEffects>
         <Effect>获得世界线的观察见证者，其效果为（理念类，每日获得的政治点数：-0.05，理念类花费：+10%，稳定度：+35%，建造速度：+25%，部队核心领土攻击：+30%，部队核心领土防御：+30%，ai修正：专注防御：+30%，防御战争对稳定度修正：+20%，孤立倾向：+0.01，路上要塞建造速度：+25%，防空火炮建造速度：+25%，雷达站建造速度：+25%）</Effect>
       </RawEffects>
-      <Effects />
       <Requires>
         <Require>16</Require>
       </Requires>
     </Node>
-    <Node ID="18" Name="绝圣弃智" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="18" Name="绝圣弃智" Star="false" Duration="60" Descript="绝圣弃智，民利百倍" Ps.="">
       <RawEffects>
         <Effect>修身养性追加效果：科研速度：-3%，生活消费品：-6%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),(Label)" Value="(科研速度|3%),(修身养性)" />
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),(Label)" Value="(生活消费品|6%),(修身养性)" />
-      </Effects>
       <Requires>
         <Require>17</Require>
       </Requires>
     </Node>
-    <Node ID="19" Name="绝仁弃义" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="19" Name="绝仁弃义" Star="false" Duration="60" Descript="绝仁弃义，民复慈孝" Ps.="">
       <RawEffects>
         <Effect>天地不仁追加效果：稳定度：-5%，适役人口：+2%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),(Label)" Value="(稳定度|5%),(天地不仁)" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(适役人口|2%),(天地不仁)" />
-      </Effects>
       <Requires>
         <Require>18</Require>
       </Requires>
     </Node>
-    <Node ID="20" Name="知人胜人" Star="true" Duration="60" Descript="" Ps.="">
+    <Node ID="20" Name="知人胜人" Star="true" Duration="60" Descript="知人者智……胜人者有力" Ps.="">
       <RawEffects>
         <Effect>不争之争追加效果：部队攻击：+10%，解密：+10</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(部队攻击|10%),(不争之争)" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(解密|10),(不争之争)" />
-      </Effects>
       <Requires>
         <Require>19</Require>
       </Requires>
     </Node>
-    <Node ID="21" Name="知己自胜" Star="true" Duration="60" Descript="" Ps.="">
+    <Node ID="21" Name="知己自胜" Star="true" Duration="60" Descript="自知者明……自胜者强" Ps.="">
       <RawEffects>
         <Effect>不争之争追加效果：政治点数：+15%，科研速度：+10%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(政治点数|15%),(不争之争)" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(科研速度|10%),(不争之争)" />
-      </Effects>
       <Requires>
         <Require>19</Require>
       </Requires>
     </Node>
-    <Node ID="22" Name="强行不失" Star="true" Duration="60" Descript="" Ps.="">
+    <Node ID="22" Name="强行不失" Star="true" Duration="60" Descript="强行者有志……不失其所者久" Ps.="">
       <RawEffects>
         <Effect>修身养性追加效果：投降界限：+10%，部队组织度恢复：+10%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(投降界限|10%),(修身养性)" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(部队组织度恢复|10%),(修身养性)" />
-      </Effects>
       <Requires>
         <Require>21</Require>
       </Requires>
     </Node>
-    <Node ID="23" Name="知足不亡" Star="true" Duration="60" Descript="" Ps.="">
+    <Node ID="23" Name="知足不亡" Star="true" Duration="60" Descript="知足者富……死而不亡者寿" Ps.="">
       <RawEffects>
         <Effect>修身养性追加效果：科研速度：-2%，生活消费品工厂：-6%，适役人口：+2%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),(Label)" Value="(科研速度|2%),(修身养性)" />
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),(Label)" Value="(生活消费品工厂|6%),(修身养性)" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(适役人口|2%),(修身养性)" />
-      </Effects>
       <Requires>
         <Require>21</Require>
       </Requires>
     </Node>
-    <Node ID="24" Name="天下归附" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="24" Name="天下归附" Star="false" Duration="60" Descript="执大象，天下往。往而不害，安平太" Ps.="">
       <RawEffects>
         <Effect>不争之争追加效果：下降附庸等级所需时间：-50%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),(Label)" Value="(下降附庸等级所需时间|50%),(不争之争)" />
-      </Effects>
       <Requires>
         <Require>23</Require>
       </Requires>
     </Node>
-    <Node ID="25" Name="无心插柳" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="25" Name="无心插柳" Star="false" Duration="60" Descript="上德不德，是以有德；下德不失德，是以无德" Ps.="">
       <RawEffects>
         <Effect>每个国家获得：道德观不同（对隐世村落关系：-20）</Effect>
         <Effect>获得1个科研槽</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),(State)" Value="(道德观不同),(每个国家)">
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(对隐世村落关系|20),()" />
-        </Sentence>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(科研槽|1),()" />
-      </Effects>
       <Requires>
         <Require>24</Require>
       </Requires>
     </Node>
-    <Node ID="26" Name="不欲如玉" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="26" Name="不欲如玉" Star="false" Duration="60" Descript="致数与无与。是故不欲禄禄如玉，珞珞如石" Ps.="">
       <RawEffects>
         <Effect>每个国家失去：道德观不同（对隐世村落关系：-20）</Effect>
         <Effect>获得1个科研槽</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Remove" Type="(Label),(State)" Value="(道德观不同),(每个国家)">
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(对隐世村落关系|20),()" />
-        </Sentence>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(科研槽|1),()" />
-      </Effects>
       <Requires>
         <Require>25</Require>
       </Requires>
     </Node>
-    <Node ID="27" Name="其鬼不神" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="27" Name="其鬼不神" Star="false" Duration="60" Descript="以道莅天下，其鬼不神" Ps.="">
       <RawEffects>
         <Effect>幽灵种族的省份将自动获得核心：是</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(AbleToGainCoreAuto),(Province)" Value="(),(幽灵种族的省份)" />
-      </Effects>
       <Requires>
         <Require>26</Require>
       </Requires>
     </Node>
-    <Node ID="28" Name="所教教人" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="28" Name="所教教人" Star="false" Duration="60" Descript="人之所教，亦我而教人：强梁者不得其死——吾将以为教父。" Ps.="">
       <RawEffects>
         <Effect>每个孤立国家触发事件“隐世村落的无偿教导？”。如果他们同意，则获得强烈的战略结盟（对隐居村落的关系：+100）</Effect>
         <Effect>获得幻想乡道家正统，其效果为（意识形态变化抵制力度：+75%，可以创建阵营）</Effect>
         <Effect>神灵庙触发事件“道教该如何面对道家？”</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Trigger" Type="(RequestEvent),(State)" Value="(隐世村落的无偿教导？),(每个孤立国家)">
-          <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(强烈的战略结盟),()">
-            <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(对隐居村落的关系|100),()" />
-          </Sentence>
-        </Sentence>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(幻想乡道家正统),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(意识形态变化抵制力度|75%),()" />
-          <Sentence Motion="AfterDone, Gain" Type="(AbleToCreateCamp),()" Value="(),()" />
-        </Sentence>
-        <Sentence Motion="AfterDone, Trigger" Type="(Event),(State)" Value="(道教该如何面对道家？),(神灵庙)" />
-      </Effects>
       <Requires>
         <Require>25</Require>
       </Requires>
     </Node>
-    <Node ID="29" Name="走马以粪" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="29" Name="走马以粪" Star="false" Duration="60" Descript="天下有道，却走马以粪；天下无道，戎马生于郊" Ps.="">
       <RawEffects>
         <Effect>向鸽派发展一级，以鸽派5取代鸽派4，效果变化（生活消费品：-2% 战争支持度：-5% 改善关系持续花费：-10% 地区最大工业值：+10% 贸易协定关系修正：+20.00% 正当化战争目标所需时间：+10% 敌国对我国正当化战争目标所需时间：+20% 人力：+1000）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Replace" Type="(Grade),()" Value="(鸽派4|鸽派5),()">
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(生活消费品|2%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(战争支持度|5%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(改善关系持续花费|10%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(地区最大工业值|10%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(贸易协定关系修正|20.00%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(正当化战争目标所需时间|10%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(敌国对我国正当化战争目标所需时间|20%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(人力|1000),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>25</Require>
       </Requires>
     </Node>
-    <Node ID="30" Name="报怨以德" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="30" Name="报怨以德" Star="false" Duration="60" Descript="为无为，事无事，味无味。大小多少，报怨以德" Ps.="">
       <RawEffects>
         <Effect>顺从度增长速度：+100%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(顺从度增长速度|100%),()" />
-      </Effects>
       <Requires>
         <Require>29</Require>
       </Requires>
     </Node>
-    <Node ID="31" Name="损至于无" Star="false" Duration="60" Descript="" Ps.="：（注：需要所教教人+不欲如玉）">
+    <Node ID="31" Name="损至于无" Star="false" Duration="60" Descript="为学日益，为道日损。损之又损，以至于无为" Ps.="：（注：需要所教教人+不欲如玉）">
       <RawEffects>
         <Effect>这项国策目前没有实际影响。但随着世界局势的变化可能会发生改变。</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="NoneButMayChange" Type="(),()" Value="(),()" />
-      </Effects>
       <Requires>
         <Require>29</Require>
       </Requires>
     </Node>
-    <Node ID="32" Name="治人事天" Star="false" Duration="60" Descript="" Ps.="（注：需要所教教人+走马入粪）">
+    <Node ID="32" Name="治人事天" Star="false" Duration="60" Descript="治人事天，莫若啬。夫唯啬，是以早服" Ps.="（注：需要所教教人+走马入粪）">
       <RawEffects>
         <Effect>村民生活区（增加10个建筑位，增加10个民用工厂）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Region)" Value="(建筑位|10),(村民生活区)" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Region)" Value="(民用工厂|10),(村民生活区)" />
-      </Effects>
       <Requires>
         <Require>29</Require>
       </Requires>
     </Node>
-    <Node ID="33" Name="愚民" Star="false" Duration="30" Descript="" Ps.="（注：需要报怨以德+治人事天）">
+    <Node ID="33" Name="愚民" Star="false" Duration="30" Descript="古之为道者，非以明民，将以愚之" Ps.="（注：需要报怨以德+治人事天）">
       <RawEffects>
         <Effect>圣人追加效果：增援率：-5%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),(Label)" Value="(增援率|5%),(圣人)" />
-      </Effects>
       <Requires>
         <Require>32</Require>
       </Requires>
     </Node>
-    <Node ID="34" Name="为人" Star="false" Duration="30" Descript="" Ps.="（注：需要其鬼不神+损至与无）">
+    <Node ID="34" Name="为人" Star="false" Duration="30" Descript="圣人不积：既以为人，己愈有；既以与人，己愈多" Ps.="（注：需要其鬼不神+损至与无）">
       <RawEffects>
         <Effect>获得为期365天的“强大的威望”，其效果为（每日获得的政治点数：+0.25，部队组织度：+15%，稳定度：+20%，战争支持度：+20%，建造速度：+10%，部队攻击：+5%，部队防御：+5%，科研速度：+10%，工厂产出：+10%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(强大的威望|365天),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(每日获得的政治点数|0.25),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(部队组织度|15%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(稳定度|20%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(战争支持度|20%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(建造速度|10%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(部队攻击|5%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(部队防御|5%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(科研速度|10%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(工厂产出|10%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>32</Require>
       </Requires>
     </Node>
-    <Node ID="35" Name="大盗终止" Star="false" Duration="100" Descript="" Ps.="（注：需要拥有“强大的威望”）">
+    <Node ID="35" Name="大盗终止" Star="false" Duration="100" Descript="彼窃钩者诛，窃国者为诸侯。圣人不死，大盗不止" Ps.="（注：需要拥有“强大的威望”）">
       <RawEffects>
         <Effect>移除圣人，其效果为（孤立倾向：+0.1，每日唯心度变化：+0.04%）</Effect>
         <Effect>获得强大的威望，其效果为（每日获得的政治点数：+0.25，部队组织度：+15%，稳定度：+20%，战争支持度：+20%，建造速度：+10%，部队攻击：+5%，部队防御：+5%，科研速度：+10%，工厂产出：+10%）</Effect>
         <Effect>触发事件“圣人的告别”</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Remove" Type="(Label),()" Value="(圣人),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(孤立倾向|0.1),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(每日唯心度变化|0.04%),()" />
-        </Sentence>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(强大的威望),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(每日获得的政治点数|0.25),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(部队组织度|15%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(稳定度|20%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(战争支持度|20%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(建造速度|10%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(部队攻击|5%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(部队防御|5%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(科研速度|10%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(工厂产出|10%),()" />
-        </Sentence>
-        <Sentence Motion="AfterDone, Trigger" Type="(Event),()" Value="(圣人的告别),()" />
-      </Effects>
       <Requires>
         <Require>34</Require>
       </Requires>
     </Node>
-    <Node ID="36" Name="兵者不详" Star="true" Duration="30" Descript="" Ps.="（注：要求神灵庙意识形态为孤立）">
+    <Node ID="36" Name="兵者不详" Star="true" Duration="30" Descript="夫唯兵者，不详之器，物或恶之……" Ps.="（注：要求神灵庙意识形态为孤立）">
       <RawEffects>
         <Effect>获得不详之器，其效果为（部队组织度：+20%，部队组织度恢复：-5%）</Effect>
         <Effect>向鹰派发展一级，以鸽派2取代鸽派3，效果变化（生活消费品：+2% 战争支持度：+5% 改善关系持续花费：+10% 地区最大工业值：-10% 贸易协定修正：-20% 正当化战争目标所需时间：-10% 敌国对我国正当化目标所需时间：-20% 边界开放法则切换花费：+10% 灵力使用法案切换花费：+10%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(不详之器),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(部队组织度|20%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(部队组织度恢复|5%),()" />
-        </Sentence>
-        <Sentence Motion="AfterDone, Replace" Type="(Grade),()" Value="(鸽派3|鸽派2),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(生活消费品|2%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(战争支持度|5%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(改善关系持续花费|10%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(地区最大工业值|10%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(贸易协定修正|20%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(正当化战争目标所需时间|10%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(敌国对我国正当化目标所需时间|20%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(边界开放法则切换花费|10%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(灵力使用法案切换花费|10%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>12</Require>
       </Requires>
     </Node>
-    <Node ID="37" Name="函谷关" Star="false" Duration="0" Descript="" Ps.="（注：随事件的发展自动完成）">
+    <Node ID="37" Name="函谷关" Star="false" Duration="0" Descript="西出函谷，或言老子入夷狄为浮屠？" Ps.="（注：随事件的发展自动完成）">
       <RawEffects>
         <Effect>这项国策目前没有实际影响。但随着世界局势的变化可能会发生改变。</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="NoneButMayChange" Type="(),()" Value="(),()" />
-      </Effects>
       <Requires>
         <Require>36</Require>
       </Requires>
     </Node>
-    <Node ID="38" Name="再西出" Star="false" Duration="30" Descript="" Ps.="">
+    <Node ID="38" Name="再西出" Star="false" Duration="30" Descript="老子化胡，于是佛道兴矣" Ps.="">
       <RawEffects>
         <Effect>圣人追加效果：新规倾向：+0.01，部队攻击：+15%</Effect>
         <Effect>获得再西出，其效果为（（天狗共和国）我国对其进攻修正：+20%，（天狗帝国）我国对其进攻修正：+20%，（守矢神社）我国对其进攻修正：+20%，（河童共和国）我国对其进攻修正：+20%，（河童长老会）我国对其进攻修正：+20%，（山童自治区）我国对其进攻修正：+20%）</Effect>
@@ -545,42 +318,19 @@
         <Effect>（隐居村落）获得自古以来（对命莲寺关系：+200）</Effect>
         <Effect>（神灵庙）获得命莲寺的宣称</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(新规倾向|0.01),(圣人)" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(部队攻击|15%),(圣人)" />
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(再西出),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(对其进攻|天狗共和国|20%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(对其进攻|天狗帝国|20%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(对其进攻|守矢神社|20%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(对其进攻|河童共和国|20%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(对其进攻|河童长老会|20%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(对其进攻|山童自治区|20%),()" />
-        </Sentence>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),(State)" Value="(宗教对立),(命莲寺)">
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(对隐居村落关系|200),()" />
-        </Sentence>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),(State)" Value="(自古以来),(隐居村落)">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(对命莲寺关系|200),()" />
-        </Sentence>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),(State)" Value="(命莲寺的宣称),(神灵庙)" />
-      </Effects>
       <Requires>
         <Require>37</Require>
       </Requires>
     </Node>
-    <Node ID="39" Name="谷神不死" Star="false" Duration="30" Descript="" Ps.="">
+    <Node ID="39" Name="谷神不死" Star="false" Duration="30" Descript="谷神不死，是谓玄牝。玄牝之们，是谓天地根。绵绵若存，用之不勤" Ps.="">
       <RawEffects>
         <Effect>玄武川之泉（增加5个建筑位，增加5个军用工厂）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Region)" Value="(建筑位|5),(玄武川之泉)" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Region)" Value="(军用工厂|5),(玄武川之泉)" />
-      </Effects>
       <Requires>
         <Require>38</Require>
       </Requires>
     </Node>
-    <Node ID="40" Name="坐进此道" Star="false" Duration="30" Descript="" Ps.="">
+    <Node ID="40" Name="坐进此道" Star="false" Duration="30" Descript="虽有拱壁以先驷马，不如坐进此道" Ps.="">
       <RawEffects>
         <Effect>获得允许创建阵营，创建阵营：道盟</Effect>
         <Effect>神灵庙加入阵营</Effect>
@@ -588,959 +338,586 @@
         <Effect>（隐居村落）获得强烈的战略结盟（对神灵庙的关系：+100）</Effect>
         <Effect>获得道盟盟主，其效果为（投降界限：-10%，适役人口：+3%，核心领土攻击：+10%，核心领土防御：+10%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Create" Type="(Camp),()" Value="(道盟),()" />
-        <Sentence Motion="AfterDone, Join" Type="(Camp),(State)" Value="(阵营),(神灵庙)" />
-        <Sentence Motion="AfterDone, Gain" Type="(Label),(State)" Value="(强烈的战略结盟),(神灵庙)">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(对隐居村落的关系|100),()" />
-        </Sentence>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),(State)" Value="(强烈的战略结盟),(隐居村落)">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(对神灵庙的关系|100),()" />
-        </Sentence>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(道盟盟主),()">
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(投降界限|10%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(适役人口|3%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(核心领土攻击|10%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(核心领土防御|10%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>39</Require>
       </Requires>
     </Node>
-    <Node ID="41" Name="用人配天" Star="false" Duration="30" Descript="" Ps.="">
+    <Node ID="41" Name="用人配天" Star="false" Duration="30" Descript="是谓用人，是谓配天，古之极也" Ps.="">
       <RawEffects>
         <Effect>获得发现幻想乡的矛盾点，其效果为（步兵部队攻击：+4%，步兵部队防御：+4%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(发现幻想乡的矛盾点),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(步兵部队攻击|4%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(步兵部队防御|4%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>40</Require>
       </Requires>
     </Node>
-    <Node ID="42" Name="无兵无敌" Star="false" Duration="30" Descript="" Ps.="">
+    <Node ID="42" Name="无兵无敌" Star="false" Duration="30" Descript="是谓行无行，攘无臂，执无兵，乃无敌矣" Ps.="">
       <RawEffects>
         <Effect>发现幻想乡的矛盾点追加效果：步兵部队攻击：+4%，步兵部队防御：+4%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(步兵部队攻击|4%),(发现幻想乡的矛盾点)" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(步兵部队防御|4%),(发现幻想乡的矛盾点)" />
-      </Effects>
       <Requires>
         <Require>41</Require>
       </Requires>
     </Node>
-    <Node ID="43" Name="如临大敌" Star="false" Duration="30" Descript="" Ps.="">
+    <Node ID="43" Name="如临大敌" Star="false" Duration="30" Descript="祸莫大于轻敌，轻敌几丧吾宝。故抗兵相若……" Ps.="">
       <RawEffects>
         <Effect>发现幻想乡的矛盾点追加效果：步兵部队攻击：+4%，步兵部队防御：+4%，将会出现6个编制为神灵庙护卫编制的部队</Effect>
         <Effect>移除修身养性，其效果为（生活消费品：-6%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(步兵部队攻击|4%),(发现幻想乡的矛盾点)" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(步兵部队防御|4%),(发现幻想乡的矛盾点)" />
-        <Sentence Motion="AfterDone, Add" Type="(Troop),(Label)" Value="(神灵庙护卫|6),(发现幻想乡的矛盾点)" />
-        <Sentence Motion="AfterDone, Remove" Type="(Label),()" Value="(修身养性),()">
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(生活消费品|6%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>42</Require>
       </Requires>
     </Node>
-    <Node ID="44" Name="慎终如始" Star="false" Duration="30" Descript="" Ps.="">
+    <Node ID="44" Name="慎终如始" Star="false" Duration="30" Descript="民之从事，常于几成而败之。慎终如始，则无败事" Ps.="">
       <RawEffects>
         <Effect>获得为期365天的“无败事”，其效果为（工厂产出：+50%，生产效率增长：+50%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(无败事|365天),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(工厂产出|50%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(生产效率增长|50%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>43</Require>
       </Requires>
     </Node>
-    <Node ID="45" Name="兵强则灭" Star="false" Duration="30" Descript="" Ps.="">
+    <Node ID="45" Name="兵强则灭" Star="false" Duration="30" Descript="****，****。****，****" Ps.="">
       <RawEffects>
         <Effect>获得对守矢神社的吞并战争目标</Effect>
         <Effect>获得对天狗共和国的吞并战争目标</Effect>
         <Effect>触发事件“模糊不清的梦”</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(WarGoal),()" Value="(吞并|守矢神社),()" />
-        <Sentence Motion="AfterDone, Gain" Type="(WarGoal),()" Value="(吞并|天狗共和国),()" />
-        <Sentence Motion="AfterDone, Trigger" Type="(Event),()" Value="(模糊不清的梦),()" />
-      </Effects>
       <Requires>
         <Require>44</Require>
       </Requires>
     </Node>
-    <Node ID="46" Name="行路不避" Star="false" Duration="30" Descript="" Ps.="">
+    <Node ID="46" Name="行路不避" Star="false" Duration="30" Descript="盖闻善摄生者，路行不避兕虎" Ps.="">
       <RawEffects>
         <Effect>圣人追加效果：部队防御：+15%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(部队防御|15%),(圣人)" />
-      </Effects>
       <Requires>
         <Require>45</Require>
       </Requires>
     </Node>
-    <Node ID="47" Name="无死地" Star="false" Duration="30" Descript="" Ps.="">
+    <Node ID="47" Name="无死地" Star="false" Duration="30" Descript="兕无所投其角，虎无所用其爪，兵无所容其刃。夫何故？以其无死地焉" Ps.="">
       <RawEffects>
         <Effect>圣人追加效果：部队组织度恢复：+10%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(部队组织度恢复|10%),(圣人)" />
-      </Effects>
       <Requires>
         <Require>46</Require>
       </Requires>
     </Node>
-    <Node ID="48" Name="物形器成" Star="false" Duration="30" Descript="" Ps.="">
+    <Node ID="48" Name="物形器成" Star="false" Duration="30" Descript="道生之，德畜之，物形之，器成之" Ps.="">
       <RawEffects>
         <Effect>3x60%研究加成：基础武器。</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Bonus" Type="(Reaserch),()" Value="(基础武器|3x60%),()" />
-      </Effects>
       <Requires>
         <Require>47</Require>
       </Requires>
     </Node>
-    <Node ID="49" Name="见明守强" Star="false" Duration="30" Descript="" Ps.="">
+    <Node ID="49" Name="见明守强" Star="false" Duration="30" Descript="见小曰明，**曰强" Ps.="">
       <RawEffects>
         <Effect>圣人追加效果：部队增援率：+5%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(部队增援率|5%),(圣人)" />
-      </Effects>
       <Requires>
         <Require>48</Require>
       </Requires>
     </Node>
-    <Node ID="50" Name="不道早己" Star="false" Duration="30" Descript="" Ps.="">
+    <Node ID="50" Name="不道早己" Star="false" Duration="30" Descript="……谓之不道，不道早已" Ps.="">
       <RawEffects>
         <Effect>触发事件“百姓的口腹之欲？”。</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Trigger" Type="(Event),()" Value="(百姓的口腹之欲？),()" />
-      </Effects>
       <Requires>
         <Require>49</Require>
       </Requires>
     </Node>
-    <Node ID="51" Name="民恒畏死" Star="false" Duration="30" Descript="" Ps.="">
+    <Node ID="51" Name="民恒畏死" Star="false" Duration="30" Descript="民恒畏死……吾将得而杀之，夫孰敢矣？" Ps.="">
       <RawEffects>
         <Effect>稳定度：-10%</Effect>
         <Effect>移除无为而治，其效果为（每周人口：+1，每月人口：+15%）</Effect>
         <Effect>圣人追加效果：新规倾向：+0.01，部队攻击：+15%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(稳定度|10%),()" />
-        <Sentence Motion="AfterDone, Remove" Type="(Label),()" Value="(无为而治),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(每周人口|1),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(每月人口|15%),()" />
-        </Sentence>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(新规倾向|0.01),(圣人)" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(部队攻击|15%),(圣人)" />
-      </Effects>
       <Requires>
         <Require>50</Require>
       </Requires>
     </Node>
-    <Node ID="52" Name="民恒畏威" Star="false" Duration="30" Descript="" Ps.="">
+    <Node ID="52" Name="民恒畏威" Star="false" Duration="30" Descript="民不畏威，则大威至……" Ps.="">
       <RawEffects>
         <Effect>稳定度：-20%</Effect>
         <Effect>移除万民自化，其效果为（每周稳定度：+0.1%，每周战争支持度：-0.1%，战争支持度：+100%）</Effect>
         <Effect>圣人追加效果：新规倾向：+0.01，部队攻击：+15%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(稳定度|20%),()" />
-        <Sentence Motion="AfterDone, Remove" Type="(Label),()" Value="(万民自化),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(每周稳定度|0.1%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(每周战争支持度|0.1%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(战争支持度|100%),()" />
-        </Sentence>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(新规倾向|0.01),(圣人)" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(部队攻击|15%),(圣人)" />
-      </Effects>
       <Requires>
         <Require>51</Require>
       </Requires>
     </Node>
-    <Node ID="53" Name="民恒无知" Star="false" Duration="30" Descript="" Ps.="">
+    <Node ID="53" Name="民恒无知" Star="false" Duration="30" Descript="夫唯无知，是以不我知。知我者希，则我贵矣……" Ps.="">
       <RawEffects>
         <Effect>稳定度：-30%</Effect>
         <Effect>移除天地不仁，其效果为（科研速度：+10%）</Effect>
         <Effect>圣人追加效果：新规倾向：+0.01，部队攻击：+15%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(稳定度|30%),()" />
-        <Sentence Motion="AfterDone, Remove" Type="(Label),()" Value="(天地不仁),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(科研速度|10%),()" />
-        </Sentence>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(新规倾向|0.01),(圣人)" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(部队攻击|15%),(圣人)" />
-      </Effects>
       <Requires>
         <Require>52</Require>
       </Requires>
     </Node>
-    <Node ID="54" Name="除无道" Star="false" Duration="30" Descript="" Ps.="">
+    <Node ID="54" Name="除无道" Star="false" Duration="30" Descript="服文……厌饮食，财货有余，是为盗贼夸。非道也哉" Ps.="">
       <RawEffects>
         <Effect>居民生活区（移除1个民用工厂，增加1个军用工厂）</Effect>
         <Effect>山中鸡场（移除1个民用工厂，增加1个军用工厂）</Effect>
         <Effect>触发事件“天之正者不可逆之”。</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),(Region)" Value="(民用工厂|1),(居民生活区)" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Region)" Value="(军用工厂|1),(居民生活区)" />
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),(Region)" Value="(民用工厂|1),(山中鸡场)" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Region)" Value="(军用工厂|1),(山中鸡场)" />
-        <Sentence Motion="AfterDone, Trigger" Type="(Event),()" Value="(天之正者不可逆之),()" />
-      </Effects>
       <Requires>
         <Require>53</Require>
       </Requires>
     </Node>
-    <Node ID="55" Name="天怒人怨" Star="false" Duration="0" Descript="" Ps.="（注1：随事件的发展自动完成）（注2：要守矢神社和天狗共和国不存在之后才会触发）（注3：以下debuff随国力发展自动添加）">
+    <Node ID="55" Name="天怒人怨" Star="false" Duration="0" Descript="兵强则灭，木强则折。强大处下，柔弱处上" Ps.="（注1：随事件的发展自动完成）（注2：要守矢神社和天狗共和国不存在之后才会触发）（注3：以下debuff随国力发展自动添加）">
       <RawEffects>
         <Effect>获得五弊三缺</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(五弊三缺),()" />
-      </Effects>
       <Requires>
         <Require>54</Require>
       </Requires>
     </Node>
-    <Node ID="56" Name="鳏" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="56" Name="鳏" Star="false" Duration="60" Descript="老而无妻曰鳏" Ps.="">
       <RawEffects>
         <Effect>五弊三缺追加效果：适役人口修正：-20%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),(Label)" Value="(适役人口修正|20%),(五弊三缺)" />
-      </Effects>
       <Requires>
         <Require>55</Require>
       </Requires>
     </Node>
-    <Node ID="57" Name="寡" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="57" Name="寡" Star="false" Duration="60" Descript="老而无夫曰寡" Ps.="">
       <RawEffects>
         <Effect>五弊三缺追加效果：每月人口：-10%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),(Label)" Value="(每月人口|10%),(五弊三缺)" />
-      </Effects>
       <Requires>
         <Require>55</Require>
       </Requires>
     </Node>
-    <Node ID="58" Name="孤" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="58" Name="孤" Star="false" Duration="60" Descript="幼而无父曰孤" Ps.="">
       <RawEffects>
         <Effect>五弊三缺追加效果：人力：-1000</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),(Label)" Value="(人力|1000),(五弊三缺)" />
-      </Effects>
       <Requires>
         <Require>55</Require>
       </Requires>
     </Node>
-    <Node ID="59" Name="独" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="59" Name="独" Star="false" Duration="60" Descript="老而无子曰独" Ps.="">
       <RawEffects>
         <Effect>五弊三缺追加效果：适役人口：-1%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),(Label)" Value="(适役人口|1%),(五弊三缺)" />
-      </Effects>
       <Requires>
         <Require>55</Require>
       </Requires>
     </Node>
-    <Node ID="60" Name="残" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="60" Name="残" Star="false" Duration="60" Descript="假有旧瞎一目为残疾，更瞎一目成笃疾" Ps.="">
       <RawEffects>
         <Effect>五弊三缺追加效果：训练时间：+20%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(训练时间|20%),(五弊三缺)" />
-      </Effects>
       <Requires>
         <Require>55</Require>
       </Requires>
     </Node>
-    <Node ID="61" Name="福" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="61" Name="福" Star="false" Duration="60" Descript="无权" Ps.="">
       <RawEffects>
         <Effect>五弊三缺追加效果：政治点数：-30%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),(Label)" Value="(政治点数|30%),(五弊三缺)" />
-      </Effects>
       <Requires>
         <Require>55</Require>
       </Requires>
     </Node>
-    <Node ID="62" Name="禄" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="62" Name="禄" Star="false" Duration="60" Descript="缺财" Ps.="">
       <RawEffects>
         <Effect>五弊三缺追加效果：工厂产出：-30%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),(Label)" Value="(工厂产出|30%),(五弊三缺)" />
-      </Effects>
       <Requires>
         <Require>55</Require>
       </Requires>
     </Node>
-    <Node ID="63" Name="寿" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="63" Name="寿" Star="false" Duration="60" Descript="短寿" Ps.="">
       <RawEffects>
         <Effect>五弊三缺追加效果：建造速度：-30%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),(Label)" Value="(建造速度|30%),(五弊三缺)" />
-      </Effects>
       <Requires>
         <Require>55</Require>
       </Requires>
     </Node>
-    <Node ID="64" Name="因果循环" Star="false" Duration="100" Descript="" Ps.="（注：需要鳏+寡+孤+独+残+福+禄+寿）">
+    <Node ID="64" Name="因果循环" Star="false" Duration="100" Descript="和大怨，必有余怨……夫天道无亲，常与善人" Ps.="（注：需要鳏+寡+孤+独+残+福+禄+寿）">
       <RawEffects>
         <Effect>触发事件“最后的劝诫”。</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Trigger" Type="(Event),()" Value="(最后的劝诫),()" />
-      </Effects>
       <Requires>
         <Require>63</Require>
       </Requires>
     </Node>
-    <Node ID="65" Name="天下共主" Star="true" Duration="30" Descript="" Ps.="（注：要求守矢神社意识形态为孤立）">
+    <Node ID="65" Name="天下共主" Star="true" Duration="30" Descript="道常无名，朴虽小，天下莫能臣也。侯王若能守之，万物将自宾" Ps.="（注：要求守矢神社意识形态为孤立）">
       <RawEffects>
         <Effect>（守矢神社）获得战略同盟（对隐居村落关系：+80）</Effect>
         <Effect>（隐居村落）获得战略同盟（对他们的关系改变了：+80）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),(State)" Value="(战略同盟),(守矢神社)">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(对隐居村落关系|80),()" />
-        </Sentence>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),(State)" Value="(战略同盟),(隐居村落)">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(对他们的关系改变了|80),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>97</Require>
       </Requires>
     </Node>
-    <Node ID="66" Name="邦者下流" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="66" Name="邦者下流" Star="false" Duration="60" Descript="大邦者，下流也，天下之牝。天下之交也，牝恒以静胜牡" Ps.="">
       <RawEffects>
         <Effect>（守矢神社）获得允许创建防御性阵营，创建阵营：妖怪山自卫联盟。</Effect>
         <Effect>隐居村落加入妖怪山自卫联盟</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Create" Type="(Camp),(State)" Value="(妖怪山自卫联盟|防御性),(守矢神社)" />
-        <Sentence Motion="AfterDone, Join" Type="(Camp),(State)" Value="(妖怪山自卫联盟),(隐居村落)" />
-      </Effects>
       <Requires>
         <Require>97</Require>
       </Requires>
     </Node>
-    <Node ID="67" Name="事人取信" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="67" Name="事人取信" Star="false" Duration="60" Descript="小邦以下大邦，则取于大邦。故或下以取，或下而取" Ps.="">
       <RawEffects>
         <Effect>（河童长老会）河童长老会成为隐居村落的四级附庸（势力范围）</Effect>
         <Effect>获得融合河童，其效果为（下降附庸等级所需政治点：-10%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(融合河童),()">
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(下降附庸等级所需政治点|10%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>66</Require>
       </Requires>
     </Node>
-    <Node ID="68" Name="各得所欲" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="68" Name="各得所欲" Star="false" Duration="60" Descript="大邦不过欲兼畜人，小邦不过欲人事人。夫二者各得所欲，则大者宜为下" Ps.="">
       <RawEffects>
         <Effect>隐居村落吞并河童长老会</Effect>
         <Effect>（守矢神社）获得万民自化，其效果为（每周稳定度：+0.1%，每周战争支持度：-0.1%，战争支持度：+100%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Annexed" Type="(State),(State)" Value="(河童长老会),(隐居村落)" />
-        <Sentence Motion="AfterDone, Gain" Type="(Label),(State)" Value="(万民自化),(守矢神社)">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(每周稳定度|0.1%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(每周战争支持度|0.1%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(战争支持度|100%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>66</Require>
       </Requires>
     </Node>
-    <Node ID="69" Name="道冲不盈" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="69" Name="道冲不盈" Star="false" Duration="60" Descript="道冲，而用之或不盈" Ps.="">
       <RawEffects>
         <Effect>增加5个地图外民用工厂</Effect>
         <Effect>无为而治追加效果：地区最大工业值：+20%</Effect>
         <Effect>（守矢神社）触发事件“隐居村落希望改变我们的理念”。如果他们同意，则无为而治追加效果：地区最大工业值：+20%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(地图外民用工厂|5),()" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(地区最大工业值|20%),(无为而治)" />
-        <Sentence Motion="AfterDone, Trigger" Type="(RequestEvent),(State)" Value="(隐居村落希望改变我们的理念),(守矢神社)">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(地区最大工业值|20%),(无为而治)" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>68</Require>
       </Requires>
     </Node>
-    <Node ID="70" Name="无以为用" Star="false" Duration="60" Descript="" Ps.="（注：如果道冲不盈守矢神社同意，（守矢神社）无为而治追加效果：建造速度+30%">
+    <Node ID="70" Name="无以为用" Star="false" Duration="60" Descript="三十辐共一毂，当其无，有车之用。埏埴以为器，当其无，有器之用。凿户牖以为室，当其无，有室之用。故有之以为利，无之以为用}" Ps.="（注：如果道冲不盈守矢神社同意，（守矢神社）无为而治追加效果：建造速度+30%">
       <RawEffects>
         <Effect>所有拥有的地区：增加3个建筑位</Effect>
         <Effect>无为而治追加效果：建造速度：+30%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Region)" Value="(建筑位|3),(所有拥有的地区)" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(建造速度|30%),(无为而治)" />
-      </Effects>
       <Requires>
         <Require>69</Require>
       </Requires>
     </Node>
-    <Node ID="71" Name="不惜牺身" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="71" Name="不惜牺身" Star="false" Duration="60" Descript="故贵以身为天下，若可寄天下" Ps.="">
       <RawEffects>
         <Effect>获得大城镇，其效果为（每月人口：+25%，适役人口修正：5%，稳定度：+10%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(大城镇),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(每月人口|25%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(适役人口修正|5%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(稳定度|10%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>70</Require>
       </Requires>
     </Node>
-    <Node ID="72" Name="相托天下" Star="false" Duration="60" Descript="" Ps.="（注：如果道冲不盈守矢神社同意，（守矢神社）以国家取代宗教组织 效果变化：每日获得的政治点数：+0.1 部队训练时间：+20% 部队组织度：-15% 生活消费品工厂：+6% 稳定度：-20% 战争支持度：-5% 建造速度：+15% 科研速度：+25% 工厂产出：+15% 训练时间：-5%，特工位：+1））">
+    <Node ID="72" Name="相托天下" Star="false" Duration="60" Descript="爱以身为天下，若可托天下" Ps.="（注：如果道冲不盈守矢神社同意，（守矢神社）以国家取代宗教组织 效果变化：每日获得的政治点数：+0.1 部队训练时间：+20% 部队组织度：-15% 生活消费品工厂：+6% 稳定度：-20% 战争支持度：-5% 建造速度：+15% 科研速度：+25% 工厂产出：+15% 训练时间：-5%，特工位：+1））">
       <RawEffects>
         <Effect>获得国家，其效果为（每日获得的政治点数：+0.1，部队组织度：+10%，每月人口：+30%，适役人口修正：10%，生活消费品工厂：1%，稳定度：+15%，训练时间：-5%，特工位：+1）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(国家),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(每日获得的政治点数|0.1),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(部队组织度|10%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(每月人口|30%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(适役人口修正|10%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(生活消费品工厂|1%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(稳定度|15%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(训练时间|5%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(特工位|1),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>71</Require>
       </Requires>
     </Node>
-    <Node ID="73" Name="重为轻根" Star="true" Duration="60" Descript="" Ps.="">
+    <Node ID="73" Name="重为轻根" Star="true" Duration="60" Descript="重为轻根……轻则失根" Ps.="">
       <RawEffects>
         <Effect>修身养性追加效果：核心领土防御：-10%，部队防御：+8%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),(Label)" Value="(核心领土防御|10%),(修身养性)" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(部队防御|8%),(修身养性)" />
-      </Effects>
       <Requires>
         <Require>72</Require>
       </Requires>
     </Node>
-    <Node ID="74" Name="善行无痕" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="74" Name="善行无痕" Star="false" Duration="60" Descript="善行无痕迹，善言无瑕谪" Ps.="">
       <RawEffects>
         <Effect>万民自化追加效果：加密：+6</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(加密|6),(万民自化)" />
-      </Effects>
       <Requires>
         <Require>73</Require>
       </Requires>
     </Node>
-    <Node ID="75" Name="静为躁君" Star="true" Duration="60" Descript="" Ps.="">
+    <Node ID="75" Name="静为躁君" Star="true" Duration="60" Descript="静为躁君……躁则失君" Ps.="">
       <RawEffects>
         <Effect>修身养性追加效果：核心领土攻击：+20%，部队攻击：-4%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(核心领土攻击|20%),(修身养性)" />
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),(Label)" Value="(部队攻击|4%),(修身养性)" />
-      </Effects>
       <Requires>
         <Require>74</Require>
       </Requires>
     </Node>
-    <Node ID="76" Name="善计不筹" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="76" Name="善计不筹" Star="false" Duration="60" Descript="善计不用筹划" Ps.="">
       <RawEffects>
         <Effect>万民自化追加效果：计划速度：+10%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(计划速度|10%),(万民自化)" />
-      </Effects>
       <Requires />
     </Node>
-    <Node ID="77" Name="常善救物" Star="false" Duration="60" Descript="" Ps.="（注：需要重为轻根，静为躁君其一即可）">
+    <Node ID="77" Name="常善救物" Star="false" Duration="60" Descript="常善救物，故无弃物" Ps.="（注：需要重为轻根，静为躁君其一即可）">
       <RawEffects>
         <Effect>万民自化追加效果：战略资源获取率：+25%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(战略资源获取率|25%),(万民自化)" />
-      </Effects>
       <Requires>
         <Require>76</Require>
       </Requires>
     </Node>
-    <Node ID="78" Name="常善救人" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="78" Name="常善救人" Star="false" Duration="60" Descript="常善救人，故无弃人" Ps.="">
       <RawEffects>
         <Effect>万民自化追加效果：所有步兵：伤兵复原：+1%，经验损失：-1.5%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(伤兵复原|1%),(万民自化)" />
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),(Label)" Value="(经验损失|1.5%),(万民自化)" />
-      </Effects>
       <Requires>
         <Require>77</Require>
       </Requires>
     </Node>
-    <Node ID="79" Name="常贵其师" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="79" Name="常贵其师" Star="false" Duration="60" Descript="故善人者，善人之师" Ps.="">
       <RawEffects>
         <Effect>守矢神社增加：科研共享加成+5%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(State)" Value="(科研共享加成|5%),(守矢神社)" />
-      </Effects>
       <Requires>
         <Require>78</Require>
       </Requires>
     </Node>
-    <Node ID="80" Name="善人之资" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="80" Name="善人之资" Star="false" Duration="60" Descript="不善人者，善人之资" Ps.="">
       <RawEffects>
         <Effect>山童镇，山童实验场，水坝控制站，河童大坝，蒸汽村落，南玄武川城，中玄武川镇，三平实验室：隐居村落获得该地区的核心。</Effect>
       </RawEffects>
-      <Effects />
       <Requires>
         <Require>79</Require>
       </Requires>
     </Node>
-    <Node ID="81" Name="大制不割" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="81" Name="大制不割" Star="false" Duration="60" Descript="圣人用之，则为官长。故大制不割" Ps.="">
       <RawEffects>
         <Effect>（天狗帝国）（山姥部落）（妖兽仙界）触发事件“有偿帮助”。如果他们同意，则获得保护自己的臣民，其效果为（陆上要塞：建造速度：+25%）</Effect>
         <Effect>获得为期365天的“借花献佛”，其效果为（生活消费品工厂：10%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(借花献佛|365天),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(生活消费品工厂|10%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>80</Require>
       </Requires>
     </Node>
-    <Node ID="82" Name="有所不为" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="82" Name="有所不为" Star="false" Duration="60" Descript="将欲取天下而为之，吾见其不得已。天下神器，不可为也" Ps.="">
       <RawEffects>
         <Effect>（后户之国）（隙间世界）通过与隐居村落的互不侵犯条约，政治点数：-500</Effect>
       </RawEffects>
-      <Effects />
       <Requires>
         <Require>81</Require>
       </Requires>
     </Node>
-    <Node ID="83" Name="张弛有度" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="83" Name="张弛有度" Star="false" Duration="60" Descript="将欲歙之，必固张之；将欲弱之，必固强之；将欲废之，必固举之；将欲取之，必固予之" Ps.="">
       <RawEffects>
         <Effect>获得帝国，其效果为（每日获得的政治点数：+0.35，部队组织度：+10%，每月人口：+30%，适役人口修正：15%，稳定度：+25%，训练时间：-5%，特工位：+1）</Effect>
         <Effect>获得为期365天的“张弛有度”，其效果为（部队组织度：-25%，部队组织度恢复：-15%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(帝国),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(每日获得的政治点数|0.35),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(部队组织度|10%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(每月人口|30%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(适役人口修正|15%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(稳定度|25%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(训练时间|5%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(特工位|1),()" />
-        </Sentence>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(张弛有度|365天),()">
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(部队组织度|25%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(部队组织度恢复|15%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>82</Require>
       </Requires>
     </Node>
-    <Node ID="84" Name="受国不详" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="84" Name="受国不详" Star="false" Duration="60" Descript="圣人云：“受国之诟，是谓社稷主；受国不详，是谓天下王" Ps.="">
       <RawEffects>
         <Effect>万民自化追加效果：最大指挥点数提高：-30，每月人口：+100</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),(Label)" Value="(最大指挥点数提高|30),(万民自化)" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(每月人口|100),(万民自化)" />
-      </Effects>
       <Requires>
         <Require>83</Require>
       </Requires>
     </Node>
-    <Node ID="85" Name="天网恢恢" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="85" Name="天网恢恢" Star="false" Duration="60" Descript="天之道，不争而善胜，不言而善应，不召而自来，坦然而善谋。天网恢恢，疏而不失" Ps.="">
       <RawEffects>
         <Effect>万民自化追加效果：解密：+10，加密：-6</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(解密|10),(万民自化)" />
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),(Label)" Value="(加密|6),(万民自化)" />
-      </Effects>
       <Requires>
         <Require>84</Require>
       </Requires>
     </Node>
-    <Node ID="86" Name="进道若退" Star="false" Duration="100" Descript="" Ps.="">
+    <Node ID="86" Name="进道若退" Star="false" Duration="100" Descript="建言有之：明道若昧，进道若退，夷道若纇" Ps.="">
       <RawEffects>
         <Effect>成为守矢神社的四级附庸（势力范围），开启与守矢神社争夺国家领导权决议</Effect>
       </RawEffects>
-      <Effects />
       <Requires>
         <Require>85</Require>
       </Requires>
     </Node>
-    <Node ID="87" Name="改过自新" Star="false" Duration="30" Descript="" Ps.="（注：达成要求前不可见，需要完成因果循环国策，需要认同劝谏）">
+    <Node ID="87" Name="改过自新" Star="false" Duration="30" Descript="其政闷闷，其民淳淳；其政察察，其民缺缺" Ps.="（注：达成要求前不可见，需要完成因果循环国策，需要认同劝谏）">
       <RawEffects>
         <Effect>圣人追加效果：新规倾向：-0.05，部队攻击：-50%</Effect>
         <Effect>移除五弊三缺</Effect>
         <Effect>获得365天的“负荆请罪”，其效果为（战争支持度：-50%，制造战争目标的紧张度限制：+50%，志愿军部队数上限值：-50%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),(Label)" Value="(新规倾向|0.05),(圣人)" />
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),(Label)" Value="(部队攻击|50%),(圣人)" />
-        <Sentence Motion="AfterDone, Remove" Type="(Label),()" Value="(五弊三缺),()" />
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(负荆请罪|365天),()">
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(战争支持度|50%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(制造战争目标的紧张度限制|50%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(志愿军部队数上限值|50%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>12</Require>
       </Requires>
     </Node>
-    <Node ID="88" Name="废贤" Star="false" Duration="30" Descript="" Ps.="">
+    <Node ID="88" Name="废贤" Star="false" Duration="30" Descript="不尚贤，使民不争" Ps.="">
       <RawEffects>
         <Effect>战争支持度：-10%</Effect>
         <Effect>稳定度：+20%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(战争支持度|10%),()" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(稳定度|20%),()" />
-      </Effects>
       <Requires>
         <Require>87</Require>
       </Requires>
     </Node>
-    <Node ID="89" Name="均贱" Star="false" Duration="30" Descript="" Ps.="">
+    <Node ID="89" Name="均贱" Star="false" Duration="30" Descript="不贵难得之货，使民不为盗" Ps.="">
       <RawEffects>
         <Effect>将平均灵力值固定为50%</Effect>
         <Effect>稳定度：+30%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Fixed" Type="(Variable),()" Value="(平均灵力值|50%),()" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(稳定度|30%),()" />
-      </Effects>
       <Requires>
         <Require>88</Require>
       </Requires>
     </Node>
-    <Node ID="90" Name="隐欲" Star="false" Duration="30" Descript="" Ps.="">
+    <Node ID="90" Name="隐欲" Star="false" Duration="30" Descript="不见其欲，使民心不乱" Ps.="">
       <RawEffects>
         <Effect>将世界观固定为唯心世界观</Effect>
         <Effect>稳定度：+50%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Fixed" Type="(Variable),()" Value="(世界观|唯心世界观),()" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(稳定度|50%),()" />
-      </Effects>
       <Requires>
         <Require>89</Require>
       </Requires>
     </Node>
-    <Node ID="91" Name="不仁" Star="false" Duration="30" Descript="" Ps.="">
+    <Node ID="91" Name="不仁" Star="false" Duration="30" Descript="天地不仁，以万物为刍狗；圣人不仁，以天地为刍狗" Ps.="">
       <RawEffects>
         <Effect>稳定度：-50%</Effect>
         <Effect>获得天地不仁，其效果为（科研速度：+10%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(稳定度|50%),()" />
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(天地不仁),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(科研速度|10%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>90</Require>
       </Requires>
     </Node>
-    <Node ID="92" Name="饱腹" Star="false" Duration="30" Descript="" Ps.="">
+    <Node ID="92" Name="饱腹" Star="false" Duration="30" Descript="圣人为腹不为目，故去彼取此" Ps.="">
       <RawEffects>
         <Effect>人口：+1000</Effect>
         <Effect>向保守社会发展一级，以保守社会5取代保守社会4，效果变化（稳定度：+6% 科研速度：-3% 加密：+0.5 可出口资源：-5% 意识形态变化抵制力度：+10%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(人口|1000),()" />
-        <Sentence Motion="AfterDone, Replace" Type="(Grade),()" Value="(保守社会4|保守社会5),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(稳定度|6%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(科研速度|3%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(加密|0.5),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(可出口资源|5%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(意识形态变化抵制力度|10%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>91</Require>
       </Requires>
     </Node>
-    <Node ID="93" Name="修身养性" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="93" Name="修身养性" Star="false" Duration="60" Descript="知常容，容乃公，公乃全，全乃天，天乃道，道乃久，没身不殆" Ps.="">
       <RawEffects>
         <Effect>获得修身养性，其效果为（生活消费品工厂：-6%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(修身养性),()">
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(生活消费品工厂|6%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>92</Require>
       </Requires>
     </Node>
-    <Node ID="94" Name="功遂身退" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="94" Name="功遂身退" Star="false" Duration="60" Descript="悠兮其贵言，功成身遂，百姓皆谓我自然" Ps.="">
       <RawEffects>
         <Effect>圣人追加效果：每日唯心度变化：-0.04%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),(Label)" Value="(每日唯心度变化|0.04%),(圣人)" />
-      </Effects>
       <Requires>
         <Require>93</Require>
       </Requires>
     </Node>
-    <Node ID="95" Name="无不为" Star="false" Duration="30" Descript="" Ps.="">
+    <Node ID="95" Name="无不为" Star="false" Duration="30" Descript="道常无为，而无不为" Ps.="">
       <RawEffects>
         <Effect>稳定度：-50%</Effect>
         <Effect>获得1个科研槽</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(稳定度|50%),()" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(科研槽|1),()" />
-      </Effects>
       <Requires>
         <Require>94</Require>
       </Requires>
     </Node>
-    <Node ID="96" Name="无为而治" Star="false" Duration="60" Descript="" Ps.="（注：守矢神社选择无为而治后的民族精神要和隐居村落相同）">
+    <Node ID="96" Name="无为而治" Star="false" Duration="60" Descript="多言数穷，不如守中" Ps.="（注：守矢神社选择无为而治后的民族精神要和隐居村落相同）">
       <RawEffects>
         <Effect>获得无为而治，其效果为（每周人口：+1，每月人口：+15%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(无为而治),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(每周人口|1),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(每月人口|15%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>95</Require>
       </Requires>
     </Node>
-    <Node ID="97" Name="万民自化" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="97" Name="万民自化" Star="false" Duration="60" Descript="圣人之言曰：“我无为，而民自化；我好静，而民自正；我无事，而民自富；我无欲，而民自朴。”" Ps.="">
       <RawEffects>
         <Effect>获得万民自化，其效果为（每周稳定度：+0.1%，每周战争支持度：-0.1%，战争支持度：+100%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(万民自化),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(每周稳定度|0.1%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(每周战争支持度|0.1%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(战争支持度|100%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>94</Require>
       </Requires>
     </Node>
-    <Node ID="98" Name="小国寡民" Star="true" Duration="60" Descript="" Ps.="">
+    <Node ID="98" Name="小国寡民" Star="true" Duration="60" Descript="小国寡民。使有什伯人之器而不用；使民重死而不远；虽有舟舆，无所乘之；虽有甲兵，无所陈之" Ps.="">
       <RawEffects>
         <Effect>将势力规模固定为国家</Effect>
         <Effect>获得国家，其效果为（每日获得的政治点数+0.1，部队组织度+10%，每月人口+30%，适役人口修正：-10%，生活消费品工厂：1%，稳定度+15%，训练时间-5%，特工位+1）</Effect>
         <Effect>获得小国寡民，其效果为（适役人口修正：-20%，部队攻击：+10%，部队防御：+10%，部队组织度恢复-10%，近战武器：对人员杀伤：+20%，对装甲杀伤：+20%，防御：+20%，突破：+20%，生产花费+10%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Fixed" Type="(Variable),()" Value="(势力规模|国家),()" />
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(国家),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(每日获得的政治点数|0.1),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(部队组织度|10%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(每月人口|30%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(适役人口修正|10%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(生活消费品工厂|1%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(稳定度|15%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(训练时间|5%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(特工位|1),()" />
-        </Sentence>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(小国寡民),()">
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(适役人口修正|20%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(部队攻击|10%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(部队防御|10%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(部队组织度恢复|10%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),(Region)" Value="(对人员杀伤|20%),(近战武器)" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(对装甲杀伤|20%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(防御|20%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(突破|20%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(生产花费|10%),()" />
-        </Sentence>
-      </Effects>
       <Requires />
     </Node>
-    <Node ID="99" Name="为而弗争" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="99" Name="为而弗争" Star="false" Duration="60" Descript="天之道，利而不害；人之道，为而弗争" Ps.="">
       <RawEffects>
         <Effect>所有拥有的地区：添加5个基础设施</Effect>
         <Effect>小国寡民追加效果：核心领土防御：+10%，民用工厂建造速度：+30%，军用工厂建造速度：-10%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Region)" Value="(基础设施|5),(所有拥有的地区)" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(核心领土防御|10%),(小国寡民)" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(民用工厂建造速度|30%),(小国寡民)" />
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),(Label)" Value="(军用工厂建造速度|10%),(小国寡民)" />
-      </Effects>
       <Requires>
         <Require>98</Require>
       </Requires>
     </Node>
-    <Node ID="100" Name="鸡犬相闻" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="100" Name="鸡犬相闻" Star="false" Duration="60" Descript="邻国相望，鸡犬之声相闻，民至老死，不相往来" Ps.="">
       <RawEffects>
         <Effect>小国寡民：可出口资源：-100%，贸易协定修正：-100%</Effect>
         <Effect>无为而治追加效果：每周人口：+1，每月人口：+15%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),(Region)" Value="(可出口资源|100%),(小国寡民)" />
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),(Region)" Value="(贸易协定修正|100%),(小国寡民)" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(每周人口|1),(无为而治)" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(每月人口|15%),(无为而治)" />
-      </Effects>
       <Requires>
         <Require>99</Require>
       </Requires>
     </Node>
-    <Node ID="101" Name="哀者必胜" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="101" Name="哀者必胜" Star="false" Duration="60" Descript="抗兵相若，哀者必胜" Ps.="">
       <RawEffects>
         <Effect>小国寡民追加效果：每日获得的政治点数：-0.2，战争支持度：-15%，每周战争支持度：+0.1%，厌战周期上涨：-50%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),(Label)" Value="(每日获得的政治点数|0.2),(小国寡民)" />
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),(Label)" Value="(战争支持度|15%),(小国寡民)" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(每周战争支持度|0.1%),(小国寡民)" />
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),(Label)" Value="(厌战周期上涨|50%),(小国寡民)" />
-      </Effects>
       <Requires>
         <Require>100</Require>
       </Requires>
     </Node>
-    <Node ID="102" Name="圣人出" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="102" Name="圣人出" Star="false" Duration="60" Descript="圣人出，“黄河”清" Ps.="">
       <RawEffects>
         <Effect>稳定度：+50%</Effect>
         <Effect>圣人追加效果：每周战争支持度：+0.1%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(稳定度|50%),()" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(每周战争支持度|0.1%),(圣人)" />
-      </Effects>
       <Requires>
         <Require>101</Require>
       </Requires>
     </Node>
-    <Node ID="103" Name="若烹小鲜" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="103" Name="若烹小鲜" Star="false" Duration="60" Descript="治大国，若烹小鲜" Ps.="">
       <RawEffects>
         <Effect>万民自化追加效果：每日获得的政治点数：+0.1，每周稳定度：+0.1%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(每日获得的政治点数|0.1),(万民自化)" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(每周稳定度|0.1%),(万民自化)" />
-      </Effects>
       <Requires>
         <Require>102</Require>
       </Requires>
     </Node>
-    <Node ID="104" Name="不以兵强" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="104" Name="不以兵强" Star="false" Duration="60" Descript="以道佐人主者，不以兵强天下，其事好还" Ps.="">
       <RawEffects>
         <Effect>所有拥有的地区：添加3个民用工厂</Effect>
         <Effect>获得类人体系人力3，其效果为（适役人口：+2.4%，训练时间：-5%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Region)" Value="(民用工厂|3),(所有拥有的地区)" />
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(类人体系人力3),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(适役人口|2.4%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(训练时间|5%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>103</Require>
       </Requires>
     </Node>
-    <Node ID="105" Name="必有凶年" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="105" Name="必有凶年" Star="false" Duration="60" Descript="师之所处，荆棘生焉；大军之后，必有凶年" Ps.="">
       <RawEffects>
         <Effect>当选中此项时：所有敌国获得为期365天的“必有凶年”，其效果为（生活消费品工厂：+30%，适役人口修正：-80%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="Instantly, Gain" Type="(Label),(State)" Value="(必有凶年|365天),(所有敌国)">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(生活消费品工厂|30%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(适役人口修正|80%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>104</Require>
       </Requires>
     </Node>
-    <Node ID="106" Name="希言自然" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="106" Name="希言自然" Star="false" Duration="60" Descript="希言自然。故飘风不终朝，骤雨不终日。孰为此者？天地。天地尚不能久，而况于人乎？" Ps.="">
       <RawEffects>
         <Effect>万民自化追加效果：通用决议花费：-100%，志愿军部队数上限：+50%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),(Label)" Value="(通用决议花费|100%),(万民自化)" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(志愿军部队数上限|50%),(万民自化)" />
-      </Effects>
       <Requires>
         <Require>105</Require>
       </Requires>
     </Node>
-    <Node ID="107" Name="不为天下先" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="107" Name="不为天下先" Star="false" Duration="60" Descript="我恒有三宝，持而宝之：一曰慈，二曰俭，三曰不敢为天下先" Ps.="">
       <RawEffects>
         <Effect>万民自化追加效果：处于阵营加成：+100%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(处于阵营加成|100%),(万民自化)" />
-      </Effects>
       <Requires>
         <Require>106</Require>
       </Requires>
     </Node>
-    <Node ID="108" Name="知己不知" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="108" Name="知己不知" Star="false" Duration="60" Descript="知不知，尚矣；不知知，病也。是以圣人之不病也，以其病病也，是以不病" Ps.="">
       <RawEffects>
         <Effect>获得1个科研槽</Effect>
         <Effect>获得道教的探索精神，其效果为（科研速度：-15%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(科研槽|1),()" />
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(道教的探索精神),()">
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(科研速度|15%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>107</Require>
       </Requires>
     </Node>
-    <Node ID="109" Name="损余补足" Star="true" Duration="100" Descript="" Ps.="（注：需要完成国策大盗终止）">
+    <Node ID="109" Name="损余补足" Star="true" Duration="100" Descript="天之道，损有余而补不足" Ps.="（注：需要完成国策大盗终止）">
       <RawEffects>
         <Effect>移除道教的探索精神</Effect>
         <Effect>移除对势力规模的固定</Effect>
@@ -1548,250 +925,120 @@
         <Effect>移除对平均灵力值的固定</Effect>
         <Effect>不争之争追加效果：规则修改：可以宣战</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Remove" Type="(Label),()" Value="(道教的探索精神),()" />
-        <Sentence Motion="AfterDone, Unpin" Type="(Variable),()" Value="(势力规模),()" />
-        <Sentence Motion="AfterDone, Unpin" Type="(Variable),()" Value="(世界观),()" />
-        <Sentence Motion="AfterDone, Unpin" Type="(Variable),()" Value="(平均灵力值),()" />
-        <Sentence Motion="AfterDone, Gain" Type="(AbleToDeclareWar),(Label)" Value="(),(不争之争)" />
-      </Effects>
       <Requires>
         <Require>108</Require>
       </Requires>
     </Node>
-    <Node ID="110" Name="种有几" Star="true" Duration="100" Descript="" Ps.="">
+    <Node ID="110" Name="种有几" Star="true" Duration="100" Descript="后稷生于巨迹，伊尹生于空桑。厥昭生乎湿，醯鸡生乎酒。羊奚比乎不笋久竹生青宁，青宁生程，程生马，马生人" Ps.="">
       <RawEffects>
         <Effect>增加5个地图外军用工厂</Effect>
         <Effect>获得种有几，其效果为（适役人口：+38.2%）</Effect>
         <Effect>获得人类，其效果为（科学系研究速度：+5%，动员速度：+10%，部队组织度：+20%，适役人口：+4%，稳定度：+10%，加密：-2，解密：-2，陆军夜战攻击：-30%，陆军征兵法案花费：+25%）</Effect>
         <Effect>向开放社会发展一级，以保守社会3取代保守社会4，效果变化（稳定度：-6% 科研速度：+3% 加密：-0.5 可出口资源：+5% 意识形态变化抵制力度：-10%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(地图外军用工厂|5),()" />
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(种有几),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(适役人口|38.2%),()" />
-        </Sentence>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(人类),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(科学系研究速度|5%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(动员速度|10%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(部队组织度|20%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(适役人口|4%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(稳定度|10%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(加密|2),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(解密|2),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(陆军夜战攻击|30%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(陆军征兵法案花费|25%),()" />
-        </Sentence>
-        <Sentence Motion="AfterDone, Replace" Type="(Grade),()" Value="(保守社会4|保守社会3),()">
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(稳定度|6%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(科研速度|3%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(加密|0.5),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(可出口资源|5%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(意识形态变化抵制力度|10%),()" />
-        </Sentence>
-      </Effects>
       <Requires />
     </Node>
-    <Node ID="111" Name="“无”" Star="false" Duration="30" Descript="" Ps.="">
+    <Node ID="111" Name="“无”" Star="false" Duration="30" Descript="或谓子列子曰：“子奚贵虚？”列子曰：“虚者无贵也。”" Ps.="">
       <RawEffects>
         <Effect>触发事件“《列子》的前后矛盾”。</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Trigger" Type="(Event),()" Value="(《列子》的前后矛盾),()" />
-      </Effects>
       <Requires>
         <Require>110</Require>
       </Requires>
     </Node>
-    <Node ID="112" Name="何容心哉" Star="false" Duration="30" Descript="" Ps.="">
+    <Node ID="112" Name="何容心哉" Star="false" Duration="30" Descript="杞人忧天，晓之者弗……子列子闻而笑曰：“言天地坏者亦谬，言天地不坏者亦谬。坏与不坏，吾所不能知也……坏与不坏，吾何容心哉”" Ps.="">
       <RawEffects>
         <Effect>种有几追加效果：建造速度：+20%，每日唯心度变化：+0.1%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(建造速度|20%),(种有几)" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(每日唯心度变化|0.1%),(种有几)" />
-      </Effects>
       <Requires>
         <Require>111</Require>
       </Requires>
     </Node>
-    <Node ID="113" Name="始得一眄" Star="false" Duration="30" Descript="" Ps.="">
+    <Node ID="113" Name="始得一眄" Star="false" Duration="30" Descript="自吾之事夫子友若人也，三年之后，心不敢念是非，口不敢言利害，始得夫子以眄而已" Ps.="">
       <RawEffects>
         <Effect>获得法师，其效果为（灵力系研究速度：+5%，动员速度：+15%，部队组织度：-2%，适役人口：+8%，稳定度：-5%，步兵部队攻击：+10%，炮兵攻击：+5%，工厂产出：-6%，陆军夜战攻击：-5%，每日人类影响力基础变化：+0.03）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(法师),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(灵力系研究速度|5%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(动员速度|15%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(部队组织度|2%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(适役人口|8%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(稳定度|5%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(步兵部队攻击|10%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(炮兵攻击|5%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(工厂产出|6%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(陆军夜战攻击|5%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(每日人类影响力基础变化|0.03),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>112</Require>
       </Requires>
     </Node>
-    <Node ID="114" Name="解言而笑" Star="false" Duration="30" Descript="" Ps.="">
+    <Node ID="114" Name="解言而笑" Star="false" Duration="30" Descript="五年之后，心更念是非，口俞言利害，夫子始一解颜而笑" Ps.="">
       <RawEffects>
         <Effect>获得幽灵/亡灵，其效果为（战略资源获取率：+10%，部队组织度：-5%，适役人口：+0.2%，移动中组织度损失：+5%，部队损耗：-20%，补给损耗：-15%，部队组织度恢复：+10%，步兵部队攻击：-30%，步兵部队防御：-30%，训练时间：-40%，每日人类影响力基础变化：+0.02，征兵法案花费：+50%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(幽灵/亡灵),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(战略资源获取率|10%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(部队组织度|5%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(适役人口|0.2%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(移动中组织度损失|5%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(部队损耗|20%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(补给损耗|15%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(部队组织度恢复|10%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(步兵部队攻击|30%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(步兵部队防御|30%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(训练时间|40%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(每日人类影响力基础变化|0.02),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(征兵法案花费|50%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>113</Require>
       </Requires>
     </Node>
-    <Node ID="115" Name="并席而坐" Star="false" Duration="30" Descript="" Ps.="">
+    <Node ID="115" Name="并席而坐" Star="false" Duration="30" Descript="七年之后，从心之所念，庚无是非；从口之所言，庚无利害，夫子始一引吾并席而坐" Ps.="">
       <RawEffects>
         <Effect>获得妖兽，其效果为（动员速度：+20%，适役人口：+14%，改善关系持续花费：+25%，每日人类影响力基础变化：+0.04，征兵法案花费：-10%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(妖兽),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(动员速度|20%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(适役人口|14%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(改善关系持续花费|25%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(每日人类影响力基础变化|0.04),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(征兵法案花费|10%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>114</Require>
       </Requires>
     </Node>
-    <Node ID="116" Name="内外进矣" Star="false" Duration="30" Descript="" Ps.="">
+    <Node ID="116" Name="内外进矣" Star="false" Duration="30" Descript="九年之后，横心之所念，横口之所言，亦不知我之是非利害欤，亦不知彼是非利害欤；亦不知夫子之为我师，若人之为我友：内外进矣" Ps.="">
       <RawEffects>
         <Effect>获得神明，其效果为（动员速度：+20%，适役人口：+16%，补给消耗：-5%，加密：+2，解密：+2，陆军夜战攻击：-15%，每日人类影响力基础变化：+0.07）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(神明),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(动员速度|20%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(适役人口|16%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(补给消耗|5%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(加密|2),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(解密|2),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(陆军夜战攻击|15%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(每日人类影响力基础变化|0.07),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>115</Require>
       </Requires>
     </Node>
-    <Node ID="117" Name="纯气之守" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="117" Name="纯气之守" Star="false" Duration="60" Descript="夫醉者之坠于车也，虽疾不死。骨节与人同，而犯害与人异，其神全也。乘亦弗知也，坠亦弗知也。死生惊惧不入乎其胸，是故遌物而不慑" Ps.="">
       <RawEffects>
         <Effect>种有几追加效果：部队防御：+10%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(部队防御|10%),(种有几)" />
-      </Effects>
       <Requires>
         <Require>116</Require>
       </Requires>
     </Node>
-    <Node ID="118" Name="地文不誫" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="118" Name="地文不誫" Star="false" Duration="60" Descript="壶子曰：“向吾示之以地文，罪乎不誫不止，是殆见吾杜德几也”" Ps.="">
       <RawEffects>
         <Effect>种有几追加效果：适役人口修正：-50%，堑壕速度：+10%，堑壕上限：+10</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),(Label)" Value="(适役人口修正|50%),(种有几)" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(堑壕速度|10%),(种有几)" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(堑壕上限|10),(种有几)" />
-      </Effects>
       <Requires>
         <Require>117</Require>
       </Requires>
     </Node>
-    <Node ID="119" Name="天壤机发" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="119" Name="天壤机发" Star="false" Duration="60" Descript="壶子曰：“向吾示之以天壤，名实不入，而机发于踵，此为杜权”" Ps.="">
       <RawEffects>
         <Effect>种有几追加效果：每月人口增长：+25%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(每月人口增长|25%),(种有几)" />
-      </Effects>
       <Requires>
         <Require>118</Require>
       </Requires>
     </Node>
-    <Node ID="120" Name="太冲衡气" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="120" Name="太冲衡气" Star="false" Duration="60" Descript="壶子曰：“向吾示之以太冲莫朕，是殆见吾衡气几也”" Ps.="">
       <RawEffects>
         <Effect>种有几追加效果：部队组织度恢复：+20%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(部队组织度恢复|20%),(种有几)" />
-      </Effects>
       <Requires>
         <Require>119</Require>
       </Requires>
     </Node>
-    <Node ID="121" Name="虚而猗移" Star="false" Duration="60" Descript="" Ps.="">
+    <Node ID="121" Name="虚而猗移" Star="false" Duration="60" Descript="壶子曰：“向吾示之以未始出吾宗。吾与之虚而猗移，不知其谁何，因以为茅糜，因以为波流，故逃也。”" Ps.="">
       <RawEffects>
         <Effect>种有几追加效果：稳定度：-20%，增援率：+5%</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Sub" Type="(Variable),(Label)" Value="(稳定度|20%),(种有几)" />
-        <Sentence Motion="AfterDone, Add" Type="(Variable),(Label)" Value="(增援率|5%),(种有几)" />
-      </Effects>
       <Requires>
         <Require>120</Require>
       </Requires>
     </Node>
-    <Node ID="122" Name="奉余损足" Star="true" Duration="100" Descript="" Ps.="">
+    <Node ID="122" Name="奉余损足" Star="true" Duration="100" Descript="人之道则不然，损不足以奉有余" Ps.="">
       <RawEffects>
         <Effect>每个国家获得：敌对关系（与隐居村落的关系：-500）</Effect>
         <Effect>获得幻想乡建立者，其效果为（每日获得的政治点数：+0.5，每周人力：+3，生活消费品工厂：-10%，稳定度：+10%，地区最大工业值：+30%，建造速度：+25%，工厂产出：25%，制作战争目标的紧张度限制：+15%，特工位：+2，每日人类影响力额外变化：+0.02，x可以加入阵营，灵力系科研速度：+35%，混合类研究速度：+10%，秘密武器类研究速度：-60%）</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),(State)" Value="(敌对关系),(每个国家)">
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(与隐居村落的关系|500),()" />
-        </Sentence>
-        <Sentence Motion="AfterDone, Gain" Type="(Label),()" Value="(幻想乡建立者),()">
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(每日获得的政治点数|0.5),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(每周人力|3),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(生活消费品工厂|10%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(稳定度|10%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(地区最大工业值|30%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(建造速度|25%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(工厂产出|25%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(制作战争目标的紧张度限制|15%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(特工位|2),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(每日人类影响力额外变化|0.02),()" />
-          <Sentence Motion="AfterDone, Remove" Type="(AbleToJoinCamp),()" Value="(),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(灵力系科研速度|35%),()" />
-          <Sentence Motion="AfterDone, Add" Type="(Variable),()" Value="(混合类研究速度|10%),()" />
-          <Sentence Motion="AfterDone, Sub" Type="(Variable),()" Value="(秘密武器类研究速度|60%),()" />
-        </Sentence>
-      </Effects>
       <Requires>
         <Require>121</Require>
       </Requires>
     </Node>
-    <Node ID="123" Name="庄子三剑" Star="true" Duration="100" Descript="" Ps.="（注：需要虚而猗移，知己不知其一即可）">
+    <Node ID="123" Name="庄子三剑" Star="true" Duration="100" Descript="南华老仙，晌午授道" Ps.="（注：需要虚而猗移，知己不知其一即可）">
       <RawEffects>
         <Effect>触发事件“庄子三剑”。</Effect>
       </RawEffects>
-      <Effects>
-        <Sentence Motion="AfterDone, Trigger" Type="(Event),()" Value="(庄子三剑),()" />
-      </Effects>
       <Requires>
         <Require>121</Require>
       </Requires>

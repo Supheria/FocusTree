@@ -1,10 +1,8 @@
 ﻿#define DEBUG
-using FocusTree.Data;
+using FocusTree.Data.Focus;
 using FocusTree.IO;
-using FocusTree.Tool.IO;
-using FocusTree.Tool.UI;
+using FocusTree.IO.FileManege;
 using FocusTree.UI.Controls;
-using FocusTree.UI.test;
 
 namespace FocusTree.UI
 {
@@ -235,7 +233,7 @@ namespace FocusTree.UI
 
         private void MainForm_Menu_graph_saveas_Click(object sender, EventArgs e)
         {
-            DrawNodeMapWithInfo.GraphSaveasImage(Display.Graph);
+            DrawNodeMap.GraphSaveasImage(Display.Graph);
         }
 
         private void MainForm_Menu_graph_saveasBatch_Click(object sender, EventArgs e)
@@ -253,7 +251,7 @@ namespace FocusTree.UI
                 try
                 {
                     var graph = XmlIO.LoadFromXml<FocusGraph>(fileName);
-                    DrawNodeMapWithInfo.GraphSaveasImage(graph);
+                    DrawNodeMap.GraphSaveasImage(graph);
                 }
                 catch (Exception ex)
                 {

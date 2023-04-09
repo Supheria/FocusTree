@@ -1,5 +1,4 @@
-using FocusTree.Tool.Data;
-using FocusTree.Tool.UI;
+using FocusTree.Data;
 using FocusTree.UI.Controls;
 
 namespace FocusTree.UI.NodeToolDialogs
@@ -53,7 +52,7 @@ namespace FocusTree.UI.NodeToolDialogs
             Descript.ReadOnly = Display.ReadOnly;
             Effects.ReadOnly = Display.ReadOnly;
 
-            this.ClearHistory();
+            this.NewHistory();
         }
 
         #endregion

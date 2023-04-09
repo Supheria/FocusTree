@@ -1,6 +1,5 @@
-﻿using FocusTree.Data;
+﻿using FocusTree.Data.Focus;
 using FocusTree.IO;
-using FocusTree.Tool.IO;
 
 namespace FocusTree.UI.test
 {
@@ -9,10 +8,10 @@ namespace FocusTree.UI.test
         TestFormatter testFormatter = new();
         public string InfoText
         {
-            get 
+            get
             {
                 Info.Text = infoText;
-                return infoText; 
+                return infoText;
             }
             set
             {
@@ -52,17 +51,17 @@ namespace FocusTree.UI.test
         private void ToolStripMenuItemOpen_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFile = new();
-            openFile.Filter = "xml文件|*.xml";
+            openFile.Filter = "所有文件|*.*";
             if (openFile.ShowDialog() == DialogResult.OK)
             {
                 Initialize();
+                Text = openFile.FileName;
                 var g = XmlIO.LoadFromXml<FocusGraph>(openFile.FileName);
                 Info.Text += "\n\n=====Successfull=====\n";
-                var enumer = g.GetNodeCatalogEnumerator();
-                while (enumer.MoveNext())
+                foreach (var node in g.GetNodes())
                 {
-                    Info.Text += enumer.Current.Value.ID + ". ";
-                    foreach (var effect in enumer.Current.Value.Effects)
+                    Info.Text += node.ID + ". ";
+                    foreach (var effect in node.Effects)
                     {
                         Info.Text += effect.ToString() + "\n";
                     }
