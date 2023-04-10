@@ -63,7 +63,7 @@ namespace FocusTree.IO
         #region ==== 输出图片 ====
 
         static NodeMapDrawer Drawer;
-        public static void SaveasImage(FocusGraph Graph)
+        public static void SaveasImage(FocusGraph Graph, string toSavePath)
         {
             if (Graph == null)
             {
@@ -92,7 +92,7 @@ namespace FocusTree.IO
             g.Flush();
             g.Dispose();
 
-            canvas.Save(Path.ChangeExtension(Graph.FilePath, ".jpg"));
+            canvas.Save(toSavePath);
             canvas.Dispose();
             Drawer.Close();
         }

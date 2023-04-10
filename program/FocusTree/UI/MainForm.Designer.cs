@@ -71,7 +71,7 @@ namespace FocusTree.UI
             // MainForm_StatusStrip
             // 
             MainForm_StatusStrip.ImageScalingSize = new Size(24, 24);
-            MainForm_StatusStrip.Items.AddRange(new ToolStripItem[] { MainForm_StatusStrip_filename, MainForm_ProgressBar, MainForm_StatusStrip_status });
+            MainForm_StatusStrip.Items.AddRange(new ToolStripItem[] { MainForm_StatusStrip_status, MainForm_ProgressBar, MainForm_StatusStrip_filename });
             MainForm_StatusStrip.Location = new Point(0, 761);
             MainForm_StatusStrip.Name = "MainForm_StatusStrip";
             MainForm_StatusStrip.Padding = new Padding(2, 0, 22, 0);
@@ -283,21 +283,21 @@ namespace FocusTree.UI
             // MainForm_Menu_batch_saveas
             // 
             MainForm_Menu_batch_saveas.Name = "MainForm_Menu_batch_saveas";
-            MainForm_Menu_batch_saveas.Size = new Size(270, 34);
+            MainForm_Menu_batch_saveas.Size = new Size(201, 34);
             MainForm_Menu_batch_saveas.Text = "转存";
             MainForm_Menu_batch_saveas.Click += MainForm_Menu_batch_saveas_Click;
             // 
             // MainForm_Menu_batch_reorderIds
             // 
             MainForm_Menu_batch_reorderIds.Name = "MainForm_Menu_batch_reorderIds";
-            MainForm_Menu_batch_reorderIds.Size = new Size(270, 34);
+            MainForm_Menu_batch_reorderIds.Size = new Size(201, 34);
             MainForm_Menu_batch_reorderIds.Text = "重排节点ID";
             MainForm_Menu_batch_reorderIds.Click += MainForm_Menu_batch_reorderIds_Click;
             // 
             // MainForm_Menu_batch_saveasImage
             // 
             MainForm_Menu_batch_saveasImage.Name = "MainForm_Menu_batch_saveasImage";
-            MainForm_Menu_batch_saveasImage.Size = new Size(270, 34);
+            MainForm_Menu_batch_saveasImage.Size = new Size(201, 34);
             MainForm_Menu_batch_saveasImage.Text = "生成图片";
             MainForm_Menu_batch_saveasImage.Click += MainForm_Menu_batch_saveasImage_Click;
             // 

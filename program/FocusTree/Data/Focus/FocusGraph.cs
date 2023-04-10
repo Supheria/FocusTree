@@ -13,15 +13,6 @@ namespace FocusTree.Data.Focus
 {
     public class FocusGraph : IXmlSerializable, IHistoryable, IBackupable
     {
-        #region ---- 存档文件路径 ----
-
-        /// <summary>
-        /// 存档文件路径
-        /// </summary>
-        internal string FilePath;
-
-        #endregion
-
         #region ---- 基本变量 ----
 
         /// <summary>
@@ -40,10 +31,7 @@ namespace FocusTree.Data.Focus
         /// <summary>
         /// 名称
         /// </summary>
-        public string Name
-        {
-            get { return Path.GetFileNameWithoutExtension(FilePath); }
-        }
+        public string Name { get; private set; }
         /// <summary>
         /// 节点数量
         /// </summary>
@@ -424,7 +412,6 @@ namespace FocusTree.Data.Focus
         /// <param name="path"></param>
         public void Save(string path)
         {
-            FilePath = path;
             this.SaveToXml(path);
             Latest = Format();
         }
@@ -453,11 +440,11 @@ namespace FocusTree.Data.Focus
         {
             NodeCatalog = new();
 
-            while (reader.Read())
+            do
             {
-                if (reader.Name == "FilePath")
+                if (reader.Name == "State" && reader.NodeType == XmlNodeType.Element)
                 {
-                    FilePath = reader.ReadElementContentAsString();
+                    Name = reader.GetAttribute("Name");
                 }
                 if (reader.Name == "Nodes")
                 {
@@ -475,7 +462,7 @@ namespace FocusTree.Data.Focus
                     } while (reader.Read());
 
                 }
-            }
+            } while (reader.Read());
             CreateLinkes();
             SetMetaPoints();
         }
@@ -483,8 +470,8 @@ namespace FocusTree.Data.Focus
         public void WriteXml(XmlWriter writer)
         {
             // <State>
-            //writer.WriteStartElement("State", Name);
-            writer.WriteElementString("State", Name);
+            writer.WriteStartElement("State");
+            writer.WriteAttributeString("Name", Name);
 
             //==== 序列化节点数据 ====//
 
@@ -500,7 +487,7 @@ namespace FocusTree.Data.Focus
             writer.WriteEndElement();
 
             // </State>
-            //writer.WriteEndElement();
+            writer.WriteEndElement();
         }
 
         #endregion

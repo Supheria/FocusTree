@@ -1,931 +1,932 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FocusGraph>
-  <FilePath>C:\Users\Non_E\Documents\GitHub\FocusTree\FocusTree\program\FILES\神佑村落.xml</FilePath>
-  <Nodes>
-    <Node ID="1" Name="准备西南战争" Star="false" Duration="15" Descript="西南的矛盾已经在爆发的边缘，我们必须做好准备" Ps.="">
-      <RawEffects>
-        <Effect>政治点数：-100</Effect>
-        <Effect>神佑村落（添加4个建筑位，添加2个民用工厂，添加2个军用工厂）</Effect>
-      </RawEffects>
-      <Requires />
-    </Node>
-    <Node ID="2" Name="发放大量贷款" Star="false" Duration="15" Descript="神明信仰联盟的支持让我们在扩张上毫无顾忌，但是无缘冢的垃圾不会变成金子，我们需要更多的帮助" Ps.="">
-      <RawEffects>
-        <Effect>政治点数：+500</Effect>
-        <Effect>获得为期365天的“贷款”，其效果为（生活消费品工厂：3%）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>1</Require>
-      </Requires>
-    </Node>
-    <Node ID="3" Name="收缴武器" Star="false" Duration="15" Descript="我们在收复失地中缴获的武器有不少还处于地方的自治管辖下，将他们收缴上来至少可以缓解一时困难" Ps.="">
-      <RawEffects>
-        <Effect>稳定度：+10%</Effect>
-        <Effect>2.5k单位的步兵武器，2.5k单位的近战武器添加到国家储备中</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>2</Require>
-      </Requires>
-    </Node>
-    <Node ID="4" Name="组织民兵" Star="false" Duration="15" Descript="我们的百姓本就是好战的，组织他们参与这次战争十分容易" Ps.="">
-      <RawEffects>
-        <Effect>战争支持度：+25%</Effect>
-        <Effect>获得四个编制为人类警戒编制的部队</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>3</Require>
-      </Requires>
-    </Node>
-    <Node ID="5" Name="开放私人作坊" Star="false" Duration="15" Descript=" 我们毫不怀疑私人作坊的粗制滥造，一天或许只能做出三条枪，其中还只有一条能用，但是谁在乎呢" Ps.="">
-      <RawEffects>
-        <Effect>获得私人作坊，其效果为（步兵武器：可靠性：-10%，生产花费：-20%，近战武器：可靠性：-10%，生产花费：-20%）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>4</Require>
-      </Requires>
-    </Node>
-    <Node ID="6" Name="做好防御准备" Star="false" Duration="15" Descript="铃兰部落和妖精汗国通过所谓的团结协定联合在一起，如果我们只想着进攻必然会首尾不能相顾" Ps.="">
-      <RawEffects>
-        <Effect>争取生存空间追加效果：（妖精汗国）我国对其防御修正：+10%，（铃兰部落）我国对其防御修正：+10%</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>5</Require>
-      </Requires>
-    </Node>
-    <Node ID="7" Name="争取更多支持" Star="false" Duration="15" Descript="我们不得已请求庇护我们多年的神明信仰联盟加大帮助，西南战争结束后我们会回报他们更多" Ps.="">
-      <RawEffects>
-        <Effect>（神明信仰联盟）触发事件“神佑村落请求更多支持”。如果他们同意，则来自神明信仰联盟的支持追加效果：政治点数：+10%，部队组织度：+5%，适役人口：+1%，部队组织度恢复：+5%</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>6</Require>
-      </Requires>
-    </Node>
-    <Node ID="8" Name="抵抗幽灵袭扰" Star="false" Duration="15" Descript="幽灵肆意的袭扰我们只能想办法应对，即使过程可能是缓慢的" Ps.="">
-      <RawEffects>
-        <Effect>启动决议抵抗幽灵的占据能力</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>7</Require>
-      </Requires>
-    </Node>
-    <Node ID="9" Name="专注对铃兰部落的进攻" Star="false" Duration="15" Descript="铃兰部落作为我们的历史宿敌才是西南战争的主要对手，先一步进攻他们是捣毁整个南线联络的关键" Ps.="">
-      <RawEffects>
-        <Effect>争取生存空间追加效果：（铃兰部落）我国对其进攻加成：+10%</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>7</Require>
-      </Requires>
-    </Node>
-    <Node ID="10" Name="防御妖精汗国的进攻" Star="false" Duration="15" Descript="妖精汗国有着不俗的游击队，但是离开他们熟悉的地形同样无计可施，我们只需要避免和他们的正面冲突就能获胜" Ps.="">
-      <RawEffects>
-        <Effect>争取生存空间追加效果：（妖精汗国）我国对其防御加成：+10%</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>7</Require>
-      </Requires>
-    </Node>
-    <Node ID="11" Name="战时措施" Star="false" Duration="30" Descript="战争已经开始，晚一步进入战时状态都是犯罪" Ps.="（注：需要抵抗幽灵袭扰，专注对铃兰部落的进攻，防御妖精汗国的进攻其一即可）">
-      <RawEffects>
-        <Effect>获得战时经济，其效果为（生活消费品工厂：25%，稳定度：-30%，战争支持度：-15%，民转军花费：-10%，工厂产出：+20%，军用工厂建造速度：+20%，民用工厂建造速度：-20%）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>10</Require>
-      </Requires>
-    </Node>
-    <Node ID="12" Name="消亡教育" Star="false" Duration="60" Descript="为了我们的真神秋静叶，神佑部落愿意以消亡教育作为代价来唤醒人们对神明的信仰" Ps.="">
-      <RawEffects>
-        <Effect>向保守社会发展一级，以保守社会3取代保守社会2，效果变化（稳定度：+6% 科研速度：-3% 加密：+0.5 可出口资源：-5% 意识形态变化抵制力度：+10%）</Effect>
-        <Effect>向鹰派发展一级，以鹰派3取代鹰派2，效果变化（生活消费品：+1% 战争支持度+6% 改善关系持续花费：+20% 贸易关系协议修正：-15% 正当化战争目标时间：-4% 征兵法案花费：-10% 经济法案花费：-10%）</Effect>
-        <Effect>获得为期365天的“为了真神！”，其效果为（动员速度：+15%，部队组织度：+5%，投降界限：+5%，建造速度：+5%，部队核心领土攻击：+10%，部队核心领土防御：+10%，工厂产出：+5%，训练时间：-15%，厌战上涨周期：+33%）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>11</Require>
-      </Requires>
-    </Node>
-    <Node ID="13" Name="意外帮助" Star="false" Duration="60" Descript="一部分“凋零者”被我们的诚意打动，自愿向秋静叶提出请求离开神明信仰联盟来帮助我们，而我们自然不会辜负他们的好意" Ps.="">
-      <RawEffects>
-        <Effect>触发事件：“‘凋零者’的帮助”，获得四个编制为凋零者的部队</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>12</Require>
-      </Requires>
-    </Node>
-    <Node ID="14" Name="智胜我们的敌人" Star="false" Duration="60" Descript="无缘冢总会有一些外界垃圾出现，当然也会有书籍，不过我们很难了解捡到并且宣传他的人是什么水平" Ps.="">
-      <RawEffects>
-        <Effect>获得兵法（？），其效果为（堑壕速度：+10%，缴获装备比例：10%）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>13</Require>
-      </Requires>
-    </Node>
-    <Node ID="15" Name="其疾如风" Star="false" Duration="60" Descript="这一点是我们现在最能理解的了，速度更快才能做更多事" Ps.="">
-      <RawEffects>
-        <Effect>兵法（？）追加效果：其效果为（部队速度：+10%）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>14</Require>
-      </Requires>
-    </Node>
-    <Node ID="16" Name="其徐如林" Star="false" Duration="60" Descript="我们并不能明白什么叫在森林中徐徐展开，但是我们至少能明白计划周密才能行进从容" Ps.="">
-      <RawEffects>
-        <Effect>兵法（？）追加效果：计划上限：+10%</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>14</Require>
-      </Requires>
-    </Node>
-    <Node ID="17" Name="侵略如火" Star="false" Duration="60" Descript="这个我们很擅长，抢东西自然是无微不至" Ps.="">
-      <RawEffects>
-        <Effect>兵法（？）追加效果：掠夺占领区花费：-100%</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>14</Require>
-      </Requires>
-    </Node>
-    <Node ID="18" Name="难知如阴" Star="false" Duration="60" Descript="虽然这一条我们都能理解但是实施起来却十分困难，因为鹰派本身就很难约束" Ps.="">
-      <RawEffects>
-        <Effect>兵法（？）追加效果：加密：+5</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>14</Require>
-      </Requires>
-    </Node>
-    <Node ID="19" Name="动如雷震" Star="false" Duration="60" Descript="像雷震一样行动肯定是人多而让人害怕吧，毕竟人多力量大" Ps.="">
-      <RawEffects>
-        <Effect>兵法（？）追加效果：适役人口：+3%</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>14</Require>
-      </Requires>
-    </Node>
-    <Node ID="20" Name="横扫四合" Star="false" Duration="140" Descript="经过不懈努力，我们荡平了西南，整合完成后我们必须考虑自己和神明信仰联盟的关系了" Ps.="（注：需要铃兰部落、妖精汗国、幽灵维权运动、幽灵自治运动不存在）">
-      <RawEffects>
-        <Effect>选择时，获得谨防外界干涉，其效果为（ai修正：专注防御：+100%，堑壕上限：+10，核心领土防御：+30%）直到国策结束。</Effect>
-        <Effect>稳定度：-40%，获得（铃兰部落）（妖精汗国）（幽灵维权运动）（幽灵自治运动）所有领土的核心</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>14</Require>
-      </Requires>
-    </Node>
-    <Node ID="21" Name="庇护的回报" Star="true" Duration="30" Descript="我们的神明永远是我们最坚实的后盾，是时候履行要求他们帮助的回报了" Ps.="（注：需要神明信仰联盟没有拒绝过支援）">
-      <RawEffects>
-        <Effect>(神明信仰联盟）通过与神佑村落的互不侵犯条约，获得强烈的战略同盟（与神佑村落的关系+100）</Effect>
-        <Effect>（神佑村落）获得强烈的战略同盟（与神佑村落的关系+100）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>20</Require>
-      </Requires>
-    </Node>
-    <Node ID="22" Name="重回战前" Star="false" Duration="60" Descript="杀戒一开难再回头，不让经历战争的百姓平复下来，我们或许就再也回不去了" Ps.="">
-      <RawEffects>
-        <Effect>来自神明信仰联盟的支持追加效果：政治点数：-10%，部队组织度：-5%，适役人口：-1%，部队组织度恢复：-5%</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>21</Require>
-      </Requires>
-    </Node>
-    <Node ID="23" Name="我们的贡献" Star="false" Duration="60" Descript="空口无凭，我们愿意让神明看到我们的决心" Ps.="">
-      <RawEffects>
-        <Effect>来自神明信仰联盟的支持追加效果：（神明信仰联盟）该国所拥民用工厂：+10%</Effect>
-        <Effect>（神明信仰联盟）来自神佑村落的战利品追加效果：生活消费品工厂：-4%，建造速度：+7%，工厂产出：+7%</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>22</Require>
-      </Requires>
-    </Node>
-    <Node ID="24" Name="自愿戍边" Star="false" Duration="60" Descript="愿为我们的神明驻守西南，任凭驱使无往不利" Ps.="">
-      <RawEffects>
-        <Effect>（神明信仰联盟）完成国策：继续支持神佑村落、不必亲自动手</Effect>
-        <Effect>触发事件“一位人类鹰派的自白”。</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>23</Require>
-      </Requires>
-    </Node>
-    <Node ID="25" Name="荣耀归属" Star="false" Duration="60" Descript="虽然是我们亲手赢得了西南战争的胜利，但是如果没有我们的神明帮助是不可能的，荣耀归于真神" Ps.="">
-      <RawEffects>
-        <Effect>（神明信仰联盟）成为无名之村、星光小径的拥有者</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>23</Require>
-      </Requires>
-    </Node>
-    <Node ID="26" Name="为傲慢付出代价" Star="false" Duration="60" Descript="斯卡雷特帝国在过去的战争中羞辱了我们的神明，为我们的神明一雪前耻是我们的责任" Ps.="">
-      <RawEffects>
-        <Effect>神明信仰联盟的忠犬追击效果：（斯卡雷特帝国）我国对其进攻修正：+20%</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>25</Require>
-      </Requires>
-    </Node>
-    <Node ID="27" Name="做好对花田的战争准备" Star="false" Duration="60" Descript="我们的神明好像对那片花田有想法，我们当然愿意为此努力，但是毕竟师出无名" Ps.="">
-      <RawEffects>
-        <Effect>政治点数：-200</Effect>
-        <Effect>神明信仰联盟的忠犬追加效果：（太阳花田）我国对其进攻修正：+10%，我国对其防御修正：+10%</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>25</Require>
-      </Requires>
-    </Node>
-    <Node ID="28" Name="做好对佛教的战争准备" Star="false" Duration="60" Descript="我们的神明才是最伟大的，什么佛都要靠边站" Ps.="">
-      <RawEffects>
-        <Effect>政治点数：-100</Effect>
-        <Effect>神明信仰联盟的忠犬追加效果：（命莲寺）我国对其进攻修正：+10%，我国对其防御修正：+10%</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>25</Require>
-      </Requires>
-    </Node>
-    <Node ID="29" Name="为投机付出代价" Star="false" Duration="60" Descript="这群投机商让我们的神明一度陷入国度被颠覆的境地，神明宽容仁厚，但我们可不一样" Ps.="">
-      <RawEffects>
-        <Effect>神明信仰联盟的忠犬追加效果：（中有之道贸易站）我国对其进攻修正：+20%</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>25</Require>
-      </Requires>
-    </Node>
-    <Node ID="30" Name="全力支持终末之战" Star="false" Duration="60" Descript="" Ps.="（注：需要为傲慢付出代价，做好花田的战争准备，做好对佛教的战争准备，为投机付出代价其一即可）">
-      <RawEffects>
-        <Effect>政治点数：-500</Effect>
-        <Effect>（神明信仰联盟)当第一次和天狗共和国进入战争状态时，获得为期365天的“神佑村落的全力支持”，其效果为（适役人口：+10%，工厂产出：+100%，建造速度：+100%）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>29</Require>
-      </Requires>
-    </Node>
-    <Node ID="31" Name="元气大伤" Star="false" Duration="0" Descript="我们尽到了对神明的所有义务，但是我们因此元气大伤" Ps.="（注：随事件发展自动完成）">
-      <RawEffects>
-        <Effect>获得元气大伤，其效果为（建造速度：-50%，工厂产出：-50%）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>30</Require>
-      </Requires>
-    </Node>
-    <Node ID="32" Name="恢复元气" Star="false" Duration="60" Descript="但我们从不为此后悔，恢复时间漫长但自豪" Ps.="">
-      <RawEffects>
-        <Effect>移除元气大伤，其效果为（建造速度：-50%，工厂产出：-50%）</Effect>
-        <Effect>获得为期365天的“恢复元气”，其效果为（建造速度：-25%，工厂产出：-25%）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>31</Require>
-      </Requires>
-    </Node>
-    <Node ID="33" Name="秋静叶大人的怀抱" Star="false" Duration="100" Descript="我们的真神秋静叶大人居然来到了神佑村落与我们见面，村委会一致决定要以身回报神明" Ps.="">
-      <RawEffects>
-        <Effect>成为神明信仰联盟的合作势力</Effect>
-        <Effect>获得神明，其效果为（动员速度：+20%，适役人口：+16%，补给消耗：-5%，加密：+2，解密：+2，部队夜战攻击：-15%，每日人类影响力基础变化：+0.07）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>32</Require>
-      </Requires>
-    </Node>
-    <Node ID="34" Name="留手的隔阂" Star="true" Duration="30" Descript="我们的神明在这次战争中留了手，他们似乎不愿意让西南战争那么快结束，我们头一次觉得自己和秋静叶大人的关系这么远" Ps.="（注：需要拥有来自神明信仰联盟的支持，神明信仰联盟拒绝过对我们的支援）">
-      <RawEffects>
-        <Effect>移除来自神明信仰联盟的支持，其效果为（政治点数：-10%，部队组织度：+10%，适役人口：+2%，部队组织度恢复：+10%，（神明信仰联盟）贸易协定关系修正：+50%，（神明信仰联盟）该国所拥民用工厂：+10%）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>20</Require>
-      </Requires>
-    </Node>
-    <Node ID="35" Name="再次示好" Star="false" Duration="60" Descript="我们的神明并没有完全放弃我们，或许我们可以争取让她们重新站到我们这边来" Ps.="">
-      <RawEffects>
-        <Effect>（神明信仰联盟）稳定度：+10%，政治点数：+100</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>34</Require>
-      </Requires>
-    </Node>
-    <Node ID="36" Name="最终确认" Star="false" Duration="60" Descript="我们已经做了我们应该做的事，接下来就看神明的意愿了" Ps.="">
-      <RawEffects>
-        <Effect>（神明信仰联盟）触发事件“神佑村落询问我们的意见”。如果他们同意，则获得神明信仰联盟的默许，其效果为（部队组织度：+5%，部队组织度恢复：+5%，适役人口：+1%）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>35</Require>
-      </Requires>
-    </Node>
-    <Node ID="37" Name="自愿戍边" Star="true" Duration="60" Descript="愿为我们的神明驻守西南，任凭驱使无往不利" Ps.="（注：需要他们同意）">
-      <RawEffects>
-        <Effect>（神明信仰联盟）完成国策：继续支持神佑村落、不必亲自动手，触发事件“一位人类鹰派的自白”。</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>36</Require>
-      </Requires>
-    </Node>
-    <Node ID="38" Name="荣耀归属" Star="false" Duration="60" Descript="虽然是我们亲手赢得了西南战争的胜利，但是如果没有我们的神明帮助是不可能的，荣耀归于真神" Ps.="">
-      <RawEffects>
-        <Effect>（神明信仰联盟）成为无名之村、星光小径的拥有者</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>37</Require>
-      </Requires>
-    </Node>
-    <Node ID="39" Name="做好对花田的战争准备" Star="false" Duration="60" Descript="我们的神明好像对那片花田有想法，我们当然愿意为此努力，但是毕竟师出无名" Ps.="">
-      <RawEffects>
-        <Effect>政治点数：-200，神明信仰联盟的忠犬追加效果：（太阳花田）我国对其进攻修正：+10%，我国对其防御修正：+10%</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>38</Require>
-      </Requires>
-    </Node>
-    <Node ID="40" Name="做好对佛教的战争准备" Star="false" Duration="60" Descript="我们的神明才是最伟大的，什么佛都要靠边站" Ps.="">
-      <RawEffects>
-        <Effect>政治点数：-100，神明信仰联盟的忠犬追加效果：（命莲寺）我国对其进攻修正：+10%，我国对其防御修正：+10%</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>38</Require>
-      </Requires>
-    </Node>
-    <Node ID="41" Name="为投机付出代价" Star="false" Duration="60" Descript="这群投机商让我们的神明一度陷入国度被颠覆的境地，神明宽容仁厚，但我们可不一样" Ps.="">
-      <RawEffects>
-        <Effect>神明信仰联盟的忠犬追加效果：（中有之道贸易站）我国对其进攻修正：+20%</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>38</Require>
-      </Requires>
-    </Node>
-    <Node ID="42" Name="为傲慢付出代价" Star="false" Duration="60" Descript="斯卡雷特帝国在过去的战争中羞辱了我们的神明，为我们的神明一雪前耻是我们的责任" Ps.="">
-      <RawEffects>
-        <Effect>神明信仰联盟的忠犬追击效果：（斯卡雷特帝国）我国对其进攻修正：+20%）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>38</Require>
-      </Requires>
-    </Node>
-    <Node ID="43" Name="全力支持终末之战" Star="false" Duration="60" Descript="" Ps.="">
-      <RawEffects>
-        <Effect>政治点数：-500，</Effect>
-        <Effect>（神明信仰联盟)当第一次和天狗共和国进入战争状态时，获得为期365天的“神佑村落的全力支持”，其效果为（适役人口：+10%，工厂产出：+100%，建造速度：+100%）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>42</Require>
-      </Requires>
-    </Node>
-    <Node ID="44" Name="元气大伤" Star="false" Duration="0" Descript="我们尽到了对神明的所有义务，但是我们因此元气大伤" Ps.="（注：随事件发展自动完成）">
-      <RawEffects>
-        <Effect>获得元气大伤，其效果为（建造速度：-50%，工厂产出：-50%）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>43</Require>
-      </Requires>
-    </Node>
-    <Node ID="45" Name="恢复元气" Star="false" Duration="60" Descript="但我们从不为此后悔，恢复时间漫长但自豪" Ps.="">
-      <RawEffects>
-        <Effect>移除元气大伤，其效果为（建造速度：-50%，工厂产出：-50%），获得为期365天的“恢复元气”，其效果为（建造速度：-25%，工厂产出：-25%）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>44</Require>
-      </Requires>
-    </Node>
-    <Node ID="46" Name="秋静叶大人的怀抱" Star="false" Duration="100" Descript="我们的真神秋静叶大人居然来到了神佑村落与我们见面，村委会一致决定要以身回报神明" Ps.="">
-      <RawEffects>
-        <Effect>成为神明信仰联盟的合作势力，获得神明，其效果为（动员速度：+20%，适役人口：+16%，补给消耗：-5%，加密：+2，解密：+2，部队夜战攻击：-15%，每日人类影响力基础变化：+0.07）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>45</Require>
-      </Requires>
-    </Node>
-    <Node ID="47" Name="清君侧" Star="true" Duration="30" Descript="曾经支持我们的神明被卑鄙的逐出政治舞台，我们的真神只有秋静叶大人，应该让她回来主持神明信仰联盟的事务" Ps.="（注：需要他们反对）">
-      <RawEffects>
-        <Effect>获得清君侧，其效果为（神明信仰联盟）我国对其进攻修正：+20%，我国对其防御修正：+20%</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>36</Require>
-      </Requires>
-    </Node>
-    <Node ID="48" Name="承续前志" Star="false" Duration="30" Descript="曾经我们也有同路人，但如今我们只能依靠自己" Ps.="">
-      <RawEffects>
-        <Effect>获得掌权的极端势力，其效果为（部队组织度：-5%，部队组织度恢复：-5%，部队攻击：+8%，部队防御：+8%，新规倾向：+0.05，允许创建阵营）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>47</Require>
-      </Requires>
-    </Node>
-    <Node ID="49" Name="神佑吾等" Star="false" Duration="30" Descript="神明总是保佑我们，哪怕今天" Ps.="">
-      <RawEffects>
-        <Effect>神佑村落向神明信仰联盟宣战，获得八个编制为凋零者的部队</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>48</Require>
-      </Requires>
-    </Node>
-    <Node ID="50" Name="强占学院" Star="false" Duration="30" Descript="教育是神明不需要的东西，任何想要以此威胁神明的人都会被抹除" Ps.="（注：需要我们或我们的附庸控制稻田聚落）">
-      <RawEffects>
-        <Effect>增加1个科研槽，获得为了真神!，其效果为（动员速度：+15%，部队组织度：+5%，投降界限：+5%，建造速度：+5%，部队核心领土攻击：+10%，部队核心领土防御：+10%，工厂产出：+5%，训练时间：-15%，厌战上涨周期：+33%）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>49</Require>
-      </Requires>
-    </Node>
-    <Node ID="51" Name="对神明的爱意" Star="false" Duration="30" Descript="神佑村落与神明信仰联盟重整关系之后，有一些人类和神明萌发了超越敬意的情感，我们当然不会阻止他们" Ps.="">
-      <RawEffects>
-        <Effect>获得人与神的模糊界限，其效果为（部队组织度：+5%，稳定度：+5%，解密：-2，加密：-2，灵力系研究速度：+5%）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>50</Require>
-      </Requires>
-    </Node>
-    <Node ID="52" Name="勿忘“凋零者”" Star="false" Duration="30" Descript="“凋零者”在西南战争和清君侧中都帮了我们极大的忙，忘记他们就是忘记历史" Ps.="">
-      <RawEffects>
-        <Effect>获得“凋零者”精神，其效果为（部队组织度：-5%，部队组织度恢复：-5%，部队攻击：+8%，部队防御：+8%）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>51</Require>
-      </Requires>
-    </Node>
-    <Node ID="53" Name="让教育消亡" Star="false" Duration="60" Descript="知识越多越反动！为了不让什么“革新派”再度成为主流，秋静叶准备禁止一切人类间的知识交流。目前这个概念还很抽象，不过可以确定的是如果可行且有必要，她将禁止人类使用书面文字" Ps.="">
-      <RawEffects>
-        <Effect>向保守社会发展一级，以保守社会3取代保守社会2，效果变化（稳定度：+6% 科研速度：-3% 加密：+0.5 可出口资源：-5% 意识形态变化抵制力度：+10%）</Effect>
-        <Effect>向鹰派发展一级，以鹰派3取代鹰派2，效果变化（生活消费品：+1% 战争支持度+6% 改善关系持续花费：+20% 贸易关系协议修正：-15% 正当化战争目标时间：-4% 征兵法案花费：-10% 经济法案花费：-10%）</Effect>
-        <Effect>获得为了真神！，其效果为（动员速度：+15%，部队组织度：+5%，投降界限：+5%，建造速度：+5%，部队核心领土攻击：+10%，部队核心领土防御：+10%，工厂产出：+5%，训练时间：-15%，厌战上涨周期：+33%）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>52</Require>
-      </Requires>
-    </Node>
-    <Node ID="54" Name="重启收复失地运动" Star="false" Duration="60" Descript="无缘冢都是我们的领土，任何人都不能占据哪怕一分一毫" Ps.="">
-      <RawEffects>
-        <Effect>神佑村落向中有之道贸易区宣战</Effect>
-        <Effect>神佑村落向雾雨流亡者宣战</Effect>
-        <Effect>神佑村落向幽灵革命运动宣战</Effect>
-        <Effect>获得为期90天的“一脚把门踢开”，其效果为（移动中组织度损失：-10%，增援率：+3%，计划速度：+15%，计划加成上限：+15%）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>53</Require>
-      </Requires>
-    </Node>
-    <Node ID="55" Name="羞辱斯卡雷特帝国" Star="false" Duration="60" Descript="以眼还眼以牙还牙，斯卡雷特帝国应该学到教训" Ps.="">
-      <RawEffects>
-        <Effect>（斯卡雷特帝国）触发事件“来自神佑村落的羞辱”。</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>53</Require>
-      </Requires>
-    </Node>
-    <Node ID="56" Name="与山姥部落换地" Star="false" Duration="60" Descript="神佑村落愿以“五百里之地”易山姥村……" Ps.="">
-      <RawEffects>
-        <Effect>（山姥部落）触发事件“神佑村落的换地想法”。</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>53</Require>
-      </Requires>
-    </Node>
-    <Node ID="57" Name="影响太阳花田的政治" Star="false" Duration="60" Descript="太阳花田已经脱离时代很有一段时间了，因此意识形态的影响近乎无往不利" Ps.="">
-      <RawEffects>
-        <Effect>（太阳花田）获得新规倾向，其效果为（新规倾向：+0.1）</Effect>
-        <Effect>（太阳花田）获得强烈的战略同盟（与神佑村落的关系+100），神佑村落获得强烈的战略同盟（与太阳花田的关系+100）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>53</Require>
-      </Requires>
-    </Node>
-    <Node ID="58" Name="准备终末之战" Star="false" Duration="60" Descript="多一个盟友便能巩固我们在无缘冢的地位，不过守矢神社的野心无人能知" Ps.="">
-      <RawEffects>
-        <Effect>开启决议与守矢神社交涉）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>57</Require>
-      </Requires>
-    </Node>
-    <Node ID="59" Name="无缘冢的霸主" Star="false" Duration="100" Descript="我们横扫了西南的所有敌人，后户之国的贤者面见了我们后，协商通过了对我们西南地位的认可，人类与神明的幸福国度近在咫尺" Ps.="">
-      <RawEffects>
-        <Effect>获得帝国，其效果为（每日获得的政治点数：+0.35，部队组织度：+10%，每月人口：+30%，适役人口修正：15%，稳定度：+25%，训练时间：-5%，特工位：+1）</Effect>
-        <Effect>获得后户之国的授权，其效果为（科研速度：+20%，工厂产出：+20%，建造速度：+20%）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>58</Require>
-      </Requires>
-    </Node>
-    <Node ID="60" Name="翻脸的代价" Star="true" Duration="30" Descript="神明不佑我们，我们不敬神明，让他们看看翻脸的代价是什么" Ps.="（注：需要“翻脸”）">
-      <RawEffects>
-        <Effect>神佑村落将被称为西南村落，政治点数：+200</Effect>
-        <Effect>获得为期365天的“不再有神佑了”，其效果为（每周战争支持度：+0.1%，稳定度：-10%）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>20</Require>
-      </Requires>
-    </Node>
-    <Node ID="61" Name="第二次生存" Star="false" Duration="15" Descript="我们凭自己的努力打赢了西南战争，西北的旧主也无法阻拦我们" Ps.="">
-      <RawEffects>
-        <Effect>获得第二次争取生存空间，其效果为（（神明信仰联盟）我国对其进攻修正：+10%，我国对其防御修正：+10%，（驱鬼村落）我国对其进攻修正：+10%，我国对其防御修正：+10%，（丰收村落）我国对其进攻修正：+10%，我国对其防御修正：+10%，（锻造村落）我国对其进攻修正：+10%，我国对其防御修正：+10%）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>60</Require>
-      </Requires>
-    </Node>
-    <Node ID="62" Name="整合”凋零者“" Star="false" Duration="15" Descript="神明和我们的冲突让我们怒火中烧，但这和我们的旧友“凋零者”无关，我们会收编他们继续为我们而战" Ps.="">
-      <RawEffects>
-        <Effect>解散所有编制为凋零者的部队，获得32只编制为扫荡编制的部队</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>61</Require>
-      </Requires>
-    </Node>
-    <Node ID="63" Name="新家" Star="false" Duration="15" Descript="" Ps.="，人类村落获得希望之地？（与神佑村落的关系+15），神佑村落获得希望之地？（与人类村落的关系+15）}{“凋零”者们，神明抛弃了我们，但人类兄弟愿意接纳你们，西南会是所有人类的新家}">
-      <RawEffects>
-        <Effect>稳定度：+10%，获得人类移民，其效果为（灵力系研究速度：+5%，每周人力：+3，每日人类影响力额外变化：+0.03）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>62</Require>
-      </Requires>
-    </Node>
-    <Node ID="64" Name="老兵" Star="false" Duration="15" Descript="更多老兵接踵而至，虽然他们有些已经身体残疾，幻想乡不容许人类复权也自然不会治疗他们的伤势，许多老兵已经郁郁而终。但我们给他们最好的食物和住所，不仅仅是因为我们认可战争，更因为我们也是人类" Ps.="">
-      <RawEffects>
-        <Effect>触发事件“老兵不死”。人力+1000，陆军经验+15，获得前人类村落的正规战斗编制</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>63</Require>
-      </Requires>
-    </Node>
-    <Node ID="65" Name="人类复仇运动" Star="false" Duration="30" Descript="人类复权运动的失败不是因为他的“极端”，恰恰因为他不够“极端”，幻想乡认为的极端就是不极端，敌人不认可的我们才更应该支持" Ps.="">
-      <RawEffects>
-        <Effect>获得6只编制为正规战斗编制的部队</Effect>
-        <Effect>神佑村落向神明信仰联盟宣战</Effect>
-        <Effect>获得人类复仇运动，其效果为（每周战争支持度：+0.1%，政治点数：+15%）</Effect>
-        <Effect>所有拥有幻想乡正统势力的国家：获得历史宿敌（与神佑村落的关系-500）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>64</Require>
-      </Requires>
-    </Node>
-    <Node ID="66" Name="接纳流亡者" Star="false" Duration="15" Descript="西面的流亡者和我们同出一源，我们或许可以兵不血刃让他们回归" Ps.="">
-      <RawEffects>
-        <Effect>雾雨流亡者触发事件“人类复权的回归？”。</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>65</Require>
-      </Requires>
-    </Node>
-    <Node ID="67" Name="兼并弱邻" Star="false" Duration="30" Descript="弱肉强食，幻想乡最喜欢强调这一法则，但当他们成为弱肉的时候会有什么想法呢" Ps.="">
-      <RawEffects>
-        <Effect>神佑村落向山姥部落宣战，人类复仇运动追加效果：稳定度：+10%</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>66</Require>
-      </Requires>
-    </Node>
-    <Node ID="68" Name="强占贸易区" Star="false" Duration="30" Descript="贸易是个好东西，大家都喜欢，不过我们需要一点手续费" Ps.="">
-      <RawEffects>
-        <Effect>神佑村落向中有之道贸易站下宣战，人类复权运动追加效果：生活消费品工厂：-5%</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>67</Require>
-      </Requires>
-    </Node>
-    <Node ID="69" Name="搜刮战利品" Star="false" Duration="15" Descript="中有之道贸易站里居然有曾经神明信仰联盟的地契，真是飞来横福}（注：需要中有之道贸易站不存在" Ps.="">
-      <RawEffects>
-        <Effect>神佑村落获得土地贸易所得，其效果为（生活消费品工厂：-3%）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>68</Require>
-      </Requires>
-    </Node>
-    <Node ID="70" Name="镇压异族革命" Star="false" Duration="30" Descript="革命就像一把达摩克里斯之剑，如果不能握在人类手上不如让他毁灭" Ps.="">
-      <RawEffects>
-        <Effect>神佑村落向幽灵革命运动宣战，激进倾向：+5%</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>69</Require>
-      </Requires>
-    </Node>
-    <Node ID="71" Name="革命之力" Star="false" Duration="30" Descript="人类二度掌握革命之力，但也要谨防他的反噬" Ps.="">
-      <RawEffects>
-        <Effect>获得无序即自由，其效果为（每日获得的政治点数：-0.05，理念类花费：+10%，补给消耗：-20%，部队组织度恢复：+40%，部队核心领土攻击：+10%，部队核心领土防御：+10%，增援率：+5%，ai修正：专注进攻：+15%，激进倾向：+0.01，新规倾向：+5%）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>70</Require>
-      </Requires>
-    </Node>
-    <Node ID="72" Name="灭佛运动" Star="false" Duration="30" Descript="佛也是神的一种，人类不需要任何神明或宗教" Ps.="">
-      <RawEffects>
-        <Effect>神佑村落对（命莲寺）宣战，陆军经验：+100</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>71</Require>
-      </Requires>
-    </Node>
-    <Node ID="73" Name="与神灵庙交涉" Star="false" Duration="30" Descript="道教对外自称不干涉任何事物的清静无为，如果他们不对外传教，以神灵庙这些年庇护的人类数量我们可以放他们一马" Ps.="">
-      <RawEffects>
-        <Effect>（神灵庙）触发事件“是否恪守中立？”。</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>72</Require>
-      </Requires>
-    </Node>
-    <Node ID="74" Name="交好道派" Star="true" Duration="60" Descript="道教愿意恪守中立，我们也愿意对他们中立" Ps.="（注：需要神灵庙恪守中立）">
-      <RawEffects>
-        <Effect>（神灵庙）获得战略同盟（与神佑村落的关系+80）</Effect>
-        <Effect>（神佑村落）获得战略同盟（与神灵庙的关系+80）</Effect>
-        <Effect>（隐居村落）获得战略同盟（与神佑村落的关系+80）</Effect>
-        <Effect>（神佑村落）获得战略同盟（与隐居村落的关系+80）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>73</Require>
-      </Requires>
-    </Node>
-    <Node ID="75" Name="分享佛教宝物" Star="false" Duration="60" Descript="朋友来了有美酒，敌人来了有钢枪，这就是人类的待客之道" Ps.="（注：需要掌控命莲寺）">
-      <RawEffects>
-        <Effect>（神灵庙）获得飞来横福（与神佑村落关系+150）</Effect>
-        <Effect>（神灵庙）获得在（命莲寺）上建神灵庙分庙，其效果为（部队组织度恢复：+15%）</Effect>
-        <Effect>从命莲寺移除5个基础设施，从命莲寺移除2个民用工厂，从命莲寺移除2个军用工厂</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>74</Require>
-      </Requires>
-    </Node>
-    <Node ID="76" Name="合流人类村落" Star="false" Duration="60" Descript="上白泽慧音的政权懦弱且驯化人类，试图让万物灵长成为猪狗，她必须下台" Ps.="">
-      <RawEffects>
-        <Effect>神佑村落向人类村落宣战</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>75</Require>
-      </Requires>
-    </Node>
-    <Node ID="77" Name="惩戒人类财阀" Star="false" Duration="60" Descript="对人类财阀一顿杀鸡儆猴之后，我们获得人类的绝对话语权" Ps.="（注：需要人类财阀联合不存在）">
-      <RawEffects>
-        <Effect>政治点数：-200</Effect>
-        <Effect>获得取得人类的领导权，其效果为（每日人类影响力额外变化：+0.01）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>76</Require>
-      </Requires>
-    </Node>
-    <Node ID="78" Name="将人类大家族的资产收为己有" Star="false" Duration="60" Descript="人类村落的一些大家族通过出卖人类的利益获得了很多不义之财，我们可以正当的把他们受为己用" Ps.="">
-      <RawEffects>
-        <Effect>政治点数：+250，增加3个地图外民用工厂，增加3个地图外军用工厂</Effect>
-        <Effect>获得将人类大家族的资产收为己有，其效果为（每日人类影响力额外变化：+0.04）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>77</Require>
-      </Requires>
-    </Node>
-    <Node ID="79" Name="借刀杀人" Star="false" Duration="60" Descript="我们现在还没有和所有妖怪开战的打算，所以要是想对妖怪出手，我们至少得挑选一位代理人" Ps.="">
-      <RawEffects>
-        <Effect>（神灵庙）完成国策：将妖怪赶出人类村落</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>78</Require>
-      </Requires>
-    </Node>
-    <Node ID="80" Name="人类帝国的黎明" Star="false" Duration="100" Descript="现在我们终于可以宣布人类涅槃重生，未来我们可以继续复仇运动也可以固守一方，我们合法合理的接过了人类复权运动的旗帜，也完成了他们的夙愿" Ps.="（注：需要人类村落不存在）">
-      <RawEffects>
-        <Effect>获得帝国，其效果为（每日获得的政治点数：+0.35，部队组织度：+10%，每月人口：+30%，适役人口修正：15%，稳定度：+25%，训练时间：-5%，特工位：+1）</Effect>
-        <Effect>获得所有地块为人类的省份核心</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>79</Require>
-      </Requires>
-    </Node>
-    <Node ID="81" Name="敬酒不吃" Star="true" Duration="30" Descript="神灵庙的家伙真是敬酒不吃吃罚酒，那就别怪我们不客气了" Ps.="">
-      <RawEffects>
-        <Effect>神佑村落向神灵庙宣战</Effect>
-        <Effect>获得为期365天的“勿谓言之不预”，其效果为（部队速度：-10%，部队攻击：+10%，部队防御：+10%）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>73</Require>
-      </Requires>
-    </Node>
-    <Node ID="82" Name="复仇更进一步" Star="false" Duration="30" Descript="人类复权运动的目标近在眼前，唤醒人类义不容辞" Ps.="">
-      <RawEffects>
-        <Effect>（人类村落）触发事件“人类复权运动的回归？”。如果他们同意，则人类复仇运动追加效果：部队攻击：+10%，部队防御：+10%</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>81</Require>
-      </Requires>
-    </Node>
-    <Node ID="83" Name="消灭背叛者" Star="false" Duration="30" Descript="如果没有九十九工业的背叛，人类至少不会落得如今的田地，而九十九工业却可以心安理得的享受人类血肉的报偿，背叛者不得好死" Ps.="">
-      <RawEffects>
-        <Effect>神佑村落向九十九工业宣战，人类复仇运动追加效果：适役人口修正：20%</Effect>
-        <Effect>（九十九工业）获得为期365天的“人类复权运动的阴影”，其效果为（政治点数：-100%，堑壕速度：+20%）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>82</Require>
-      </Requires>
-    </Node>
-    <Node ID="84" Name="让魔法使回归" Star="false" Duration="30" Descript="魔法使和人类的关系本就千丝万缕，虽然现在她们已经堕落，但是亡羊补牢为时未晚" Ps.="">
-      <RawEffects>
-        <Effect>神佑村落向魔女联盟宣战</Effect>
-        <Effect>人类复仇运动追加效果：每日指挥点数增加：+50%，灵力值对战斗力的影响翻倍</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>83</Require>
-      </Requires>
-    </Node>
-    <Node ID="85" Name="为巫女出头" Star="false" Duration="30" Descript="森近霖之助曾认为：博丽巫女成为了牺牲的对象，但人类告诉巫女，她从来没有被放弃" Ps.="">
-      <RawEffects>
-        <Effect>神佑村落向兽道部落宣战</Effect>
-        <Effect>人类复仇运动追加效果：步兵部队攻击：+15%，步兵部队防御：+15%</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>84</Require>
-      </Requires>
-    </Node>
-    <Node ID="86" Name="与博丽灵梦交涉" Star="false" Duration="30" Descript="博丽灵梦在八云紫的监视下却一直没有动摇到了146季，不管后来发生了什么，我们都愿意给她一个机会" Ps.="">
-      <RawEffects>
-        <Effect>（博丽神社）触发事件“重回人类的邀请”。如果他们同意，则成为神佑村落的四级附庸（势力范围），获得博丽分队，其效果为（每周人力：+4，部队组织度：+15%，部队组织度恢复：+10%，新将领初始防御技能等级：+1），</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>85</Require>
-      </Requires>
-    </Node>
-    <Node ID="87" Name="毁灭叛乱同盟" Star="false" Duration="30" Descript="下克上运动本来可以和人类达成某种共识，但结果差劲人意，如果她们没有能力，我们不介意替他们代劳" Ps.="">
-      <RawEffects>
-        <Effect>神佑村落向叛乱同盟宣战，人类复仇运动追加效果：顺从速度增长：+10%，驻军所受伤害：-20%</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>86</Require>
-      </Requires>
-    </Node>
-    <Node ID="88" Name="延续间歇泉条约" Star="false" Duration="30" Descript="" Ps.="">
-      <RawEffects>
-        <Effect>获得间歇泉条约，其效果为（稳定度：+5%，（通道防卫同盟）对其制造战争目标的紧张度限制：+85%，（怨灵通道）对其制造战争目标的紧张度限制：+85%，（蜘蛛风洞）对其制造战争目标的紧张度限制：+85%，（无法地带）对其制造战争目标的紧张度限制：+85%，（旧都自治领）对其制造战争目标的紧张度限制：+85%，（怨灵兄弟会）对其制造战争目标的紧张度限制：+85%）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>87</Require>
-      </Requires>
-    </Node>
-    <Node ID="89" Name="向妖精示好" Star="false" Duration="30" Descript="" Ps.="">
-      <RawEffects>
-        <Effect>（雾之湖妖静联合体）通过与神佑村落的互不侵犯条约，获得战略同盟（与神佑村落的关系+80），（神佑村落）获得战略同盟（与雾之湖妖精联合体的关系+80）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>88</Require>
-      </Requires>
-    </Node>
-    <Node ID="90" Name="摧毁吸血鬼帝国" Star="false" Duration="30" Descript="万事俱备，吸血鬼帝国当灭，人类将兴" Ps.="">
-      <RawEffects>
-        <Effect>神佑村落向斯卡雷特帝国宣战</Effect>
-        <Effect>人类复仇运动追加效果：训练时间：-10%</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>89</Require>
-      </Requires>
-    </Node>
-    <Node ID="91" Name="扼杀天狗共和国" Star="false" Duration="30" Descript="天狗拥有无比优越的资源却不知利用，属实是我人类的大幸" Ps.="">
-      <RawEffects>
-        <Effect>神佑村落向天狗共和国宣战</Effect>
-        <Effect>人类复仇运动追加效果：科研速度：+10%，混合类研究速度：+5%</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>90</Require>
-      </Requires>
-    </Node>
-    <Node ID="92" Name="对万国宣战诏书" Star="false" Duration="100" Descript="这是最后的斗争，团结起来到明天……" Ps.="">
-      <RawEffects>
-        <Effect>所有拥有幻想乡正统势力的国家：向神佑村落宣战</Effect>
-        <Effect>获得法师，其效果为（灵力系研究速度：+5%，动员速度：+15%，部队组织度：-2%，适役人口：+8%，稳定度：-5%，步兵部队攻击：+10%，炮兵攻击：+5%，工厂产出：-6%，陆军夜战攻击：-5%，每日人类影响力基础变化：+0.03）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>91</Require>
-      </Requires>
-    </Node>
-    <Node ID="93" Name="回顾我们的过去" Star="false" Duration="30" Descript="从我们被送往无缘冢进行收复失地运动开始，我们的心中其实一直有神明也无法理解的种子在发芽" Ps.="">
-      <RawEffects>
-        <Effect>神佑村落（将基础设施添加到最大）</Effect>
-      </RawEffects>
-      <Requires />
-    </Node>
-    <Node ID="94" Name="关注我们的现在" Star="false" Duration="30" Descript="战争是我们的归宿，又或者是我们的鸦片？" Ps.="">
-      <RawEffects>
-        <Effect>神佑村落（添加2个军用工厂，添加2个建筑位）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>93</Require>
-      </Requires>
-    </Node>
-    <Node ID="95" Name="展望我们的未来" Star="false" Duration="30" Descript="未来我们所有人应该都能每天吃上两顿饭吧，又或者是我们的孩子、后代……" Ps.="">
-      <RawEffects>
-        <Effect>增加10点唯心值，增加10点灵力值</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>94</Require>
-      </Requires>
-    </Node>
-    <Node ID="96" Name="训练部队" Star="false" Duration="30" Descript="我们的军队与其说是军队，不如说是广泛的中央指挥民兵，如果不做出改变他们是无法适应为了战场的" Ps.="">
-      <RawEffects>
-        <Effect>获得训练部队，其效果为（陆军经验增加：+0.1每日，陆军经验增长：+10%，训练时间：+20%）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>95</Require>
-      </Requires>
-    </Node>
-    <Node ID="97" Name="动员体系的调整" Star="false" Duration="60" Descript="务必像山顶上的邻居那样锐意进取" Ps.="">
-      <RawEffects>
-        <Effect>陆军经验：+5</Effect>
-        <Effect>获得动员体系的调整，其效果为（适役人口修正：5%）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>96</Require>
-      </Requires>
-    </Node>
-    <Node ID="98" Name="新时代的陆战技术" Star="false" Duration="60" Descript="新时代的陆战技术" Ps.="">
-      <RawEffects>
-        <Effect>陆军经验：+10，1x25%花费降低：基础陆军学说，2x50%花费降低：新兴科技学说</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>97</Require>
-      </Requires>
-    </Node>
-    <Node ID="99" Name="简化山地攻坚炮" Star="false" Duration="60" Descript="简化山地攻坚炮" Ps.="">
-      <RawEffects>
-        <Effect>减少1.5的超前惩罚并获得70%的研究加成，对于下2次研究149山地攻坚支援炮，155山地攻坚支援炮，161山地攻坚支援炮和167山地攻坚支援炮科技时有效，攻坚小队支援炮的移动速度+20%，获得科技：简化山地攻坚炮</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>98</Require>
-      </Requires>
-    </Node>
-    <Node ID="100" Name="加强炮兵阵线" Star="false" Duration="60" Descript="{加强炮兵阵线" Ps.="">
-      <RawEffects>
-        <Effect>2x70%研究加成：魔导师小队和迫击炮小队</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>99</Require>
-      </Requires>
-    </Node>
-    <Node ID="101" Name="查漏补缺" Star="false" Duration="30" Descript="我们的空军可以说是白纸一张，我们应该把资源向他们倾斜一部分" Ps.="">
-      <RawEffects>
-        <Effect>获得空军扩编，其效果为（战斗机生产花费：-10%，侦察机生产花费：+10%）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>95</Require>
-      </Requires>
-    </Node>
-    <Node ID="102" Name="暗影蔽日" Star="false" Duration="60" Descript="暗影蔽日" Ps.="">
-      <RawEffects>
-        <Effect>空军经验：+20，1x50%研究加成：战斗机</Effect>
-        <Effect>获得暗影蔽日，其效果为（空军研究速度：+50%，夺取制空权任务效率：+10%）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>101</Require>
-      </Requires>
-    </Node>
-    <Node ID="103" Name="妖风湮灭" Star="false" Duration="60" Descript="妖风湮灭" Ps.="">
-      <RawEffects>
-        <Effect>空军经验：+20，减少1.0的超前惩罚，对下1次研究战略轰炸机科技时有效</Effect>
-        <Effect>获得妖风湮灭，其效果为（支援机：生产花费：-15%）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>102</Require>
-      </Requires>
-    </Node>
-    <Node ID="104" Name="千里眼侦察" Star="false" Duration="60" Descript="千里眼侦察" Ps.="">
-      <RawEffects>
-        <Effect>空军经验：+10，减少1.0的超前惩罚，对下1次研究侦察机科技时有效</Effect>
-        <Effect>获得千里眼侦察，其效果为（侦察：+10%）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>103</Require>
-      </Requires>
-    </Node>
-    <Node ID="105" Name="进阶风弹" Star="false" Duration="60" Descript="进阶风弹" Ps.="">
-      <RawEffects>
-        <Effect>2x70%研究加成：基础武器</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>104</Require>
-      </Requires>
-    </Node>
-    <Node ID="106" Name="宣告紧急状态" Star="false" Duration="60" Descript="战局正在向着对我们不利的方向前进，我们必须不惜代价行动" Ps.="（注：需要处于战时且投降倾向超过30%）">
-      <RawEffects>
-        <Effect>增加基础稳定度：+5%</Effect>
-        <Effect>以总动员取代前期动员，效果变化（适役人口修正：-30%，生活消费品工厂：-15%，稳定度：-30%，战争支持度：-15%，民转军花费：-15%，工厂产出：+25%，军用工厂建造速度：+25%，民用工厂建造速度：-25%）</Effect>
-        <Effect>以类人体系人力7取代类人体系人力4，效果变化（动员速度：+30%，适役人口：+25.2%，生活消费品工厂：+8%，建造速度：-40%，工厂产出：-40%，训练时间：+45%）</Effect>
-      </RawEffects>
-      <Requires />
-    </Node>
-    <Node ID="107" Name="玉石俱焚" Star="false" Duration="60" Descript="民不畏死，奈何以死惧之？" Ps.="（注：需要处于战时）">
-      <RawEffects>
-        <Effect>稳定度：-10%，获得为期365天的“玉石俱焚”，其效果为（部队攻击：+30%，部队防御：-30%）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>106</Require>
-      </Requires>
-    </Node>
-    <Node ID="108" Name="人怨" Star="false" Duration="100" Descript="谁来与我同去？" Ps.="（注：需要处于战时）">
-      <RawEffects>
-        <Effect>所有敌国：获得人怨，其效果为（适役人口修正：-50%，适役人口：-3%）</Effect>
-        <Effect>获得人怨，其效果为（适役人口修正：-50%，适役人口：-3%）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>107</Require>
-      </Requires>
-    </Node>
-    <Node ID="109" Name="地覆" Star="false" Duration="100" Descript="谁来与我同去？" Ps.="（注：需要处于战时）">
-      <RawEffects>
-        <Effect>所有敌国：获得地覆，其效果为（建造速度：-80%，工厂产出：-80%）</Effect>
-        <Effect>获得地覆，其效果为（建造速度：-80%，适役人口：-3%）</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>108</Require>
-      </Requires>
-    </Node>
-    <Node ID="110" Name="天妒" Star="false" Duration="100" Descript="" Ps.="（注：需要处于战时）">
-      <RawEffects>
-        <Effect>所有敌国：获得天妒，其效果为（生活消费品工厂：+50%，政治点数：-50%）</Effect>
-        <Effect>获得天妒，其效果为（生活消费品工厂：+50%，政治点数：-50%）{谁来与我同去？</Effect>
-      </RawEffects>
-      <Requires>
-        <Require>109</Require>
-      </Requires>
-    </Node>
-  </Nodes>
+  <State Name="神佑村落">
+    <Nodes>
+      <Node ID="1" Name="准备西南战争" Star="false" Duration="15" Descript="西南的矛盾已经在爆发的边缘，我们必须做好准备" Ps.="">
+        <RawEffects>
+          <Effect>政治点数：-100</Effect>
+          <Effect>神佑村落（添加4个建筑位，添加2个民用工厂，添加2个军用工厂）</Effect>
+        </RawEffects>
+        <Requires />
+      </Node>
+      <Node ID="2" Name="发放大量贷款" Star="false" Duration="15" Descript="神明信仰联盟的支持让我们在扩张上毫无顾忌，但是无缘冢的垃圾不会变成金子，我们需要更多的帮助" Ps.="">
+        <RawEffects>
+          <Effect>政治点数：+500</Effect>
+          <Effect>获得为期365天的“贷款”，其效果为（生活消费品工厂：3%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>1</Require>
+        </Requires>
+      </Node>
+      <Node ID="3" Name="收缴武器" Star="false" Duration="15" Descript="我们在收复失地中缴获的武器有不少还处于地方的自治管辖下，将他们收缴上来至少可以缓解一时困难" Ps.="">
+        <RawEffects>
+          <Effect>稳定度：+10%</Effect>
+          <Effect>2.5k单位的步兵武器，2.5k单位的近战武器添加到国家储备中</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>2</Require>
+        </Requires>
+      </Node>
+      <Node ID="4" Name="组织民兵" Star="false" Duration="15" Descript="我们的百姓本就是好战的，组织他们参与这次战争十分容易" Ps.="">
+        <RawEffects>
+          <Effect>战争支持度：+25%</Effect>
+          <Effect>获得四个编制为人类警戒编制的部队</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>3</Require>
+        </Requires>
+      </Node>
+      <Node ID="5" Name="开放私人作坊" Star="false" Duration="15" Descript=" 我们毫不怀疑私人作坊的粗制滥造，一天或许只能做出三条枪，其中还只有一条能用，但是谁在乎呢" Ps.="">
+        <RawEffects>
+          <Effect>获得私人作坊，其效果为（步兵武器：可靠性：-10%，生产花费：-20%，近战武器：可靠性：-10%，生产花费：-20%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>4</Require>
+        </Requires>
+      </Node>
+      <Node ID="6" Name="做好防御准备" Star="false" Duration="15" Descript="铃兰部落和妖精汗国通过所谓的团结协定联合在一起，如果我们只想着进攻必然会首尾不能相顾" Ps.="">
+        <RawEffects>
+          <Effect>争取生存空间追加效果：（妖精汗国）我国对其防御修正：+10%，（铃兰部落）我国对其防御修正：+10%</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>5</Require>
+        </Requires>
+      </Node>
+      <Node ID="7" Name="争取更多支持" Star="false" Duration="15" Descript="我们不得已请求庇护我们多年的神明信仰联盟加大帮助，西南战争结束后我们会回报他们更多" Ps.="">
+        <RawEffects>
+          <Effect>（神明信仰联盟）触发事件“神佑村落请求更多支持”。如果他们同意，则来自神明信仰联盟的支持追加效果：政治点数：+10%，部队组织度：+5%，适役人口：+1%，部队组织度恢复：+5%</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>6</Require>
+        </Requires>
+      </Node>
+      <Node ID="8" Name="抵抗幽灵袭扰" Star="false" Duration="15" Descript="幽灵肆意的袭扰我们只能想办法应对，即使过程可能是缓慢的" Ps.="">
+        <RawEffects>
+          <Effect>启动决议抵抗幽灵的占据能力</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>7</Require>
+        </Requires>
+      </Node>
+      <Node ID="9" Name="专注对铃兰部落的进攻" Star="false" Duration="15" Descript="铃兰部落作为我们的历史宿敌才是西南战争的主要对手，先一步进攻他们是捣毁整个南线联络的关键" Ps.="">
+        <RawEffects>
+          <Effect>争取生存空间追加效果：（铃兰部落）我国对其进攻加成：+10%</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>7</Require>
+        </Requires>
+      </Node>
+      <Node ID="10" Name="防御妖精汗国的进攻" Star="false" Duration="15" Descript="妖精汗国有着不俗的游击队，但是离开他们熟悉的地形同样无计可施，我们只需要避免和他们的正面冲突就能获胜" Ps.="">
+        <RawEffects>
+          <Effect>争取生存空间追加效果：（妖精汗国）我国对其防御加成：+10%</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>7</Require>
+        </Requires>
+      </Node>
+      <Node ID="11" Name="战时措施" Star="false" Duration="30" Descript="战争已经开始，晚一步进入战时状态都是犯罪" Ps.="（注：需要抵抗幽灵袭扰，专注对铃兰部落的进攻，防御妖精汗国的进攻其一即可）">
+        <RawEffects>
+          <Effect>获得战时经济，其效果为（生活消费品工厂：25%，稳定度：-30%，战争支持度：-15%，民转军花费：-10%，工厂产出：+20%，军用工厂建造速度：+20%，民用工厂建造速度：-20%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>10</Require>
+        </Requires>
+      </Node>
+      <Node ID="12" Name="消亡教育" Star="false" Duration="60" Descript="为了我们的真神秋静叶，神佑部落愿意以消亡教育作为代价来唤醒人们对神明的信仰" Ps.="">
+        <RawEffects>
+          <Effect>向保守社会发展一级，以保守社会3取代保守社会2，效果变化（稳定度：+6% 科研速度：-3% 加密：+0.5 可出口资源：-5% 意识形态变化抵制力度：+10%）</Effect>
+          <Effect>向鹰派发展一级，以鹰派3取代鹰派2，效果变化（生活消费品：+1% 战争支持度+6% 改善关系持续花费：+20% 贸易关系协议修正：-15% 正当化战争目标时间：-4% 征兵法案花费：-10% 经济法案花费：-10%）</Effect>
+          <Effect>获得为期365天的“为了真神！”，其效果为（动员速度：+15%，部队组织度：+5%，投降界限：+5%，建造速度：+5%，部队核心领土攻击：+10%，部队核心领土防御：+10%，工厂产出：+5%，训练时间：-15%，厌战上涨周期：+33%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>11</Require>
+        </Requires>
+      </Node>
+      <Node ID="13" Name="意外帮助" Star="false" Duration="60" Descript="一部分“凋零者”被我们的诚意打动，自愿向秋静叶提出请求离开神明信仰联盟来帮助我们，而我们自然不会辜负他们的好意" Ps.="">
+        <RawEffects>
+          <Effect>触发事件：“‘凋零者’的帮助”，获得四个编制为凋零者的部队</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>12</Require>
+        </Requires>
+      </Node>
+      <Node ID="14" Name="智胜我们的敌人" Star="false" Duration="60" Descript="无缘冢总会有一些外界垃圾出现，当然也会有书籍，不过我们很难了解捡到并且宣传他的人是什么水平" Ps.="">
+        <RawEffects>
+          <Effect>获得兵法（？），其效果为（堑壕速度：+10%，缴获装备比例：10%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>13</Require>
+        </Requires>
+      </Node>
+      <Node ID="15" Name="其疾如风" Star="false" Duration="60" Descript="这一点是我们现在最能理解的了，速度更快才能做更多事" Ps.="">
+        <RawEffects>
+          <Effect>兵法（？）追加效果：其效果为（部队速度：+10%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>14</Require>
+        </Requires>
+      </Node>
+      <Node ID="16" Name="其徐如林" Star="false" Duration="60" Descript="我们并不能明白什么叫在森林中徐徐展开，但是我们至少能明白计划周密才能行进从容" Ps.="">
+        <RawEffects>
+          <Effect>兵法（？）追加效果：计划上限：+10%</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>14</Require>
+        </Requires>
+      </Node>
+      <Node ID="17" Name="侵略如火" Star="false" Duration="60" Descript="这个我们很擅长，抢东西自然是无微不至" Ps.="">
+        <RawEffects>
+          <Effect>兵法（？）追加效果：掠夺占领区花费：-100%</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>14</Require>
+        </Requires>
+      </Node>
+      <Node ID="18" Name="难知如阴" Star="false" Duration="60" Descript="虽然这一条我们都能理解但是实施起来却十分困难，因为鹰派本身就很难约束" Ps.="">
+        <RawEffects>
+          <Effect>兵法（？）追加效果：加密：+5</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>14</Require>
+        </Requires>
+      </Node>
+      <Node ID="19" Name="动如雷震" Star="false" Duration="60" Descript="像雷震一样行动肯定是人多而让人害怕吧，毕竟人多力量大" Ps.="">
+        <RawEffects>
+          <Effect>兵法（？）追加效果：适役人口：+3%</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>14</Require>
+        </Requires>
+      </Node>
+      <Node ID="20" Name="横扫四合" Star="false" Duration="140" Descript="经过不懈努力，我们荡平了西南，整合完成后我们必须考虑自己和神明信仰联盟的关系了" Ps.="（注：需要铃兰部落、妖精汗国、幽灵维权运动、幽灵自治运动不存在）">
+        <RawEffects>
+          <Effect>选择时，获得谨防外界干涉，其效果为（ai修正：专注防御：+100%，堑壕上限：+10，核心领土防御：+30%）直到国策结束。</Effect>
+          <Effect>稳定度：-40%，获得（铃兰部落）（妖精汗国）（幽灵维权运动）（幽灵自治运动）所有领土的核心</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>14</Require>
+        </Requires>
+      </Node>
+      <Node ID="21" Name="庇护的回报" Star="true" Duration="30" Descript="我们的神明永远是我们最坚实的后盾，是时候履行要求他们帮助的回报了" Ps.="（注：需要神明信仰联盟没有拒绝过支援）">
+        <RawEffects>
+          <Effect>(神明信仰联盟）通过与神佑村落的互不侵犯条约，获得强烈的战略同盟（与神佑村落的关系+100）</Effect>
+          <Effect>（神佑村落）获得强烈的战略同盟（与神佑村落的关系+100）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>20</Require>
+        </Requires>
+      </Node>
+      <Node ID="22" Name="重回战前" Star="false" Duration="60" Descript="杀戒一开难再回头，不让经历战争的百姓平复下来，我们或许就再也回不去了" Ps.="">
+        <RawEffects>
+          <Effect>来自神明信仰联盟的支持追加效果：政治点数：-10%，部队组织度：-5%，适役人口：-1%，部队组织度恢复：-5%</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>21</Require>
+        </Requires>
+      </Node>
+      <Node ID="23" Name="我们的贡献" Star="false" Duration="60" Descript="空口无凭，我们愿意让神明看到我们的决心" Ps.="">
+        <RawEffects>
+          <Effect>来自神明信仰联盟的支持追加效果：（神明信仰联盟）该国所拥民用工厂：+10%</Effect>
+          <Effect>（神明信仰联盟）来自神佑村落的战利品追加效果：生活消费品工厂：-4%，建造速度：+7%，工厂产出：+7%</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>22</Require>
+        </Requires>
+      </Node>
+      <Node ID="24" Name="自愿戍边" Star="false" Duration="60" Descript="愿为我们的神明驻守西南，任凭驱使无往不利" Ps.="">
+        <RawEffects>
+          <Effect>（神明信仰联盟）完成国策：继续支持神佑村落、不必亲自动手</Effect>
+          <Effect>触发事件“一位人类鹰派的自白”。</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>23</Require>
+        </Requires>
+      </Node>
+      <Node ID="25" Name="荣耀归属" Star="false" Duration="60" Descript="虽然是我们亲手赢得了西南战争的胜利，但是如果没有我们的神明帮助是不可能的，荣耀归于真神" Ps.="">
+        <RawEffects>
+          <Effect>（神明信仰联盟）成为无名之村、星光小径的拥有者</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>23</Require>
+        </Requires>
+      </Node>
+      <Node ID="26" Name="为傲慢付出代价" Star="false" Duration="60" Descript="斯卡雷特帝国在过去的战争中羞辱了我们的神明，为我们的神明一雪前耻是我们的责任" Ps.="">
+        <RawEffects>
+          <Effect>神明信仰联盟的忠犬追击效果：（斯卡雷特帝国）我国对其进攻修正：+20%</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>25</Require>
+        </Requires>
+      </Node>
+      <Node ID="27" Name="做好对花田的战争准备" Star="false" Duration="60" Descript="我们的神明好像对那片花田有想法，我们当然愿意为此努力，但是毕竟师出无名" Ps.="">
+        <RawEffects>
+          <Effect>政治点数：-200</Effect>
+          <Effect>神明信仰联盟的忠犬追加效果：（太阳花田）我国对其进攻修正：+10%，我国对其防御修正：+10%</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>25</Require>
+        </Requires>
+      </Node>
+      <Node ID="28" Name="做好对佛教的战争准备" Star="false" Duration="60" Descript="我们的神明才是最伟大的，什么佛都要靠边站" Ps.="">
+        <RawEffects>
+          <Effect>政治点数：-100</Effect>
+          <Effect>神明信仰联盟的忠犬追加效果：（命莲寺）我国对其进攻修正：+10%，我国对其防御修正：+10%</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>25</Require>
+        </Requires>
+      </Node>
+      <Node ID="29" Name="为投机付出代价" Star="false" Duration="60" Descript="这群投机商让我们的神明一度陷入国度被颠覆的境地，神明宽容仁厚，但我们可不一样" Ps.="">
+        <RawEffects>
+          <Effect>神明信仰联盟的忠犬追加效果：（中有之道贸易站）我国对其进攻修正：+20%</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>25</Require>
+        </Requires>
+      </Node>
+      <Node ID="30" Name="全力支持终末之战" Star="false" Duration="60" Descript="" Ps.="（注：需要为傲慢付出代价，做好花田的战争准备，做好对佛教的战争准备，为投机付出代价其一即可）">
+        <RawEffects>
+          <Effect>政治点数：-500</Effect>
+          <Effect>（神明信仰联盟)当第一次和天狗共和国进入战争状态时，获得为期365天的“神佑村落的全力支持”，其效果为（适役人口：+10%，工厂产出：+100%，建造速度：+100%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>29</Require>
+        </Requires>
+      </Node>
+      <Node ID="31" Name="元气大伤" Star="false" Duration="0" Descript="我们尽到了对神明的所有义务，但是我们因此元气大伤" Ps.="（注：随事件发展自动完成）">
+        <RawEffects>
+          <Effect>获得元气大伤，其效果为（建造速度：-50%，工厂产出：-50%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>30</Require>
+        </Requires>
+      </Node>
+      <Node ID="32" Name="恢复元气" Star="false" Duration="60" Descript="但我们从不为此后悔，恢复时间漫长但自豪" Ps.="">
+        <RawEffects>
+          <Effect>移除元气大伤，其效果为（建造速度：-50%，工厂产出：-50%）</Effect>
+          <Effect>获得为期365天的“恢复元气”，其效果为（建造速度：-25%，工厂产出：-25%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>31</Require>
+        </Requires>
+      </Node>
+      <Node ID="33" Name="秋静叶大人的怀抱" Star="false" Duration="100" Descript="我们的真神秋静叶大人居然来到了神佑村落与我们见面，村委会一致决定要以身回报神明" Ps.="">
+        <RawEffects>
+          <Effect>成为神明信仰联盟的合作势力</Effect>
+          <Effect>获得神明，其效果为（动员速度：+20%，适役人口：+16%，补给消耗：-5%，加密：+2，解密：+2，部队夜战攻击：-15%，每日人类影响力基础变化：+0.07）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>32</Require>
+        </Requires>
+      </Node>
+      <Node ID="34" Name="留手的隔阂" Star="true" Duration="30" Descript="我们的神明在这次战争中留了手，他们似乎不愿意让西南战争那么快结束，我们头一次觉得自己和秋静叶大人的关系这么远" Ps.="（注：需要拥有来自神明信仰联盟的支持，神明信仰联盟拒绝过对我们的支援）">
+        <RawEffects>
+          <Effect>移除来自神明信仰联盟的支持，其效果为（政治点数：-10%，部队组织度：+10%，适役人口：+2%，部队组织度恢复：+10%，（神明信仰联盟）贸易协定关系修正：+50%，（神明信仰联盟）该国所拥民用工厂：+10%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>20</Require>
+        </Requires>
+      </Node>
+      <Node ID="35" Name="再次示好" Star="false" Duration="60" Descript="我们的神明并没有完全放弃我们，或许我们可以争取让她们重新站到我们这边来" Ps.="">
+        <RawEffects>
+          <Effect>（神明信仰联盟）稳定度：+10%，政治点数：+100</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>34</Require>
+        </Requires>
+      </Node>
+      <Node ID="36" Name="最终确认" Star="false" Duration="60" Descript="我们已经做了我们应该做的事，接下来就看神明的意愿了" Ps.="">
+        <RawEffects>
+          <Effect>（神明信仰联盟）触发事件“神佑村落询问我们的意见”。如果他们同意，则获得神明信仰联盟的默许，其效果为（部队组织度：+5%，部队组织度恢复：+5%，适役人口：+1%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>35</Require>
+        </Requires>
+      </Node>
+      <Node ID="37" Name="自愿戍边" Star="true" Duration="60" Descript="愿为我们的神明驻守西南，任凭驱使无往不利" Ps.="（注：需要他们同意）">
+        <RawEffects>
+          <Effect>（神明信仰联盟）完成国策：继续支持神佑村落、不必亲自动手，触发事件“一位人类鹰派的自白”。</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>36</Require>
+        </Requires>
+      </Node>
+      <Node ID="38" Name="荣耀归属" Star="false" Duration="60" Descript="虽然是我们亲手赢得了西南战争的胜利，但是如果没有我们的神明帮助是不可能的，荣耀归于真神" Ps.="">
+        <RawEffects>
+          <Effect>（神明信仰联盟）成为无名之村、星光小径的拥有者</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>37</Require>
+        </Requires>
+      </Node>
+      <Node ID="39" Name="做好对花田的战争准备" Star="false" Duration="60" Descript="我们的神明好像对那片花田有想法，我们当然愿意为此努力，但是毕竟师出无名" Ps.="">
+        <RawEffects>
+          <Effect>政治点数：-200，神明信仰联盟的忠犬追加效果：（太阳花田）我国对其进攻修正：+10%，我国对其防御修正：+10%</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>38</Require>
+        </Requires>
+      </Node>
+      <Node ID="40" Name="做好对佛教的战争准备" Star="false" Duration="60" Descript="我们的神明才是最伟大的，什么佛都要靠边站" Ps.="">
+        <RawEffects>
+          <Effect>政治点数：-100，神明信仰联盟的忠犬追加效果：（命莲寺）我国对其进攻修正：+10%，我国对其防御修正：+10%</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>38</Require>
+        </Requires>
+      </Node>
+      <Node ID="41" Name="为投机付出代价" Star="false" Duration="60" Descript="这群投机商让我们的神明一度陷入国度被颠覆的境地，神明宽容仁厚，但我们可不一样" Ps.="">
+        <RawEffects>
+          <Effect>神明信仰联盟的忠犬追加效果：（中有之道贸易站）我国对其进攻修正：+20%</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>38</Require>
+        </Requires>
+      </Node>
+      <Node ID="42" Name="为傲慢付出代价" Star="false" Duration="60" Descript="斯卡雷特帝国在过去的战争中羞辱了我们的神明，为我们的神明一雪前耻是我们的责任" Ps.="">
+        <RawEffects>
+          <Effect>神明信仰联盟的忠犬追击效果：（斯卡雷特帝国）我国对其进攻修正：+20%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>38</Require>
+        </Requires>
+      </Node>
+      <Node ID="43" Name="全力支持终末之战" Star="false" Duration="60" Descript="" Ps.="">
+        <RawEffects>
+          <Effect>政治点数：-500，</Effect>
+          <Effect>（神明信仰联盟)当第一次和天狗共和国进入战争状态时，获得为期365天的“神佑村落的全力支持”，其效果为（适役人口：+10%，工厂产出：+100%，建造速度：+100%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>42</Require>
+        </Requires>
+      </Node>
+      <Node ID="44" Name="元气大伤" Star="false" Duration="0" Descript="我们尽到了对神明的所有义务，但是我们因此元气大伤" Ps.="（注：随事件发展自动完成）">
+        <RawEffects>
+          <Effect>获得元气大伤，其效果为（建造速度：-50%，工厂产出：-50%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>43</Require>
+        </Requires>
+      </Node>
+      <Node ID="45" Name="恢复元气" Star="false" Duration="60" Descript="但我们从不为此后悔，恢复时间漫长但自豪" Ps.="">
+        <RawEffects>
+          <Effect>移除元气大伤，其效果为（建造速度：-50%，工厂产出：-50%），获得为期365天的“恢复元气”，其效果为（建造速度：-25%，工厂产出：-25%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>44</Require>
+        </Requires>
+      </Node>
+      <Node ID="46" Name="秋静叶大人的怀抱" Star="false" Duration="100" Descript="我们的真神秋静叶大人居然来到了神佑村落与我们见面，村委会一致决定要以身回报神明" Ps.="">
+        <RawEffects>
+          <Effect>成为神明信仰联盟的合作势力，获得神明，其效果为（动员速度：+20%，适役人口：+16%，补给消耗：-5%，加密：+2，解密：+2，部队夜战攻击：-15%，每日人类影响力基础变化：+0.07）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>45</Require>
+        </Requires>
+      </Node>
+      <Node ID="47" Name="清君侧" Star="true" Duration="30" Descript="曾经支持我们的神明被卑鄙的逐出政治舞台，我们的真神只有秋静叶大人，应该让她回来主持神明信仰联盟的事务" Ps.="（注：需要他们反对）">
+        <RawEffects>
+          <Effect>获得清君侧，其效果为（神明信仰联盟）我国对其进攻修正：+20%，我国对其防御修正：+20%</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>36</Require>
+        </Requires>
+      </Node>
+      <Node ID="48" Name="承续前志" Star="false" Duration="30" Descript="曾经我们也有同路人，但如今我们只能依靠自己" Ps.="">
+        <RawEffects>
+          <Effect>获得掌权的极端势力，其效果为（部队组织度：-5%，部队组织度恢复：-5%，部队攻击：+8%，部队防御：+8%，新规倾向：+0.05，允许创建阵营）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>47</Require>
+        </Requires>
+      </Node>
+      <Node ID="49" Name="神佑吾等" Star="false" Duration="30" Descript="神明总是保佑我们，哪怕今天" Ps.="">
+        <RawEffects>
+          <Effect>神佑村落向神明信仰联盟宣战，获得八个编制为凋零者的部队</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>48</Require>
+        </Requires>
+      </Node>
+      <Node ID="50" Name="强占学院" Star="false" Duration="30" Descript="教育是神明不需要的东西，任何想要以此威胁神明的人都会被抹除" Ps.="（注：需要我们或我们的附庸控制稻田聚落）">
+        <RawEffects>
+          <Effect>增加1个科研槽，获得为了真神!，其效果为（动员速度：+15%，部队组织度：+5%，投降界限：+5%，建造速度：+5%，部队核心领土攻击：+10%，部队核心领土防御：+10%，工厂产出：+5%，训练时间：-15%，厌战上涨周期：+33%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>49</Require>
+        </Requires>
+      </Node>
+      <Node ID="51" Name="对神明的爱意" Star="false" Duration="30" Descript="神佑村落与神明信仰联盟重整关系之后，有一些人类和神明萌发了超越敬意的情感，我们当然不会阻止他们" Ps.="">
+        <RawEffects>
+          <Effect>获得人与神的模糊界限，其效果为（部队组织度：+5%，稳定度：+5%，解密：-2，加密：-2，灵力系研究速度：+5%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>50</Require>
+        </Requires>
+      </Node>
+      <Node ID="52" Name="勿忘“凋零者”" Star="false" Duration="30" Descript="“凋零者”在西南战争和清君侧中都帮了我们极大的忙，忘记他们就是忘记历史" Ps.="">
+        <RawEffects>
+          <Effect>获得“凋零者”精神，其效果为（部队组织度：-5%，部队组织度恢复：-5%，部队攻击：+8%，部队防御：+8%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>51</Require>
+        </Requires>
+      </Node>
+      <Node ID="53" Name="让教育消亡" Star="false" Duration="60" Descript="知识越多越反动！为了不让什么“革新派”再度成为主流，秋静叶准备禁止一切人类间的知识交流。目前这个概念还很抽象，不过可以确定的是如果可行且有必要，她将禁止人类使用书面文字" Ps.="">
+        <RawEffects>
+          <Effect>向保守社会发展一级，以保守社会3取代保守社会2，效果变化（稳定度：+6% 科研速度：-3% 加密：+0.5 可出口资源：-5% 意识形态变化抵制力度：+10%）</Effect>
+          <Effect>向鹰派发展一级，以鹰派3取代鹰派2，效果变化（生活消费品：+1% 战争支持度+6% 改善关系持续花费：+20% 贸易关系协议修正：-15% 正当化战争目标时间：-4% 征兵法案花费：-10% 经济法案花费：-10%）</Effect>
+          <Effect>获得为了真神！，其效果为（动员速度：+15%，部队组织度：+5%，投降界限：+5%，建造速度：+5%，部队核心领土攻击：+10%，部队核心领土防御：+10%，工厂产出：+5%，训练时间：-15%，厌战上涨周期：+33%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>52</Require>
+        </Requires>
+      </Node>
+      <Node ID="54" Name="重启收复失地运动" Star="false" Duration="60" Descript="无缘冢都是我们的领土，任何人都不能占据哪怕一分一毫" Ps.="">
+        <RawEffects>
+          <Effect>神佑村落向中有之道贸易区宣战</Effect>
+          <Effect>神佑村落向雾雨流亡者宣战</Effect>
+          <Effect>神佑村落向幽灵革命运动宣战</Effect>
+          <Effect>获得为期90天的“一脚把门踢开”，其效果为（移动中组织度损失：-10%，增援率：+3%，计划速度：+15%，计划加成上限：+15%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>53</Require>
+        </Requires>
+      </Node>
+      <Node ID="55" Name="羞辱斯卡雷特帝国" Star="false" Duration="60" Descript="以眼还眼以牙还牙，斯卡雷特帝国应该学到教训" Ps.="">
+        <RawEffects>
+          <Effect>（斯卡雷特帝国）触发事件“来自神佑村落的羞辱”。</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>53</Require>
+        </Requires>
+      </Node>
+      <Node ID="56" Name="与山姥部落换地" Star="false" Duration="60" Descript="神佑村落愿以“五百里之地”易山姥村……" Ps.="">
+        <RawEffects>
+          <Effect>（山姥部落）触发事件“神佑村落的换地想法”。</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>53</Require>
+        </Requires>
+      </Node>
+      <Node ID="57" Name="影响太阳花田的政治" Star="false" Duration="60" Descript="太阳花田已经脱离时代很有一段时间了，因此意识形态的影响近乎无往不利" Ps.="">
+        <RawEffects>
+          <Effect>（太阳花田）获得新规倾向，其效果为（新规倾向：+0.1）</Effect>
+          <Effect>（太阳花田）获得强烈的战略同盟（与神佑村落的关系+100），神佑村落获得强烈的战略同盟（与太阳花田的关系+100）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>53</Require>
+        </Requires>
+      </Node>
+      <Node ID="58" Name="准备终末之战" Star="false" Duration="60" Descript="多一个盟友便能巩固我们在无缘冢的地位，不过守矢神社的野心无人能知" Ps.="">
+        <RawEffects>
+          <Effect>开启决议与守矢神社交涉）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>57</Require>
+        </Requires>
+      </Node>
+      <Node ID="59" Name="无缘冢的霸主" Star="false" Duration="100" Descript="我们横扫了西南的所有敌人，后户之国的贤者面见了我们后，协商通过了对我们西南地位的认可，人类与神明的幸福国度近在咫尺" Ps.="">
+        <RawEffects>
+          <Effect>获得帝国，其效果为（每日获得的政治点数：+0.35，部队组织度：+10%，每月人口：+30%，适役人口修正：15%，稳定度：+25%，训练时间：-5%，特工位：+1）</Effect>
+          <Effect>获得后户之国的授权，其效果为（科研速度：+20%，工厂产出：+20%，建造速度：+20%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>58</Require>
+        </Requires>
+      </Node>
+      <Node ID="60" Name="翻脸的代价" Star="true" Duration="30" Descript="神明不佑我们，我们不敬神明，让他们看看翻脸的代价是什么" Ps.="（注：需要“翻脸”）">
+        <RawEffects>
+          <Effect>神佑村落将被称为西南村落，政治点数：+200</Effect>
+          <Effect>获得为期365天的“不再有神佑了”，其效果为（每周战争支持度：+0.1%，稳定度：-10%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>20</Require>
+        </Requires>
+      </Node>
+      <Node ID="61" Name="第二次生存" Star="false" Duration="15" Descript="我们凭自己的努力打赢了西南战争，西北的旧主也无法阻拦我们" Ps.="">
+        <RawEffects>
+          <Effect>获得第二次争取生存空间，其效果为（（神明信仰联盟）我国对其进攻修正：+10%，我国对其防御修正：+10%，（驱鬼村落）我国对其进攻修正：+10%，我国对其防御修正：+10%，（丰收村落）我国对其进攻修正：+10%，我国对其防御修正：+10%，（锻造村落）我国对其进攻修正：+10%，我国对其防御修正：+10%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>60</Require>
+        </Requires>
+      </Node>
+      <Node ID="62" Name="整合”凋零者“" Star="false" Duration="15" Descript="神明和我们的冲突让我们怒火中烧，但这和我们的旧友“凋零者”无关，我们会收编他们继续为我们而战" Ps.="">
+        <RawEffects>
+          <Effect>解散所有编制为凋零者的部队，获得32只编制为扫荡编制的部队</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>61</Require>
+        </Requires>
+      </Node>
+      <Node ID="63" Name="新家" Star="false" Duration="15" Descript="" Ps.="，人类村落获得希望之地？（与神佑村落的关系+15），神佑村落获得希望之地？（与人类村落的关系+15）}{“凋零”者们，神明抛弃了我们，但人类兄弟愿意接纳你们，西南会是所有人类的新家}">
+        <RawEffects>
+          <Effect>稳定度：+10%，获得人类移民，其效果为（灵力系研究速度：+5%，每周人力：+3，每日人类影响力额外变化：+0.03）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>62</Require>
+        </Requires>
+      </Node>
+      <Node ID="64" Name="老兵" Star="false" Duration="15" Descript="更多老兵接踵而至，虽然他们有些已经身体残疾，幻想乡不容许人类复权也自然不会治疗他们的伤势，许多老兵已经郁郁而终。但我们给他们最好的食物和住所，不仅仅是因为我们认可战争，更因为我们也是人类" Ps.="">
+        <RawEffects>
+          <Effect>触发事件“老兵不死”。人力+1000，陆军经验+15，获得前人类村落的正规战斗编制</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>63</Require>
+        </Requires>
+      </Node>
+      <Node ID="65" Name="人类复仇运动" Star="false" Duration="30" Descript="人类复权运动的失败不是因为他的“极端”，恰恰因为他不够“极端”，幻想乡认为的极端就是不极端，敌人不认可的我们才更应该支持" Ps.="">
+        <RawEffects>
+          <Effect>获得6只编制为正规战斗编制的部队</Effect>
+          <Effect>神佑村落向神明信仰联盟宣战</Effect>
+          <Effect>获得人类复仇运动，其效果为（每周战争支持度：+0.1%，政治点数：+15%）</Effect>
+          <Effect>所有拥有幻想乡正统势力的国家：获得历史宿敌（与神佑村落的关系-500）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>64</Require>
+        </Requires>
+      </Node>
+      <Node ID="66" Name="接纳流亡者" Star="false" Duration="15" Descript="西面的流亡者和我们同出一源，我们或许可以兵不血刃让他们回归" Ps.="">
+        <RawEffects>
+          <Effect>雾雨流亡者触发事件“人类复权的回归？”。</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>65</Require>
+        </Requires>
+      </Node>
+      <Node ID="67" Name="兼并弱邻" Star="false" Duration="30" Descript="弱肉强食，幻想乡最喜欢强调这一法则，但当他们成为弱肉的时候会有什么想法呢" Ps.="">
+        <RawEffects>
+          <Effect>神佑村落向山姥部落宣战，人类复仇运动追加效果：稳定度：+10%</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>66</Require>
+        </Requires>
+      </Node>
+      <Node ID="68" Name="强占贸易区" Star="false" Duration="30" Descript="贸易是个好东西，大家都喜欢，不过我们需要一点手续费" Ps.="">
+        <RawEffects>
+          <Effect>神佑村落向中有之道贸易站下宣战，人类复权运动追加效果：生活消费品工厂：-5%</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>67</Require>
+        </Requires>
+      </Node>
+      <Node ID="69" Name="搜刮战利品" Star="false" Duration="15" Descript="中有之道贸易站里居然有曾经神明信仰联盟的地契，真是飞来横福}（注：需要中有之道贸易站不存在" Ps.="">
+        <RawEffects>
+          <Effect>神佑村落获得土地贸易所得，其效果为（生活消费品工厂：-3%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>68</Require>
+        </Requires>
+      </Node>
+      <Node ID="70" Name="镇压异族革命" Star="false" Duration="30" Descript="革命就像一把达摩克里斯之剑，如果不能握在人类手上不如让他毁灭" Ps.="">
+        <RawEffects>
+          <Effect>神佑村落向幽灵革命运动宣战，激进倾向：+5%</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>69</Require>
+        </Requires>
+      </Node>
+      <Node ID="71" Name="革命之力" Star="false" Duration="30" Descript="人类二度掌握革命之力，但也要谨防他的反噬" Ps.="">
+        <RawEffects>
+          <Effect>获得无序即自由，其效果为（每日获得的政治点数：-0.05，理念类花费：+10%，补给消耗：-20%，部队组织度恢复：+40%，部队核心领土攻击：+10%，部队核心领土防御：+10%，增援率：+5%，ai修正：专注进攻：+15%，激进倾向：+0.01，新规倾向：+5%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>70</Require>
+        </Requires>
+      </Node>
+      <Node ID="72" Name="灭佛运动" Star="false" Duration="30" Descript="佛也是神的一种，人类不需要任何神明或宗教" Ps.="">
+        <RawEffects>
+          <Effect>神佑村落对（命莲寺）宣战，陆军经验：+100</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>71</Require>
+        </Requires>
+      </Node>
+      <Node ID="73" Name="与神灵庙交涉" Star="false" Duration="30" Descript="道教对外自称不干涉任何事物的清静无为，如果他们不对外传教，以神灵庙这些年庇护的人类数量我们可以放他们一马" Ps.="">
+        <RawEffects>
+          <Effect>（神灵庙）触发事件“是否恪守中立？”。</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>72</Require>
+        </Requires>
+      </Node>
+      <Node ID="74" Name="交好道派" Star="true" Duration="60" Descript="道教愿意恪守中立，我们也愿意对他们中立" Ps.="（注：需要神灵庙恪守中立）">
+        <RawEffects>
+          <Effect>（神灵庙）获得战略同盟（与神佑村落的关系+80）</Effect>
+          <Effect>（神佑村落）获得战略同盟（与神灵庙的关系+80）</Effect>
+          <Effect>（隐居村落）获得战略同盟（与神佑村落的关系+80）</Effect>
+          <Effect>（神佑村落）获得战略同盟（与隐居村落的关系+80）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>73</Require>
+        </Requires>
+      </Node>
+      <Node ID="75" Name="分享佛教宝物" Star="false" Duration="60" Descript="朋友来了有美酒，敌人来了有钢枪，这就是人类的待客之道" Ps.="（注：需要掌控命莲寺）">
+        <RawEffects>
+          <Effect>（神灵庙）获得飞来横福（与神佑村落关系+150）</Effect>
+          <Effect>（神灵庙）获得在（命莲寺）上建神灵庙分庙，其效果为（部队组织度恢复：+15%）</Effect>
+          <Effect>从命莲寺移除5个基础设施，从命莲寺移除2个民用工厂，从命莲寺移除2个军用工厂</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>74</Require>
+        </Requires>
+      </Node>
+      <Node ID="76" Name="合流人类村落" Star="false" Duration="60" Descript="上白泽慧音的政权懦弱且驯化人类，试图让万物灵长成为猪狗，她必须下台" Ps.="">
+        <RawEffects>
+          <Effect>神佑村落向人类村落宣战</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>75</Require>
+        </Requires>
+      </Node>
+      <Node ID="77" Name="惩戒人类财阀" Star="false" Duration="60" Descript="对人类财阀一顿杀鸡儆猴之后，我们获得人类的绝对话语权" Ps.="（注：需要人类财阀联合不存在）">
+        <RawEffects>
+          <Effect>政治点数：-200</Effect>
+          <Effect>获得取得人类的领导权，其效果为（每日人类影响力额外变化：+0.01）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>76</Require>
+        </Requires>
+      </Node>
+      <Node ID="78" Name="将人类大家族的资产收为己有" Star="false" Duration="60" Descript="人类村落的一些大家族通过出卖人类的利益获得了很多不义之财，我们可以正当的把他们受为己用" Ps.="">
+        <RawEffects>
+          <Effect>政治点数：+250，增加3个地图外民用工厂，增加3个地图外军用工厂</Effect>
+          <Effect>获得将人类大家族的资产收为己有，其效果为（每日人类影响力额外变化：+0.04）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>77</Require>
+        </Requires>
+      </Node>
+      <Node ID="79" Name="借刀杀人" Star="false" Duration="60" Descript="我们现在还没有和所有妖怪开战的打算，所以要是想对妖怪出手，我们至少得挑选一位代理人" Ps.="">
+        <RawEffects>
+          <Effect>（神灵庙）完成国策：将妖怪赶出人类村落</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>78</Require>
+        </Requires>
+      </Node>
+      <Node ID="80" Name="人类帝国的黎明" Star="false" Duration="100" Descript="现在我们终于可以宣布人类涅槃重生，未来我们可以继续复仇运动也可以固守一方，我们合法合理的接过了人类复权运动的旗帜，也完成了他们的夙愿" Ps.="（注：需要人类村落不存在）">
+        <RawEffects>
+          <Effect>获得帝国，其效果为（每日获得的政治点数：+0.35，部队组织度：+10%，每月人口：+30%，适役人口修正：15%，稳定度：+25%，训练时间：-5%，特工位：+1）</Effect>
+          <Effect>获得所有地块为人类的省份核心</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>79</Require>
+        </Requires>
+      </Node>
+      <Node ID="81" Name="敬酒不吃" Star="true" Duration="30" Descript="神灵庙的家伙真是敬酒不吃吃罚酒，那就别怪我们不客气了" Ps.="">
+        <RawEffects>
+          <Effect>神佑村落向神灵庙宣战</Effect>
+          <Effect>获得为期365天的“勿谓言之不预”，其效果为（部队速度：-10%，部队攻击：+10%，部队防御：+10%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>73</Require>
+        </Requires>
+      </Node>
+      <Node ID="82" Name="复仇更进一步" Star="false" Duration="30" Descript="人类复权运动的目标近在眼前，唤醒人类义不容辞" Ps.="">
+        <RawEffects>
+          <Effect>（人类村落）触发事件“人类复权运动的回归？”。如果他们同意，则人类复仇运动追加效果：部队攻击：+10%，部队防御：+10%</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>81</Require>
+        </Requires>
+      </Node>
+      <Node ID="83" Name="消灭背叛者" Star="false" Duration="30" Descript="如果没有九十九工业的背叛，人类至少不会落得如今的田地，而九十九工业却可以心安理得的享受人类血肉的报偿，背叛者不得好死" Ps.="">
+        <RawEffects>
+          <Effect>神佑村落向九十九工业宣战，人类复仇运动追加效果：适役人口修正：20%</Effect>
+          <Effect>（九十九工业）获得为期365天的“人类复权运动的阴影”，其效果为（政治点数：-100%，堑壕速度：+20%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>82</Require>
+        </Requires>
+      </Node>
+      <Node ID="84" Name="让魔法使回归" Star="false" Duration="30" Descript="魔法使和人类的关系本就千丝万缕，虽然现在她们已经堕落，但是亡羊补牢为时未晚" Ps.="">
+        <RawEffects>
+          <Effect>神佑村落向魔女联盟宣战</Effect>
+          <Effect>人类复仇运动追加效果：每日指挥点数增加：+50%，灵力值对战斗力的影响翻倍</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>83</Require>
+        </Requires>
+      </Node>
+      <Node ID="85" Name="为巫女出头" Star="false" Duration="30" Descript="森近霖之助曾认为：博丽巫女成为了牺牲的对象，但人类告诉巫女，她从来没有被放弃" Ps.="">
+        <RawEffects>
+          <Effect>神佑村落向兽道部落宣战</Effect>
+          <Effect>人类复仇运动追加效果：步兵部队攻击：+15%，步兵部队防御：+15%</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>84</Require>
+        </Requires>
+      </Node>
+      <Node ID="86" Name="与博丽灵梦交涉" Star="false" Duration="30" Descript="博丽灵梦在八云紫的监视下却一直没有动摇到了146季，不管后来发生了什么，我们都愿意给她一个机会" Ps.="">
+        <RawEffects>
+          <Effect>（博丽神社）触发事件“重回人类的邀请”。如果他们同意，则成为神佑村落的四级附庸（势力范围），获得博丽分队，其效果为（每周人力：+4，部队组织度：+15%，部队组织度恢复：+10%，新将领初始防御技能等级：+1），</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>85</Require>
+        </Requires>
+      </Node>
+      <Node ID="87" Name="毁灭叛乱同盟" Star="false" Duration="30" Descript="下克上运动本来可以和人类达成某种共识，但结果差劲人意，如果她们没有能力，我们不介意替他们代劳" Ps.="">
+        <RawEffects>
+          <Effect>神佑村落向叛乱同盟宣战，人类复仇运动追加效果：顺从速度增长：+10%，驻军所受伤害：-20%</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>86</Require>
+        </Requires>
+      </Node>
+      <Node ID="88" Name="延续间歇泉条约" Star="false" Duration="30" Descript="" Ps.="">
+        <RawEffects>
+          <Effect>获得间歇泉条约，其效果为（稳定度：+5%，（通道防卫同盟）对其制造战争目标的紧张度限制：+85%，（怨灵通道）对其制造战争目标的紧张度限制：+85%，（蜘蛛风洞）对其制造战争目标的紧张度限制：+85%，（无法地带）对其制造战争目标的紧张度限制：+85%，（旧都自治领）对其制造战争目标的紧张度限制：+85%，（怨灵兄弟会）对其制造战争目标的紧张度限制：+85%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>87</Require>
+        </Requires>
+      </Node>
+      <Node ID="89" Name="向妖精示好" Star="false" Duration="30" Descript="" Ps.="">
+        <RawEffects>
+          <Effect>（雾之湖妖静联合体）通过与神佑村落的互不侵犯条约，获得战略同盟（与神佑村落的关系+80），（神佑村落）获得战略同盟（与雾之湖妖精联合体的关系+80）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>88</Require>
+        </Requires>
+      </Node>
+      <Node ID="90" Name="摧毁吸血鬼帝国" Star="false" Duration="30" Descript="万事俱备，吸血鬼帝国当灭，人类将兴" Ps.="">
+        <RawEffects>
+          <Effect>神佑村落向斯卡雷特帝国宣战</Effect>
+          <Effect>人类复仇运动追加效果：训练时间：-10%</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>89</Require>
+        </Requires>
+      </Node>
+      <Node ID="91" Name="扼杀天狗共和国" Star="false" Duration="30" Descript="天狗拥有无比优越的资源却不知利用，属实是我人类的大幸" Ps.="">
+        <RawEffects>
+          <Effect>神佑村落向天狗共和国宣战</Effect>
+          <Effect>人类复仇运动追加效果：科研速度：+10%，混合类研究速度：+5%</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>90</Require>
+        </Requires>
+      </Node>
+      <Node ID="92" Name="对万国宣战诏书" Star="false" Duration="100" Descript="这是最后的斗争，团结起来到明天……" Ps.="">
+        <RawEffects>
+          <Effect>所有拥有幻想乡正统势力的国家：向神佑村落宣战</Effect>
+          <Effect>获得法师，其效果为（灵力系研究速度：+5%，动员速度：+15%，部队组织度：-2%，适役人口：+8%，稳定度：-5%，步兵部队攻击：+10%，炮兵攻击：+5%，工厂产出：-6%，陆军夜战攻击：-5%，每日人类影响力基础变化：+0.03）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>91</Require>
+        </Requires>
+      </Node>
+      <Node ID="93" Name="回顾我们的过去" Star="false" Duration="30" Descript="从我们被送往无缘冢进行收复失地运动开始，我们的心中其实一直有神明也无法理解的种子在发芽" Ps.="">
+        <RawEffects>
+          <Effect>神佑村落（将基础设施添加到最大）</Effect>
+        </RawEffects>
+        <Requires />
+      </Node>
+      <Node ID="94" Name="关注我们的现在" Star="false" Duration="30" Descript="战争是我们的归宿，又或者是我们的鸦片？" Ps.="">
+        <RawEffects>
+          <Effect>神佑村落（添加2个军用工厂，添加2个建筑位）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>93</Require>
+        </Requires>
+      </Node>
+      <Node ID="95" Name="展望我们的未来" Star="false" Duration="30" Descript="未来我们所有人应该都能每天吃上两顿饭吧，又或者是我们的孩子、后代……" Ps.="">
+        <RawEffects>
+          <Effect>增加10点唯心值，增加10点灵力值</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>94</Require>
+        </Requires>
+      </Node>
+      <Node ID="96" Name="训练部队" Star="false" Duration="30" Descript="我们的军队与其说是军队，不如说是广泛的中央指挥民兵，如果不做出改变他们是无法适应为了战场的" Ps.="">
+        <RawEffects>
+          <Effect>获得训练部队，其效果为（陆军经验增加：+0.1每日，陆军经验增长：+10%，训练时间：+20%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>95</Require>
+        </Requires>
+      </Node>
+      <Node ID="97" Name="动员体系的调整" Star="false" Duration="60" Descript="务必像山顶上的邻居那样锐意进取" Ps.="">
+        <RawEffects>
+          <Effect>陆军经验：+5</Effect>
+          <Effect>获得动员体系的调整，其效果为（适役人口修正：5%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>96</Require>
+        </Requires>
+      </Node>
+      <Node ID="98" Name="新时代的陆战技术" Star="false" Duration="60" Descript="新时代的陆战技术" Ps.="">
+        <RawEffects>
+          <Effect>陆军经验：+10，1x25%花费降低：基础陆军学说，2x50%花费降低：新兴科技学说</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>97</Require>
+        </Requires>
+      </Node>
+      <Node ID="99" Name="简化山地攻坚炮" Star="false" Duration="60" Descript="简化山地攻坚炮" Ps.="">
+        <RawEffects>
+          <Effect>减少1.5的超前惩罚并获得70%的研究加成，对于下2次研究149山地攻坚支援炮，155山地攻坚支援炮，161山地攻坚支援炮和167山地攻坚支援炮科技时有效，攻坚小队支援炮的移动速度+20%，获得科技：简化山地攻坚炮</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>98</Require>
+        </Requires>
+      </Node>
+      <Node ID="100" Name="加强炮兵阵线" Star="false" Duration="60" Descript="{加强炮兵阵线" Ps.="">
+        <RawEffects>
+          <Effect>2x70%研究加成：魔导师小队和迫击炮小队</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>99</Require>
+        </Requires>
+      </Node>
+      <Node ID="101" Name="查漏补缺" Star="false" Duration="30" Descript="我们的空军可以说是白纸一张，我们应该把资源向他们倾斜一部分" Ps.="">
+        <RawEffects>
+          <Effect>获得空军扩编，其效果为（战斗机生产花费：-10%，侦察机生产花费：+10%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>95</Require>
+        </Requires>
+      </Node>
+      <Node ID="102" Name="暗影蔽日" Star="false" Duration="60" Descript="暗影蔽日" Ps.="">
+        <RawEffects>
+          <Effect>空军经验：+20，1x50%研究加成：战斗机</Effect>
+          <Effect>获得暗影蔽日，其效果为（空军研究速度：+50%，夺取制空权任务效率：+10%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>101</Require>
+        </Requires>
+      </Node>
+      <Node ID="103" Name="妖风湮灭" Star="false" Duration="60" Descript="妖风湮灭" Ps.="">
+        <RawEffects>
+          <Effect>空军经验：+20，减少1.0的超前惩罚，对下1次研究战略轰炸机科技时有效</Effect>
+          <Effect>获得妖风湮灭，其效果为（支援机：生产花费：-15%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>102</Require>
+        </Requires>
+      </Node>
+      <Node ID="104" Name="千里眼侦察" Star="false" Duration="60" Descript="千里眼侦察" Ps.="">
+        <RawEffects>
+          <Effect>空军经验：+10，减少1.0的超前惩罚，对下1次研究侦察机科技时有效</Effect>
+          <Effect>获得千里眼侦察，其效果为（侦察：+10%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>103</Require>
+        </Requires>
+      </Node>
+      <Node ID="105" Name="进阶风弹" Star="false" Duration="60" Descript="进阶风弹" Ps.="">
+        <RawEffects>
+          <Effect>2x70%研究加成：基础武器</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>104</Require>
+        </Requires>
+      </Node>
+      <Node ID="106" Name="宣告紧急状态" Star="false" Duration="60" Descript="战局正在向着对我们不利的方向前进，我们必须不惜代价行动" Ps.="（注：需要处于战时且投降倾向超过30%）">
+        <RawEffects>
+          <Effect>增加基础稳定度：+5%</Effect>
+          <Effect>以总动员取代前期动员，效果变化（适役人口修正：-30%，生活消费品工厂：-15%，稳定度：-30%，战争支持度：-15%，民转军花费：-15%，工厂产出：+25%，军用工厂建造速度：+25%，民用工厂建造速度：-25%）</Effect>
+          <Effect>以类人体系人力7取代类人体系人力4，效果变化（动员速度：+30%，适役人口：+25.2%，生活消费品工厂：+8%，建造速度：-40%，工厂产出：-40%，训练时间：+45%）</Effect>
+        </RawEffects>
+        <Requires />
+      </Node>
+      <Node ID="107" Name="玉石俱焚" Star="false" Duration="60" Descript="民不畏死，奈何以死惧之？" Ps.="（注：需要处于战时）">
+        <RawEffects>
+          <Effect>稳定度：-10%，获得为期365天的“玉石俱焚”，其效果为（部队攻击：+30%，部队防御：-30%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>106</Require>
+        </Requires>
+      </Node>
+      <Node ID="108" Name="人怨" Star="false" Duration="100" Descript="谁来与我同去？" Ps.="（注：需要处于战时）">
+        <RawEffects>
+          <Effect>所有敌国：获得人怨，其效果为（适役人口修正：-50%，适役人口：-3%）</Effect>
+          <Effect>获得人怨，其效果为（适役人口修正：-50%，适役人口：-3%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>107</Require>
+        </Requires>
+      </Node>
+      <Node ID="109" Name="地覆" Star="false" Duration="100" Descript="谁来与我同去？" Ps.="（注：需要处于战时）">
+        <RawEffects>
+          <Effect>所有敌国：获得地覆，其效果为（建造速度：-80%，工厂产出：-80%）</Effect>
+          <Effect>获得地覆，其效果为（建造速度：-80%，适役人口：-3%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>108</Require>
+        </Requires>
+      </Node>
+      <Node ID="110" Name="天妒" Star="false" Duration="100" Descript="" Ps.="（注：需要处于战时）">
+        <RawEffects>
+          <Effect>所有敌国：获得天妒，其效果为（生活消费品工厂：+50%，政治点数：-50%）</Effect>
+          <Effect>获得天妒，其效果为（生活消费品工厂：+50%，政治点数：-50%）{谁来与我同去？</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>109</Require>
+        </Requires>
+      </Node>
+    </Nodes>
+  </State>
 </FocusGraph>

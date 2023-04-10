@@ -80,8 +80,8 @@ namespace FocusTree.UI
         }
         private void MainForm_Menu_file_saveas_Click(object sender, EventArgs e)
         {
-            MainForm_Savefile.InitialDirectory = Path.GetDirectoryName(Display.Graph.FilePath);
-            MainForm_Savefile.FileName = Path.GetFileNameWithoutExtension(Display.Graph.FilePath) + "_new.xml";
+            MainForm_Savefile.InitialDirectory = Path.GetDirectoryName(Display.FilePath);
+            MainForm_Savefile.FileName = Path.GetFileNameWithoutExtension(Display.FilePath) + "_new.xml";
             if (MainForm_Savefile.ShowDialog() == DialogResult.OK)
             {
                 Display.SaveAsNew(MainForm_Savefile.FileName);
@@ -154,42 +154,12 @@ namespace FocusTree.UI
 
         private void MainForm_Menu_graph_saveas_Click(object sender, EventArgs e)
         {
-            NodeMapDrawer.SaveasImage(Display.Graph);
+            var savePath = Path.ChangeExtension(Display.FilePath, ".jpg");
+            NodeMapDrawer.SaveasImage(Display.Graph, savePath);
         }
         private void MainForm_Menu_graph_reorderIds_Click(object sender, EventArgs e)
         {
             Display.ReorderNodeIds();
-        }
-
-        #endregion
-
-        #region ==== Text ====
-
-        public void UpdateText()
-        {
-            if (Display.Graph == null)
-            {
-                Text = "国策树";
-                MainForm_StatusStrip_filename.Text = "等待打开文件";
-                MainForm_StatusStrip_status.Text = "";
-                return;
-            }
-            Text = Display.FileName;
-            if (Display.ReadOnly)
-            {
-                MainForm_StatusStrip_filename.Text = Display.Graph.Name;
-                MainForm_StatusStrip_status.Text = "正在预览";
-            }
-            else if (Display.GraphEdited)
-            {
-                MainForm_StatusStrip_filename.Text = Display.Graph.Name;
-                MainForm_StatusStrip_status.Text = "正在编辑";
-            }
-            else
-            {
-                MainForm_StatusStrip_filename.Text = Display.Graph.Name;
-                MainForm_StatusStrip_status.Text = "就绪";
-            }
         }
 
         #endregion
@@ -235,7 +205,8 @@ namespace FocusTree.UI
                 try
                 {
                     var graph = XmlIO.LoadFromXml<FocusGraph>(fileName);
-                    NodeMapDrawer.SaveasImage(graph);
+                    var savePath = Path.ChangeExtension(fileName, ".jpg");
+                    NodeMapDrawer.SaveasImage(graph, savePath);
                     suc++;
                 }
                 catch (Exception ex)
@@ -283,6 +254,32 @@ namespace FocusTree.UI
 
         #region ==== MainForm ====
 
+        public void UpdateText()
+        {
+            if (Display.Graph == null)
+            {
+                Text = "国策树";
+                MainForm_StatusStrip_filename.Text = "等待打开文件";
+                MainForm_StatusStrip_status.Text = "";
+                return;
+            }
+            Text = Display.FileName;
+            if (Display.ReadOnly)
+            {
+                MainForm_StatusStrip_filename.Text = Display.FilePath;
+                MainForm_StatusStrip_status.Text = "正在预览";
+            }
+            else if (Display.GraphEdited)
+            {
+                MainForm_StatusStrip_filename.Text = Display.FilePath;
+                MainForm_StatusStrip_status.Text = "正在编辑";
+            }
+            else
+            {
+                MainForm_StatusStrip_filename.Text = Display.FilePath;
+                MainForm_StatusStrip_status.Text = "就绪";
+            }
+        }
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             Cache.Clear();

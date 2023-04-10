@@ -21,9 +21,9 @@ namespace FocusTree.UI.Controls
         {
             get
             {
-                if (ReadOnly) { return Path.GetFileNameWithoutExtension(Graph.FilePath) + $"{Path.GetFileNameWithoutExtension(FilePath)}" + "（只读）"; }
-                else if (GraphEdited) { return Path.GetFileNameWithoutExtension(FilePath) + "（未保存）"; }
-                else { return Path.GetFileNameWithoutExtension(FilePath); }
+                if (ReadOnly) { return Graph.Name + $"{Path.GetFileNameWithoutExtension(FilePath)}" + "（只读）"; }
+                else if (GraphEdited) { return Graph.Name + "（未保存）"; }
+                else { return Graph.Name; }
             }
         }
 
@@ -691,12 +691,6 @@ namespace FocusTree.UI.Controls
 
         #region ---- 读写操作 ----
 
-        public void SaveGraph(string path, FocusGraph graph)
-        {
-            graph.Save(FilePath);
-            graph.FilePath = path;
-            graph.Latest = graph.Format();
-        }
         /// <summary>
         /// 保存
         /// </summary>
@@ -721,7 +715,7 @@ namespace FocusTree.UI.Controls
         public void SaveAsNew(string path)
         {
             if (Graph == null) { return; }
-            Graph.FilePath = FilePath = path;
+            FilePath = path;
             Graph.Save(path);
             Graph.NewHistory();
             Invalidate();
