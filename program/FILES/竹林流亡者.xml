@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FocusGraph>
+  <FilePath>C:\Users\Non_E\Documents\GitHub\FocusTree\FocusTree\program\FILES\竹林流亡者.xml</FilePath>
+  <Nodes>
+    <Node ID="1" Name="流浪啊流浪" Star="false" Duration="5" Descript="人类复权运动失败之后，我们看似四散而逃，实则在为人类保留火种……" Ps.="">
+      <RawEffects>
+        <Effect>触发事件“曾经的约定”。</Effect>
+      </RawEffects>
+      <Requires />
+    </Node>
+    <Node ID="2" Name="再次联络" Star="false" Duration="5" Descript="不管我们怎么认为，人类的确失败了，但至少现在我们不需要再次白手起家" Ps.="">
+      <RawEffects>
+        <Effect>获得科技：147季无线电。</Effect>
+        <Effect>触发事件“再看幻想乡”。</Effect>
+      </RawEffects>
+      <Requires>
+        <Require>1</Require>
+      </Requires>
+    </Node>
+    <Node ID="3" Name="在我们的兄弟当中" Star="false" Duration="5" Descript="很巧的是，我们都选择了互帮互助，虽然这批援助不知道是否来自哪个土作坊" Ps.="">
+      <RawEffects>
+        <Effect>获得2个编制为人类流亡编制的部队，1800单位的竹林流亡者产步枪，1800单位的草原流亡者产步枪，216单位的竹林流亡者产迫击炮，216单位的草原流亡者产迫击炮，600单位的竹林流亡者产近战武器，600单位的草原流亡者产近战武器添加进国家储备。</Effect>
+        <Effect>触发事件“流亡者归来”。</Effect>
+        <Effect>获得志愿军，其效果为（志愿军部队数上限：+6，派遣志愿军需要的部队数量：-100%）</Effect>
+      </RawEffects>
+      <Requires>
+        <Require>2</Require>
+      </Requires>
+    </Node>
+    <Node ID="4" Name="慷慨解囊" Star="false" Duration="5" Descript="我们谁也不会说出去这是慷慧音政府之慨的" Ps.="">
+      <RawEffects>
+        <Effect>获得2个地图外民用工厂</Effect>
+      </RawEffects>
+      <Requires>
+        <Require>3</Require>
+      </Requires>
+    </Node>
+    <Node ID="5" Name="私通财阀" Star="false" Duration="55" Descript="我们是在其他流亡者中离人类村落最近的，原因就是我们知道本居小铃隐藏的想法，她一定会帮助我们" Ps.="">
+      <RawEffects>
+        <Effect>获得人类财阀投资，其效果为（生活消费品工厂：-5%）</Effect>
+      </RawEffects>
+      <Requires>
+        <Require>4</Require>
+      </Requires>
+    </Node>
+    <Node ID="6" Name="科教兴国" Star="false" Duration="55" Descript="前人类村落的技术当然是我们的筹码，而且我们可以决定将他赠与谁" Ps.="">
+      <RawEffects>
+        <Effect>增加2个科研槽</Effect>
+      </RawEffects>
+      <Requires>
+        <Require>5</Require>
+      </Requires>
+    </Node>
+    <Node ID="7" Name="蒙蔽天狗" Star="false" Duration="55" Descript="我们怎么可能忘记天狗对我们的伤害呢，但远交近攻对我们并没有害处，尤其是对某些还有人类认同的科学家而言" Ps.="">
+      <RawEffects>
+        <Effect>（天狗共和国）移除被转移的人类科学家，获得向往天狗（与竹林流亡者的关系+80）</Effect>
+        <Effect>（竹林流亡者）获得暗怀杀机（与天狗共和国的关系-80）</Effect>
+        <Effect>获得家国，其效果为（数学类研究速度：+4%）</Effect>
+      </RawEffects>
+      <Requires>
+        <Require>6</Require>
+      </Requires>
+    </Node>
+    <Node ID="8" Name="软化付丧神" Star="false" Duration="55" Descript="付丧神的背叛如芒在背，但我们如果使用怀柔政策，还能得到少部分付丧神的支持" Ps.="（注：如果多多良小伞不是九十九工业的领导人，那么多多良小伞会成为将领）">
+      <RawEffects>
+        <Effect>（九十九工业）移除成妖的道具们，获得起源呼唤（与竹林流亡者的关系+80）</Effect>
+        <Effect>（竹林流亡者）获得隐忍背叛（与九十九工业的关系-80）</Effect>
+        <Effect>获得故土，其效果为（迫击炮：对人员杀伤：+10%，步枪：对人员杀伤：+5%，对装甲杀伤：+5%，生产效率上限：+10%）</Effect>
+      </RawEffects>
+      <Requires>
+        <Require>7</Require>
+      </Requires>
+    </Node>
+    <Node ID="9" Name="鸷鸟卑飞" Star="false" Duration="55" Descript="鸷鸟将击，卑飞敛翼；猛兽将搏，弭耳俯伏" Ps.="">
+      <RawEffects>
+        <Effect>开启决议对周边国家进行边境冲突</Effect>
+      </RawEffects>
+      <Requires>
+        <Require>8</Require>
+      </Requires>
+    </Node>
+    <Node ID="10" Name="待敌可胜" Star="false" Duration="55" Descript="昔之善战者，先为不可胜，以待敌之可胜" Ps.="">
+      <RawEffects>
+        <Effect>获得庙算，其效果为（补给消耗：-20%，工厂产出：+20%，堑壕上限：+10）</Effect>
+      </RawEffects>
+      <Requires>
+        <Require>9</Require>
+      </Requires>
+    </Node>
+    <Node ID="11" Name="奇正相生" Star="false" Duration="55" Descript="故善动敌者，形之，敌必从之；予之，敌必取之。以利动之，以卒待之" Ps.="">
+      <RawEffects>
+        <Effect>庙算追击效果：部队速度：-5%，加密：-5，堑壕速度：+20%，部队攻击：+20%</Effect>
+      </RawEffects>
+      <Requires>
+        <Require>10</Require>
+      </Requires>
+    </Node>
+    <Node ID="12" Name="避实击虚" Star="false" Duration="55" Descript="夫兵形象水，水之形，避高而趋下，兵之形，避实而击虚" Ps.="">
+      <RawEffects>
+        <Effect>庙算追击效果：增援率：+15%，解密：+15</Effect>
+      </RawEffects>
+      <Requires>
+        <Require>11</Require>
+      </Requires>
+    </Node>
+    <Node ID="13" Name="火攻" Star="false" Duration="55" Descript="兵有奇变，不在众寡……依草结营，易为风火……因夜纵烧，必大惊乱" Ps.="">
+      <RawEffects>
+        <Effect>获得火攻，其效果为（侦察：+5，地形惩罚降低：-50%，林地游侠特质经验增长速度：+50%）</Effect>
+        <Effect>（竹林妖怪联盟）（月兔年糕厂）获得溃逃，其效果为（部队组织度：-10%，堑壕上限：-10）</Effect>
+      </RawEffects>
+      <Requires>
+        <Require>12</Require>
+      </Requires>
+    </Node>
+    <Node ID="14" Name="坐忘道" Star="false" Duration="55" Descript="堕肢体，黜聪明，离形去知，同于大通，此谓坐忘" Ps.="（注：需要人类村落存在且意识形态为孤立）">
+      <RawEffects>
+        <Effect>（人类村落）成为竹林流亡者的四级附庸（势力范围）</Effect>
+        <Effect>释放人类财阀联合</Effect>
+      </RawEffects>
+      <Requires>
+        <Require>13</Require>
+      </Requires>
+    </Node>
+    <Node ID="15" Name="昭然若揭" Star="false" Duration="55" Descript="吾心昭昭，又何惧天下之口}（注：需要竹林妖怪联盟、月兔年糕厂不存在" Ps.="">
+      <RawEffects>
+        <Effect>创建阵营：第二次人类复权运动——南线</Effect>
+        <Effect>（人类财阀联合）触发事件：“无心插柳”。</Effect>
+      </RawEffects>
+      <Requires>
+        <Require>14</Require>
+      </Requires>
+    </Node>
+    <Node ID="16" Name="一顾茅庐" Star="false" Duration="55" Descript="人类复权运动失败之后许多曾经帮助我们一方的重要人物都被软禁或流放到其他地方，但我们拥有了改变的机会" Ps.="">
+      <RawEffects>
+        <Effect>（藤原卫队）触发事件：“戏谑的诗句”。获得第一次拜访（与竹林流亡者的关系+30）</Effect>
+      </RawEffects>
+      <Requires>
+        <Require>15</Require>
+      </Requires>
+    </Node>
+    <Node ID="17" Name="二顾茅庐" Star="false" Duration="55" Descript="人类复权路上，我们能付出的只有真挚与坚持" Ps.="">
+      <RawEffects>
+        <Effect>获得军乐队，其效果为（部队组织度：+10%）</Effect>
+        <Effect>（藤原卫队）触发事件：“熟悉的音乐”。获得第二次拜访（与竹林流亡者的关系+60）</Effect>
+      </RawEffects>
+      <Requires>
+        <Require>16</Require>
+      </Requires>
+    </Node>
+    <Node ID="18" Name="三顾茅庐" Star="false" Duration="55" Descript="文王拉车八百步，周朝天下八百年" Ps.="">
+      <RawEffects>
+        <Effect>（藤原卫队）触发事件：“承认人类身份”。如果他们同意，则（藤原卫队）成为竹林流亡者的四级附庸（势力范围）</Effect>
+      </RawEffects>
+      <Requires>
+        <Require>17</Require>
+      </Requires>
+    </Node>
+    <Node ID="19" Name="家仇国恨" Star="false" Duration="55" Descript="经过我们的开导，藤原妹红明白了父亲和自己的悲剧并不是源于自身，而是源于妖怪操控的社会" Ps.="（注：需要永远亭存在，需要藤原卫队是我们的盟友）">
+      <RawEffects>
+        <Effect>竹林流亡者对永远亭宣战</Effect>
+      </RawEffects>
+      <Requires>
+        <Require>18</Require>
+      </Requires>
+    </Node>
+    <Node ID="20" Name="软禁辉夜" Star="false" Duration="55" Descript="此战之后藤原妹红再无挂念，差人建造一座金屋后就将藤原卫队全权交给我们" Ps.="（注：需要永远亭不存在）">
+      <RawEffects>
+        <Effect>获得强大的威望，其效果为（每日获得的政治点数：+0.25，部队组织度：+15%，稳定度：+20%，战争支持度：+20%，建造速度：+10%，部队攻击：+5%，部队防御：+5%，科研速度：+10%，工厂产出：+10%）</Effect>
+        <Effect>竹林流亡者吞并藤原卫队</Effect>
+      </RawEffects>
+      <Requires>
+        <Require>19</Require>
+      </Requires>
+    </Node>
+    <Node ID="21" Name="威霸一方" Star="false" Duration="55" Descript="威名一方，霸业安稳" Ps.="">
+      <RawEffects>
+        <Effect>获得外交中立，其效果为（稳定度：+35%，训练时间：+5%，ai修正：加入或扩大一个阵营的意愿：-250，ai修正：专注防御：+50%，ai修正：专注进攻：-30%，ai修正：专注和平：+40%，ai修正：部署部队数量修正：-20%）</Effect>
+      </RawEffects>
+      <Requires>
+        <Require>20</Require>
+      </Requires>
+    </Node>
+    <Node ID="22" Name="人类复权运动的未来" Star="false" Duration="110" Descript="当初为人类保留火种的任务我们已经超额完成了，我们又一次站在人类的岔路口上" Ps.="">
+      <RawEffects>
+        <Effect>触发事件：“人类复权运动的未来”。</Effect>
+      </RawEffects>
+      <Requires>
+        <Require>21</Require>
+      </Requires>
+    </Node>
+  </Nodes>
+</FocusGraph>
