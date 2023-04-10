@@ -1,34 +1,61 @@
-﻿using FocusTree.Data.Focus;
+﻿using FocusTree.Data;
+using FocusTree.Data.Focus;
+using System.IO;
 using System.IO.Compression;
+using System.Text.RegularExpressions;
+using System.Xml.Linq;
+using System.Xml.Serialization;
+using IFormattable = FocusTree.Data.IFormattable;
 
 namespace FocusTree.IO.FileManege
 {
-    internal class Backup
+    internal static class Backup
     {
         /// <summary>
-        /// 根备份目录
+        /// 根目录
         /// </summary>
-        public static string DirectoryName
-        {
-            get { return DirectoryInfo.FullName; }
-        }
-        static string FolderPath = "backup\\backups";
-        static DirectoryInfo DirectoryInfo = Directory.CreateDirectory(FolderPath);
+        static DirectoryInfo RootDirectoryInfo = Directory.CreateDirectory("backup");
+        public static string SubRootDirectoryName { get { return Path.Combine(RootDirectoryInfo.FullName, "backups"); } }
         /// <summary>
-        /// 按文件路径备份
+        /// 对象根目录
         /// </summary>
-        /// <param name="path"></param>
-        public static void BackupFile(string path)
+        private static string DirectoryName<T>(this T obj) where T : IBackupable
         {
-            if (File.Exists(path) == false)
-            {
-                return;
-            }
+            var dir = Path.Combine(SubRootDirectoryName, obj.FileManageDirectory);
+            Directory.CreateDirectory(dir);
+            return dir;
+        }
+        /// <summary>
+        /// 文件备份路径
+        /// root\subRoot\obj's Root\fileName\objHash\dateTime
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <param name="path">what fileName is of</param>
+        /// <returns></returns>
+        private static string BackupPath<T>(this T obj, string path) where T : IBackupable
+        {
+            var fileName = Path.GetFileNameWithoutExtension(path);
+            var objHash = obj.GetHashString();
+            return Path.Combine(obj.DirectoryName(), fileName, objHash, $"BK{DateTime.Now:yyyyMMddHHmmss}");
+        }
+        /// <summary>
+        /// 备份指定文件路径的obj（如果存在的话）
+        /// </summary>
+        /// <param name="path">要备份的文件路径</param>
+        public static void BackupFile<T>(this T obj, string path) where T : IBackupable
+        {
             try
             {
-                var dir = Directory.CreateDirectory(Path.Combine(DirectoryName, Path.GetFileNameWithoutExtension(path)));
-                var copyPath = Path.Combine(dir.FullName, DateTime.Now.ToString("yyyyMMdd_HHmmss"));
-                File.Copy(path, copyPath, true);
+                var objToBk = XmlIO.LoadFromXml<T>(path);
+                var bkPath = objToBk.BackupPath(path);
+                var bkDir = Path.GetDirectoryName(bkPath);
+                if (Directory.Exists(bkDir))
+                {
+                    Directory.Delete(bkDir, true);
+                }
+                Directory.CreateDirectory(bkDir);
+                File.Copy(path, bkPath, true);
             }
             catch (Exception ex)
             {
@@ -36,74 +63,53 @@ namespace FocusTree.IO.FileManege
             }
         }
         /// <summary>
-        /// 从备份恢复出原graph，备份原文件所在的位置上的文件
+        /// 将当前是备份状态的obj恢复到文件路径后删除备份，并备份文件路径的原obj
         /// </summary>
-        /// <param name="graph"></param>
-        public static void BackupFile(FocusGraph graph)
+        /// <param name="path">要恢复到的文件路径</param>
+        public static void RestoreBackup<T>(this T obj, string path) where T : IBackupable
         {
-            var path = graph.FilePath;
-            if (File.Exists(path) == false)
-            {
-                return;
-            }
-            try
-            {
-                var prevGraph = XmlIO.LoadFromXml<FocusGraph>(path);
-                if (graph.Format().Equals(prevGraph.Format()))
-                {
-                    return;
-                }
-                var dir = Directory.CreateDirectory(Path.Combine(DirectoryName, Path.GetFileNameWithoutExtension(path)));
-                var copyPath = Path.Combine(dir.FullName, DateTime.Now.ToString("yyyyMMdd_HHmmss"));
-                File.Copy(path, copyPath, true);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"[2303051407]无法备份{path}。\n{ex.Message}");
-            }
-        }
-        /// <summary>
-        /// 从备份恢复出原graph
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        public static FocusGraph Restore(string path)
-        {
-            var graph = XmlIO.LoadFromXml<FocusGraph>(path);
-            if (graph.FilePath == path)
-            {
-                return graph;
-            }
-            if (File.Exists(graph.FilePath))
-            {
-                var prevGraph = XmlIO.LoadFromXml<FocusGraph>(graph.FilePath);
-                if (graph.Format().Equals(prevGraph.Format()) == false)
-                {
-                    var dir = Directory.CreateDirectory(Path.Combine(DirectoryName, Path.GetFileNameWithoutExtension(graph.FilePath)));
-                    var copyPath = Path.Combine(dir.FullName, DateTime.Now.ToString("yyyyMMdd_HHmmss"));
-                    File.Copy(graph.FilePath, copyPath, true);
-                }
-            }
-            graph.Save(graph.FilePath);
-            File.Delete(path);
-            return graph;
+            obj.BackupFile(path);
+            obj.SaveToXml(path);
+            var objHashDir = Path.GetDirectoryName(obj.BackupPath(path));
+            Directory.Delete(objHashDir, true);
         }
         /// <summary>
         /// 通过文件路径的文件名查找同名文件夹下的所有备份，形成文件列表
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns>文件列表</returns>
-        public static List<FileInfo> GetBackupsList(string filePath)
+        public static List<string> GetBackupsList<T>(this T obj, string path) where T : IBackupable
         {
-            List<FileInfo> result = new();
-            var dir = Path.Combine(DirectoryName, Path.GetFileNameWithoutExtension(filePath));
-            if (Directory.Exists(dir))
+            List<string> result = new();
+            string fileNameDir;
+            if (IsBackupFile(path))
             {
-                var dirInfo = new DirectoryInfo(dir);
-                var fileList = dirInfo.EnumerateFiles();
-                result = fileList.ToList();
+                fileNameDir = Path.GetDirectoryName(Path.GetDirectoryName(path));
+            }
+            else
+            {
+                fileNameDir = Path.GetDirectoryName(Path.GetDirectoryName(obj.BackupPath(path)));
+            }
+            if (Directory.Exists(fileNameDir))
+            {
+                var root = new DirectoryInfo(fileNameDir);
+                var dirs = root.GetDirectories();
+                foreach ( var dir in dirs )
+                {
+                    result.Add(GetBkFilePath(dir));
+                }
             }
             return result;
+        }
+        /// <summary>
+        /// 获取对象名文件夹下的备份文件
+        /// </summary>
+        /// <param name="objNameDir"></param>
+        /// <returns></returns>
+        private static string GetBkFilePath(DirectoryInfo objNameDir)
+        {
+            var file = objNameDir.GetFiles();
+            return file.First().FullName;
         }
         /// <summary>
         /// 清空根目录
@@ -118,9 +124,19 @@ namespace FocusTree.IO.FileManege
             {
                 MessageBox.Show("已删除所有备份。");
             }
-            ZipFile.CreateFromDirectory(DirectoryName, Path.Combine(Path.GetDirectoryName(DirectoryName), DateTime.Now.ToString("yyyy年MM月dd日 HH时mm分") + ".zip"));
-            Directory.Delete(DirectoryName, true);
-            DirectoryInfo = Directory.CreateDirectory(FolderPath);
+            ZipFile.CreateFromDirectory(SubRootDirectoryName, Path.Combine(RootDirectoryInfo.FullName, DateTime.Now.ToString("yyyy年MM月dd日 HH时mm分") + ".zip"));
+            Directory.Delete(SubRootDirectoryName, true);
+            Directory.CreateDirectory(SubRootDirectoryName);
+        }
+        /// <summary>
+        /// 查询文件是否是备份文件：位于备份子根目录下且具有备份文件名格式
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static bool IsBackupFile(string path)
+        {
+            var match = Regex.Match(Path.GetFileName(path), "^BK(\\d){4}((\\d){2}){5}$");
+            return match.Success && Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(path)))) == SubRootDirectoryName;
         }
     }
 }

@@ -11,7 +11,7 @@ using System.Xml.Serialization;
 
 namespace FocusTree.Data.Focus
 {
-    public class FocusGraph : IXmlSerializable, IHistoryable, IFileManageable
+    public class FocusGraph : IXmlSerializable, IHistoryable, IBackupable
     {
         #region ---- 存档文件路径 ----
 
@@ -455,7 +455,6 @@ namespace FocusTree.Data.Focus
 
             while (reader.Read())
             {
-                //if (reader.NodeType != XmlNodeType.Element) { continue; }
                 if (reader.Name == "FilePath")
                 {
                     FilePath = reader.ReadElementContentAsString();
@@ -483,7 +482,9 @@ namespace FocusTree.Data.Focus
 
         public void WriteXml(XmlWriter writer)
         {
-            writer.WriteElementString("FilePath", FilePath);
+            // <State>
+            //writer.WriteStartElement("State", Name);
+            writer.WriteElementString("State", Name);
 
             //==== 序列化节点数据 ====//
 
@@ -495,9 +496,11 @@ namespace FocusTree.Data.Focus
                 node.WriteXml(writer);
                 // </Node>
             }
-
-            writer.WriteEndElement();
             // </Nodes>
+            writer.WriteEndElement();
+
+            // </State>
+            //writer.WriteEndElement();
         }
 
         #endregion
@@ -505,15 +508,20 @@ namespace FocusTree.Data.Focus
         #region ---- 文件管理工具 ----
 
         public string FileManageDirectory { get; private set; } = "FoucsGraph";
-        public new int GetHashCode()
+        public string GetHashString()
         {
             var cachePath = this.GetCachePath("hashTemp");
-            XmlIO.SaveToXml(this, cachePath); 
+            XmlIO.SaveToXml(this, cachePath);
             HashAlgorithm sha = SHA256.Create();
             FileStream data = new(cachePath, FileMode.Open);
             byte[] hash = sha.ComputeHash(data);
             data.Close();
-            return BitConverter.ToInt32(hash, 0);
+            string result = string.Empty;
+            foreach (var b in hash)
+            {
+                result += b.ToString();
+            }
+            return result;
         }
 
         #endregion
@@ -526,7 +534,7 @@ namespace FocusTree.Data.Focus
         public FormattedData Latest { get; set; }
         public FormattedData Format()
         {
-            var hashCode = GetHashCode().ToString();
+            var hashCode = GetHashString();
             if (!Directory.Exists(hashCode))
             {
                 XmlIO.SaveToXml(this, this.GetCachePath(hashCode));

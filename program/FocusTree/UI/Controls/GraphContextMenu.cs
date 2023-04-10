@@ -1,4 +1,5 @@
 ﻿using FocusTree.IO.FileManege;
+using System.Text.RegularExpressions;
 
 namespace FocusTree.UI.Controls
 {
@@ -37,10 +38,6 @@ namespace FocusTree.UI.Controls
         private void FileItemClicked(object sender, EventArgs args)
         {
             ToolStripMenuItem item = (ToolStripMenuItem)sender;
-            if (item.Tag.ToString() == Display.FilePath)
-            {
-                return;
-            }
             if (Display.GraphEdited)
             {
                 if (MessageBox.Show("要放弃当前的更改切换到备份吗？", "提示 ", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No)
@@ -111,22 +108,31 @@ namespace FocusTree.UI.Controls
 
         private void MouseButtonMiddle()
         {
-            ToolStripMenuItem item = new();
-            item.Tag = Display.Graph.FilePath;
-            item.Text = Path.GetFileNameWithoutExtension(Display.Graph.FilePath);
-            item.Size = new Size(180, 22);
+            ToolStripMenuItem item = new()
+            {
+                Tag = Display.FilePath,
+                Text = Path.GetFileNameWithoutExtension(Display.FilePath),
+                Size = new Size(180, 22)
+            };
             item.Click += FileItemClicked;
             Items.Add(item);
 
-            foreach (var filePath in Backup.GetBackupsList(Display.Graph.FilePath))
+            foreach (var filePath in Display.Graph.GetBackupsList(Display.FilePath))
             {
-                item = new();
-                item.Tag = filePath.FullName;
-                item.Text = Path.GetFileNameWithoutExtension(filePath.FullName);
-                item.Size = new Size(180, 22);
+                item = new()
+                {
+                    Tag = filePath,
+                    Text = GetBKDateTime(Path.GetFileName(filePath)),
+                    Size = new Size(180, 22)
+                };
                 item.Click += FileItemClicked;
                 Items.Add(item);
             }
+        }
+        private string GetBKDateTime(string path)
+        {
+            var match = Regex.Match(path, "^BK(\\d{4})(\\d{2})(\\d{2})(\\d{2})(\\d{2})(\\d{2})$");
+            return $"{match.Groups[1].Value}/{match.Groups[2].Value}/{match.Groups[3].Value} {match.Groups[4].Value}:{match.Groups[5].Value}:{match.Groups[6].Value}";
         }
         private void MouseButtonRight()
         {

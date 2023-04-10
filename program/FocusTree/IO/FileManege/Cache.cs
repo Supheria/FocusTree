@@ -9,16 +9,18 @@ namespace FocusTree.IO.FileManege
     public static class Cache
     {
         /// <summary>
-        /// 根缓存目录
+        /// 根目录
         /// </summary>
-        static string DirectoryName<T>(this T obj) where T : IFileManageable
+        static DirectoryInfo RootDirectoryInfo = Directory.CreateDirectory("cache");
+        /// <summary>
+        /// 对象根目录
+        /// </summary>
+        private static string DirectoryName<T>(this T obj) where T : IFileManageable
         {
             var dir = Path.Combine(RootDirectoryInfo.FullName, obj.FileManageDirectory);
             Directory.CreateDirectory(dir);
             return dir;
         }
-        static DirectoryInfo RootDirectoryInfo = Directory.CreateDirectory("cache");
-        static string FileExtension = string.Empty;
         /// <summary>
         /// 保存到缓存文件
         /// </summary>
@@ -29,7 +31,6 @@ namespace FocusTree.IO.FileManege
         public static string GetCachePath<T>(this T obj, string FileNameWithoutExtension) where T : IFileManageable
         {
             var cachePath = Path.Combine(obj.DirectoryName(), FileNameWithoutExtension);
-            cachePath = Path.ChangeExtension(cachePath, FileExtension);
             return cachePath;
         }
         /// <summary>

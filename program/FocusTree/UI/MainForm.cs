@@ -66,7 +66,7 @@ namespace FocusTree.UI
             }
             MainForm_Openfile.Filter = "全部文件|*.*";
             var oldInitDir = MainForm_Openfile.InitialDirectory;
-            MainForm_Openfile.InitialDirectory = Backup.DirectoryName;
+            MainForm_Openfile.InitialDirectory = Backup.SubRootDirectoryName;
             if (MainForm_Openfile.ShowDialog() == DialogResult.OK)
             {
                 Display.LoadGraph(MainForm_Openfile.FileName);
@@ -213,7 +213,7 @@ namespace FocusTree.UI
                 try
                 {
                     var graph = XmlIO.LoadFromXml<FocusGraph>(fileName);
-                    Backup.BackupFile(graph);
+                    graph.BackupFile(fileName);
                     graph.Save(Path.Combine(folderBrowser.SelectedPath, Path.GetFileName(fileName)));
                     suc++;
                 }
@@ -257,7 +257,7 @@ namespace FocusTree.UI
                 {
                     var graph = XmlIO.LoadFromXml<FocusGraph>(fileName);
                     graph.ReorderNodeIds();
-                    Backup.BackupFile(graph);
+                    graph.BackupFile(fileName);
                     graph.Save(fileName);
                     suc++;
                 }

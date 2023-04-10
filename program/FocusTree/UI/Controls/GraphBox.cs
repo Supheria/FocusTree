@@ -3,6 +3,7 @@ using FocusTree.Data.Focus;
 using FocusTree.IO;
 using FocusTree.IO.FileManege;
 using FocusTree.UI.NodeToolDialogs;
+using System.IO;
 using System.Numerics;
 
 namespace FocusTree.UI.Controls
@@ -11,16 +12,16 @@ namespace FocusTree.UI.Controls
     {
         //===== 变量 =====//
 
-        #region ---- 临时文件名 ----
+        #region ---- 文件路径 ----
         /// <summary>
-        /// 临时文件名
+        /// 文件路径
         /// </summary>
         public string FilePath;
         public string FileName
         {
             get
             {
-                if (ReadOnly) { return Path.GetFileNameWithoutExtension(Graph.FilePath) + $"_{Path.GetFileNameWithoutExtension(FilePath)}" + "（只读）"; }
+                if (ReadOnly) { return Path.GetFileNameWithoutExtension(Graph.FilePath) + $"{Path.GetFileNameWithoutExtension(FilePath)}" + "（只读）"; }
                 else if (GraphEdited) { return Path.GetFileNameWithoutExtension(FilePath) + "（未保存）"; }
                 else { return Path.GetFileNameWithoutExtension(FilePath); }
             }
@@ -52,14 +53,7 @@ namespace FocusTree.UI.Controls
         /// 图像已更改
         /// </summary>
         public bool GraphEdited { get { return Graph.IsEdit(); } }
-        public bool ReadOnly
-        {
-            get
-            {
-                if (Path.GetDirectoryName(Path.GetDirectoryName(FilePath)) == Backup.DirectoryName) { return true; }
-                else { return false; }
-            }
-        }
+        public bool ReadOnly { get; private set; }
         public Dictionary<string, NodeToolDialog> ToolDialogs { get { return toolDialogs; } }
 
         #endregion
@@ -246,10 +240,7 @@ namespace FocusTree.UI.Controls
         #region ---- 绘图 ----
         private void DrawNodeMap()
         {
-            if (Graph == null)
-            {
-                return;
-            }
+            if (Graph == null) { return; }
             Image ??= new Bitmap(Size.Width, Size.Height);
             var g = Graphics.FromImage(Image);
             g.Clear(Color.White);
@@ -307,10 +298,7 @@ namespace FocusTree.UI.Controls
         }
         private void _draw_info(string info, Rectangle infoRect, Font infoFont, Brush BackBrush, Brush FrontBrush)
         {
-            if (Graph == null)
-            {
-                return;
-            }
+            if (Graph == null) { return; }
             Image ??= new Bitmap(Size.Width, Size.Height);
             var g = Graphics.FromImage(Image);
 
@@ -373,10 +361,7 @@ namespace FocusTree.UI.Controls
 
         private void OnMouseDown(object sender, MouseEventArgs args)
         {
-            if (Graph == null)
-            {
-                return;
-            }
+            if (Graph == null) { return; }
 
             CheckPrevSelect();
 
@@ -443,10 +428,7 @@ namespace FocusTree.UI.Controls
 
         private void OnMouseDoubleClick(object sender, MouseEventArgs args)
         {
-            if (Graph == null)
-            {
-                return;
-            }
+            if (Graph == null) { return; }
 
             CheckPrevSelect();
 
@@ -475,8 +457,8 @@ namespace FocusTree.UI.Controls
                 if (MessageBox.Show("[202303052340]是否恢复并删除备份？", "提示", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     CloseAllNodeToolDialogs();
-                    Graph = Backup.Restore(FilePath);
-                    FilePath = Graph.FilePath;
+                    Graph.RestoreBackup(FilePath);
+                    ReadOnly = false;
                     SelectedNode = null;
                     RescaleToPanorama();
                     Invalidate();
@@ -495,10 +477,7 @@ namespace FocusTree.UI.Controls
 
         private void OnMouseMove(object sender, MouseEventArgs args)
         {
-            if (Graph == null)
-            {
-                return;
-            }
+            if (Graph == null) { return; }
             if (args.Button == MouseButtons.Left && DragMousePoint_Flag)
             {
                 DragGraph(args.Location);
@@ -538,10 +517,7 @@ namespace FocusTree.UI.Controls
 
         private void OnMouseUp(object sender, MouseEventArgs args)
         {
-            if (Graph == null)
-            {
-                return;
-            }
+            if (Graph == null) { return; }
             // 用于拖动事件
             if (args.Button == MouseButtons.Left)
             {
@@ -553,10 +529,7 @@ namespace FocusTree.UI.Controls
 
         private void OnMouseWheel(object sender, MouseEventArgs args)
         {
-            if (Graph == null)
-            {
-                return;
-            }
+            if (Graph == null) { return; }
             var mulDelta = 1 + args.Delta * 0.002f; // 对，这个数就是很小，不然鼠标一滚就飞了
 
             // 鼠标点击的位置与窗口中心的偏移量
@@ -729,13 +702,10 @@ namespace FocusTree.UI.Controls
         /// </summary>
         public void SaveGraph()
         {
-            if (Graph == null)
-            {
-                return;
-            }
+            if (Graph == null || ReadOnly) { return; }
             if (GraphEdited)
             {
-                Backup.BackupFile(FilePath);
+                Graph.BackupFile(FilePath);
                 Graph.Save(FilePath);
                 Invalidate();
             }
@@ -750,10 +720,7 @@ namespace FocusTree.UI.Controls
         /// <param name="path"></param>
         public void SaveAsNew(string path)
         {
-            if (Graph == null)
-            {
-                return;
-            }
+            if (Graph == null) { return; }
             Graph.FilePath = FilePath = path;
             Graph.Save(path);
             Graph.NewHistory();
@@ -766,7 +733,8 @@ namespace FocusTree.UI.Controls
         public void LoadGraph(string path)
         {
             CloseAllNodeToolDialogs();
-            FilePath = path;
+            ReadOnly = Backup.IsBackupFile(path);
+            if (!ReadOnly) { FilePath = path; }
             Graph = XmlIO.LoadFromXml<FocusGraph>(path);
             Graph.NewHistory();
             SelectedNode = null;
@@ -792,18 +760,12 @@ namespace FocusTree.UI.Controls
 
         public bool HasPrevHistory()
         {
-            if (Graph == null)
-            {
-                return false;
-            }
+            if (Graph == null) { return false; }
             return Graph.HasPrev();
         }
         public bool HasNextHistory()
         {
-            if (Graph == null)
-            {
-                return false;
-            }
+            if (Graph == null) { return false; }
             return Graph.HasNext();
         }
 
@@ -821,10 +783,7 @@ namespace FocusTree.UI.Controls
         /// </summary>
         public void CamLocateSelected()
         {
-            if (SelectedNode == null)
-            {
-                return;
-            }
+            if (SelectedNode == null) { return; }
             else
             {
                 RescaleToNode(SelectedNode.Value, true);
@@ -844,10 +803,7 @@ namespace FocusTree.UI.Controls
         }
         public void RemoveNode()
         {
-            if (SelectedNode == null)
-            {
-                return;
-            }
+            if (SelectedNode == null) { return; }
             Graph.RemoveNode(SelectedNode.Value);
             Graph.EnqueueHistory();
             SelectedNode = null;
@@ -855,10 +811,7 @@ namespace FocusTree.UI.Controls
         }
         public FocusNode GetSelectedNodeData()
         {
-            if (SelectedNode == null)
-            {
-                return null;
-            }
+            if (SelectedNode == null) { return null; }
             return Graph.GetNode(SelectedNode.Value);
         }
         public Point GetSelectedNodeCenterOnScreen()
@@ -874,10 +827,7 @@ namespace FocusTree.UI.Controls
 
         public void ReorderNodeIds()
         {
-            if (Graph == null)
-            {
-                return;
-            }
+            if (Graph == null) { return; }
             Graph.ReorderNodeIds();
             Invalidate();
         }

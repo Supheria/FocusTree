@@ -2,6 +2,7 @@
 using Hoi4Object.IO;
 using static Hoi4Object.IO.PublicSign;
 
+Console.WriteLine($"{DateTime.Now:yyyyMMddHHmmss}");
 var a = Motions.Modify | Motions.NoneButMayChange;
 Console.WriteLine($"{a}: {(int)a})");
 var sA = a.ToString();
