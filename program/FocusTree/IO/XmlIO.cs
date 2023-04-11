@@ -25,7 +25,7 @@ namespace FocusTree.IO
         public static T LoadFromXml<T>(string path) where T : IXmlSerializable
         {
             var file = File.OpenRead(path);
-            var reader = new XmlSerializer(typeof(FocusGraph));
+            var reader = new XmlSerializer(typeof(T));
             var obj = (T)reader.Deserialize(file);
             file.Close();
             return obj;

@@ -9,7 +9,7 @@ using System.Xml.Serialization;
 
 namespace FocusTree.Data.Focus
 {
-    public class FocusGraph : IXmlSerializable, IHistoryable, IBackupable
+    public class FocusGraph : IHistoryable, IBackupable
     {
         #region ---- 基本变量 ----
 
@@ -21,11 +21,6 @@ namespace FocusTree.Data.Focus
         /// 以 ID 作为 Key 的所有节点
         /// </summary>
         Dictionary<int, FocusNode> NodeCatalog;
-
-        #endregion
-
-        #region ---- 图像信息 ----
-
         /// <summary>
         /// 名称
         /// </summary>
@@ -41,35 +36,6 @@ namespace FocusTree.Data.Focus
         /// 分支数量
         /// </summary>
         public int BranchesCount { get; private set; }
-        /// <summary>
-        /// 全图的元中心坐标和元尺寸
-        /// </summary>
-        /// <returns></returns>
-        public (Vector2, SizeF) GetGraphMetaData()
-        {
-            bool first = true;
-            var bounds = new RectangleF();
-            foreach (var node in NodeCatalog.Values)
-            {
-                var point = node.MetaPoint;
-                if (first)
-                {
-                    bounds = new RectangleF(point.X, point.Y, point.X, point.Y);
-                    first = false;
-                }
-                else
-                {
-                    bounds.X = point.X < bounds.X ? point.X : bounds.X;
-                    bounds.Y = point.Y < bounds.Y ? point.Y : bounds.Y;
-                    bounds.Width = point.X > bounds.Width ? point.X : bounds.Width;
-                    bounds.Height = point.Y > bounds.Height ? point.Y : bounds.Height;
-                }
-            }
-            return (
-                new Vector2((bounds.X + bounds.Width) / 2, (bounds.Y + bounds.Height) / 2),
-                new SizeF(bounds.Width - bounds.X + 1, bounds.Height - bounds.Y + 1)
-                );
-        }
 
         #endregion
 
@@ -86,8 +52,8 @@ namespace FocusTree.Data.Focus
                 MessageBox.Show("[2303031210]提示：无法添加节点 - 无法加入字典。");
                 return false;
             }
-            CreateLinkes();
-            SetMetaPoints();
+            CreateNodesLinkes();
+            SetNodesMetaPoints();
             return true;
         }
         /// <summary>
@@ -111,8 +77,8 @@ namespace FocusTree.Data.Focus
             }
             // 从节点表中删除此节点
             NodeCatalog.Remove(id);
-            CreateLinkes();
-            SetMetaPoints();
+            CreateNodesLinkes();
+            SetNodesMetaPoints();
             return true;
         }
         /// <summary>
@@ -130,8 +96,8 @@ namespace FocusTree.Data.Focus
                 return false;
             }
             NodeCatalog[id] = newData;
-            CreateLinkes();
-            SetMetaPoints();
+            CreateNodesLinkes();
+            SetNodesMetaPoints();
             return true;
         }
         /// <summary>
@@ -152,45 +118,39 @@ namespace FocusTree.Data.Focus
             return result.ToArray();
         }
 
-        #endregion
-
-        #region ---- 图像操作 ----
-
         /// <summary>
-        /// 使用 Requires 创建 Linked
+        /// 使用 Requires 创建所有节点的 Links
         /// </summary>
-        private void CreateLinkes()
+        private void CreateNodesLinkes()
         {
             foreach (var node in NodeCatalog.Values)
             {
                 // 这里一定要清空，因为是刷新
                 node.Links.Clear();
-            }
-            foreach (var node in NodeCatalog.Values)
-            {
                 foreach (var require in node.Requires)
                 {
                     foreach (var requireId in require)
                     {
-                        if (requireId == 123 || node.ID == 123)
-                        {
-
-                        }
                         NodeCatalog[requireId].Links.Add(node.ID);
                     }
                 }
             }
         }
         /// <summary>
-        /// 获取绘图用的已自动排序后的 NodeMap
+        /// 设置所有节点的元坐标
         /// </summary>
         /// <returns></returns>
-        private void SetMetaPoints()
+        private void SetNodesMetaPoints()
         {
             var branches = GetBranches(GetRootNodes(), true, true);
             BranchesCount = branches.Count;
             CombineBranchNodes(branches);
         }
+
+        #endregion
+
+        #region ---- 图像操作 ----
+
         /// <summary>
         /// 获取某个节点的所有分支
         /// </summary>
@@ -260,7 +220,7 @@ namespace FocusTree.Data.Focus
         /// <returns></returns>
         private void CombineBranchNodes(List<int[]> branches)
         {
-            Dictionary<int, List<int>> nodeCoordinates = new();
+            Dictionary<int, int[]> nodeCoordinates = new();
             if (branches.Count == 0)
             {
                 return;
@@ -284,13 +244,7 @@ namespace FocusTree.Data.Focus
                     }
                     else
                     {
-                        nodeCoordinates.Add(node, new List<int>());
-                        // 起始x, [0]
-                        nodeCoordinates[node].Add(x);
-                        // 终止x, [1]
-                        nodeCoordinates[node].Add(x);
-                        // y, [2]
-                        nodeCoordinates[node].Add(y);
+                        nodeCoordinates.Add(node, new int[3] { x, x, y }); // [0]起始x, [1]终止x, [2]y
                     }
                 }
             }
@@ -362,8 +316,8 @@ namespace FocusTree.Data.Focus
                 }
             }
             NodeCatalog = TempNodeCatalog;
-            CreateLinkes();
-            SetMetaPoints();
+            CreateNodesLinkes();
+            SetNodesMetaPoints();
             if (this.IsEdit()) { this.EnqueueHistory(); }
         }
         /// <summary>
@@ -396,6 +350,35 @@ namespace FocusTree.Data.Focus
                 }
                 NodeCatalog[linkId].Requires = newRequires;
             }
+        }
+        /// <summary>
+        /// 全图的元中心坐标和元尺寸
+        /// </summary>
+        /// <returns></returns>
+        public (Vector2, SizeF) GetGraphMetaData()
+        {
+            bool first = true;
+            var bounds = new RectangleF();
+            foreach (var node in NodeCatalog.Values)
+            {
+                var point = node.MetaPoint;
+                if (first)
+                {
+                    bounds = new RectangleF(point.X, point.Y, point.X, point.Y);
+                    first = false;
+                }
+                else
+                {
+                    bounds.X = point.X < bounds.X ? point.X : bounds.X;
+                    bounds.Y = point.Y < bounds.Y ? point.Y : bounds.Y;
+                    bounds.Width = point.X > bounds.Width ? point.X : bounds.Width;
+                    bounds.Height = point.Y > bounds.Height ? point.Y : bounds.Height;
+                }
+            }
+            return (
+                new Vector2((bounds.X + bounds.Width) / 2, (bounds.Y + bounds.Height) / 2),
+                new SizeF(bounds.Width - bounds.X + 1, bounds.Height - bounds.Y + 1)
+                );
         }
 
         #endregion
@@ -445,8 +428,8 @@ namespace FocusTree.Data.Focus
 
                 }
             } while (reader.Read());
-            CreateLinkes();
-            SetMetaPoints();
+            CreateNodesLinkes();
+            SetNodesMetaPoints();
         }
 
         public void WriteXml(XmlWriter writer)
@@ -500,7 +483,7 @@ namespace FocusTree.Data.Focus
         public int HistoryIndex { get; set; } = 0;
         public int CurrentHistoryLength { get; set; } = 0;
         public FormattedData[] History { get; set; } = new FormattedData[20];
-        public FormattedData Latest { get; set; }
+        public FormattedData Latest { get; set; } = new();
         public FormattedData Format()
         {
             var hashCode = GetHashString();
@@ -514,8 +497,8 @@ namespace FocusTree.Data.Focus
         {
             NodeCatalog = new();
             NodeCatalog = XmlIO.LoadFromXml<FocusGraph>(this.GetCachePath(data.Items[0])).NodeCatalog;
-            CreateLinkes();
-            SetMetaPoints();
+            CreateNodesLinkes();
+            SetNodesMetaPoints();
         }
 
         #endregion

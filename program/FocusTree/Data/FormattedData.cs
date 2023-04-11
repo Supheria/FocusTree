@@ -2,14 +2,14 @@ namespace FocusTree.Data
 {
     public struct FormattedData
     {
-        public string[] Items { get { return items; } }
-        string[] items = Array.Empty<string>();
+        public string[] Items { get; private set; }
         public FormattedData(params string[] data)
         {
-            items = data ?? Array.Empty<string>();
+            Items = data ?? Array.Empty<string>();
         }
         public FormattedData()
         {
+            Items = Array.Empty<string>();
         }
         /// <summary>
         /// 比较两个格式化字符串数组是否相同

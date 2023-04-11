@@ -21,7 +21,7 @@ namespace FocusTree.UI.Controls
         {
             get
             {
-                if (ReadOnly) { return Graph.Name + $"{Path.GetFileNameWithoutExtension(FilePath)}" + "（只读）"; }
+                if (ReadOnly) { return Graph.Name + "（只读）"; }
                 else if (GraphEdited) { return Graph.Name + "（未保存）"; }
                 else { return Graph.Name; }
             }
@@ -334,9 +334,6 @@ namespace FocusTree.UI.Controls
 
         #region ---- 事件 ----
 
-        //---- OnPaint ----
-
-
         //---- OnSizeChanged ----//
 
         private void OnSizeChanged(object sender, EventArgs args)
@@ -381,7 +378,7 @@ namespace FocusTree.UI.Controls
             {
                 if (PrevSelectNode == null)
                 {
-                    OpenPicGraphContextMenu(args.Button);
+                    OpenGraphContextMenu(args.Button);
                 }
                 else
                 {
@@ -391,7 +388,7 @@ namespace FocusTree.UI.Controls
 
             else if ((args.Button & MouseButtons.Middle) == MouseButtons.Middle)
             {
-                OpenPicGraphContextMenu(args.Button);
+                OpenGraphContextMenu(args.Button);
             }
         }
         private void GraphLeftClicked(Point dragMousePoint)
@@ -400,28 +397,23 @@ namespace FocusTree.UI.Controls
             DragMousePoint = dragMousePoint;
             Invalidate();
         }
-        private void OpenPicGraphContextMenu(MouseButtons button)
+        private void NodeLeftClicked(int id)
         {
-            if (PicGraphContextMenu == null || PicGraphContextMenu.ButtonTag != button)
-            {
-                PicGraphContextMenu = new GraphContextMenu(this, button);
-            }
-            PicGraphContextMenu.Show(Cursor.Position);
+            var data = Graph.GetNode(id);
+            var info = $"{data.Name}, {data.Duration}日\n{data.Descript}";
+            DrawInfo(info);
         }
         private void NodeRightClicked()
         {
             CloseAllNodeToolDialogs();
             SelectedNode = PrevSelectNode;
             RescaleToNode(SelectedNode.Value, false);
-            PicNodeContextMenu = new NodeContextMenu(this);
-            PicNodeContextMenu.Show(Cursor.Position);
+            PicNodeContextMenu = new(this, Cursor.Position);
             Invalidate();
         }
-        private void NodeLeftClicked(int id)
+        private void OpenGraphContextMenu(MouseButtons button)
         {
-            var data = Graph.GetNode(id);
-            var info = $"{data.Name}, {data.Duration}日\n{data.Descript}";
-            DrawInfo(info);
+            PicGraphContextMenu = new(this, Cursor.Position, button);
         }
 
         //---- OnMouseDoubleClick ----//
@@ -437,7 +429,6 @@ namespace FocusTree.UI.Controls
                 if (PrevSelectNode == null)
                 {
                     GraphLeftDoubleClicked();
-                    RestoreBackup();
                 }
                 else
                 {
@@ -448,10 +439,6 @@ namespace FocusTree.UI.Controls
         private void GraphLeftDoubleClicked()
         {
             SelectedNode = null;
-            Invalidate();
-        }
-        private void RestoreBackup()
-        {
             if (ReadOnly)
             {
                 if (MessageBox.Show("[202303052340]是否恢复并删除备份？", "提示", MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -461,9 +448,9 @@ namespace FocusTree.UI.Controls
                     ReadOnly = false;
                     SelectedNode = null;
                     RescaleToPanorama();
-                    Invalidate();
                 }
             }
+            Invalidate();
         }
         private void NodeLeftDoubleClicked()
         {
@@ -545,6 +532,10 @@ namespace FocusTree.UI.Controls
         }
 
         //---- Public ----//
+        
+        /// <summary>
+        /// 检查预选择节点
+        /// </summary>
         private void CheckPrevSelect()
         {
             var clickPos = PointToClient(Cursor.Position);
@@ -601,17 +592,12 @@ namespace FocusTree.UI.Controls
                 );
         }
         /// <summary>
-        /// 绘图区域包含指定坐标的节点，若没有返回null
+        /// 坐标是否处于任何节点的绘图区域中
         /// </summary>
         /// <param name="location">指定坐标 </param>
-        /// <returns>绘图区域包含指定坐标的节点，若没有返回null</returns>
+        /// <returns>坐标所处于的节点id，若没有返回null</returns>
         private int? PointInAnyNodeDrawingRect(Point location)
         {
-            if (Graph == null)
-            {
-                return null;
-            }
-
             foreach (var id in Graph.IdList)
             {
                 var rect = NodeDrawingRect(id);
@@ -650,10 +636,6 @@ namespace FocusTree.UI.Controls
         /// </summary>
         private void RescaleToPanorama()
         {
-            if (Graph == null)
-            {
-                return;
-            }
             var meta = Graph.GetGraphMetaData();
             DrawingCenter = MetaPointToCanvasPoint(meta.Item1);
             var canvasSize = MetaSizeToCanvasSize(meta.Item2);
@@ -670,10 +652,6 @@ namespace FocusTree.UI.Controls
         /// <param name="zoom">是否聚焦</param>
         private void RescaleToNode(int id, bool zoom)
         {
-            if (Graph == null)
-            {
-                return;
-            }
             var point = Graph.GetNode(id).MetaPoint;
             var canvasPoint = MetaPointToCanvasPoint(point);
             DrawingCenter = new(canvasPoint.X + NodeSize.Width / 2, canvasPoint.Y + NodeSize.Height / 2);
@@ -765,6 +743,7 @@ namespace FocusTree.UI.Controls
 
         public void CamLocatePanorama()
         {
+            if (Graph == null) { return; }
             RescaleToPanorama();
             Invalidate();
         }
@@ -773,11 +752,8 @@ namespace FocusTree.UI.Controls
         /// </summary>
         public void CamLocateSelected()
         {
-            if (SelectedNode == null) { return; }
-            else
-            {
-                RescaleToNode(SelectedNode.Value, true);
-            }
+            if (Graph == null || SelectedNode == null) { return; }
+            RescaleToNode(SelectedNode.Value, true);
             Invalidate();
         }
 

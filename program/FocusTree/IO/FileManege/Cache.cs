@@ -28,14 +28,14 @@
             return cachePath;
         }
         /// <summary>
-        /// 清空缓存文件
+        /// 删除所有缓存
         /// </summary>
         public static void ClearCache<T>(this T obj) where T : IFileManageable
         {
             Directory.Delete(obj.DirectoryName(), true);
         }
         /// <summary>
-        /// 删除所有缓存
+        /// 清空根目录
         /// </summary>
         public static void Clear()
         {

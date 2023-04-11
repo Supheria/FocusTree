@@ -1,5 +1,7 @@
-﻿using System.IO.Compression;
+﻿using System.IO;
+using System.IO.Compression;
 using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 namespace FocusTree.IO.FileManege
 {
@@ -24,12 +26,11 @@ namespace FocusTree.IO.FileManege
         }
         /// <summary>
         /// 文件备份路径
-        /// root\subRoot\obj's Root\fileName\objHash\dateTime
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
         /// <param name="path">what fileName is of</param>
-        /// <returns></returns>
+        /// <returns>root\subRoot\obj's Root\fileName\objHash\dateTime</returns>
         private static string BackupPath<T>(this T obj, string path) where T : IBackupable
         {
             var fileName = Path.GetFileNameWithoutExtension(path);
@@ -73,7 +74,7 @@ namespace FocusTree.IO.FileManege
         /// <summary>
         /// 通过文件路径的文件名查找同名文件夹下的所有备份，形成文件列表
         /// </summary>
-        /// <param name="filePath"></param>
+        /// <param name="path"></param>
         /// <returns>文件列表</returns>
         public static List<string> GetBackupsList<T>(this T obj, string path) where T : IBackupable
         {
@@ -93,37 +94,44 @@ namespace FocusTree.IO.FileManege
                 var dirs = root.GetDirectories();
                 foreach (var dir in dirs)
                 {
-                    result.Add(GetBkFilePath(dir));
+                    var file = dir.GetFiles();
+                    result.Add(file.First().FullName);
                 }
             }
             return result;
         }
         /// <summary>
-        /// 获取对象名文件夹下的备份文件
+        /// 删除当前备份
         /// </summary>
-        /// <param name="objNameDir"></param>
-        /// <returns></returns>
-        private static string GetBkFilePath(DirectoryInfo objNameDir)
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj">要删除的备份对象</param>
+        /// <param name="path">有备份的文件路径</param>
+        public static void DeleteBackup<T>(this T obj, string path) where T : IBackupable
         {
-            var file = objNameDir.GetFiles();
-            return file.First().FullName;
-        }
-        /// <summary>
-        /// 清空根目录
-        /// </summary>
-        public static void Clear()
-        {
-            if (MessageBox.Show("是否删除所有备份？", "提示", MessageBoxButtons.YesNo) == DialogResult.No)
+            var toDeleteDir = Path.GetDirectoryName(obj.BackupPath(path));
+            if (!Directory.Exists(toDeleteDir) || MessageBox.Show("是否要删除当前备份？", "提示", MessageBoxButtons.YesNo) == DialogResult.No)
             {
                 return;
             }
-            else
-            {
-                MessageBox.Show("已删除所有备份。");
-            }
-            ZipFile.CreateFromDirectory(SubRootDirectoryName, Path.Combine(RootDirectoryInfo.FullName, DateTime.Now.ToString("yyyy年MM月dd日 HH时mm分") + ".zip"));
+            Directory.Delete(toDeleteDir, true);
+        }
+        /// <summary>
+        /// 清空根目录并打成压缩包
+        /// </summary>
+        public static void Clear()
+        {
+            FolderBrowserDialog folderBrowser = new();
+            folderBrowser.Description = "选择要打包到文件夹";
+            if (folderBrowser.ShowDialog() == DialogResult.Cancel) { return; }
+            var zipPath = Path.Combine(folderBrowser.SelectedPath, DateTime.Now.ToString("yyyy年MM月dd日 HH时mm分ss秒") + ".zip");
+            ZipFile.CreateFromDirectory(SubRootDirectoryName, zipPath);
             Directory.Delete(SubRootDirectoryName, true);
             Directory.CreateDirectory(SubRootDirectoryName);
+
+            Process p = new Process();
+            p.StartInfo.FileName = "explorer.exe";
+            p.StartInfo.Arguments = @" /select, " + zipPath;
+            p.Start();
         }
         /// <summary>
         /// 查询文件是否是备份文件：位于备份子根目录下且具有备份文件名格式
