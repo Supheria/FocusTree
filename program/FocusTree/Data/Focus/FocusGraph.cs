@@ -1,9 +1,7 @@
 #define DEBUG
 using FocusTree.IO;
 using FocusTree.IO.FileManege;
-using Newtonsoft.Json;
 using System.Numerics;
-using System.Runtime.Intrinsics.Arm;
 using System.Security.Cryptography;
 using System.Xml;
 using System.Xml.Schema;
@@ -168,13 +166,17 @@ namespace FocusTree.Data.Focus
                 // 这里一定要清空，因为是刷新
                 node.Links.Clear();
             }
-            foreach (var node in NodeCatalog)
+            foreach (var node in NodeCatalog.Values)
             {
-                foreach (var require in node.Value.Requires)
+                foreach (var require in node.Requires)
                 {
                     foreach (var requireId in require)
                     {
-                        NodeCatalog[requireId].Links.Add(node.Key);
+                        if (requireId == 123 || node.ID == 123)
+                        {
+
+                        }
+                        NodeCatalog[requireId].Links.Add(node.ID);
                     }
                 }
             }
@@ -336,84 +338,64 @@ namespace FocusTree.Data.Focus
                 }
             }
         }
-
         /// <summary>
-        /// 按 NodeCatalog 的顺序重排节点ID
+        /// 按分支顺序从左到右、从上到下重排节点ID
         /// </summary>
         public void ReorderNodeIds()
         {
             Dictionary<int, FocusNode> TempNodeCatalog = new();
             var branches = GetBranches(GetRootNodes(), true, true);
+            HashSet<int> visited = new();
+            int newId = 1;
             foreach (var branch in branches)
             {
-                foreach (var node in branch)
+                foreach (var nodeId in branch)
                 {
-                    TempNodeCatalog.TryAdd(node, NodeCatalog[node]);
+                    if (!visited.Contains(nodeId))
+                    {
+                        UpdateLinkNodesRequiresWithNewId(nodeId, newId);
+                        TempNodeCatalog.Add(newId, NodeCatalog[nodeId]);
+                        visited.Add(nodeId);
+                        NodeCatalog[nodeId].ID = newId;
+                        newId++;
+                    }
                 }
             }
             NodeCatalog = TempNodeCatalog;
-            Dictionary<int, FocusNode> newNodeCatalog = new();
-            Dictionary<int, int> ExchangePairs = new();
-            Dictionary<int, List<HashSet<int>>> tempRequires = new();
-            Dictionary<int, List<HashSet<int>>> newRequires = new();
-            var enumer = NodeCatalog.GetEnumerator();
-            for (int newId = 1; enumer.MoveNext(); newId++)
-            {
-                var data = enumer.Current.Value;
-                data.ID = newId;
-                newNodeCatalog.Add(newId, data);
-                ExchangePairs.Add(enumer.Current.Key, newId);
-                foreach (var child in enumer.Current.Value.Links)
-                {
-                    List<HashSet<int>> newGroups = new();
-                    foreach (var requireGroup in NodeCatalog[child].Requires)
-                    {
-                        HashSet<int> newRequireGroup = new();
-                        foreach (var parent in requireGroup)
-                        {
-                            if (parent == enumer.Current.Key)
-                            {
-                                newRequireGroup.Add(newId);
-                            }
-                            else
-                            {
-                                newRequireGroup.Add(parent);
-                            }
-                        }
-                        newGroups.Add(newRequireGroup);
-                    }
-                    if (tempRequires.TryAdd(child, newGroups) == false)
-                    {
-                        tempRequires[child] = newGroups;
-                    }
-                }
-            }
-            enumer = NodeCatalog.GetEnumerator();
-            while (enumer.MoveNext())
-            {
-                List<HashSet<int>> groups;
-                if (tempRequires.TryGetValue(enumer.Current.Key, out groups))
-                {
-                    newRequires.Add(ExchangePairs[enumer.Current.Key], groups);
-                }
-            }
-            NodeCatalog = newNodeCatalog;
-            foreach (var requires in newRequires)
-            {
-                NodeCatalog[requires.Key].Requires = requires.Value;
-            }
             CreateLinkes();
             SetMetaPoints();
-            this.EnqueueHistory();
+            if (this.IsEdit()) { this.EnqueueHistory(); }
         }
         /// <summary>
-        /// 保存为xml文件，并更新存档文件路径
+        /// 按新节点id更新原节点的所有子链接节点的依赖组
         /// </summary>
-        /// <param name="path"></param>
-        public void Save(string path)
+        /// <param name="nodeId"></param>
+        /// <param name="newId"></param>
+        /// <returns></returns>
+        private void UpdateLinkNodesRequiresWithNewId(int nodeId, int newId)
         {
-            this.SaveToXml(path);
-            Latest = Format();
+            var node = NodeCatalog[nodeId];
+            foreach (var linkId in node.Links)
+            {
+                List<HashSet<int>> newRequires = new();
+                foreach (var require in NodeCatalog[linkId].Requires)
+                {
+                    HashSet<int> newRequire = new();
+                    foreach (var requireId in require)
+                    {
+                        if (requireId == node.ID)
+                        {
+                            newRequire.Add(newId);
+                        }
+                        else
+                        {
+                            newRequire.Add(requireId);
+                        }
+                    }
+                    newRequires.Add(newRequire);
+                }
+                NodeCatalog[linkId].Requires = newRequires;
+            }
         }
 
         #endregion
@@ -494,7 +476,7 @@ namespace FocusTree.Data.Focus
 
         #region ---- 文件管理工具 ----
 
-        public string FileManageDirectory { get; private set; } = "FoucsGraph";
+        public string FileManageDirName { get; private set; } = "FoucsGraph";
         public string GetHashString()
         {
             var cachePath = this.GetCachePath("hashTemp");
@@ -531,18 +513,9 @@ namespace FocusTree.Data.Focus
         public void Deformat(FormattedData data)
         {
             NodeCatalog = new();
-            var g = XmlIO.LoadFromXml<FocusGraph>(this.GetCachePath(data.Items[0]));
-            NodeCatalog = g.NodeCatalog;
+            NodeCatalog = XmlIO.LoadFromXml<FocusGraph>(this.GetCachePath(data.Items[0])).NodeCatalog;
             CreateLinkes();
             SetMetaPoints();
-        }
-        /// <summary>
-        /// 开始新的历史记录
-        /// </summary>
-        public void NewHistory()
-        {
-            ObjectHistory.NewHistory(this);
-            this.ClearCache();
         }
 
         #endregion

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FocusTree.IO.FileManege
+﻿namespace FocusTree.IO.FileManege
 {
     public static class Cache
     {
@@ -17,7 +11,7 @@ namespace FocusTree.IO.FileManege
         /// </summary>
         private static string DirectoryName<T>(this T obj) where T : IFileManageable
         {
-            var dir = Path.Combine(RootDirectoryInfo.FullName, obj.FileManageDirectory);
+            var dir = Path.Combine(RootDirectoryInfo.FullName, obj.FileManageDirName);
             Directory.CreateDirectory(dir);
             return dir;
         }
@@ -40,6 +34,9 @@ namespace FocusTree.IO.FileManege
         {
             Directory.Delete(obj.DirectoryName(), true);
         }
+        /// <summary>
+        /// 删除所有缓存
+        /// </summary>
         public static void Clear()
         {
             Directory.Delete(RootDirectoryInfo.FullName, true);

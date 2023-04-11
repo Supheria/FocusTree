@@ -2,6 +2,9 @@
 {
     public interface IFileManageable
     {
-        string FileManageDirectory { get; }
+        /// <summary>
+        /// 文件管理目录名
+        /// </summary>
+        string FileManageDirName { get; }
     }
 }

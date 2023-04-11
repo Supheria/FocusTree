@@ -3,7 +3,6 @@ using FocusTree.Data.Focus;
 using FocusTree.IO;
 using FocusTree.IO.FileManege;
 using FocusTree.UI.Controls;
-using System.Windows.Forms;
 
 namespace FocusTree.UI
 {
@@ -172,7 +171,7 @@ namespace FocusTree.UI
             var fileNames = GetBatchPath();
             if (fileNames == null) { return; }
             FolderBrowserDialog folderBrowser = new();
-            folderBrowser.InitialDirectory = Path.GetDirectoryName(fileNames[0]);
+            folderBrowser.InitialDirectory = Path.Combine(Path.GetDirectoryName(fileNames[0]), "batch");
             if (folderBrowser.ShowDialog() == DialogResult.Cancel)
             {
                 return;
@@ -183,8 +182,7 @@ namespace FocusTree.UI
                 try
                 {
                     var graph = XmlIO.LoadFromXml<FocusGraph>(fileName);
-                    graph.BackupFile(fileName);
-                    graph.Save(Path.Combine(folderBrowser.SelectedPath, Path.GetFileName(fileName)));
+                    graph.SaveToXml(Path.Combine(folderBrowser.SelectedPath, Path.GetFileName(fileName)));
                     suc++;
                 }
                 catch (Exception ex)
@@ -228,8 +226,8 @@ namespace FocusTree.UI
                 {
                     var graph = XmlIO.LoadFromXml<FocusGraph>(fileName);
                     graph.ReorderNodeIds();
-                    graph.BackupFile(fileName);
-                    graph.Save(fileName);
+                    Backup.BackupFile<FocusGraph>(fileName);
+                    graph.SaveToXml(fileName);
                     suc++;
                 }
                 catch (Exception ex)

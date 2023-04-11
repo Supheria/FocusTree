@@ -1,11 +1,5 @@
-﻿using FocusTree.Data;
-using FocusTree.Data.Focus;
-using System.IO;
-using System.IO.Compression;
+﻿using System.IO.Compression;
 using System.Text.RegularExpressions;
-using System.Xml.Linq;
-using System.Xml.Serialization;
-using IFormattable = FocusTree.Data.IFormattable;
 
 namespace FocusTree.IO.FileManege
 {
@@ -14,14 +8,17 @@ namespace FocusTree.IO.FileManege
         /// <summary>
         /// 根目录
         /// </summary>
-        static DirectoryInfo RootDirectoryInfo = Directory.CreateDirectory("backup");
+        readonly static DirectoryInfo RootDirectoryInfo = Directory.CreateDirectory("backup");
+        /// <summary>
+        /// 子根目录
+        /// </summary>
         public static string SubRootDirectoryName { get { return Path.Combine(RootDirectoryInfo.FullName, "backups"); } }
         /// <summary>
         /// 对象根目录
         /// </summary>
         private static string DirectoryName<T>(this T obj) where T : IBackupable
         {
-            var dir = Path.Combine(SubRootDirectoryName, obj.FileManageDirectory);
+            var dir = Path.Combine(SubRootDirectoryName, obj.FileManageDirName);
             Directory.CreateDirectory(dir);
             return dir;
         }
@@ -43,7 +40,7 @@ namespace FocusTree.IO.FileManege
         /// 备份指定文件路径的obj（如果存在的话）
         /// </summary>
         /// <param name="path">要备份的文件路径</param>
-        public static void BackupFile<T>(this T obj, string path) where T : IBackupable
+        public static void BackupFile<T>(string path) where T : IBackupable
         {
             try
             {
@@ -68,7 +65,7 @@ namespace FocusTree.IO.FileManege
         /// <param name="path">要恢复到的文件路径</param>
         public static void RestoreBackup<T>(this T obj, string path) where T : IBackupable
         {
-            obj.BackupFile(path);
+            BackupFile<T>(path);
             obj.SaveToXml(path);
             var objHashDir = Path.GetDirectoryName(obj.BackupPath(path));
             Directory.Delete(objHashDir, true);
@@ -94,7 +91,7 @@ namespace FocusTree.IO.FileManege
             {
                 var root = new DirectoryInfo(fileNameDir);
                 var dirs = root.GetDirectories();
-                foreach ( var dir in dirs )
+                foreach (var dir in dirs)
                 {
                     result.Add(GetBkFilePath(dir));
                 }

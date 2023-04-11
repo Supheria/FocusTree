@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FocusTree.Data.Hoi4Object
+﻿namespace FocusTree.Data.Hoi4Object
 {
     /// <summary>
     /// 句子属性

@@ -2,10 +2,6 @@
 {
     public static class ObjectHistory
     {
-        public static int GetHistoryLength<T>(this T obj) where T : IHistoryable
-        {
-            return obj.CurrentHistoryLength;
-        }
         /// <summary>
         /// 较最近一次保存是否已被编辑
         /// </summary>

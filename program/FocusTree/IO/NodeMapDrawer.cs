@@ -1,10 +1,5 @@
 ﻿using FocusTree.Data.Focus;
-using FocusTree.UI.Controls;
-using System;
-using System.Drawing;
 using System.Numerics;
-using System.Windows.Forms;
-using System.Xml.Linq;
 
 namespace FocusTree.IO
 {
@@ -25,7 +20,6 @@ namespace FocusTree.IO
             Progress.Value = 0;
             Progress.Step = 1;
         }
-
         private void InitializeComponent()
         {
             Progress = new ProgressBar();
@@ -51,7 +45,6 @@ namespace FocusTree.IO
             TopMost = true;
             ResumeLayout(false);
         }
-
         /// <summary>
         /// 进度条步进下一刻
         /// </summary>

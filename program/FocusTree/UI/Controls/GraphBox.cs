@@ -1,9 +1,9 @@
+#define DEBUG
 using FocusTree.Data;
 using FocusTree.Data.Focus;
 using FocusTree.IO;
 using FocusTree.IO.FileManege;
 using FocusTree.UI.NodeToolDialogs;
-using System.IO;
 using System.Numerics;
 
 namespace FocusTree.UI.Controls
@@ -245,7 +245,7 @@ namespace FocusTree.UI.Controls
             var g = Graphics.FromImage(Image);
             g.Clear(Color.White);
 
-            foreach(var node in Graph.GetNodes())
+            foreach (var node in Graph.GetNodes())
             {
                 var id = node.ID;
                 var rect = NodeDrawingRect(id);
@@ -320,7 +320,7 @@ namespace FocusTree.UI.Controls
         /// <returns></returns>
         private bool IsNodeConflict(int id)
         {
-            foreach(var node in Graph.GetNodes())
+            foreach (var node in Graph.GetNodes())
             {
                 if (id != node.ID && Graph.GetNode(id).MetaPoint == node.MetaPoint)
                 {
@@ -666,15 +666,15 @@ namespace FocusTree.UI.Controls
         /// <summary>
         /// 缩放居中至节点
         /// </summary>
-        /// <param name="ID">节点ID</param>
+        /// <param name="id">节点ID</param>
         /// <param name="zoom">是否聚焦</param>
-        private void RescaleToNode(int ID, bool zoom)
+        private void RescaleToNode(int id, bool zoom)
         {
             if (Graph == null)
             {
                 return;
             }
-            var point = Graph.GetNode(ID).MetaPoint;
+            var point = Graph.GetNode(id).MetaPoint;
             var canvasPoint = MetaPointToCanvasPoint(point);
             DrawingCenter = new(canvasPoint.X + NodeSize.Width / 2, canvasPoint.Y + NodeSize.Height / 2);
             if (zoom)
@@ -697,16 +697,10 @@ namespace FocusTree.UI.Controls
         public void SaveGraph()
         {
             if (Graph == null || ReadOnly) { return; }
-            if (GraphEdited)
-            {
-                Graph.BackupFile(FilePath);
-                Graph.Save(FilePath);
-                Invalidate();
-            }
-            else
-            {
-                Graph.Save(FilePath);
-            }
+            Backup.BackupFile<FocusGraph>(FilePath);
+            Graph.SaveToXml(FilePath);
+            Graph.Latest = Graph.Format();
+            Invalidate();
         }
         /// <summary>
         /// 另存为
@@ -716,8 +710,9 @@ namespace FocusTree.UI.Controls
         {
             if (Graph == null) { return; }
             FilePath = path;
-            Graph.Save(path);
+            Graph.SaveToXml(path);
             Graph.NewHistory();
+            Graph.ClearCache();
             Invalidate();
         }
         /// <summary>
@@ -731,6 +726,7 @@ namespace FocusTree.UI.Controls
             if (!ReadOnly) { FilePath = path; }
             Graph = XmlIO.LoadFromXml<FocusGraph>(path);
             Graph.NewHistory();
+            Graph.ClearCache();
             SelectedNode = null;
             RescaleToPanorama();
             Invalidate();

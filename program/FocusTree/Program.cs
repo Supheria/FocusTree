@@ -1,7 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 //Console.WriteLine("Hello, World!");
 
-using FocusTree.IO.FileManege;
 using FocusTree.UI;
 using FocusTree.UI.test;
 

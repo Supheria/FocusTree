@@ -184,7 +184,7 @@ namespace FocusTree.Data.Hoi4Object
                 var valueType = PublicSign.Types.RegionCore;
                 var triggerType = PublicSign.Types.State;
                 var t = match.Groups[1].Value;
-                foreach(var region in regions)
+                foreach (var region in regions)
                 {
                     t += PublicSign.Splitter + region;
                 }

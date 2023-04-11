@@ -7,7 +7,7 @@
         /// </summary>
         public int HistoryIndex { get; set; }
         /// <summary>
-        /// 历史记录长度
+        /// 当前历史记录长度
         /// </summary>
         public int CurrentHistoryLength { get; set; }
         /// <summary>
