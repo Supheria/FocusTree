@@ -1,6 +1,6 @@
 ﻿namespace FocusTree.IO.FileManege
 {
-    public static class Cache
+    public static class FileCache
     {
         /// <summary>
         /// 根目录

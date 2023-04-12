@@ -70,7 +70,7 @@ namespace FocusTree.UI
         }
         private void MainForm_Menu_file_backup_clear_Click(object sender, EventArgs e)
         {
-            Backup.Clear();
+            FileBackup.Clear();
         }
 
         #endregion
@@ -93,26 +93,17 @@ namespace FocusTree.UI
             if (Display.Graph == null) { return; }
 
             MainForm_Menu_file_backup_open.DropDownItems.Clear();
-            var backupFiles = Display.Graph.GetBackupsList(Display.FilePath);
-            if (backupFiles.Count == 0) { return; }
+            var backupList = Display.Graph.GetBackupsList(Display.FilePath);
+            if (backupList.Count == 1) { return; }
 
             MainForm_Menu_file_backup_open.Visible = true;
-            ToolStripMenuItem item = new()
-            {
-                Tag = Display.FilePath,
-                Text = Path.GetFileNameWithoutExtension(Display.FilePath),
-                Size = new Size(180, 22)
-            };
-            item.Click += BackupItemClicked;
-            MainForm_Menu_file_backup_open.DropDownItems.Add(item);
-
-            foreach (var filePath in backupFiles)
+            ToolStripMenuItem item;
+            foreach (var pair in backupList)
             {
                 item = new()
                 {
-                    Tag = filePath,
-                    Text = GetBKDateTime(Path.GetFileName(filePath)),
-                    Size = new Size(180, 22)
+                    Tag = pair.Item1,
+                    Text = pair.Item2
                 };
                 item.Click += BackupItemClicked;
                 MainForm_Menu_file_backup_open.DropDownItems.Add(item);
@@ -130,15 +121,9 @@ namespace FocusTree.UI
             }
             Display.LoadGraph(item.Tag.ToString());
         }
-        private static string GetBKDateTime(string path)
-        {
-            var match = Regex.Match(path, "^BK(\\d{4})(\\d{2})(\\d{2})(\\d{2})(\\d{2})(\\d{2})$");
-            return $"{match.Groups[1].Value}/{match.Groups[2].Value}/{match.Groups[3].Value} {match.Groups[4].Value}:{match.Groups[5].Value}:{match.Groups[6].Value}";
-        }
-
         private void MainForm_Menu_file_backup_delete_Click(object sender, EventArgs e)
         {
-            Display.Graph.DeleteBackup(Display.FilePath);
+            Display.Graph.DeleteBackup();
             Display.LoadGraph(Display.FilePath);
         }
 
@@ -314,7 +299,7 @@ namespace FocusTree.UI
             }
             else if (Display.GraphEdited)
             {
-                MainForm_StatusStrip_filename.Text = Display.FilePath;
+                MainForm_StatusStrip_filename.Text = Display.FilePath + "*";
                 MainForm_StatusStrip_status.Text = "正在编辑";
             }
             else
@@ -325,7 +310,21 @@ namespace FocusTree.UI
         }
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Cache.Clear();
+            if (Display.Graph == null || !Display.GraphEdited)
+            {
+                FileCache.Clear();
+                return;
+            }
+            var result = MessageBox.Show("是否保存当前编辑？", "提示", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+            if (result == DialogResult.Cancel) 
+            { 
+                e.Cancel = true;
+                return; 
+            }
+            if (result == DialogResult.Yes)
+            {
+                Display.SaveGraph();
+            }
         }
 
         #endregion

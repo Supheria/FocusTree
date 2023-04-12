@@ -3,15 +3,6 @@
     class NodeContextMenu : ContextMenuStrip
     {
         private GraphBox Display;
-        //private ToolStripMenuItem menuItem_add = new();
-        //private ToolStripMenuItem menuItem_add_parent = new();
-        //private ToolStripMenuItem menuItem_add_child = new();
-        //private ToolStripMenuItem menuItem_edit = new();
-        //private ToolStripMenuItem menuItem_edit_focus = new();
-        //private ToolStripMenuItem menuItem_edit_requireGroup = new();
-        //private ToolStripMenuItem menuItem_edit_link = new();
-        //private ToolStripMenuItem menuItem_remove = new();
-        //private ToolStripMenuItem menuItem_checkout = new();
         public NodeContextMenu(GraphBox display, Point showPoint)
         {
             Display = display;
@@ -27,25 +18,6 @@
         }
         private void InitializeInEditable()
         {
-            //==== 添加 ====//
-            //
-            ToolStripMenuItem menuItem_add = new()
-            {
-                Text = "添加"
-            };
-            ToolStripMenuItem menuItem_add_require = new()
-            {
-                Text = "依赖"
-            };
-            ToolStripMenuItem menuItem_add_newNode = new()
-            {
-                Text = "新节点"
-            };
-            menuItem_add.DropDownItems.AddRange(new ToolStripItem[]
-            {
-                menuItem_add_require,
-                menuItem_add_newNode
-            });
             //
             //==== 编辑 ====//
             //
@@ -68,18 +40,38 @@
                 menuItem_edit_require
             });
             //
-            //==== 删除节点 ====//
+            //==== 插入 ====//
             //
-            ToolStripMenuItem menuItem_removeNode = new()
+            ToolStripMenuItem menuItem_insert = new()
             {
-                Text = "删除节点"
+                Text = "插入节点"
             };
-            menuItem_removeNode.Click += MenuItem_removeNode_Click;
+            ToolStripMenuItem menuItem_insert_up = new()
+            {
+                Text = "向上"
+            };
+            ToolStripMenuItem menuItem_insert_down = new()
+            {
+                Text = "向下"
+            };
+            menuItem_insert.DropDownItems.AddRange(new ToolStripItem[]
+            {
+                menuItem_insert_up,
+                menuItem_insert_down
+            });
+            //
+            //==== 删除 ====//
+            //
+            ToolStripMenuItem menuItem_remove = new()
+            {
+                Text = "删除"
+            };
+            menuItem_remove.Click += MenuItem_removeNode_Click;
 
             Items.AddRange(new ToolStripItem[] {
-                menuItem_add,
                 menuItem_edit,
-                menuItem_removeNode
+                menuItem_insert,
+                menuItem_remove
                 });
         }
 

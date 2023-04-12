@@ -24,11 +24,18 @@ namespace FocusTree.IO
         /// <returns>FGraph</returns>
         public static T LoadFromXml<T>(string path) where T : IXmlSerializable
         {
-            var file = File.OpenRead(path);
-            var reader = new XmlSerializer(typeof(T));
-            var obj = (T)reader.Deserialize(file);
-            file.Close();
-            return obj;
+            try
+            {
+                var file = File.OpenRead(path);
+                var reader = new XmlSerializer(typeof(T));
+                var obj = (T)reader.Deserialize(file);
+                file.Close();
+                return obj;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"[2304130225]无法读取{path}。\n{ex.Message}");
+            }
         }
     }
 }

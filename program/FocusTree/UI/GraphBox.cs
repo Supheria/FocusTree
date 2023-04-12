@@ -4,6 +4,7 @@ using FocusTree.Data.Focus;
 using FocusTree.IO;
 using FocusTree.IO.FileManege;
 using FocusTree.UI.NodeToolDialogs;
+using System.IO;
 using System.Numerics;
 
 namespace FocusTree.UI.Controls
@@ -405,7 +406,8 @@ namespace FocusTree.UI.Controls
         }
         private void NodeRightClicked()
         {
-            CloseAllNodeToolDialogs();
+            CloseAllNodeToolDialogs(); 
+            NodeInfoTip.Hide(this);
             SelectedNode = PrevSelectNode;
             RescaleToNode(SelectedNode.Value, false);
             PicNodeContextMenu = new(this, Cursor.Position);
@@ -413,7 +415,10 @@ namespace FocusTree.UI.Controls
         }
         private void OpenGraphContextMenu(MouseButtons button)
         {
+            SelectedNode = PrevSelectNode; 
+            NodeInfoTip.Hide(this);
             PicGraphContextMenu = new(this, Cursor.Position, button);
+            Invalidate();
         }
 
         //---- OnMouseDoubleClick ----//
@@ -441,10 +446,11 @@ namespace FocusTree.UI.Controls
             SelectedNode = null;
             if (ReadOnly)
             {
-                if (MessageBox.Show("[202303052340]是否恢复并删除备份？", "提示", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show("[202303052340]是否恢复备份？", "提示", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     CloseAllNodeToolDialogs();
-                    Graph.RestoreBackup(FilePath);
+                    FileBackup.Backup<FocusGraph>(FilePath);
+                    Graph.SaveToXml(FilePath);
                     ReadOnly = false;
                     SelectedNode = null;
                     RescaleToPanorama();
@@ -674,8 +680,8 @@ namespace FocusTree.UI.Controls
         /// </summary>
         public void SaveGraph()
         {
-            if (Graph == null || ReadOnly) { return; }
-            Backup.BackupFile<FocusGraph>(FilePath);
+            if (Graph == null || ReadOnly || !Graph.IsEdit()) { return; }
+            FileBackup.Backup<FocusGraph>(FilePath);
             Graph.SaveToXml(FilePath);
             Graph.Latest = Graph.Format();
             Invalidate();
@@ -688,9 +694,9 @@ namespace FocusTree.UI.Controls
         {
             if (Graph == null) { return; }
             FilePath = path;
+            Graph.ClearCache();
             Graph.SaveToXml(path);
             Graph.NewHistory();
-            Graph.ClearCache();
             Invalidate();
         }
         /// <summary>
@@ -700,11 +706,12 @@ namespace FocusTree.UI.Controls
         public void LoadGraph(string path)
         {
             CloseAllNodeToolDialogs();
-            ReadOnly = Backup.IsBackupFile(path);
+            ReadOnly = Graph == null ? false : Graph.IsBackupFile(path);
             if (!ReadOnly) { FilePath = path; }
+            Graph?.ClearCache();
             Graph = XmlIO.LoadFromXml<FocusGraph>(path);
+            FileBackup.Backup<FocusGraph>(FilePath);
             Graph.NewHistory();
-            Graph.ClearCache();
             SelectedNode = null;
             RescaleToPanorama();
             Invalidate();

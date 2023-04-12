@@ -1,4 +1,6 @@
-﻿using FocusTree.Data.Hoi4Object;
+﻿//#define FORMAT_TEST
+#define RAW_EFFECTS
+using FocusTree.Data.Hoi4Object;
 using System.Numerics;
 using System.Xml;
 
@@ -156,9 +158,11 @@ namespace FocusTree.Data.Focus
                 Program.testInfo.total++;
                 if (!FormatRawEffectSentence.Formatter(raw, out var formattedList))
                 {
+#if RAW_EFFECTS
                     Program.testInfo.erro++;
                     Program.testInfo.good = Program.testInfo.total - Program.testInfo.erro;
                     Program.testInfo.InfoText += $"{ID}. {raw}\n";
+#endif
                     continue;
                 }
                 foreach (var formatted in formattedList)
@@ -237,7 +241,7 @@ namespace FocusTree.Data.Focus
             writer.WriteAttributeString("Duration", Data.Duration);
             writer.WriteAttributeString("Descript", Data.Descript);
             writer.WriteAttributeString("Ps.", Data.Ps);
-
+#if RAW_EFFECTS
             // <RawEffects>
             writer.WriteStartElement("RawEffects");
             foreach (var effect in RawEffects)
@@ -246,16 +250,17 @@ namespace FocusTree.Data.Focus
             }
             // </RawEffects>
             writer.WriteEndElement();
-
-            //// <Effects>
-            //writer.WriteStartElement("Effects");
-            //foreach (var sentence in Data.Effects)
-            //{
-            //    sentence.WriteXml(writer);
-            //}
-            //// </Effects>
-            //writer.WriteEndElement();
-
+#endif
+#if FORMAT_TEST
+            // <Effects>
+            writer.WriteStartElement("Effects");
+            foreach (var sentence in Data.Effects)
+            {
+                sentence.WriteXml(writer);
+            }
+            // </Effects>
+            writer.WriteEndElement();
+#endif
             // <Requires>
             writer.WriteStartElement("Requires");
             foreach (var require in Requires)
@@ -274,6 +279,6 @@ namespace FocusTree.Data.Focus
             writer.WriteEndElement();
         }
 
-        #endregion
+#endregion
     }
 }

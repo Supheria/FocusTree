@@ -2,7 +2,7 @@
 
 namespace FocusTree.IO.FileManege
 {
-    internal interface IBackupable : IFileManageable, IXmlSerializable
+    public interface IBackupable : IFileManageable, IXmlSerializable
     {
         /// <summary>
         /// 获取对象哈希值字符串

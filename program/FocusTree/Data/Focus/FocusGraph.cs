@@ -1,11 +1,14 @@
 #define DEBUG
 using FocusTree.IO;
 using FocusTree.IO.FileManege;
+using Newtonsoft.Json;
 using System.Numerics;
 using System.Security.Cryptography;
+using System.Text;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace FocusTree.Data.Focus
 {
@@ -459,14 +462,25 @@ namespace FocusTree.Data.Focus
 
         #region ---- 文件管理工具 ----
 
-        public string FileManageDirName { get; private set; } = "FoucsGraph";
+        public string FileManageDirName { get { return $"FG{GetHashString(Name)}"; } }
+        private static string GetHashString(string str)
+        {
+            MD5 sha = MD5.Create();
+            byte[] hash = sha.ComputeHash(Encoding.UTF8.GetBytes(str));
+            string result = string.Empty;
+            foreach (var b in hash)
+            {
+                result += b.ToString();
+            }
+            return result;
+        }
         public string GetHashString()
         {
-            var cachePath = this.GetCachePath("hashTemp");
+            var cachePath = this.GetCachePath("hashtest");
             XmlIO.SaveToXml(this, cachePath);
-            HashAlgorithm sha = SHA256.Create();
             FileStream data = new(cachePath, FileMode.Open);
-            byte[] hash = sha.ComputeHash(data);
+            MD5 sha = MD5.Create();
+            var hash = sha.ComputeHash(data);
             data.Close();
             string result = string.Empty;
             foreach (var b in hash)
