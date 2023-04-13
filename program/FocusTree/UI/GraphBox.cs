@@ -23,7 +23,7 @@ namespace FocusTree.UI.Controls
             get
             {
                 if (ReadOnly) { return Graph.Name + "（只读）"; }
-                else if (GraphEdited) { return Graph.Name + "（未保存）"; }
+                else if (GraphEdited == true) { return Graph.Name + "（未保存）"; }
                 else { return Graph.Name; }
             }
         }
@@ -53,7 +53,7 @@ namespace FocusTree.UI.Controls
         /// <summary>
         /// 图像已更改
         /// </summary>
-        public bool GraphEdited { get { return Graph.IsEdit(); } }
+        public bool? GraphEdited { get { return Graph?.IsEdit(); } }
         public bool ReadOnly { get; private set; }
         public Dictionary<string, NodeToolDialog> ToolDialogs { get { return toolDialogs; } }
 
@@ -149,10 +149,18 @@ namespace FocusTree.UI.Controls
         /// </summary>
         Vector2 DrawingCenter = new(0, 0);
         /// <summary>
-        /// 鼠标拖动时使用的定位参数
+        /// 拖动图像时使用的鼠标参照坐标
         /// </summary>
-        Point DragMousePoint = new(0, 0);
-        bool DragMousePoint_Flag = false;
+        Point DragGraphMouseFlagPoint = new(0, 0);
+        bool DragGraph_Flag = false;
+        /// <summary>
+        /// 拖动节点时使用的鼠标参照坐标
+        /// </summary>
+        Point DragNodeMouseFlagPoint = new(0, 0);
+        /// <summary>
+        /// 鼠标拖动节点指示器
+        /// </summary>
+        bool DragNode_Flag = false;
 
         #endregion
 
@@ -188,33 +196,11 @@ namespace FocusTree.UI.Controls
             }
             DrawNodeMap();
             _draw_info($"节点数量：{Graph.NodesCount}，分支数量：{Graph.BranchesCount}",
-                new Rectangle(Bounds.Left, Bounds.Bottom - 88, Bounds.Width, 35),
                 new Font(NodeFont, 25, FontStyle.Bold, GraphicsUnit.Pixel),
                 new SolidBrush(Color.FromArgb(160, Color.DarkGray)),
                 new SolidBrush(Color.FromArgb(255, Color.WhiteSmoke))
                 );
-            Parent.UpdateText();
-
             Update();
-        }
-        public void DrawInfo(string info, Rectangle infoRect, Font infoFont, Brush BackBrush, Brush FrontBrush)
-        {
-            if (Graph == null)
-            {
-                return;
-            }
-            Invalidated -= UpdateGraph;
-
-            DrawNodeMap();
-            _draw_info(info,
-                infoRect,
-                infoFont,
-                BackBrush,
-                FrontBrush
-                );
-
-            Invalidate();
-            Invalidated += UpdateGraph;
         }
         public void DrawInfo(string info)
         {
@@ -226,7 +212,6 @@ namespace FocusTree.UI.Controls
 
             DrawNodeMap();
             _draw_info(info,
-                new Rectangle(Bounds.Left, Bounds.Bottom - 100, Bounds.Width, 66),
                 new Font(NodeFont, 25, FontStyle.Bold, GraphicsUnit.Pixel),
                 new SolidBrush(Color.FromArgb(160, Color.DarkGray)),
                 new SolidBrush(Color.FromArgb(255, Color.WhiteSmoke))
@@ -297,12 +282,12 @@ namespace FocusTree.UI.Controls
             g.Flush();
             g.Dispose();
         }
-        private void _draw_info(string info, Rectangle infoRect, Font infoFont, Brush BackBrush, Brush FrontBrush)
+        private void _draw_info(string info, Font infoFont, Brush BackBrush, Brush FrontBrush)
         {
             if (Graph == null) { return; }
             Image ??= new Bitmap(Size.Width, Size.Height);
             var g = Graphics.FromImage(Image);
-
+            Rectangle infoRect = new(Bounds.Left, Bounds.Bottom - 100, Bounds.Width, 66);
             g.FillRectangle(BackBrush, infoRect);
             g.DrawString(
                 info,
@@ -351,7 +336,7 @@ namespace FocusTree.UI.Controls
             var ratio = MathF.Min(ratioVec.X, ratioVec.Y);
             ControlResize.SetTag(this);
             Image = new Bitmap(Size.Width, Size.Height);
-            GScale = GScale * ratio;
+            GScale *= ratio;
             Invalidate();
         }
 
@@ -372,6 +357,7 @@ namespace FocusTree.UI.Controls
                 else
                 {
                     NodeLeftClicked(PrevSelectNode.Value);
+                    WriteNodeDragFlags(args.Location);
                 }
             }
 
@@ -380,6 +366,7 @@ namespace FocusTree.UI.Controls
                 if (PrevSelectNode == null)
                 {
                     OpenGraphContextMenu(args.Button);
+                    Parent.UpdateText("打开图像选项");
                 }
                 else
                 {
@@ -390,19 +377,28 @@ namespace FocusTree.UI.Controls
             else if ((args.Button & MouseButtons.Middle) == MouseButtons.Middle)
             {
                 OpenGraphContextMenu(args.Button);
+                Parent.UpdateText("打开备份选项");
             }
         }
-        private void GraphLeftClicked(Point dragMousePoint)
+        private void GraphLeftClicked(Point startPoint)
         {
-            DragMousePoint_Flag = true;
-            DragMousePoint = dragMousePoint;
+            DragGraph_Flag = true;
+            DragGraphMouseFlagPoint = startPoint;
             Invalidate();
+            Parent.UpdateText("拖动图像");
         }
         private void NodeLeftClicked(int id)
         {
             var data = Graph.GetNode(id);
             var info = $"{data.Name}, {data.Duration}日\n{data.Descript}";
             DrawInfo(info);
+            Parent.UpdateText("选择节点");
+        }
+        private void WriteNodeDragFlags(Point startPoint)
+        {
+            DragNode_Flag = true;
+            var nodeRect = NodeDrawingRect(PrevSelectNode.Value);
+            DragNodeMouseFlagPoint = new(startPoint.X - (int)nodeRect.X, startPoint.Y - (int)nodeRect.Y);
         }
         private void NodeRightClicked()
         {
@@ -412,6 +408,7 @@ namespace FocusTree.UI.Controls
             RescaleToNode(SelectedNode.Value, false);
             PicNodeContextMenu = new(this, Cursor.Position);
             Invalidate();
+            Parent.UpdateText("打开节点选项");
         }
         private void OpenGraphContextMenu(MouseButtons button)
         {
@@ -437,7 +434,7 @@ namespace FocusTree.UI.Controls
                 }
                 else
                 {
-                    NodeLeftDoubleClicked();
+                    //NodeLeftDoubleClicked();
                 }
             }
         }
@@ -455,25 +452,30 @@ namespace FocusTree.UI.Controls
                     SelectedNode = null;
                     RescaleToPanorama();
                 }
+                Parent.UpdateText("恢复备份");
             }
             Invalidate();
         }
-        private void NodeLeftDoubleClicked()
-        {
-            SelectedNode = PrevSelectNode;
-            RescaleToNode(SelectedNode.Value, false);
-            NodeInfoTip.Hide(this);
-            Invalidate();
-        }
+        //private void NodeLeftDoubleClicked()
+        //{
+        //    SelectedNode = PrevSelectNode;
+        //    RescaleToNode(SelectedNode.Value, false);
+        //    NodeInfoTip.Hide(this);
+        //    Invalidate();
+        //}
 
         //---- OnMouseMove ----//
 
         private void OnMouseMove(object sender, MouseEventArgs args)
         {
             if (Graph == null) { return; }
-            if (args.Button == MouseButtons.Left && DragMousePoint_Flag)
+            if (args.Button == MouseButtons.Left && DragGraph_Flag)
             {
                 DragGraph(args.Location);
+            }
+            else if (args.Button == MouseButtons.Left && DragNode_Flag)
+            {
+                DragNode(args.Location);
             }
             else if (args.Button == MouseButtons.None)
             {
@@ -482,14 +484,41 @@ namespace FocusTree.UI.Controls
         }
         private void DragGraph(Point newPoint)
         {
-            var dif = new Point(newPoint.X - DragMousePoint.X, newPoint.Y - DragMousePoint.Y);
+            var dif = new Point(newPoint.X - DragGraphMouseFlagPoint.X, newPoint.Y - DragGraphMouseFlagPoint.Y);
             if (Math.Abs(dif.X) >= 1 || Math.Abs(dif.Y) >= 1)
             {
                 var difvec = new Vector2(dif.X / GScale, dif.Y / GScale);
 
                 DrawingCenter -= difvec;
-                DragMousePoint = newPoint;
+                DragGraphMouseFlagPoint = newPoint;
                 Invalidate();
+            }
+        }
+        private void DragNode(Point newPoint)
+        {
+            NodeInfoTip.Hide(this);
+            var dif = new Point(newPoint.X - DragNodeMouseFlagPoint.X, newPoint.Y - DragNodeMouseFlagPoint.Y);
+            //if ((int)Math.Abs(dif.X) % (int)(ScalingUnit.X * GScale) == 0 || (int)Math.Abs(dif.Y) % (int)(ScalingUnit.Y * GScale) == 0) 
+            {
+                Invalidated -= UpdateGraph; 
+                DrawNodeMap();
+                string info = "拖动";
+                _draw_info(info,
+                    new Font(NodeFont, 25, FontStyle.Bold, GraphicsUnit.Pixel),
+                    new SolidBrush(Color.FromArgb(160, Color.DarkGray)),
+                    new SolidBrush(Color.FromArgb(255, Color.WhiteSmoke))
+                    );
+                Graphics g = Graphics.FromImage(Image);
+                RectangleF pointerRect = new(
+                    dif.X,
+                    dif.Y,
+                    NodeSize.Width * GScale,
+                    NodeSize.Height * GScale
+                    );
+                g.FillRectangle(new SolidBrush(Color.FromArgb(100, Color.Red)), pointerRect);
+                g.Flush(); g.Dispose();
+                Invalidate();
+                Invalidated += UpdateGraph;
             }
         }
         private void ShowNodeInfoTip(Point location)
@@ -514,7 +543,8 @@ namespace FocusTree.UI.Controls
             // 用于拖动事件
             if (args.Button == MouseButtons.Left)
             {
-                DragMousePoint_Flag = false;
+                DragGraph_Flag = false;
+                DragNode_Flag = false;
             }
         }
 
@@ -535,6 +565,7 @@ namespace FocusTree.UI.Controls
             // 缩放
             GScale = MathF.Min(GScale * mulDelta, MathF.Min(Width * 0.1f, Height * 0.2f) * 0.02f);
             Invalidate();
+            Parent.UpdateText("打开节点选项");
         }
 
         //---- Public ----//
@@ -624,6 +655,16 @@ namespace FocusTree.UI.Controls
             var point = MetaPointToCanvasPoint(Graph.GetNode(id).MetaPoint);
             var rect = new RectangleF(new(point.X, point.Y), NodeSize);
             return CanvasRectToDrawingRect(rect);
+        }
+        /// <summary>
+        /// 节点的绘图中心
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        private PointF NodeDrawingCenter(int id)
+        {
+            var rect = NodeDrawingRect(id);
+            return new(rect.X + rect.Width / 2, rect.Y + rect.Height / 2);
         }
         /// <summary>
         /// 判断矩形是否可见
@@ -803,13 +844,21 @@ namespace FocusTree.UI.Controls
             if (Graph == null) { return; }
             Graph.ReorderNodeIds();
             Invalidate();
+            Parent.UpdateText("重排节点ID");
+        }
+        public void ResetNodeMetaPoints()
+        {
+            if (Graph == null) { return; }
+            Graph.ResetNodeMetaPoints(true);
+            Invalidate();
+            Parent.UpdateText("自动排版");
         }
 
         #endregion
 
-        #region ---- 绘图操作调用 ----
+            #region ---- 绘图操作调用 ----
 
-        public void DrawAddtionalInfo(string info)
+            public void DrawAddtionalInfo(string info)
         {
             Invalidate();
             DrawInfo(info);

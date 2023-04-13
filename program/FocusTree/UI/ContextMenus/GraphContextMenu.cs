@@ -127,7 +127,7 @@ namespace FocusTree.UI.Controls
         private void BackupItemClicked(object sender, EventArgs args)
         {
             ToolStripMenuItem item = (ToolStripMenuItem)sender;
-            if (Display.GraphEdited)
+            if (Display.GraphEdited == true)
             {
                 if (MessageBox.Show("要放弃当前的更改切换到备份吗？", "提示 ", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No)
                 {

@@ -56,7 +56,6 @@ namespace FocusTree.Data.Focus
                 return false;
             }
             CreateNodesLinkes();
-            SetNodesMetaPoints();
             return true;
         }
         /// <summary>
@@ -81,7 +80,6 @@ namespace FocusTree.Data.Focus
             // 从节点表中删除此节点
             NodeCatalog.Remove(id);
             CreateNodesLinkes();
-            SetNodesMetaPoints();
             return true;
         }
         /// <summary>
@@ -100,7 +98,6 @@ namespace FocusTree.Data.Focus
             }
             NodeCatalog[id] = newData;
             CreateNodesLinkes();
-            SetNodesMetaPoints();
             return true;
         }
         /// <summary>
@@ -138,16 +135,6 @@ namespace FocusTree.Data.Focus
                     }
                 }
             }
-        }
-        /// <summary>
-        /// 设置所有节点的元坐标
-        /// </summary>
-        /// <returns></returns>
-        private void SetNodesMetaPoints()
-        {
-            var branches = GetBranches(GetRootNodes(), true, true);
-            BranchesCount = branches.Count;
-            CombineBranchNodes(branches);
         }
 
         #endregion
@@ -217,19 +204,18 @@ namespace FocusTree.Data.Focus
             steps.Pop();
         }
         /// <summary>
-        /// 合并不同分支上的相同节点，使节点在分支范围内尽量居中
+        /// 重置所有节点的元坐标
+        /// 合并不同分支上的相同节点，并使节点在分支范围内尽量居中
         /// </summary>
-        /// <param name="branches"></param>
+        /// <param name="resetAll">是否重置所有：无论元坐标有无值都重置</param>
         /// <returns></returns>
-        private void CombineBranchNodes(List<int[]> branches)
+        public void ResetNodeMetaPoints(bool resetAll)
         {
-            Dictionary<int, int[]> nodeCoordinates = new();
-            if (branches.Count == 0)
-            {
-                return;
-            }
+            var branches = GetBranches(GetRootNodes(), true, true);
+            if (branches.Count == 0) { return; }
             var width = branches.Count;
             var height = branches.Max(x => x.Length);
+            Dictionary<int, int[]> nodeCoordinates = new();
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
@@ -251,34 +237,36 @@ namespace FocusTree.Data.Focus
                     }
                 }
             }
+            Dictionary<int, Vector2> metaPoints = new();
             foreach (var coordinate in nodeCoordinates)
             {
+                if (!resetAll && NodeCatalog[coordinate.Key].MetaPoint != new Vector2(-1, -1)) { continue; }
                 var x = coordinate.Value[0] + (coordinate.Value[1] - coordinate.Value[0]) / 2;
                 var point = new Vector2(x, coordinate.Value[2]);
-                NodeCatalog[coordinate.Key].MetaPoint = point;
+                metaPoints[coordinate.Key] = point;
             }
-            CleanBlanksForX();
+            if (metaPoints.Count == 0) { return; }
+            CleanBlanksForX(metaPoints);
         }
         /// <summary>
         /// 清除横坐标之间无节点的间隙
         /// </summary>
-        /// <param name="metaPoints"></param>
-        /// <returns></returns>
-        private void CleanBlanksForX()
+        /// <returns>id对应元坐标的字典</returns>
+        private void CleanBlanksForX(Dictionary<int, Vector2> metaPoints)
         {
             // 集合相同x值的元坐标
             Dictionary<float, Dictionary<int, Vector2>> xMetaPoints = new();
-            foreach (var node in NodeCatalog)
+            foreach (var pair in metaPoints)
             {
-                var x = node.Value.MetaPoint.X;
+                var x = pair.Value.X;
                 if (xMetaPoints.ContainsKey(x) == false)
                 {
                     xMetaPoints.Add(x, new Dictionary<int, Vector2>());
                 }
-                xMetaPoints[x].Add(node.Key, node.Value.MetaPoint);
+                xMetaPoints[x].Add(pair.Key, pair.Value);
             }
             var blank = 0;
-            var width = NodeCatalog.Max(x => x.Value.MetaPoint.X);
+            var width = metaPoints.Max(x => x.Value.X);
             for (int x = 0; x <= width; x++)
             {
                 if (xMetaPoints.ContainsKey(x))
@@ -289,10 +277,7 @@ namespace FocusTree.Data.Focus
                         NodeCatalog[nodePoint.Key].MetaPoint = point;
                     }
                 }
-                else
-                {
-                    blank++;
-                }
+                else { blank++; }
             }
         }
         /// <summary>
@@ -320,7 +305,6 @@ namespace FocusTree.Data.Focus
             }
             NodeCatalog = TempNodeCatalog;
             CreateNodesLinkes();
-            SetNodesMetaPoints();
             if (this.IsEdit()) { this.EnqueueHistory(); }
         }
         /// <summary>
@@ -394,7 +378,6 @@ namespace FocusTree.Data.Focus
         private FocusGraph()
         {
         }
-
         /// <summary>
         /// 序列化预留方法，默认返回 null
         /// </summary>
@@ -403,7 +386,6 @@ namespace FocusTree.Data.Focus
         {
             return null;
         }
-
         public void ReadXml(XmlReader reader)
         {
             NodeCatalog = new();
@@ -432,9 +414,8 @@ namespace FocusTree.Data.Focus
                 }
             } while (reader.Read());
             CreateNodesLinkes();
-            SetNodesMetaPoints();
+            ResetNodeMetaPoints(false);
         }
-
         public void WriteXml(XmlWriter writer)
         {
             // <State>
@@ -512,7 +493,6 @@ namespace FocusTree.Data.Focus
             NodeCatalog = new();
             NodeCatalog = XmlIO.LoadFromXml<FocusGraph>(this.GetCachePath(data.Items[0])).NodeCatalog;
             CreateNodesLinkes();
-            SetNodesMetaPoints();
         }
 
         #endregion

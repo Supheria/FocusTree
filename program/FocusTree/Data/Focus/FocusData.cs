@@ -12,6 +12,10 @@ namespace FocusTree.Data.Focus
         /// </summary>
         public List<Sentence> Effects = new();
         /// <summary>
+        /// 元坐标
+        /// </summary>
+        public string MetaPoint;
+        /// <summary>
         /// 节点ID
         /// </summary>
         public string ID;
@@ -35,7 +39,7 @@ namespace FocusTree.Data.Focus
         /// 备注
         /// </summary>
         public string Ps;
-        public FocusData(string id, string name, string beginWithStar, string duration, string descript, string ps)
+        public FocusData(string id, string name, string beginWithStar, string duration, string descript, string ps, string metaPoint)
         {
             ID = id;
             Name = name;
@@ -43,6 +47,7 @@ namespace FocusTree.Data.Focus
             Duration = duration;
             Descript = descript;
             Ps = ps;
+            MetaPoint = metaPoint;
         }
     }
 }

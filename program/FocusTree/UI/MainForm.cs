@@ -27,7 +27,7 @@ namespace FocusTree.UI
                 this.MainForm_Menu_window.DropDownItems.Add(item);
             }
 #if DEBUG
-            //Display.LoadGraph("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\国策\\隐居村落.xml");
+            Display.LoadGraph("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\program\\FILES\\隐居村落.xml");
             //WindowState = FormWindowState.Minimized;
             //Display.SaveAsNew("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\国策\\国策测试\\test.xml");
             //Display.LoadGraph("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\国策\\国策测试\\test.xml");
@@ -43,7 +43,7 @@ namespace FocusTree.UI
 
         private void MainForm_Menu_file_open_Click(object sender, EventArgs e)
         {
-            if (Display.Graph != null && Display.GraphEdited)
+            if (Display.GraphEdited == true)
             {
                 if (MessageBox.Show("要放弃当前的更改吗？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No)
                 {
@@ -57,10 +57,12 @@ namespace FocusTree.UI
             }
             MainForm_Openfile.InitialDirectory = Path.GetDirectoryName(MainForm_Openfile.FileName);
             Display.LoadGraph(MainForm_Openfile.FileName);
+            UpdateText();
         }
         private void MainForm_Menu_file_save_Click(object sender, EventArgs e)
         {
             Display.SaveGraph();
+            UpdateText();
         }
         private void MainForm_Menu_file_saveas_Click(object sender, EventArgs e)
         {
@@ -70,6 +72,7 @@ namespace FocusTree.UI
             {
                 Display.SaveAsNew(MainForm_Savefile.FileName);
             }
+            UpdateText();
         }
 
         #endregion
@@ -111,7 +114,7 @@ namespace FocusTree.UI
         private void BackupItemClicked(object sender, EventArgs args)
         {
             ToolStripMenuItem item = (ToolStripMenuItem)sender;
-            if (Display.GraphEdited)
+            if (Display.GraphEdited == true)
             {
                 if (MessageBox.Show("要放弃当前的更改切换到备份吗？", "提示 ", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No)
                 {
@@ -124,22 +127,23 @@ namespace FocusTree.UI
         {
             Display.Graph.DeleteBackup();
             Display.LoadGraph(Display.FilePath);
+            MainForm_StatusStrip_status.Text = "已删除";
         }
         private void MainForm_Menu_file_backup_clear_Click(object sender, EventArgs e)
         {
-            MainForm_StatusStrip_status.Text = "正在打包"; 
+            MainForm_StatusStrip_status.Text = "正在打包";
             FolderBrowserDialog folderBrowser = new()
             {
                 Description = "选择要打包到文件夹"
             };
-            if (folderBrowser.ShowDialog() == DialogResult.Cancel) 
+            if (folderBrowser.ShowDialog() == DialogResult.Cancel)
             {
                 MainForm_StatusStrip_status.Text = "已取消";
                 return;
             }
             var zipPath = Path.Combine(folderBrowser.SelectedPath, DateTime.Now.ToString("yyyy年MM月dd日 HH时mm分ss秒") + ".ftbp");
             FileBackup.Clear(zipPath);
-            MainForm_StatusStrip_status.Text = "已完成";
+            MainForm_StatusStrip_status.Text = "备份已打包";
         }
         private void MainForm_Menu_file_backup_unpack_Click(object sender, EventArgs e)
         {
@@ -152,7 +156,7 @@ namespace FocusTree.UI
             }
             var zipPath = MainForm_Openfile.FileName;
             ZipFile.ExtractToDirectory(zipPath, FileBackup.RootDirectoryName, true);
-            MainForm_StatusStrip_status.Text = "已完成";
+            MainForm_StatusStrip_status.Text = "备份已解包";
         }
 
         #endregion
@@ -193,11 +197,11 @@ namespace FocusTree.UI
 
         #region ==== Camera ====
 
-        private void MainForm_Menu_camera_panorama_Click(object sender, EventArgs e)
+        private void MainForm_Menu_loc_panorama_Click(object sender, EventArgs e)
         {
             Display.CamLocatePanorama();
         }
-        private void MainForm_Menu_camera_focus_Click(object sender, EventArgs e)
+        private void MainForm_Menu_loc_focus_Click(object sender, EventArgs e)
         {
             Display.CamLocateSelected();
         }
@@ -223,6 +227,10 @@ namespace FocusTree.UI
         private void MainForm_Menu_graph_reorderIds_Click(object sender, EventArgs e)
         {
             Display.ReorderNodeIds();
+        }
+        private void MainForm_Menu_graph_setNodePointAuto_Click(object sender, EventArgs e)
+        {
+
         }
 
         #endregion
@@ -309,36 +317,45 @@ namespace FocusTree.UI
 
         #region ==== MainForm ====
 
-        public void UpdateText()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="motion">编辑动作</param>
+        public void UpdateText(string motion)
+        {
+            MainForm_StatusStrip_status.Text = motion;
+        }
+        private void UpdateText()
         {
             MainForm_ProgressBar.Value = 0;
-            if (Display.Graph == null)
+            if (Display.ReadOnly)
+            {
+                Text = Display.FileName;
+                MainForm_StatusStrip_filename.Text = Display.FilePath;
+                MainForm_StatusStrip_status.Text = "正在预览";
+            }
+            else if (Display.GraphEdited == true)
+            {
+                Text = Display.FileName;
+                MainForm_StatusStrip_filename.Text = Display.FilePath + "*";
+                MainForm_StatusStrip_status.Text = "正在编辑";
+            }
+            else if (Display.GraphEdited == false)
+            {
+                Text = Display.FileName;
+                MainForm_StatusStrip_filename.Text = Display.FilePath;
+                MainForm_StatusStrip_status.Text = "就绪";
+            }
+            else
             {
                 Text = "FocusTree";
                 MainForm_StatusStrip_status.Text = "等待打开文件";
                 MainForm_StatusStrip_filename.Text = "";
-                return;
-            }
-            Text = Display.FileName;
-            if (Display.ReadOnly)
-            {
-                MainForm_StatusStrip_filename.Text = Display.FilePath;
-                MainForm_StatusStrip_status.Text = "正在预览";
-            }
-            else if (Display.GraphEdited)
-            {
-                MainForm_StatusStrip_filename.Text = Display.FilePath + "*";
-                MainForm_StatusStrip_status.Text = "正在编辑";
-            }
-            else
-            {
-                MainForm_StatusStrip_filename.Text = Display.FilePath;
-                MainForm_StatusStrip_status.Text = "就绪";
             }
         }
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (Display.Graph == null || !Display.GraphEdited)
+            if (Display.Graph == null || Display.GraphEdited == false)
             {
                 FileCache.Clear();
                 return;

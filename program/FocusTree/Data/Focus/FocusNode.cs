@@ -23,10 +23,6 @@ namespace FocusTree.Data.Focus
         /// </summary>
         public HashSet<int> Links = new();
         /// <summary>
-        /// （自动生成）元坐标
-        /// </summary>
-        public Vector2 MetaPoint;
-        /// <summary>
         /// 原始效果语句
         /// </summary>
         public List<string> RawEffects = new();
@@ -42,6 +38,24 @@ namespace FocusTree.Data.Focus
         {
             get { return Data.Effects.Select(x => x.ToString()).ToList(); }
             set { value.ForEach(x => Data.Effects.Add(Sentence.FromString(x))); }
+        }
+        /// <summary>
+        /// 元坐标
+        /// </summary>
+        public Vector2 MetaPoint
+        {
+            get 
+            {
+                var pair = ArrayString.Reader(Data.MetaPoint);
+                try
+                {
+                    float x = float.Parse(pair[0]);
+                    float y = float.Parse(pair[1]);
+                    return new(x < 0 ? -1 : x, y < 0 ? -1 : y);
+                }
+                catch { return new(-1, -1); }
+            }
+            set { Data.MetaPoint = ArrayString.Writer(new string[] { value.X.ToString(), value.Y.ToString() }); }
         }
         /// <summary>
         /// 节点ID
@@ -117,13 +131,15 @@ namespace FocusTree.Data.Focus
             var duration = reader.GetAttribute("Duration");
             var descript = reader.GetAttribute("Descript");
             var ps = reader.GetAttribute("Ps.");
+            var metaPoint = reader.GetAttribute("Point");
             Data = new(
                 id,
                 name ?? string.Empty,
                 star ?? "false",
                 duration ?? "0",
                 descript ?? string.Empty,
-                ps ?? string.Empty
+                ps ?? string.Empty,
+                metaPoint ?? "-1, -1"
                 );
 
             while (reader.Read())
@@ -241,6 +257,7 @@ namespace FocusTree.Data.Focus
             writer.WriteAttributeString("Duration", Data.Duration);
             writer.WriteAttributeString("Descript", Data.Descript);
             writer.WriteAttributeString("Ps.", Data.Ps);
+            writer.WriteAttributeString("Point", Data.MetaPoint);
 #if RAW_EFFECTS
             // <RawEffects>
             writer.WriteStartElement("RawEffects");
