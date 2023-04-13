@@ -3,6 +3,7 @@ using FocusTree.Data.Focus;
 using FocusTree.IO;
 using FocusTree.IO.FileManege;
 using FocusTree.UI.Controls;
+using System.IO.Compression;
 using System.Text.RegularExpressions;
 
 namespace FocusTree.UI
@@ -18,8 +19,10 @@ namespace FocusTree.UI
 
             foreach (var name in Display.ToolDialogs.Keys)
             {
-                ToolStripMenuItem item = new();
-                item.Text = name;
+                ToolStripMenuItem item = new()
+                {
+                    Text = name
+                };
                 item.Click += MainForm_Menu_window_display_toolDialog_Click;
                 this.MainForm_Menu_window.DropDownItems.Add(item);
             }
@@ -67,10 +70,6 @@ namespace FocusTree.UI
             {
                 Display.SaveAsNew(MainForm_Savefile.FileName);
             }
-        }
-        private void MainForm_Menu_file_backup_clear_Click(object sender, EventArgs e)
-        {
-            FileBackup.Clear();
         }
 
         #endregion
@@ -125,6 +124,35 @@ namespace FocusTree.UI
         {
             Display.Graph.DeleteBackup();
             Display.LoadGraph(Display.FilePath);
+        }
+        private void MainForm_Menu_file_backup_clear_Click(object sender, EventArgs e)
+        {
+            MainForm_StatusStrip_status.Text = "正在打包"; 
+            FolderBrowserDialog folderBrowser = new()
+            {
+                Description = "选择要打包到文件夹"
+            };
+            if (folderBrowser.ShowDialog() == DialogResult.Cancel) 
+            {
+                MainForm_StatusStrip_status.Text = "已取消";
+                return;
+            }
+            var zipPath = Path.Combine(folderBrowser.SelectedPath, DateTime.Now.ToString("yyyy年MM月dd日 HH时mm分ss秒") + ".ftbp");
+            FileBackup.Clear(zipPath);
+            MainForm_StatusStrip_status.Text = "已完成";
+        }
+        private void MainForm_Menu_file_backup_unpack_Click(object sender, EventArgs e)
+        {
+            MainForm_StatusStrip_status.Text = "正在解包";
+            MainForm_Openfile.Filter = "备份打包文件|*.ftbp";
+            if (MainForm_Openfile.ShowDialog() == DialogResult.Cancel)
+            {
+                MainForm_StatusStrip_status.Text = "已取消";
+                return;
+            }
+            var zipPath = MainForm_Openfile.FileName;
+            ZipFile.ExtractToDirectory(zipPath, FileBackup.RootDirectoryName, true);
+            MainForm_StatusStrip_status.Text = "已完成";
         }
 
         #endregion
@@ -316,10 +344,10 @@ namespace FocusTree.UI
                 return;
             }
             var result = MessageBox.Show("是否保存当前编辑？", "提示", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-            if (result == DialogResult.Cancel) 
-            { 
+            if (result == DialogResult.Cancel)
+            {
                 e.Cancel = true;
-                return; 
+                return;
             }
             if (result == DialogResult.Yes)
             {

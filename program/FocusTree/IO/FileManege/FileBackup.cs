@@ -16,13 +16,13 @@ namespace FocusTree.IO.FileManege
         /// <summary>
         /// 子根目录
         /// </summary>
-        public static string SubRootDirectoryName { get { return Path.Combine(RootDirectoryInfo.FullName, "backups"); } }
+        public static string RootDirectoryName { get { return RootDirectoryInfo.FullName; } }
         /// <summary>
         /// 对象根目录
         /// </summary>
         private static string DirectoryName<T>(this T obj) where T : IBackupable
         {
-            var dir = Path.Combine(SubRootDirectoryName, obj.FileManageDirName);
+            var dir = Path.Combine(RootDirectoryName, obj.FileManageDirName);
             Directory.CreateDirectory(dir);
             return dir;
         }
@@ -31,7 +31,7 @@ namespace FocusTree.IO.FileManege
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
-        /// <returns>root\subRoot\obj's Root\objHash\dateTime</returns>
+        /// <returns>root\obj's Root\objHash\dateTime</returns>
         private static string BackupPath<T>(this T obj) where T : IBackupable
         {
             var objHash = obj.GetHashString();
@@ -135,17 +135,11 @@ namespace FocusTree.IO.FileManege
         /// <summary>
         /// 清空根目录并打成压缩包
         /// </summary>
-        public static void Clear()
+        public static void Clear(string zipPath)
         {
-            FolderBrowserDialog folderBrowser = new()
-            {
-                Description = "选择要打包到文件夹"
-            };
-            if (folderBrowser.ShowDialog() == DialogResult.Cancel) { return; }
-            var zipPath = Path.Combine(folderBrowser.SelectedPath, DateTime.Now.ToString("yyyy年MM月dd日 HH时mm分ss秒") + ".zip");
-            ZipFile.CreateFromDirectory(SubRootDirectoryName, zipPath);
-            Directory.Delete(SubRootDirectoryName, true);
-            Directory.CreateDirectory(SubRootDirectoryName);
+            ZipFile.CreateFromDirectory(RootDirectoryName, zipPath);
+            Directory.Delete(RootDirectoryName, true);
+            Directory.CreateDirectory(RootDirectoryName);
 
             Process p = new();
             p.StartInfo.FileName = "explorer.exe";
