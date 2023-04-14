@@ -206,6 +206,10 @@ namespace FocusTree.UI.Controls
         /// 栅格坐标系原点
         /// </summary>
         Point LatticeOriginLeftTop = new(0, 0);
+        struct LatticeCell
+        {
+
+        }
         private void DrawLattice(object sender, InvalidateEventArgs e)
         {
             Image ??= new Bitmap(Size.Width, Size.Height);
@@ -214,57 +218,89 @@ namespace FocusTree.UI.Controls
 
             var cellSize = NodeMetaSize + NodePaddingMetaSize;
             Point drawStarter = new();
+            Point cellStarter = new();
+            Point nodeStarter = new();
             //
             // Left
-            //
-            var diffOfLeft = LatticeOriginLeftTop.X - ClientRectangle.Left;
-            drawStarter.X = diffOfLeft % cellSize.Width;
-            if (drawStarter.X < 0) 
-            { 
-                drawStarter.X += cellSize.Width; 
-            }
+            var drawHeight = ClientRectangle.Height;
+            var diffOfLeft = LatticeOriginLeftTop.X - ClientRectangle.Left; 
+            cellStarter.X = diffOfLeft % cellSize.Width;
+            nodeStarter.X = (diffOfLeft - NodeMetaSize.Width) % cellSize.Width;
+            cellStarter.X = cellStarter.X < 0 ? cellStarter.X + cellSize.Width : cellStarter.X;
+            nodeStarter.X = nodeStarter.X < 0 ? nodeStarter.X + cellSize.Width : nodeStarter.X;
             var columNumber = ClientRectangle.Width / cellSize.Width + 1;
-            for (int i = 0; i < columNumber; i++)
-            {
-                var drawHeight = Height;
-                var nodeLeft = drawStarter.X + cellSize.Width * i;
-                g.DrawLine(new Pen(Color.Orange, 2),
-                    new Point(nodeLeft, 0),
-                    new Point(nodeLeft, drawHeight)
-                    );
-                var nodeRight = nodeLeft - cellSize.Width + NodeMetaSize.Width;
-                g.DrawLine(new Pen(Color.Orange, 1),
-                    new Point(nodeRight, 0),
-                    new Point(nodeRight, drawHeight)
-                    );
-            }
+            columNumber = columNumber % cellSize.Width == 0 ? columNumber-- : columNumber;
             //
             // Top
             //
-            int diffOfTop = LatticeOriginLeftTop.Y - ClientRectangle.Top;
-            drawStarter.Y = diffOfTop % cellSize.Height;
-            if (drawStarter.Y < 0) 
+            var drawWidth = ClientRectangle.Width;
+            var diffOfTop = LatticeOriginLeftTop.Y - ClientRectangle.Top;
+            cellStarter.Y = diffOfTop % cellSize.Height;
+            nodeStarter.Y = (diffOfTop - NodeMetaSize.Height) % cellSize.Height;
+            cellStarter.Y = cellStarter.Y < 0 ? cellStarter.Y + cellSize.Height : cellStarter.Y;
+            nodeStarter.Y = nodeStarter.Y < 0 ? nodeStarter.Y + cellSize.Height : nodeStarter.Y;
+            var rowNumber = ClientRectangle.Height / cellSize.Height + 1;
+            rowNumber = rowNumber % cellSize.Height == 0 ? rowNumber-- : rowNumber;
+            //if (drawStarter.Y < 0)
+            //{
+            //    drawStarter.Y += cellSize.Height;
+            //}
+
+            //
+            // colum
+            //
+            for (int i = 0; i < columNumber; i++)
             {
-                drawStarter.Y += cellSize.Height;
+                
+                var cellLeft = cellStarter.X + cellSize.Width * i;
+                g.DrawLine(new Pen(Color.Red, 2),
+                    new Point(cellLeft, 0),
+                    new Point(cellLeft, drawHeight)
+                    );
+                //drawHeight = NodeMetaSize.Height;
+                var nodeLeft = nodeStarter.X + cellSize.Width * i;
+                g.DrawLine(new Pen(Color.Orange, 1),
+                        new Point(nodeLeft, 0),
+                        new Point(nodeLeft, drawHeight)
+                        );
+                //for (int j = 0; j < rowNumber; j++)
+                //{
+                //    var nodeTop = drawStarter.Y + cellSize.Height * j + NodePaddingMetaSize.Height;
+                //    g.DrawLine(new Pen(Color.Orange, 1),
+                //        new Point(nodeLeft, nodeTop),
+                //        new Point(nodeLeft, nodeTop + drawHeight)
+                //        );
+                //}
+                //var nodeRight = nodeLeft - cellSize.Width + NodeMetaSize.Width;
+                //g.DrawLine(new Pen(Color.Orange, 1),
+                //    new Point(nodeRight, 0),
+                //    new Point(nodeRight, drawHeight)
+                //    );
             }
-            int rowNumber = ClientRectangle.Height / cellSize.Height + 1;
+            //
+            // raw
+            //
             for (int i = 0; i < rowNumber; i++)
             {
-                var drawWidth = Width;
-                var nodeTop = drawStarter.Y + cellSize.Height * i;
-                g.DrawLine(new Pen(Color.BlueViolet, 2),
+                var cellTop = cellStarter.Y + cellSize.Height * i;
+                g.DrawLine(new Pen(Color.Red, 2),
+                    new Point(0, cellTop),
+                    new Point(drawWidth, cellTop)
+                    );
+                var nodeTop = nodeStarter.Y + cellSize.Height * i;
+                g.DrawLine(new Pen(Color.BlueViolet, 1),
                     new Point(0, nodeTop),
                     new Point(drawWidth, nodeTop)
                     );
-                var nodeBottom = nodeTop - cellSize.Height + NodeMetaSize.Height;
-                g.DrawLine(new Pen(Color.BlueViolet, 1),
-                    new Point(0, nodeBottom),
-                    new Point(drawWidth, nodeBottom)
-                    );
+                //var nodeBottom = nodeTop - cellSize.Height + NodeMetaSize.Height;
+                //g.DrawLine(new Pen(Color.BlueViolet, 1),
+                //    new Point(0, nodeBottom),
+                //    new Point(drawWidth, nodeBottom)
+                //    );
             }
             // test
             g.DrawEllipse(new Pen(Color.Red), LatticeOriginLeftTop.X - 5, LatticeOriginLeftTop.Y - 5, 10, 10);
-            Parent.Text = $"columNumber {columNumber}, rowNumber{rowNumber}, {drawStarter}, {LatticeOriginLeftTop}";
+            Parent.Text = $"columNumber {columNumber}, rowNumber{rowNumber}, {cellStarter}|{nodeStarter}, {LatticeOriginLeftTop}";
 
             g.Flush(); g.Dispose();
         }
