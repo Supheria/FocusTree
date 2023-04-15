@@ -209,8 +209,9 @@ namespace FocusTree.UI.Controls
             Graphics g = Graphics.FromImage(Image);
             g.Clear(Color.White);
 
-            Lattice.ColNumber = 15;
-            Lattice.RowNumber = 10;
+            //Lattice.ColNumber = 80;
+            //Lattice.RowNumber = 80;
+            
             Lattice.Bounds = ClientRectangle;
 
             for (int i = 0; i < Lattice.ColNumber; i++)
@@ -220,7 +221,7 @@ namespace FocusTree.UI.Controls
                     LatticeCell.ColRowInLattice = new(i, j);
                     var drawLeftRight = LatticeCell.ToDrawLeftRight();
                     var drawTopBottom = LatticeCell.ToDrawTopBottom();
-                    var cellPen = new Pen(Color.Red, 2);
+                    var cellPen = new Pen(Color.AliceBlue, 1);
                     //
                     // cell main: LeftBottom -> LeftTop -> TopRight
                     //
@@ -249,7 +250,7 @@ namespace FocusTree.UI.Controls
                     }
                     var nodeDrawLeftRight = LatticeCell.NodeToDrawLeftRight();
                     var nodeDrawTopBottom = LatticeCell.NodeToDrawTopBottom();
-                    var nodePen = new Pen(Color.Orange, 1);
+                    var nodePen = new Pen(Color.Orange, 1.5f);
                     //
                     // node main: LeftBottom -> LeftTop -> TopRight
                     //
@@ -264,7 +265,7 @@ namespace FocusTree.UI.Controls
                     //
                     if (nodeDrawLeftRight.Length > 1)
                     {
-                        g.DrawLine(new Pen(Color.Orange, 1),
+                        g.DrawLine(nodePen,
                             new Point(nodeDrawLeftRight[1].Item1, nodeDrawTopBottom[0].Item1),
                             new Point(nodeDrawLeftRight[1].Item2, nodeDrawTopBottom[0].Item1)
                             );
@@ -281,7 +282,7 @@ namespace FocusTree.UI.Controls
 
             // test
             g.DrawEllipse(new Pen(Color.Red), Lattice.OriginLeft - 10, Lattice.OriginTop - 10, 10, 10);
-            //Parent.Text = $"col {Lattice.ColNumber},row {Lattice.RowNumber}, {Lattice.CellLeftOffset},{Lattice.CellTopOffset} {Lattice.OriginLeftTop}";
+            
 
             g.Flush(); g.Dispose();
         }
@@ -577,6 +578,11 @@ namespace FocusTree.UI.Controls
         private void OnMouseMove(object sender, MouseEventArgs args)
         {
 #if REBUILD
+
+
+            Parent.Text = $"cellWidth {LatticeCell.Width},cellHeight {LatticeCell.Height}, origin: {Lattice.OriginLeft}, {Lattice.OriginTop}, cursor: {args.Location}";
+
+
             if (args.Button == MouseButtons.Left && DragGraph_Flag)
             {
                 var newPoint = args.Location;

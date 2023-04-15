@@ -14,11 +14,11 @@ namespace FocusTree.UI.Graph
         /// <summary>
         /// 栅格行数
         /// </summary>
-        public static int RowNumber = 0;
+        public static int RowNumber { get; private set; }
         /// <summary>
         /// 栅格列数
         /// </summary>
-        public static int ColNumber = 0;
+        public static int ColNumber { get; private set; }
         /// <summary>
         /// 栅格放置区域（绘图区域应该调用 ToDrawRect）
         /// </summary>
@@ -26,9 +26,9 @@ namespace FocusTree.UI.Graph
         {
             set
             {
-                LatticeCell.Width = value.Width / ColNumber;
+                ColNumber = value.Width / LatticeCell.Width;
                 RowWidth = ColNumber * LatticeCell.Width;
-                LatticeCell.Height = value.Height / RowNumber; // 如果 ColRowNumber 未赋值则会触发除以零的异常
+                RowNumber = value.Height / LatticeCell.Height;
                 ColHeight = RowNumber * LatticeCell.Height;
                 var deviOfDiffInWidth = (int)((float)(value.Width - RowWidth) * 0.5f);
                 var deviOfDiffInHeight = (int)((float)(value.Height - ColHeight) * 0.5f);
@@ -86,6 +86,16 @@ namespace FocusTree.UI.Graph
         /// 格元纵坐标偏移量，对栅格坐标系原点相对于 ToDrawRect 的左上角的偏移量，在格元大小内实施相似偏移量
         /// </summary>
         public static int CellOffsetTop;
+        /// <summary>
+        /// 
+        /// </summary>
+        public static int ScaleFactor = 1;
+        /// <summary>
+        /// 从左向右的水平线在栅格绘图区域内的绘制
+        /// </summary>
+        /// <param name="left">左端点</param>
+        /// <param name="width">线长</param>
+        /// <returns>返回从左向右的水平线的起点坐标和终点坐标的数对。如果线需要分割，则返回数组里有一个额外的分割剩余线段的坐标数对。</returns>
         public static (int, int)[] LineToDrawInHorizon(int left, int width)
         {
             if (left < ToDrawRect.Left) { left += ToDrawRect.Width; }
@@ -104,6 +114,12 @@ namespace FocusTree.UI.Graph
                 };
             }
         }
+        /// <summary>
+        /// 从上向下的垂直线在栅格绘图区域内的绘制
+        /// </summary>
+        /// <param name="top">上端点</param>
+        /// <param name="height">线高</param>
+        /// <returns>返回从上向下的垂直线的起点坐标和终点坐标的数对。如果线需要分割，则返回数组里有一个额外的分割剩余线段的坐标数对。</returns>
         public static (int, int)[] LineToDrawInVertical(int top, int height)
         {
             if (top < ToDrawRect.Top) { top += ToDrawRect.Height; }

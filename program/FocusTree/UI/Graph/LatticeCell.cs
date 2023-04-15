@@ -12,6 +12,9 @@ namespace FocusTree.UI.Graph
     /// </summary>
     struct LatticeCell
     {
+        /// <summary>
+        /// 根据格元行列索引设置真实左上角坐标（索引从0开始）
+        /// </summary>
         public static Point ColRowInLattice
         {
             get => colRowInLattice;
@@ -32,11 +35,16 @@ namespace FocusTree.UI.Graph
         /// </summary>
         public static int Width 
         {
-            get => width;
+            get
+            {
+                var result = width < WidthMinimum ? WidthMinimum : width > WidthMaximum ? WidthMaximum : width;
+                NodePaddingWidth = (int)(result * 0.3f);
+                return result;
+            }
             set
             {
-                width = value;
-                NodePaddingWidth = (int)(value * 0.3f);
+                width = value < WidthMinimum ? WidthMinimum : value > WidthMaximum ? WidthMaximum : value;
+                NodePaddingWidth = (int)(width * 0.3f);
             }
         }
         static int width;
@@ -45,14 +53,35 @@ namespace FocusTree.UI.Graph
         /// </summary>
         public static int Height
         {
-            get => height;
+            get
+            {
+                var reault = height < HeightMinimum ? HeightMinimum : height > HeightMaximum ? HeightMaximum : height;
+                NodePaddingHeight = (int)(reault * 0.3f);
+                return reault;
+            }
             set
             {
-                height = value;
-                NodePaddingHeight = (int)(Height * 0.3f);
+                height = value < HeightMinimum ? HeightMinimum : value > HeightMaximum ? HeightMaximum : value;
+                NodePaddingHeight = (int)(height * 0.3f);
             }
         }
         static int height;
+        /// <summary>
+        /// 格元宽最小值
+        /// </summary>
+        public static int WidthMinimum = 50;
+        /// <summary>
+        /// 格元宽最小值
+        /// </summary>
+        public static int WidthMaximum = 200;
+        /// <summary>
+        /// 格元高最小值
+        /// </summary>
+        public static int HeightMinimum = 30;
+        /// <summary>
+        /// 格元高最大值
+        /// </summary>
+        public static int HeightMaximum = 100;
         /// <summary>
         /// 节点 Left 到格元 Left 的空隙
         /// </summary>
