@@ -4,6 +4,7 @@ using FocusTree.Data;
 using FocusTree.Data.Focus;
 using FocusTree.IO;
 using FocusTree.IO.FileManege;
+using FocusTree.UI.Graph;
 using FocusTree.UI.NodeToolDialogs;
 using System.IO;
 using System.Numerics;
@@ -202,236 +203,6 @@ namespace FocusTree.UI.Controls
             Invalidated += UpdateGraph;
             ControlResize.SetTag(this);
         }
-        /// <summary>
-        /// 格元
-        /// </summary>
-        struct LatticeCell
-        {
-            public static Point LeftTop
-            {
-                set
-                {
-                    Left = value.X + Lattice.CellLeftOffset;
-                    Top = value.Y + Lattice.CellTopOffset;
-                }
-            }
-            /// <summary>
-            /// 格元元左边界（绘图应该调用 ToDrawLeft）
-            /// </summary>
-            public static int Left
-            {
-                set
-                {
-                    var mainRect = Lattice.ToDrawRect;
-                    var left = mainRect.Left + value;
-                    if (left < mainRect.Left) { left += mainRect.Width; }
-                    else if (left > mainRect.Right) {  left -= mainRect.Width; }
-                    var realWidth = mainRect.Right - left;
-                    var cellWidth = Lattice.CellWidth;
-                    if (realWidth >= cellWidth)
-                    {
-                        ToDrawLeft = new (int, int)[] { (left, left + cellWidth) };
-                    }
-                    else
-                    {
-                        ToDrawLeft = new (int, int)[]
-                        {
-                            (left, left + realWidth),
-                            (mainRect.Left, mainRect.Left + cellWidth - realWidth)
-                        };
-                    }
-                    //
-                    // node left
-                    //
-                    left = mainRect.Left + value + Lattice.NodePaddingWidth;
-                    if (left < mainRect.Left) { left += mainRect.Width; }
-                    else if (left > mainRect.Right) { left -= mainRect.Width; }
-                    realWidth = mainRect.Right - left;
-                    var nodeWidth = Lattice.CellWidth - Lattice.NodePaddingWidth;
-                    if (realWidth >= nodeWidth)
-                    {
-                        NodeToDrawLeft = new (int, int)[] { (left, left + nodeWidth) };
-                    }
-                    else
-                    {
-                        NodeToDrawLeft = new (int, int)[]
-                        {
-                            (left, left + realWidth),
-                            (mainRect.Left, mainRect.Left + nodeWidth - realWidth)
-                        };
-                    }
-                }
-            }
-            /// <summary>
-            /// 栅格区域内格元绘图左边界
-            /// </summary>
-            public static (int, int)[] ToDrawLeft { get; private set; }
-            /// <summary>
-            /// 节点栅格区域内绘图上边界(起点x, 终点x)（如果分裂则返回右、左顺序的两个数对）
-            /// </summary>
-            public static (int, int)[] NodeToDrawLeft { get; private set; }
-            /// <summary>
-            /// 格元元左上边界（绘图应该调用 ToDrawTop）
-            /// </summary>
-            public static int Top
-            {
-                set
-                {
-                    var mainRect = Lattice.ToDrawRect;
-                    var top = mainRect.Top + value;
-                    if (top < mainRect.Top) { top += mainRect.Height; }
-                    else if (top > mainRect.Bottom) { top -= mainRect.Height; }
-                    var realHeight = mainRect.Bottom - top;
-                    var cellHeight = Lattice.CellHeight;
-                    if (realHeight >= cellHeight)
-                    {
-                        ToDrawTop = new (int, int)[] { (top, top + cellHeight) };
-                    }
-                    else
-                    {
-                        ToDrawTop = new (int, int)[]
-                        {
-                            (top, top + realHeight),
-                            (mainRect.Top, mainRect.Top + cellHeight - realHeight)
-                        };
-                    }
-                    //
-                    // node top
-                    //
-                    top = mainRect.Top + value + Lattice.NodePaddingHeight;
-                    if (top < mainRect.Top) { top += mainRect.Height; }
-                    else if (top > mainRect.Bottom) { top -= mainRect.Height; }
-                    realHeight = mainRect.Bottom - top;
-                    var nodeHeight = Lattice.CellHeight - Lattice.NodePaddingHeight;
-                    if (realHeight >= nodeHeight)
-                    {
-                        NodeToDrawTop = new (int, int)[] { (top, top + nodeHeight) };
-                    }
-                    else
-                    {
-                        NodeToDrawTop = new (int, int)[]
-                        {
-                            (top, top + realHeight),
-                            (mainRect.Top, mainRect.Top + nodeHeight - realHeight)
-                        };
-                    }
-                    
-                }
-            }
-            /// <summary>
-            /// 栅格区域内格元绘图上边界
-            /// </summary>
-            public static (int, int)[] ToDrawTop { get; private set; }
-            /// <summary>
-            /// 节点栅格区域内绘图上边界(起点y, 终点y)（如果分裂则返回下、上顺序的两个数对）
-            /// </summary>
-            public static (int, int)[] NodeToDrawTop { get; private set; }
-        }
-        /// <summary>
-        /// 栅格
-        /// </summary>
-        struct Lattice
-        {
-            /// <summary>
-            /// 栅格行数
-            /// </summary>
-            public static int RowNumber { get; set; } = 0;
-            /// <summary>
-            /// 栅格列数
-            /// </summary>
-            public static int ColNumber { get; set; } = 0;
-            /// <summary>
-            /// 栅格放置区域（绘图区域应该调用 ToDrawRect）
-            /// </summary>
-            public static Rectangle Bounds 
-            {
-                set
-                {
-                    CellWidth = value.Width / ColNumber;
-                    RowWidth = ColNumber * CellWidth;
-                    NodePaddingWidth = (int)(CellWidth * 0.3f);
-                    CellHeight = value.Height / RowNumber; // 如果 ColRowNumber 未赋值则会触发除以零的异常
-                    ColHeight = RowNumber * CellHeight;
-                    NodePaddingHeight = (int)(CellHeight * 0.3f);
-                    var deviOfDiffInWidth = (int)((float)(value.Width - RowWidth) * 0.5f);
-                    var deviOfDiffInHeight = (int)((float)(value.Height - ColHeight) * 0.5f);
-                    ToDrawRect = new Rectangle(
-                        value.X + deviOfDiffInWidth,
-                        value.Y + deviOfDiffInHeight,
-                        RowWidth,
-                        ColHeight
-                        );
-                }
-            }
-            /// <summary>
-            /// 格元宽长（根据给定放置区域和给定列数自动生成）
-            /// </summary>
-            public static int CellWidth { get; private set; }
-            /// <summary>
-            /// 格元高长（根据给定放置区域和给定行数自动生成）
-            /// </summary>
-            public static int CellHeight { get; private set; }
-            /// <summary>
-            /// 节点 Left 到格元 Left 的空隙
-            /// </summary>
-            public static int NodePaddingWidth { get; private set; }
-            /// <summary>
-            /// 节点 Top 到格元 Top 的空隙
-            /// </summary>
-            public static int NodePaddingHeight { get; private set; }
-            /// <summary>
-            /// 栅格绘图区域（根据给定放置区域、列数、行数自动生成，并在给定放置区域内居中）
-            /// </summary>
-            public static Rectangle ToDrawRect { get; private set; }
-            /// <summary>
-            /// 栅格总列宽
-            /// </summary>
-            public static int RowWidth { get; private set; }
-            /// <summary>
-            /// 栅格总行高
-            /// </summary>
-            public static int ColHeight { get; private set; }
-            /// <summary>
-            /// 栅格坐标系原点
-            /// </summary>
-            public static Point OriginLeftTop
-            {
-                get => new(originLeft, originTop);
-                set
-                {
-                    OriginLeft = value.X;
-                    OriginTop = value.Y;
-                }
-            }
-            public static int OriginLeft
-            {
-                get => originLeft;
-                set
-                {
-                    originLeft = value;
-                    CellLeftOffset = (value - ToDrawRect.X) % CellWidth;
-                }
-            }
-            /// <summary>
-            /// 格元横坐标偏移量，对栅格坐标系原点相对于 ToDrawRect 的左上角的偏移量，在格元大小内实施相似偏移量
-            /// </summary>
-            public static int CellLeftOffset { get; private set; }
-            static int originLeft;
-            public static int OriginTop
-            {
-                get => originTop;
-                set
-                {
-                    originTop = value;
-                    CellTopOffset = (value - ToDrawRect.Y) % CellHeight;
-                }
-            }
-            static int originTop;
-            /// <summary>
-            /// 格元纵坐标偏移量，对栅格坐标系原点相对于 ToDrawRect 的左上角的偏移量，在格元大小内实施相似偏移量
-            /// </summary>
-            public static int CellTopOffset { get; private set; }
-        }
         private void DrawLattice(object sender, InvalidateEventArgs e)
         {
             Image ??= new Bitmap(Size.Width, Size.Height);
@@ -446,73 +217,71 @@ namespace FocusTree.UI.Controls
             {
                 for (int j = 0; j < Lattice.RowNumber; j++)
                 {
-                    LatticeCell.LeftTop = new(Lattice.CellWidth * i, Lattice.CellHeight * j);
-                    var toDrawLeft = LatticeCell.ToDrawLeft;
-                    var toDrawTop = LatticeCell.ToDrawTop;
+                    LatticeCell.ColRowInLattice = new(i, j);
+                    var drawLeftRight = LatticeCell.ToDrawLeftRight();
+                    var drawTopBottom = LatticeCell.ToDrawTopBottom();
+                    var cellPen = new Pen(Color.Red, 2);
                     //
-                    // cell left
+                    // cell main: LeftBottom -> LeftTop -> TopRight
                     //
-                    g.DrawLine(new Pen(Color.Red, 2),
-                            new Point(toDrawLeft[0].Item1, toDrawTop[0].Item1),
-                            new Point(toDrawLeft[0].Item1, toDrawTop[0].Item2)
-                            );
-                    if (toDrawTop.Length > 1)
+                    g.DrawLines(cellPen, new Point[] 
                     {
-                        g.DrawLine(new Pen(Color.Red, 2),
-                            new Point(toDrawLeft[0].Item1, toDrawTop[1].Item1),
-                            new Point(toDrawLeft[0].Item1, toDrawTop[1].Item2)
+                        new Point(drawLeftRight[0].Item1, drawTopBottom[0].Item2),
+                        new Point(drawLeftRight[0].Item1, drawTopBottom[0].Item1),
+                        new Point(drawLeftRight[0].Item2, drawTopBottom[0].Item1)
+                    });
+                    //
+                    // cell append
+                    //
+                    if (drawLeftRight.Length > 1)
+                    {
+                        g.DrawLine(cellPen,
+                            new Point(drawLeftRight[1].Item1, drawTopBottom[0].Item1),
+                            new Point(drawLeftRight[1].Item2, drawTopBottom[0].Item1)
                             );
                     }
-                    //
-                    // cell top
-                    //
-                    g.DrawLine(new Pen(Color.Red, 2),
-                        new Point(toDrawLeft[0].Item1, toDrawTop[0].Item1),
-                        new Point(toDrawLeft[0].Item2, toDrawTop[0].Item1)
-                        );
-                    if (toDrawLeft.Length > 1)
+                    if (drawTopBottom.Length > 1)
                     {
-                        g.DrawLine(new Pen(Color.Red, 2),
-                            new Point(toDrawLeft[1].Item1, toDrawTop[0].Item1),
-                            new Point(toDrawLeft[1].Item2, toDrawTop[0].Item1)
+                        g.DrawLine(cellPen,
+                            new Point(drawLeftRight[0].Item1, drawTopBottom[1].Item1),
+                            new Point(drawLeftRight[0].Item1, drawTopBottom[1].Item2)
                             );
                     }
-                    var nodeToDrawLeft = LatticeCell.NodeToDrawLeft;
-                    var nodeToDrawTop = LatticeCell.NodeToDrawTop;
+                    var nodeDrawLeftRight = LatticeCell.NodeToDrawLeftRight();
+                    var nodeDrawTopBottom = LatticeCell.NodeToDrawTopBottom();
+                    var nodePen = new Pen(Color.Orange, 1);
                     //
-                    // node left
+                    // node main: LeftBottom -> LeftTop -> TopRight
                     //
-                    g.DrawLine(new Pen(Color.Orange, 1),
-                            new Point(nodeToDrawLeft[0].Item1, nodeToDrawTop[0].Item1),
-                            new Point(nodeToDrawLeft[0].Item1, nodeToDrawTop[0].Item2)
-                            );
-                    if (nodeToDrawTop.Length > 1)
+                    g.DrawLines(nodePen, new Point[]
+                    {
+                        new Point(nodeDrawLeftRight[0].Item1, nodeDrawTopBottom[0].Item2),
+                        new Point(nodeDrawLeftRight[0].Item1, nodeDrawTopBottom[0].Item1),
+                        new Point(nodeDrawLeftRight[0].Item2, nodeDrawTopBottom[0].Item1)
+                    });
+                    //
+                    // node append
+                    //
+                    if (nodeDrawLeftRight.Length > 1)
                     {
                         g.DrawLine(new Pen(Color.Orange, 1),
-                            new Point(nodeToDrawLeft[0].Item1, nodeToDrawTop[1].Item1),
-                            new Point(nodeToDrawLeft[0].Item1, nodeToDrawTop[1].Item2)
+                            new Point(nodeDrawLeftRight[1].Item1, nodeDrawTopBottom[0].Item1),
+                            new Point(nodeDrawLeftRight[1].Item2, nodeDrawTopBottom[0].Item1)
                             );
                     }
-                    //
-                    // node top
-                    //
-                    g.DrawLine(new Pen(Color.BlueViolet, 1),
-                        new Point(nodeToDrawLeft[0].Item1, nodeToDrawTop[0].Item1),
-                        new Point(nodeToDrawLeft[0].Item2, nodeToDrawTop[0].Item1)
-                        );
-                    if (nodeToDrawLeft.Length > 1)
+                    if (nodeDrawTopBottom.Length > 1)
                     {
-                        g.DrawLine(new Pen(Color.BlueViolet, 1),
-                            new Point(nodeToDrawLeft[1].Item1, nodeToDrawTop[0].Item1),
-                            new Point(nodeToDrawLeft[1].Item2, nodeToDrawTop[0].Item1)
+                        g.DrawLine(nodePen,
+                            new Point(nodeDrawLeftRight[0].Item1, nodeDrawTopBottom[1].Item1),
+                            new Point(nodeDrawLeftRight[0].Item1, nodeDrawTopBottom[1].Item2)
                             );
                     }
                 }
             }
 
             // test
-            g.DrawEllipse(new Pen(Color.Red), Lattice.OriginLeftTop.X - 10, Lattice.OriginLeftTop.Y - 10, 10, 10);
-            Parent.Text = $"col {Lattice.ColNumber},row {Lattice.RowNumber}, {Lattice.CellLeftOffset},{Lattice.CellTopOffset} {Lattice.OriginLeftTop}";
+            g.DrawEllipse(new Pen(Color.Red), Lattice.OriginLeft - 10, Lattice.OriginTop - 10, 10, 10);
+            //Parent.Text = $"col {Lattice.ColNumber},row {Lattice.RowNumber}, {Lattice.CellLeftOffset},{Lattice.CellTopOffset} {Lattice.OriginLeftTop}";
 
             g.Flush(); g.Dispose();
         }
