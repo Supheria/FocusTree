@@ -120,5 +120,18 @@ namespace FocusTree.UI.Graph
         {
             return Lattice.LineToDrawInVertical(RealLeftTop.Y + NodePaddingHeight, Height - NodePaddingHeight);
         }
+        /// <summary>
+        /// 在给定的格元矩形中获得其中的节点矩形
+        /// </summary>
+        /// <returns></returns>
+        public static Rectangle NodeRectInCellRect(int left, int top, int width, int height)
+        {
+            return Lattice.RectWithinDrawRect(
+                left + NodePaddingWidth,
+                top + NodePaddingHeight,
+                width - NodePaddingWidth,
+                height - NodePaddingHeight
+                );
+        }
     }
 }

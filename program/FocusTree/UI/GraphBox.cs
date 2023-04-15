@@ -192,7 +192,7 @@ namespace FocusTree.UI.Controls
             //SizeMode = PictureBoxSizeMode.Zoom;
             Dock = DockStyle.Fill;
             DoubleBuffered = true;
-            //DrawLattice();
+            DrawLattice();
 
             SizeChanged += OnSizeChanged;
             MouseDown += OnMouseDown;
@@ -204,6 +204,10 @@ namespace FocusTree.UI.Controls
             ControlResize.SetTag(this);
         }
         private void DrawLattice(object sender, InvalidateEventArgs e)
+        {
+            DrawLattice();
+        }
+        private void DrawLattice()
         {
             Image ??= new Bitmap(Size.Width, Size.Height);
             Graphics g = Graphics.FromImage(Image);
@@ -221,15 +225,15 @@ namespace FocusTree.UI.Controls
                     LatticeCell.ColRowInLattice = new(i, j);
                     var drawLeftRight = LatticeCell.ToDrawLeftRight();
                     var drawTopBottom = LatticeCell.ToDrawTopBottom();
-                    var cellPen = new Pen(Color.AliceBlue, 1);
+                    var cellPen = new Pen(Color.AliceBlue, 1.5f);
                     //
                     // cell main: LeftBottom -> LeftTop -> TopRight
                     //
                     g.DrawLines(cellPen, new Point[] 
                     {
-                        new Point(drawLeftRight[0].Item1, drawTopBottom[0].Item2),
-                        new Point(drawLeftRight[0].Item1, drawTopBottom[0].Item1),
-                        new Point(drawLeftRight[0].Item2, drawTopBottom[0].Item1)
+                        new(drawLeftRight[0].Item1, drawTopBottom[0].Item2),
+                        new(drawLeftRight[0].Item1, drawTopBottom[0].Item1),
+                        new(drawLeftRight[0].Item2, drawTopBottom[0].Item1)
                     });
                     //
                     // cell append
@@ -237,15 +241,15 @@ namespace FocusTree.UI.Controls
                     if (drawLeftRight.Length > 1)
                     {
                         g.DrawLine(cellPen,
-                            new Point(drawLeftRight[1].Item1, drawTopBottom[0].Item1),
-                            new Point(drawLeftRight[1].Item2, drawTopBottom[0].Item1)
+                            new(drawLeftRight[1].Item1, drawTopBottom[0].Item1),
+                            new(drawLeftRight[1].Item2, drawTopBottom[0].Item1)
                             );
                     }
                     if (drawTopBottom.Length > 1)
                     {
                         g.DrawLine(cellPen,
-                            new Point(drawLeftRight[0].Item1, drawTopBottom[1].Item1),
-                            new Point(drawLeftRight[0].Item1, drawTopBottom[1].Item2)
+                            new(drawLeftRight[0].Item1, drawTopBottom[1].Item1),
+                            new(drawLeftRight[0].Item1, drawTopBottom[1].Item2)
                             );
                     }
                     var nodeDrawLeftRight = LatticeCell.NodeToDrawLeftRight();
@@ -256,9 +260,9 @@ namespace FocusTree.UI.Controls
                     //
                     g.DrawLines(nodePen, new Point[]
                     {
-                        new Point(nodeDrawLeftRight[0].Item1, nodeDrawTopBottom[0].Item2),
-                        new Point(nodeDrawLeftRight[0].Item1, nodeDrawTopBottom[0].Item1),
-                        new Point(nodeDrawLeftRight[0].Item2, nodeDrawTopBottom[0].Item1)
+                        new(nodeDrawLeftRight[0].Item1, nodeDrawTopBottom[0].Item2),
+                        new(nodeDrawLeftRight[0].Item1, nodeDrawTopBottom[0].Item1),
+                        new(nodeDrawLeftRight[0].Item2, nodeDrawTopBottom[0].Item1)
                     });
                     //
                     // node append
@@ -266,23 +270,25 @@ namespace FocusTree.UI.Controls
                     if (nodeDrawLeftRight.Length > 1)
                     {
                         g.DrawLine(nodePen,
-                            new Point(nodeDrawLeftRight[1].Item1, nodeDrawTopBottom[0].Item1),
-                            new Point(nodeDrawLeftRight[1].Item2, nodeDrawTopBottom[0].Item1)
+                            new(nodeDrawLeftRight[1].Item1, nodeDrawTopBottom[0].Item1),
+                            new(nodeDrawLeftRight[1].Item2, nodeDrawTopBottom[0].Item1)
                             );
                     }
                     if (nodeDrawTopBottom.Length > 1)
                     {
                         g.DrawLine(nodePen,
-                            new Point(nodeDrawLeftRight[0].Item1, nodeDrawTopBottom[1].Item1),
-                            new Point(nodeDrawLeftRight[0].Item1, nodeDrawTopBottom[1].Item2)
+                            new(nodeDrawLeftRight[0].Item1, nodeDrawTopBottom[1].Item1),
+                            new(nodeDrawLeftRight[0].Item1, nodeDrawTopBottom[1].Item2)
                             );
                     }
                 }
             }
 
             // test
-            g.DrawEllipse(new Pen(Color.Red), Lattice.OriginLeft - 10, Lattice.OriginTop - 10, 10, 10);
-            
+            //g.FillEllipse(new SolidBrush(Color.Red), Lattice.OriginLeft - 5, Lattice.OriginTop - 5, 10, 10);
+            var testPen = new Pen(Color.Red, 0.5f);
+            g.DrawLine(testPen, new(Lattice.OriginLeft, Lattice.DrawRect.Top), new(Lattice.OriginLeft, Lattice.DrawRect.Bottom));
+            g.DrawLine(testPen, new(Lattice.DrawRect.Left, Lattice.OriginTop), new(Lattice.DrawRect.Right, Lattice.OriginTop));
 
             g.Flush(); g.Dispose();
         }
@@ -291,7 +297,7 @@ namespace FocusTree.UI.Controls
         private void UpdateGraph(object sender, InvalidateEventArgs e)
         {
 #if REBUILD
-            DrawLattice(sender, e);
+            //DrawLattice(sender, e);
 #else
             if (Graph == null)
             {
@@ -575,16 +581,14 @@ namespace FocusTree.UI.Controls
 
         //---- OnMouseMove ----//
 
+        //bool 
+
         private void OnMouseMove(object sender, MouseEventArgs args)
         {
 #if REBUILD
-
-
-            Parent.Text = $"cellWidth {LatticeCell.Width},cellHeight {LatticeCell.Height}, origin: {Lattice.OriginLeft}, {Lattice.OriginTop}, cursor: {args.Location}";
-
-
             if (args.Button == MouseButtons.Left && DragGraph_Flag)
             {
+                DrawLattice();
                 var newPoint = args.Location;
                 var diff = new Point(newPoint.X - DragGraphMouseFlagPoint.X, newPoint.Y - DragGraphMouseFlagPoint.Y);
                 if (Math.Abs(diff.X) >= 1 || Math.Abs(diff.Y) >= 1)
@@ -597,6 +601,45 @@ namespace FocusTree.UI.Controls
                     Invalidate();
                 }
             }
+
+
+
+            var cursor = args.Location;
+            Point originDiff = new(cursor.X - Lattice.OriginLeft, cursor.Y - Lattice.OriginTop);
+            Image ??= new Bitmap(Size.Width, Size.Height);
+            Graphics g = Graphics.FromImage(Image);
+
+            //
+            // 4
+            //
+            if (originDiff.X > 0 && originDiff.Y > 0)
+            {
+                var cellNumInWidth = originDiff.X / LatticeCell.Width;
+                var cellNumInHeight = originDiff.Y / LatticeCell.Height;
+                var selectedCellRect = Lattice.RectWithinDrawRect(
+                    Lattice.OriginLeft + cellNumInWidth * LatticeCell.Width,
+                    Lattice.OriginTop + cellNumInHeight * LatticeCell.Height,
+                    LatticeCell.Width,
+                    LatticeCell.Height
+                    );
+                g.FillRectangle(new SolidBrush(Color.FromArgb(100, Color.Orange)), selectedCellRect);
+
+                var nodeRect = LatticeCell.NodeRectInCellRect(
+                    Lattice.OriginLeft + cellNumInWidth * LatticeCell.Width,
+                    Lattice.OriginTop + cellNumInHeight * LatticeCell.Height,
+                    LatticeCell.Width,
+                    LatticeCell.Height
+                    );
+                g.FillRectangle(new SolidBrush(Color.FromArgb(100, Color.Aqua)), nodeRect);
+
+                Invalidate();
+            }
+
+            Parent.Text = $"W {LatticeCell.Width},H {LatticeCell.Height}, o: {Lattice.OriginLeft}, {Lattice.OriginTop}, cursor: {args.Location}, diff: {originDiff}, wNum {originDiff.X / LatticeCell.Width}, hNum {originDiff.Y / LatticeCell.Height}";
+
+            g.Flush(); g.Dispose();
+
+            
 
 #else
             if (Graph == null) { return; }
