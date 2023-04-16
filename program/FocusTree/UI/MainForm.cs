@@ -17,6 +17,8 @@ namespace FocusTree.UI
             InitializeComponent();
             UpdateText();
 
+            Shown += MainForm_Shown;
+
             foreach (var name in Display.ToolDialogs.Keys)
             {
                 ToolStripMenuItem item = new()
@@ -37,6 +39,11 @@ namespace FocusTree.UI
 #endif
 
 
+        }
+
+        private void MainForm_Shown(object sender, EventArgs e)
+        {
+            Display.DrawLattice();
         }
 
         #region ==== File ====

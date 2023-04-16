@@ -167,7 +167,7 @@ namespace FocusTree.UI.Controls
         /// <summary>
         /// 拖动图像时使用的鼠标参照坐标
         /// </summary>
-        Point DragGraphMouseFlagPoint = new(0, 0);
+        Point DragLatticeMouseFlagPoint = new(0, 0);
         bool DragGraph_Flag = false;
         /// <summary>
         /// 拖动节点时使用的鼠标参照坐标
@@ -192,9 +192,9 @@ namespace FocusTree.UI.Controls
             NodeFontFormat.LineAlignment = StringAlignment.Center;
             //SizeMode = PictureBoxSizeMode.Zoom;
             Dock = DockStyle.Fill;
-            DoubleBuffered = true;
-            DrawLattice();
-
+            //DoubleBuffered = true;
+            
+            
             SizeChanged += OnSizeChanged;
             MouseDown += OnMouseDown;
             MouseMove += OnMouseMove;
@@ -204,25 +204,26 @@ namespace FocusTree.UI.Controls
             Invalidated += UpdateGraph;
             ControlResize.SetTag(this);
         }
-        private void DrawLattice(object sender, InvalidateEventArgs e)
+
+        public void DrawLattice()
         {
-            DrawLattice();
-        }
-        private void DrawLattice()
-        {
-            Image ??= new Bitmap(Size.Width, Size.Height);
+            Image ??= new Bitmap(Width, Height);
             Graphics g = Graphics.FromImage(Image);
+            DrawLattice(g);
+            g.Flush(); g.Dispose();
+            Invalidate();
+        }
+        private void DrawLattice(Graphics g)
+        {
             g.Clear(Color.White);
 
+            Lattice.Bounds = ClientRectangle;
             Lattice.Draw(g);
             
-            Lattice.Bounds = ClientRectangle;
 
             var testPen = new Pen(Color.Red, 0.5f);
             g.DrawLine(testPen, new(Lattice.OriginLeft, Lattice.DrawRect.Top), new(Lattice.OriginLeft, Lattice.DrawRect.Bottom));
             g.DrawLine(testPen, new(Lattice.DrawRect.Left, Lattice.OriginTop), new(Lattice.DrawRect.Right, Lattice.OriginTop));
-
-            g.Flush(); g.Dispose();
         }
 
 
@@ -375,15 +376,10 @@ namespace FocusTree.UI.Controls
             {
                 return;
             }
-            if (Image != null)
-            {
-                Image.Dispose();
-            }
-            var ratioVec = ControlResize.GetRatio(this);
-            var ratio = MathF.Min(ratioVec.X, ratioVec.Y);
+            Image?.Dispose();
             ControlResize.SetTag(this);
-            Image = new Bitmap(Size.Width, Size.Height);
-            GScale *= ratio;
+            Image = new Bitmap(Width, Height);
+            DrawLattice(Graphics.FromImage(Image));
             Invalidate();
         }
 
@@ -430,7 +426,7 @@ namespace FocusTree.UI.Controls
         private void GraphLeftClicked(Point startPoint)
         {
             DragGraph_Flag = true;
-            DragGraphMouseFlagPoint = startPoint;
+            DragLatticeMouseFlagPoint = startPoint;
             Invalidate();
             Parent.UpdateText("拖动图像");
         }
@@ -517,43 +513,6 @@ namespace FocusTree.UI.Controls
 
         private void OnMouseMove(object sender, MouseEventArgs args)
         {
-#if REBUILD
-
-            if (args.Button == MouseButtons.Left && DragGraph_Flag)
-            {
-                DrawLattice();
-                var newPoint = args.Location;
-                var diff = new Point(newPoint.X - DragGraphMouseFlagPoint.X, newPoint.Y - DragGraphMouseFlagPoint.Y);
-                if (Math.Abs(diff.X) >= 1 || Math.Abs(diff.Y) >= 1)
-                {
-                    //var difvec = new Vector2(dif.X / GScale, dif.Y / GScale);
-
-                    Lattice.OriginLeft += diff.X;
-                    Lattice.OriginTop += diff.Y;
-                    DragGraphMouseFlagPoint = newPoint;
-                    Invalidate();
-                }
-            }
-
-            var cursor = args.Location;
-            Image ??= new Bitmap(Size.Width, Size.Height);
-            Graphics g = Graphics.FromImage(Image);
-
-            var cellPart = LastCell.HighlightCursor(g, cursor);
-            if (cellPart == CellParts.Leave)
-            {
-                LatticeCell cell = new(cursor);
-                LastCell = cell;
-            }
-            Invalidate();
-
-            Parent.Text = $"W {LatticeCell.Width},H {LatticeCell.Height}, o: {Lattice.OriginLeft}, {Lattice.OriginTop}, cursor: {args.Location}, cellPart: {cellPart}, lastCell{new Point(LastCell.LatticedLeft, LastCell.LatticedTop)}";
-
-            g.Flush(); g.Dispose();
-
-            
-
-#else
             if (Graph == null) { return; }
 
             if (args.Button == MouseButtons.Left && DragGraph_Flag)
@@ -568,18 +527,33 @@ namespace FocusTree.UI.Controls
             {
                 ShowNodeInfoTip(args.Location);
             }
-#endif
+
+            var cursor = args.Location;
+            Image ??= new Bitmap(Size.Width, Size.Height);
+            Graphics g = Graphics.FromImage(Image);
+
+            var cellPart = LastCell.HighlightCursor(g, cursor);
+            if (cellPart == CellParts.Leave)
+            {
+                LatticeCell cell = new(cursor);
+                LastCell = cell;
+            }
+            Invalidate();
+            Parent.Text = $"W {LatticeCell.Width},H {LatticeCell.Height}, o: {Lattice.OriginLeft}, {Lattice.OriginTop}, cursor: {args.Location}, cellPart: {cellPart}, lastCell{new Point(LastCell.LatticedLeft, LastCell.LatticedTop)}";
+
+            g.Flush(); g.Dispose();
+
         }
         private void DragGraph(Point newPoint)
         {
-            var dif = new Point(newPoint.X - DragGraphMouseFlagPoint.X, newPoint.Y - DragGraphMouseFlagPoint.Y);
-            if (Math.Abs(dif.X) >= 1 || Math.Abs(dif.Y) >= 1)
+            var diffInWidth = newPoint.X - DragLatticeMouseFlagPoint.X;
+            var diffInHeight = newPoint.Y - DragLatticeMouseFlagPoint.Y;
+            if (Math.Abs(diffInWidth) >= 1 || Math.Abs(diffInHeight) >= 1)
             {
-                var difvec = new Vector2(dif.X / GScale, dif.Y / GScale);
-
-                DrawingCenter -= difvec;
-                DragGraphMouseFlagPoint = newPoint;
-                Invalidate();
+                Lattice.OriginLeft += newPoint.X - DragLatticeMouseFlagPoint.X;
+                Lattice.OriginTop += newPoint.Y - DragLatticeMouseFlagPoint.Y;
+                DragLatticeMouseFlagPoint = newPoint;
+                DrawLattice();
             }
         }
         private void DragNode(Point newPoint)
@@ -643,19 +617,16 @@ namespace FocusTree.UI.Controls
 
         private void OnMouseWheel(object sender, MouseEventArgs args)
         {
-            if (Graph == null) { return; }
-            var mulDelta = 1 + args.Delta * 0.002f; // 对，这个数就是很小，不然鼠标一滚就飞了
+            //if (Graph == null) { return; }
+            var diffInWidth = args.Location.X - Width / 2;
+            var diffInHeight = args.Location.Y - Height / 2;
+            Lattice.OriginLeft += diffInWidth / LatticeCell.Width * Lattice.DrawRect.Width / 200;
+            Lattice.OriginTop += diffInHeight / LatticeCell.Height * Lattice.DrawRect.Height / 200;
 
-            // 鼠标点击的位置与窗口中心的偏移量
-            var click = new Vector2(args.Location.X, args.Location.Y);
-            var center = new Vector2(Width / 2, Height / 2);
-            var dif = click - center;
+            LatticeCell.Width += args.Delta / 100 * Lattice.DrawRect.Width / 200;
+            LatticeCell.Height += args.Delta / 100 * Lattice.DrawRect.Width / 200;
 
-            DrawingCenter += dif * 0.2f / GScale; // 这个函数不是算出来的，只是目前恰好能用 ;p
-
-            // 缩放
-            GScale = MathF.Min(GScale * mulDelta, MathF.Min(Width * 0.1f, Height * 0.2f) * 0.02f);
-            Invalidate();
+            DrawLattice();
             Parent.UpdateText("打开节点选项");
         }
 
