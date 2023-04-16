@@ -9,16 +9,23 @@ namespace FocusTree.UI.Graph
     /// <summary>
     /// 栅格
     /// </summary>
-    struct Lattice
+    static class Lattice
     {
+        #region ==== 设置列行数 ====
+
         /// <summary>
-        /// 栅格行数
+        /// 栅格行数（根据格元高自动生成）
         /// </summary>
         public static int RowNumber { get; private set; }
         /// <summary>
-        /// 栅格列数
+        /// 栅格列数（根据格元宽自动生成）
         /// </summary>
         public static int ColNumber { get; private set; }
+
+        #endregion
+
+        #region ==== 设置边界区域 ====
+
         /// <summary>
         /// 栅格放置区域（绘图区域应该调用 DrawRect）
         /// </summary>
@@ -60,6 +67,11 @@ namespace FocusTree.UI.Graph
         /// 栅格总行高
         /// </summary>
         public static int ColHeight;
+
+        #endregion
+
+        #region ==== 设置栅格坐标系原点 ====
+
         /// <summary>
         /// 栅格坐标系原点 x 坐标
         /// </summary>
@@ -94,11 +106,18 @@ namespace FocusTree.UI.Graph
         /// 格元纵坐标偏移量，对栅格坐标系原点相对于 DrawRect 的左上角的偏移量，在格元大小内实施相似偏移量
         /// </summary>
         public static int CellOffsetTop;
+
+        #endregion
+
         /// <summary>
         /// 
         /// </summary>
         public static int ScaleFactor = 1;
+
+        #region ==== 绘制栅格 ====
+
         /// <summary>
+        /// ===绘制栅格时调用===
         /// 从左向右的水平线在栅格绘图区域内的绘制
         /// </summary>
         /// <param name="left">左端点</param>
@@ -123,6 +142,7 @@ namespace FocusTree.UI.Graph
             }
         }
         /// <summary>
+        /// ===绘制栅格时调用===
         /// 从上向下的垂直线在栅格绘图区域内的绘制
         /// </summary>
         /// <param name="top">上端点</param>
@@ -147,6 +167,85 @@ namespace FocusTree.UI.Graph
             }
         }
         /// <summary>
+        /// 格元边界绘制用笔
+        /// </summary>
+        public static Pen CellPen = new Pen(Color.AliceBlue, 1.5f);
+        public static Pen NodePen = new Pen(Color.Orange, 1.5f);
+        /// <summary>
+        /// 绘制无限制栅格
+        /// </summary>
+        /// <param name="g"></param>
+        public static void Draw(Graphics g)
+        {
+            for (int i = 0; i < ColNumber; i++)
+            {
+                for (int j = 0; j < RowNumber; j++)
+                {
+                    LatticeCell.RealLeft = i * LatticeCell.Width + CellOffsetLeft;
+                    LatticeCell.RealTop = j * LatticeCell.Height + CellOffsetTop;
+                    var cellLeftLine = LineToDrawInHorizon(LatticeCell.RealLeft, LatticeCell.Width);
+                    var cellTopLine = LineToDrawInVertical(LatticeCell.RealTop, LatticeCell.Height);
+                    //
+                    // cell main: LeftBottom -> LeftTop -> TopRight
+                    //
+                    g.DrawLines(CellPen, new Point[]
+                    {
+                        new(cellLeftLine[0].Item1, cellTopLine[0].Item2),
+                        new(cellLeftLine[0].Item1, cellTopLine[0].Item1),
+                        new(cellLeftLine[0].Item2, cellTopLine[0].Item1)
+                    });
+                    //
+                    // cell append
+                    //
+                    if (cellLeftLine.Length > 1)
+                    {
+                        g.DrawLine(CellPen,
+                            new(cellLeftLine[1].Item1, cellTopLine[0].Item1),
+                            new(cellLeftLine[1].Item2, cellTopLine[0].Item1)
+                            );
+                    }
+                    if (cellTopLine.Length > 1)
+                    {
+                        g.DrawLine(CellPen,
+                            new(cellLeftLine[0].Item1, cellTopLine[1].Item1),
+                            new(cellLeftLine[0].Item1, cellTopLine[1].Item2)
+                            );
+                    }
+                    var nodeLeftLine = LineToDrawInHorizon(LatticeCell.NodeRealLeft, LatticeCell.NodeWidth);
+                    var nodeTopLine = LineToDrawInVertical(LatticeCell.NodeRealTop, LatticeCell.NodeHeight);
+                    //
+                    // node main: LeftBottom -> LeftTop -> TopRight
+                    //
+                    g.DrawLines(NodePen, new Point[]
+                    {
+                        new(nodeLeftLine[0].Item1, nodeTopLine[0].Item2),
+                        new(nodeLeftLine[0].Item1, nodeTopLine[0].Item1),
+                        new(nodeLeftLine[0].Item2, nodeTopLine[0].Item1)
+                    });
+                    //
+                    // node append
+                    //
+                    if (nodeLeftLine.Length > 1)
+                    {
+                        g.DrawLine(NodePen,
+                            new(nodeLeftLine[1].Item1, nodeTopLine[0].Item1),
+                            new(nodeLeftLine[1].Item2, nodeTopLine[0].Item1)
+                            );
+                    }
+                    if (nodeTopLine.Length > 1)
+                    {
+                        g.DrawLine(NodePen,
+                            new(nodeLeftLine[0].Item1, nodeTopLine[1].Item1),
+                            new(nodeLeftLine[0].Item1, nodeTopLine[1].Item2)
+                            );
+                    }
+                }
+            }
+        }
+
+        #endregion
+
+        /// <summary>
         /// 获取一个在栅格绘图区域内的矩形
         /// </summary>
         /// <param name="left">预设矩形左边界</param>
@@ -166,12 +265,18 @@ namespace FocusTree.UI.Graph
                 height -= DrawRect.Top - top;
                 top = DrawRect.Top;
             }
-            return new(
-                left,
-                top,
+            return new(left, top,
                 left + width > DrawRect.Right ? DrawRect.Right - left : width,
                 top + height > DrawRect.Bottom ? DrawRect.Bottom - top : height
                 );
+        }
+        public static Point PointWithinDrawRect(Point point)
+        {
+            if (point.X < DrawRect.Left) { point.X = DrawRect.Left; }
+            else if (point.X > DrawRect.Right) { point.X = DrawRect.Right; }
+            if (point.Y < DrawRect.Top) { point.Y = DrawRect.Top; }
+            else if (point.Y > DrawRect.Bottom) { point.Y = DrawRect.Bottom; }
+            return point;
         }
     }
 }
