@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -75,37 +76,19 @@ namespace FocusTree.UI.Graph
         /// <summary>
         /// 栅格坐标系原点 x 坐标
         /// </summary>
-        public static int OriginLeft
-        {
-            get => originLeft;
-            set
-            {
-                originLeft = value;
-                CellOffsetLeft = (value - DrawRect.X) % LatticeCell.Width + DeviDiffInDrawRectWidth;
-            }
-        }
-        static int originLeft;
+        public static int OriginLeft;
         /// <summary>
         /// 栅格坐标系原点 y 坐标
         /// </summary>
-        public static int OriginTop
-        {
-            get => originTop;
-            set
-            {
-                originTop = value;
-                CellOffsetTop = (value - DrawRect.Y) % LatticeCell.Height + DeviDiffInDrawRectHeight;
-            }
-        }
-        static int originTop;
+        public static int OriginTop;
         /// <summary>
         /// 格元横坐标偏移量，对栅格坐标系原点相对于 DrawRect 的左上角的偏移量，在格元大小内实施相似偏移量
         /// </summary>
-        public static int CellOffsetLeft;
+        public static int CellOffsetLeft { get => OriginLeft - DrawRect.X + DeviDiffInDrawRectWidth; }
         /// <summary>
         /// 格元纵坐标偏移量，对栅格坐标系原点相对于 DrawRect 的左上角的偏移量，在格元大小内实施相似偏移量
         /// </summary>
-        public static int CellOffsetTop;
+        public static int CellOffsetTop { get => OriginTop - DrawRect.Y + DeviDiffInDrawRectHeight; }
 
         #endregion
 
@@ -116,6 +99,14 @@ namespace FocusTree.UI.Graph
 
         #region ==== 绘制栅格 ====
 
+        /// <summary>
+        /// 格元边界绘制用笔
+        /// </summary>
+        public static Pen CellPen = new(Color.AliceBlue, 1.5f);
+        /// <summary>
+        /// 节点边界绘制用笔
+        /// </summary>
+        public static Pen NodePen = new(Color.Orange, 1.5f);
         /// <summary>
         /// ===绘制栅格时调用===
         /// 从左向右的水平线在栅格绘图区域内的绘制
@@ -167,11 +158,6 @@ namespace FocusTree.UI.Graph
             }
         }
         /// <summary>
-        /// 格元边界绘制用笔
-        /// </summary>
-        public static Pen CellPen = new Pen(Color.AliceBlue, 1.5f);
-        public static Pen NodePen = new Pen(Color.Orange, 1.5f);
-        /// <summary>
         /// 绘制无限制栅格
         /// </summary>
         /// <param name="g"></param>
@@ -181,10 +167,10 @@ namespace FocusTree.UI.Graph
             {
                 for (int j = 0; j < RowNumber; j++)
                 {
-                    LatticeCell.RealLeft = i * LatticeCell.Width + CellOffsetLeft;
-                    LatticeCell.RealTop = j * LatticeCell.Height + CellOffsetTop;
-                    var cellLeftLine = LineToDrawInHorizon(LatticeCell.RealLeft, LatticeCell.Width);
-                    var cellTopLine = LineToDrawInVertical(LatticeCell.RealTop, LatticeCell.Height);
+                    var cellLeft = i * LatticeCell.Width + (OriginLeft - DrawRect.X) % LatticeCell.Width + DeviDiffInDrawRectWidth;
+                    var cellTop = j * LatticeCell.Height + (OriginTop - DrawRect.Y) % LatticeCell.Height + DeviDiffInDrawRectHeight;
+                    var cellLeftLine = LineToDrawInHorizon(cellLeft, LatticeCell.Width);
+                    var cellTopLine = LineToDrawInVertical(cellTop, LatticeCell.Height);
                     //
                     // cell main: LeftBottom -> LeftTop -> TopRight
                     //
@@ -211,8 +197,10 @@ namespace FocusTree.UI.Graph
                             new(cellLeftLine[0].Item1, cellTopLine[1].Item2)
                             );
                     }
-                    var nodeLeftLine = LineToDrawInHorizon(LatticeCell.NodeRealLeft, LatticeCell.NodeWidth);
-                    var nodeTopLine = LineToDrawInVertical(LatticeCell.NodeRealTop, LatticeCell.NodeHeight);
+                    var nodeLeft = cellLeft + LatticeCell.NodePaddingWidth;
+                    var nodeTop = cellTop + LatticeCell.NodePaddingHeight;
+                    var nodeLeftLine = LineToDrawInHorizon(nodeLeft, LatticeCell.NodeWidth);
+                    var nodeTopLine = LineToDrawInVertical(nodeTop, LatticeCell.NodeHeight);
                     //
                     // node main: LeftBottom -> LeftTop -> TopRight
                     //
@@ -253,8 +241,12 @@ namespace FocusTree.UI.Graph
         /// <param name="width">预设矩形宽</param>
         /// <param name="height">预设矩形高</param>
         /// <returns>在绘图区域内的可能被裁剪过的矩形</returns>
-        public static Rectangle RectWithinDrawRect(int left, int top, int width, int height)
+        public static Rectangle RectWithinDrawRect(Rectangle rect)
         {
+            var left = rect.Left;
+            var top = rect.Top;
+            var width = rect.Width;
+            var height = rect.Height;
             if (left < DrawRect.Left)
             {
                 width -= DrawRect.Left - left;
@@ -270,13 +262,52 @@ namespace FocusTree.UI.Graph
                 top + height > DrawRect.Bottom ? DrawRect.Bottom - top : height
                 );
         }
-        public static Point PointWithinDrawRect(Point point)
+        /// <summary>
+        /// 重绘格元
+        /// </summary>
+        /// <param name="g"></param>
+        /// <param name="cell"></param>
+        public static void DrawCell(Graphics g, LatticeCell cell)
         {
-            if (point.X < DrawRect.Left) { point.X = DrawRect.Left; }
-            else if (point.X > DrawRect.Right) { point.X = DrawRect.Right; }
-            if (point.Y < DrawRect.Top) { point.Y = DrawRect.Top; }
-            else if (point.Y > DrawRect.Bottom) { point.Y = DrawRect.Bottom; }
-            return point;
+            g.FillRectangle(new SolidBrush(Color.White), cell.RealRect);
+            DrawCell(g, CellPen, 
+                new(cell.RealLeft, cell.RealTop),
+                new(LatticeCell.Width, LatticeCell.Height)
+                );
+            DrawCell(g, NodePen, 
+                new(cell.NodeRealLeft, cell.NodeRealTop), 
+                new(LatticeCell.NodeWidth, LatticeCell.NodeHeight)
+                );
+        }
+        /// <summary>
+        /// 在栅格绘图区域内绘制左下-左上-上右的七形线
+        /// </summary>
+        /// <param name="g"></param>
+        /// <param name="pen"></param>
+        /// <param name="LeftTop">七形线左上角坐标</param>
+        /// <param name="size">七形线尺寸</param>
+        static void DrawCell(Graphics g, Pen pen, Point LeftTop, Size size)
+        {
+            var left = LeftTop.X;
+            var top = LeftTop.Y;
+            if (top > DrawRect.Top && top < DrawRect.Bottom)
+            {
+                var right = left + size.Width;
+                if (left > DrawRect.Right || right < DrawRect.Left) { return; }
+                g.DrawLine(pen,
+                    new(left < DrawRect.Left ? DrawRect.Left : left, top),
+                    new(right > DrawRect.Right ? DrawRect.Right : right, top)
+                    );
+            }
+            if (left > DrawRect.Left && left < DrawRect.Right)
+            {
+                var bottom = top + size.Height;
+                if (top > DrawRect.Bottom || bottom < DrawRect.Top) {  return; }
+                g.DrawLine(pen,
+                    new(left, top < DrawRect.Top ? DrawRect.Top : top),
+                    new(left, bottom > DrawRect.Bottom ? DrawRect.Bottom : bottom)
+                    );
+            }
         }
     }
 }

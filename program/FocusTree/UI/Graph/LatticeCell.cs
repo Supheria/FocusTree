@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,21 +14,41 @@ namespace FocusTree.UI.Graph
     struct LatticeCell
     {
         /// <summary>
+        /// 格元栅格化左边界
+        /// </summary>
+        public int LatticedLeft;
+        /// <summary>
+        /// 格元栅格化上边界
+        /// </summary>
+        public int LatticedTop;
+        /// <summary>
         /// 格元真实左边界
         /// </summary>
-        public static int RealLeft;
+        public int RealLeft { get => Width * LatticedLeft + Lattice.CellOffsetLeft; }
         /// <summary>
         /// 格元真实上边界
         /// </summary>
-        public static int RealTop;
+        public int RealTop { get => Height * LatticedTop + Lattice.CellOffsetTop; }
+        /// <summary>
+        /// 格元真实坐标矩形
+        /// </summary>
+        /// <returns></returns>
+        public Rectangle RealRect { get => new(RealLeft, RealTop, Width, Height); }
         /// <summary>
         /// 节点真实左边界
         /// </summary>
-        public static int NodeRealLeft { get => RealLeft + NodePaddingWidth; }
+        public int NodeRealLeft { get => RealLeft + NodePaddingWidth; }
         /// <summary>
         /// 节点真实上边界
         /// </summary>
-        public static int NodeRealTop { get => RealTop + NodePaddingHeight; }
+        public int NodeRealTop { get => RealTop + NodePaddingHeight; }
+        /// <summary>
+        /// 节点真实坐标矩形
+        /// </summary>
+        public Rectangle NodeRealRect { get => new(NodeRealLeft, NodeRealTop, NodeWidth, NodeHeight); }
+
+        #region ==== 设置宽高和间距 ====
+
         /// <summary>
         /// 格元宽（限制最小值和最大值）
         /// </summary>
@@ -78,93 +99,104 @@ namespace FocusTree.UI.Graph
         /// 节点 Top 到格元 Top 的空隙
         /// </summary>
         public static int NodePaddingHeight { get => (int)(height * 0.3f); }
-        
-        ///// <summary>
-        ///// ===绘制栅格时调用===
-        ///// 栅格绘图区域内格元左边界(起点x, 终点x)（如果分裂则返回右、左顺序的两个数对）
-        ///// </summary>
-        //public static (int, int)[] DrawLeftLine()
-        //{
-        //    return Lattice.LineToDrawInHorizon(RealLeftTop.X, Width);
-        //}
-        ///// <summary>
-        ///// ===绘制栅格时调用===
-        ///// 栅格绘图区域内节点左边界(起点x, 终点x)（如果分裂则返回右、左顺序的两个数对）
-        ///// </summary>
-        //public static (int, int)[] NodeDrawLeftLine()
-        //{
-        //    return Lattice.LineToDrawInHorizon(RealLeftTop.X + NodePaddingWidth, Width - NodePaddingWidth);
-        //}
-        ///// <summary>
-        ///// ===绘制栅格时调用===
-        ///// 栅格绘图区域内格元上边界(起点y, 终点y)（如果分裂则返回下、上顺序的两个数对）
-        ///// </summary>
-        //public static (int, int)[] DrawTopLine()
-        //{
-        //    return Lattice.LineToDrawInVertical(RealLeftTop.Y, Height);
-        //}
-        ///// <summary>
-        ///// ===绘制栅格时调用===
-        ///// 栅格绘图区域内节点上边界(起点y, 终点y)（如果分裂则返回下、上顺序的两个数对）
-        ///// </summary>
-        //public static (int, int)[] NodeDrawTopLine()
-        //{
-        //    return Lattice.LineToDrawInVertical(RealLeftTop.Y + NodePaddingHeight, Height - NodePaddingHeight);
-        //}
-        
+
+        #endregion
+        public LatticeCell() 
+        {
+            LatticedLeft = 0;
+            LatticedTop = 0;
+        }
+        public LatticeCell(Point realPoint)
+        {
+            var widthDiff = realPoint.X - Lattice.OriginLeft;
+            var heightDiff = realPoint.Y - Lattice.OriginTop;
+            LatticedLeft = widthDiff / Width;
+            LatticedTop = heightDiff / Height;
+            if (widthDiff < 0)
+            {
+                LatticedLeft -= 1;
+            }
+            if (heightDiff < 0)
+            {
+                LatticedTop -= 1;
+            }
+        }
         /// <summary>
-        /// 在给定的格元矩形中获得其中的节点矩形
+        /// 判断两个格元的左边界和上边界是否同时相等
         /// </summary>
+        /// <param name="lhd"></param>
+        /// <param name="rhd"></param>
         /// <returns></returns>
-        public static Rectangle NodeRectInCellRect(int left, int top, int width, int height)
+        public static bool operator ==(LatticeCell lhd, LatticeCell rhd)
         {
-            return Lattice.RectWithinDrawRect(
-                left + NodePaddingWidth,
-                top + NodePaddingHeight,
-                width - NodePaddingWidth,
-                height - NodePaddingHeight
-                );
+            return lhd.LatticedLeft == rhd.LatticedLeft && lhd.LatticedTop == rhd.LatticedTop;
         }
         /// <summary>
-        /// 以格元为单位，根据给定坐标对栅格坐标系原点的偏移量设置格元的真实左上角坐标
+        /// 判断两个格元的左边界或上边界是否不相等
         /// </summary>
-        /// <param name="point">给定坐标</param>
-        /// <returns>以格元为单位，格元左上角坐标对栅格原点的偏移量</returns>
-        public static Point SetRealLeftTopWithPointOffsetToLatticeOrigin(Point point)
+        /// <param name="lhd"></param>
+        /// <param name="rhd"></param>
+        /// <returns></returns>
+        public static bool operator !=(LatticeCell lhd, LatticeCell rhd)
         {
-            var widthDiff = point.X - Lattice.OriginLeft;
-            var heightDiff = point.Y - Lattice.OriginTop;
-            var widthCells = widthDiff / Width;
-            var heightCells = heightDiff / Height;
-            widthCells = widthDiff < 0 ? widthCells - 1 : widthCells;
-            heightCells = heightDiff < 0 ? heightCells - 1 : heightCells;
-            RealLeft = Width * widthCells + Lattice.CellOffsetLeft;
-            RealTop = Height * heightCells + Lattice.CellOffsetTop;
-            return new(widthCells, heightCells);
+            return lhd.LatticedLeft != rhd.LatticedLeft || lhd.LatticedTop != rhd.LatticedTop;
         }
-        public static void Draw(Graphics g, Point? cellLeftTop = null)
+        public enum CellParts
         {
-            if (cellLeftTop == null) { cellLeftTop = new Point(RealLeft, RealTop); }
-            var point = cellLeftTop.Value;
-            //
-            // drawLeftRight
-            //
-            if (point.Y > Lattice.DrawRect.Top && point.Y < Lattice.DrawRect.Bottom)
+            /// <summary>
+            /// 已离开格元
+            /// </summary>
+            Leave,
+            /// <summary>
+            /// 节点左侧区域
+            /// </summary>
+            Left,
+            /// <summary>
+            /// 节点头上区域
+            /// </summary>
+            Top,
+            /// <summary>
+            /// 节点右上区域
+            /// </summary>
+            LeftTop,
+            /// <summary>
+            /// 节点内
+            /// </summary>
+            Node
+        }
+        Rectangle LastTouchInRect = new();
+        /// <summary>
+        /// 光标进入格元后高亮光标所处部分，或取消高亮光标刚离开的部分
+        /// </summary>
+        /// <param name="cursor"></param>
+        /// <returns></returns>
+        public CellParts HighlightCursor(Graphics g,Point cursor)
+        {
+            Rectangle[] sideParts = new Rectangle[]
             {
-                var right = point.X + Width;
-                g.DrawLine(Lattice.CellPen,
-                    new(point.X < Lattice.DrawRect.Left ? Lattice.DrawRect.Left : point.X, point.Y),
-                    new(right > Lattice.DrawRect.Right ? Lattice.DrawRect.Right : right, point.Y)
-                    );
-            }
-            if (point.X > Lattice.DrawRect.Left && point.X < Lattice.DrawRect.Right)
+                new(RealLeft, NodeRealTop, Width - NodeWidth, Height - NodePaddingHeight), // left
+                new(NodeRealLeft, RealTop, Width - NodePaddingWidth, Height - NodeHeight), // top
+                new(RealLeft, RealTop, Width - NodeWidth, Height - NodeHeight), // left top
+                NodeRealRect
+            };
+            for (int i = 0; i < sideParts.Length; i++)
             {
-                var bottom = point.Y + Height;
-                g.DrawLine(Lattice.CellPen,
-                    new(point.X, point.Y < Lattice.DrawRect.Top ? Lattice.DrawRect.Top : point.Y),
-                    new(point.X, bottom > Lattice.DrawRect.Bottom ? Lattice.DrawRect.Bottom : bottom)
-                    );
+                var part = sideParts[i];
+                if (part.Contains(cursor))
+                {
+                    if (part != LastTouchInRect)
+                    {
+                        Lattice.DrawCell(g, this);
+                        LastTouchInRect = part;
+                        part = Lattice.RectWithinDrawRect(part);
+                        if (i == 3) { g.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.Orange)), part); }
+                        else { g.FillRectangle(new SolidBrush(Color.FromArgb(100, Color.Gray)), part); }
+                    }
+                    return i == 0 ? CellParts.Left : i == 1 ? CellParts.Top : i == 2 ?  CellParts.LeftTop : CellParts.Node;
+                }
             }
+            Lattice.DrawCell(g, this);
+            return CellParts.Leave;
         }
     }
 }

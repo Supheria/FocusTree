@@ -8,6 +8,7 @@ using FocusTree.UI.Graph;
 using FocusTree.UI.NodeToolDialogs;
 using System.IO;
 using System.Numerics;
+using static FocusTree.UI.Graph.LatticeCell;
 
 namespace FocusTree.UI.Controls
 {
@@ -512,11 +513,12 @@ namespace FocusTree.UI.Controls
 
         //---- OnMouseMove ----//
 
-        Point LastOffsetCells = new();
+        static LatticeCell LastCell = new();
 
         private void OnMouseMove(object sender, MouseEventArgs args)
         {
 #if REBUILD
+
             if (args.Button == MouseButtons.Left && DragGraph_Flag)
             {
                 DrawLattice();
@@ -533,58 +535,19 @@ namespace FocusTree.UI.Controls
                 }
             }
 
-
-
             var cursor = args.Location;
-            //Point originDiff = new(cursor.X - Lattice.OriginLeft, cursor.Y - Lattice.OriginTop);
             Image ??= new Bitmap(Size.Width, Size.Height);
             Graphics g = Graphics.FromImage(Image);
 
-            var offsetCells = LatticeCell.SetRealLeftTopWithPointOffsetToLatticeOrigin(cursor);
-            if (LastOffsetCells != offsetCells)
+            var cellPart = LastCell.HighlightCursor(g, cursor);
+            if (cellPart == CellParts.Leave)
             {
-                var lastSelectRect = Lattice.RectWithinDrawRect(
-                    Lattice.OriginLeft + LastOffsetCells.X * LatticeCell.Width,
-                    Lattice.OriginTop + LastOffsetCells.Y * LatticeCell.Height,
-                    LatticeCell.Width,
-                    LatticeCell.Height
-                    );
-                g.FillRectangle(new SolidBrush(Color.White), lastSelectRect);
-                LatticeCell.Draw(g, new(lastSelectRect.X, lastSelectRect.Y));
-                //LatticeCell.ColRowInLattice = LastSelectedColRow;
-                //var cellDrawLeftRight = LatticeCell.ToDrawLeftRight();
-                //var cellDrawTopBottom = LatticeCell.ToDrawTopBottom();
-                //g.DrawLines(new Pen(Color.Orange, 1.5f), new Point[]
-                //{
-                //    new(cellDrawLeftRight[0].Item1, cellDrawTopBottom[0].Item2),
-                //    new(cellDrawLeftRight[0].Item1, cellDrawTopBottom[0].Item1),
-                //    new(cellDrawLeftRight[0].Item2, cellDrawTopBottom[0].Item1)
-                //});
-
-
-                LastOffsetCells = offsetCells;
-                var selectedCellRect = Lattice.RectWithinDrawRect(
-                Lattice.OriginLeft + offsetCells.X * LatticeCell.Width,
-                Lattice.OriginTop + offsetCells.Y * LatticeCell.Height,
-                LatticeCell.Width,
-                LatticeCell.Height
-                );
-                g.FillRectangle(new SolidBrush(Color.FromArgb(100, Color.AliceBlue)), selectedCellRect);
-
-                var nodeRect = LatticeCell.NodeRectInCellRect(
-                    Lattice.OriginLeft + offsetCells.X * LatticeCell.Width,
-                    Lattice.OriginTop + offsetCells.Y * LatticeCell.Height,
-                    LatticeCell.Width,
-                    LatticeCell.Height
-                    );
-                g.FillRectangle(new SolidBrush(Color.FromArgb(100, Color.Orange)), nodeRect);
+                LatticeCell cell = new(cursor);
+                LastCell = cell;
             }
-
-
-
             Invalidate();
 
-            Parent.Text = $"W {LatticeCell.Width},H {LatticeCell.Height}, o: {Lattice.OriginLeft}, {Lattice.OriginTop}, cursor: {args.Location}, offset: {offsetCells}";
+            Parent.Text = $"W {LatticeCell.Width},H {LatticeCell.Height}, o: {Lattice.OriginLeft}, {Lattice.OriginTop}, cursor: {args.Location}, cellPart: {cellPart}, lastCell{new Point(LastCell.LatticedLeft, LastCell.LatticedTop)}";
 
             g.Flush(); g.Dispose();
 
