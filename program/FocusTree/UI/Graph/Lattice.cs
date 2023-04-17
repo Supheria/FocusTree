@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -292,13 +293,14 @@ namespace FocusTree.UI.Graph
             ReDrawCell(g, CellPen, 
                 new(cell.RealLeft, cell.RealTop),
                 new(LatticeCell.Width, LatticeCell.Height),
-                true);
+                false, true);
             ReDrawCell(g, NodePen, 
                 new(cell.NodeRealLeft, cell.NodeRealTop), 
                 new(LatticeCell.NodeWidth, LatticeCell.NodeHeight),
-                true);
+                false, true);
         }
         static TestInfo test = new();
+        
         /// <summary>
         /// 在栅格绘图区域内绘制左下-左上-上右的七形线
         /// </summary>
@@ -307,63 +309,69 @@ namespace FocusTree.UI.Graph
         /// <param name="LeftTop">七形线左上角坐标</param>
         /// <param name="size">七形线尺寸</param>
         /// <param name="append">是否补绘超出绘图区域的部分（超左补右，以此类推）</param>
-        static void ReDrawCell(Graphics g, Pen pen, Point LeftTop, Size size, bool append)
+        static void ReDrawCell(Graphics g, Pen pen, Point LeftTop, Size size, bool drawMain, bool drawAppend)
         {
-            test.Show();
-            var left = LeftTop.X;
-            var top = LeftTop.Y;
-            //if (top > DrawRect.Top && top < DrawRect.Bottom)
+            //test.Show();
+            DrawCellLeftLine(g, pen, LeftTop.X, size.Width, LeftTop.Y, drawMain, drawAppend);
+
+        }
+        static void DrawCellLeftLine(Graphics g, Pen pen, int left, int width, int top, bool drawMain, bool drawAppend)
+        {
+            var rawTop = top;
+            if (drawAppend)
             {
-                var right = left + size.Width;
-                if (left < DrawRect.Left)
+                if (top <= DrawRect.Top)
                 {
-                    left = DrawRect.Width + (left % DrawRect.Width);
-                    if (left < DrawRect.Left) { left += DrawRect.Width; }
-                    var cutWidth = DrawRect.Right - left;
-                    if (cutWidth > size.Width) { cutWidth = size.Width; }
-                    var saveWidth = size.Width - cutWidth;
-                    g.DrawLine(pen, new(DrawRect.Left, top), new(DrawRect.Left + saveWidth, top));
-                    if (append)
-                    {
-                        test.InfoText = $"rect top: {DrawRect.Top}, rect bottom: {DrawRect.Bottom}\nraw top: {top}\ntop % height: {top %= DrawRect.Height}, % bottom: {top % DrawRect.Bottom}\n";
-                        if (top <= DrawRect.Top) 
-                        {
-                            top = (top % DrawRect.Height) + DrawRect.Height;
-                            if (top <= DrawRect.Top) { top += DrawRect.Height; } 
-                        }
-                        test.InfoText += $"+ height: {top}";
-                        if (top > DrawRect.Bottom)
-                        {
-                            top %= DrawRect.Height;
-                        }
-                        g.DrawLine(pen, new(left, top), new(left + cutWidth, top));
-                    }
+                    top = (top % DrawRect.Height) + DrawRect.Height;
+                    if (top <= DrawRect.Top) { top += DrawRect.Height; }
                 }
-                else if (right > DrawRect.Right)
+                if (top >= DrawRect.Bottom) { top %= DrawRect.Height; }
+            }
+            var right = left + width;
+            if (left > DrawRect.Left && right < DrawRect.Right)
+            {
+                if (drawMain)
                 {
-                    var testRight = right % DrawRect.Width;
-                    if (testRight >= DrawRect.Left) { right = testRight; }
-                    var cutWidth = right - DrawRect.Left;
-                    if (cutWidth > size.Width) { cutWidth = size.Width; }
-                    var saveWidth = size.Width - cutWidth;
-                    g.DrawLine(pen, new(DrawRect.Right - saveWidth, top), new(DrawRect.Right, top));
-                    // IF append
-                    g.DrawLine(pen, new(right - cutWidth, top), new(right, top));
+                    g.DrawLine(pen, new(left, top), new(right, top));
                 }
-                else
+                else if (drawAppend && (rawTop < DrawRect.Top || rawTop > DrawRect.Bottom))
                 {
                     g.DrawLine(pen, new(left, top), new(right, top));
                 }
             }
-            //if (left > DrawRect.Left && left < DrawRect.Right)
-            //{
-            //    var bottom = top + size.Height;
-            //    if (top > DrawRect.Bottom || bottom < DrawRect.Top) {  return; }
-            //    g.DrawLine(pen,
-            //        new(left, top < DrawRect.Top ? DrawRect.Top : top),
-            //        new(left, bottom > DrawRect.Bottom ? DrawRect.Bottom : bottom)
-            //        );
-            //}
+
+            else if (left <= DrawRect.Left)
+            {
+                left = DrawRect.Width + (left % DrawRect.Width);
+                if (left <= DrawRect.Left) { left += DrawRect.Width; }
+                var cutWidth = DrawRect.Right - left;
+                if (cutWidth > width) { cutWidth = width; }
+                var saveWidth = width - cutWidth;
+                if (drawMain)
+                {
+                    g.DrawLine(pen, new(DrawRect.Left, top), new(DrawRect.Left + saveWidth, top));
+                }
+                if (drawAppend)
+                {
+                    g.DrawLine(pen, new(left, top), new(left + cutWidth, top));
+                }
+            }
+            else if (right > DrawRect.Right)
+            {
+                var testRight = right % DrawRect.Width;
+                if (testRight > DrawRect.Left) { right = testRight; }
+                var cutWidth = right - DrawRect.Left;
+                if (cutWidth > width) { cutWidth = width; }
+                var saveWidth = width - cutWidth;
+                if (drawMain)
+                {
+                    g.DrawLine(pen, new(DrawRect.Right - saveWidth, top), new(DrawRect.Right, top));
+                }
+                if (drawAppend)
+                {
+                    g.DrawLine(pen, new(right - cutWidth, top), new(right, top));
+                }
+            }
         }
     }
 }
