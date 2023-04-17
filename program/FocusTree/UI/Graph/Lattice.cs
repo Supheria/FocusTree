@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -110,56 +111,6 @@ namespace FocusTree.UI.Graph
         /// </summary>
         public static Pen NodePen = new(Color.Orange, 1.5f);
         /// <summary>
-        /// ===绘制栅格时调用===
-        /// 从左向右的循环横坐标
-        /// </summary>
-        /// <param name="left">左端点</param>
-        /// <param name="width">循环单位宽度</param>
-        /// <returns>返回间隔循环单位宽度的起点横坐标和终点横坐标的数对。如果起点或终点超出绘图区域，则返回数组里有一个额外的分割剩余线段的坐标数对。</returns>
-        public static (int, int)[] LoopInHorizon(int left, int width)
-        {
-            if (left < DrawRect.Left) { left += DrawRect.Width; }
-            else if (left > DrawRect.Right) { left -= DrawRect.Width; }
-            var realWidth = DrawRect.Right - left;
-            if (realWidth >= width)
-            {
-                return new (int, int)[] { (left, left + width) };
-            }
-            else
-            {
-                return new (int, int)[]
-                {
-                    (left, left + realWidth),
-                    (DrawRect.Left, DrawRect.Left + width - realWidth)
-                };
-            }
-        }
-        /// <summary>
-        /// ===绘制栅格时调用===
-        /// 从上向下的循环纵坐标
-        /// </summary>
-        /// <param name="top">上端点</param>
-        /// <param name="height">循环单位高度</param>
-        /// <returns>返回从上向下的垂直线的起点坐标和终点坐标的数对。如果线需要分割，则返回数组里有一个额外的分割剩余线段的坐标数对。</returns>
-        public static (int, int)[] LoopInVertical(int top, int height)
-        {
-            if (top < DrawRect.Top) { top += DrawRect.Height; }
-            else if (top > DrawRect.Bottom) { top -= DrawRect.Height; }
-            var realHeight = DrawRect.Bottom - top;
-            if (realHeight >= height)
-            {
-                return new (int, int)[] { (top, top + height) };
-            }
-            else
-            {
-                return new (int, int)[]
-                {
-                    (top, top + realHeight),
-                    (DrawRect.Top, DrawRect.Top + height - realHeight)
-                };
-            }
-        }
-        /// <summary>
         /// 需要单独绘制的格元列表
         /// </summary>
         public static List<LatticeCell> CellsToDraw = new();
@@ -178,10 +129,10 @@ namespace FocusTree.UI.Graph
             {
                 for (int j = 0; j < RowNumber; j++)
                 {
-                    //DrawLoopCell(g,
-                    //    i * LatticeCell.Width + (OriginLeft - DrawRect.X) % LatticeCell.Width + DeviDiffInDrawRectWidth,
-                    //    j * LatticeCell.Height + (OriginTop - DrawRect.Y) % LatticeCell.Height + DeviDiffInDrawRectHeight
-                    //    );
+                    DrawLoopCell(g,
+                        i * LatticeCell.Width + (OriginLeft - DrawRect.X) % LatticeCell.Width + DeviDiffInDrawRectWidth,
+                        j * LatticeCell.Height + (OriginTop - DrawRect.Y) % LatticeCell.Height + DeviDiffInDrawRectHeight
+                        );
                 }
             }
         }
@@ -191,64 +142,132 @@ namespace FocusTree.UI.Graph
         /// <param name="g"></param>
         private static void DrawLoopCell(Graphics g, int cellLeft, int cellTop)
         {
-            var cellLeftLine = LoopInHorizon(cellLeft, LatticeCell.Width);
-            var cellTopLine = LoopInVertical(cellTop, LatticeCell.Height);
-            //
-            // cell main: LeftBottom -> LeftTop -> TopRight
-            //
-            g.DrawLines(CellPen, new Point[]
-            {
-                        new(cellLeftLine[0].Item1, cellTopLine[0].Item2),
-                        new(cellLeftLine[0].Item1, cellTopLine[0].Item1),
-                        new(cellLeftLine[0].Item2, cellTopLine[0].Item1)
-            });
-            //
-            // cell append
-            //
-            if (cellLeftLine.Length > 1)
-            {
-                g.DrawLine(CellPen,
-                    new(cellLeftLine[1].Item1, cellTopLine[0].Item1),
-                    new(cellLeftLine[1].Item2, cellTopLine[0].Item1)
-                    );
-            }
-            if (cellTopLine.Length > 1)
-            {
-                g.DrawLine(CellPen,
-                    new(cellLeftLine[0].Item1, cellTopLine[1].Item1),
-                    new(cellLeftLine[0].Item1, cellTopLine[1].Item2)
-                    );
-            }
+            DrawCellLine(g, CellPen, new(cellLeft, cellTop), new(LatticeCell.Width, LatticeCell.Height), true, false);
             var nodeLeft = cellLeft + LatticeCell.NodePaddingWidth;
             var nodeTop = cellTop + LatticeCell.NodePaddingHeight;
-            var nodeLeftLine = LoopInHorizon(nodeLeft, LatticeCell.NodeWidth);
-            var nodeTopLine = LoopInVertical(nodeTop, LatticeCell.NodeHeight);
-            //
-            // node main: LeftBottom -> LeftTop -> TopRight
-            //
-            g.DrawLines(NodePen, new Point[]
+            DrawCellLine(g, NodePen, new(nodeLeft, nodeTop), new(LatticeCell.NodeWidth, LatticeCell.NodeHeight), true, false);
+        }
+        /// <summary>
+        /// 在栅格绘图区域内绘制左下-左上-上右的七形线
+        /// </summary>
+        /// <param name="g"></param>
+        /// <param name="pen"></param>
+        /// <param name="LeftTop">七形线左上角坐标</param>
+        /// <param name="size">七形线尺寸</param>
+        /// <param name="drawMain">是否绘制未超出栅格绘图区域的部分</param>
+        /// <param name="drawAppend">是否补绘超出栅格绘图区域的部分。补绘方式形如：以栅格坐标系原点为方向参照中心，若横线向左超出绘图区域左边界，则超出部分补绘到绘图区域的右边界向左。向其他方向的超出各个边界同理</param>
+        static void DrawCellLine(Graphics g, Pen pen, Point LeftTop, Size size, bool drawMain, bool drawAppend)
+        {
+            var dr = DrawRect;
+            var pairLeftRight = DrawCellLeftLine((LeftTop.X, LeftTop.Y), size.Width, (dr.Left, dr.Right), (dr.Top, dr.Bottom), (dr.Width, dr.Height), drawMain, drawAppend);
+            var pairTopBottom = DrawCellLeftLine((LeftTop.Y, LeftTop.X), size.Height, (dr.Top, dr.Bottom), (dr.Left, dr.Right), (dr.Height, dr.Width), drawMain, drawAppend);
+            foreach (var pair in pairLeftRight.Value)
             {
-                        new(nodeLeftLine[0].Item1, nodeTopLine[0].Item2),
-                        new(nodeLeftLine[0].Item1, nodeTopLine[0].Item1),
-                        new(nodeLeftLine[0].Item2, nodeTopLine[0].Item1)
-            });
-            //
-            // node append
-            //
-            if (nodeLeftLine.Length > 1)
-            {
-                g.DrawLine(NodePen,
-                    new(nodeLeftLine[1].Item1, nodeTopLine[0].Item1),
-                    new(nodeLeftLine[1].Item2, nodeTopLine[0].Item1)
-                    );
+                var key = pairLeftRight.Key;
+                g.DrawLine(pen, new(pair.Item1, key), new(pair.Item2, key));
             }
-            if (nodeTopLine.Length > 1)
+            foreach (var pair in pairTopBottom.Value)
             {
-                g.DrawLine(NodePen,
-                    new(nodeLeftLine[0].Item1, nodeTopLine[1].Item1),
-                    new(nodeLeftLine[0].Item1, nodeTopLine[1].Item2)
-                    );
+                var key = pairTopBottom.Key;
+                g.DrawLine(pen, new(key, pair.Item1), new(key, pair.Item2));
             }
+        }
+        /// <summary>
+        /// 得到绘制格元左边界（上边界）线的端点坐标（变量命名以绘制横线为例）
+        /// </summary>
+        /// <param name="left_top">格元左上角坐标组成的坐标数对。数对前者最终返回画线的起点、终点坐标中变化的值，数对后者最终则返回不变值（eg.画横线时，横坐标变，纵坐标不变，则数对前者是left，后者是top）</param>
+        /// <param name="width">画线的长度（横线传入width，竖线传入height）</param>
+        /// <param name="drLR">栅格绘图区域与线平行的方向，用于判断和限制坐标数对的前者范围（eg.画横线传入绘图区域的Left和Right）</param>
+        /// <param name="drTB">栅格绘图区域与线垂直的方向，用于判断和限制坐标数对的后者范围（eg.画横线传入绘图区域的Top和Bottom）</param>
+        /// <param name="drSize">栅格绘图区域的宽高组成的数对，前者用于判断和限制坐标数对的前者，后者则用于做标数对后者（eg.画横线传入绘图区域的(width, height)数对，画竖线则相反）</param>
+        /// <param name="drawMain">是否绘制未超出栅格绘图区域的部分</param>
+        /// <param name="drawAppend">是否补绘超出栅格绘图区域的部分。补绘方式形如：以栅格坐标系原点为方向参照中心，若横线向左超出绘图区域左边界，则超出部分补绘到绘图区域的右边界向左。向其他方向的超出各个边界同理</param>
+        /// <returns>键值是约束和转化后的坐标数对前者，键值中的每个数对是绘制线时作为起点和终点的坐标数对的前者。假定drawMain = drawAppend = true，那么键值中最少一个数对，此时绘制线位于栅格绘图区域内部，只需绘制一次；最多两个数对，此时绘制线有超出部分，其中分别是未超出部分和超出部分，需要绘制两次</returns>
+        static KeyValuePair<int, List<(int, int)>> DrawCellLeftLine((int, int) left_top, int width, (int, int) drLR, (int, int) drTB, (int, int) drSize, bool drawMain, bool drawAppend)
+        {
+            var left = left_top.Item1; var top = left_top.Item2;
+            var drLeft = drLR.Item1; var drRight = drLR.Item2;
+            var drTop = drTB.Item1; var drBottom = drTB.Item2;
+            var drWidth = drSize.Item1; var drHeight = drSize.Item2;
+
+            var rawTop = top;
+            if (drawAppend)
+            {
+                if (top <= drTop)
+                {
+                    top = (top % drHeight) + drHeight;
+                    if (top <= drTop) { top += drHeight; }
+                }
+                if (top >= drBottom) { top %= drHeight; }
+            }
+            else
+            {
+                if (top < drTop || top > drBottom) { return new(top, new()); }
+            }
+            var right = left + width;
+            if (left >= drLeft && right <= drRight)
+            {
+                if (drawMain || (drawAppend && (rawTop < drTop || rawTop > drBottom)))
+                {
+                    return new(top, new() { (left, right) });
+                    //g.DrawLine(pen, new(left, top), new(right, top));
+                }
+            }
+            else if (left < drLeft)
+            {
+                return CellLeftBeyondDRLeft(left, top, width, drLeft, drRight, drWidth, drawMain, drawAppend);
+            }
+            else if (right > drRight)
+            {
+                return CellRightBeyondDRRight(right, top, width, drLeft, drRight, drWidth, drawMain, drawAppend);
+            }
+            return new(top, new());
+        }
+        /// <summary>
+        /// 格元左边界超出栅格绘图区域左边界
+        /// </summary>
+        static KeyValuePair<int, List<(int, int)>> CellLeftBeyondDRLeft(int left, int top, int width, int drLeft, int drRight, int drWidth, bool drawMain, bool drawAppend)
+        {
+            KeyValuePair<int, List<(int, int)>> result = new(top, new());
+            left = drWidth + (left % drWidth);
+            if (left <= drLeft) { left += drWidth; }
+            var cutWidth = drRight - left;
+            if (cutWidth > width) { cutWidth = width; }
+            var saveWidth = width - cutWidth;
+            if (drawMain)
+            {
+                result.Value.Add((drLeft, drLeft + saveWidth));
+                //g.DrawLine(pen, new(drLeft, top), new(drLeft + saveWidth, top));
+            }
+            if (drawAppend)
+            {
+                result.Value.Add((left, left + cutWidth));
+                //g.DrawLine(pen, new(left, top), new(left + cutWidth, top));
+            }
+            return result;
+        }
+        /// <summary>
+        /// 格元右边界超出栅格绘图区域右边界
+        /// </summary>
+        static KeyValuePair<int, List<(int, int)>> CellRightBeyondDRRight(int right, int top, int width, int drLeft, int drRight, int drWidth, bool drawMain, bool drawAppend)
+        {
+            KeyValuePair<int, List<(int, int)>> result = new(top, new());
+            var testRight = right % drWidth;
+            if (testRight > drLeft) { right = testRight; }
+            var cutWidth = right - drLeft;
+            if (cutWidth > width) { cutWidth = width; }
+            var saveWidth = width - cutWidth;
+            if (drawMain)
+            {
+                result.Value.Add((drRight - saveWidth, drRight));
+                //g.DrawLine(pen, new(drRight - saveWidth, top), new(drRight, top));
+            }
+            if (drawAppend)
+            {
+                result.Value.Add((right - cutWidth, right));
+                //g.DrawLine(pen, new(right - cutWidth, top), new(right, top));
+            }
+            return result;
         }
 
         #endregion
@@ -290,88 +309,14 @@ namespace FocusTree.UI.Graph
         public static void ReDrawCell(Graphics g, LatticeCell cell)
         {
             g.FillRectangle(new SolidBrush(Color.White), cell.RealRect);
-            ReDrawCell(g, CellPen, 
+            DrawCellLine(g, CellPen, 
                 new(cell.RealLeft, cell.RealTop),
                 new(LatticeCell.Width, LatticeCell.Height),
-                false, true);
-            ReDrawCell(g, NodePen, 
+                true, true);
+            DrawCellLine(g, NodePen, 
                 new(cell.NodeRealLeft, cell.NodeRealTop), 
                 new(LatticeCell.NodeWidth, LatticeCell.NodeHeight),
-                false, true);
-        }
-        static TestInfo test = new();
-        
-        /// <summary>
-        /// 在栅格绘图区域内绘制左下-左上-上右的七形线
-        /// </summary>
-        /// <param name="g"></param>
-        /// <param name="pen"></param>
-        /// <param name="LeftTop">七形线左上角坐标</param>
-        /// <param name="size">七形线尺寸</param>
-        /// <param name="append">是否补绘超出绘图区域的部分（超左补右，以此类推）</param>
-        static void ReDrawCell(Graphics g, Pen pen, Point LeftTop, Size size, bool drawMain, bool drawAppend)
-        {
-            //test.Show();
-            DrawCellLeftLine(g, pen, LeftTop.X, size.Width, LeftTop.Y, drawMain, drawAppend);
-
-        }
-        static void DrawCellLeftLine(Graphics g, Pen pen, int left, int width, int top, bool drawMain, bool drawAppend)
-        {
-            var rawTop = top;
-            if (drawAppend)
-            {
-                if (top <= DrawRect.Top)
-                {
-                    top = (top % DrawRect.Height) + DrawRect.Height;
-                    if (top <= DrawRect.Top) { top += DrawRect.Height; }
-                }
-                if (top >= DrawRect.Bottom) { top %= DrawRect.Height; }
-            }
-            var right = left + width;
-            if (left > DrawRect.Left && right < DrawRect.Right)
-            {
-                if (drawMain)
-                {
-                    g.DrawLine(pen, new(left, top), new(right, top));
-                }
-                else if (drawAppend && (rawTop < DrawRect.Top || rawTop > DrawRect.Bottom))
-                {
-                    g.DrawLine(pen, new(left, top), new(right, top));
-                }
-            }
-
-            else if (left <= DrawRect.Left)
-            {
-                left = DrawRect.Width + (left % DrawRect.Width);
-                if (left <= DrawRect.Left) { left += DrawRect.Width; }
-                var cutWidth = DrawRect.Right - left;
-                if (cutWidth > width) { cutWidth = width; }
-                var saveWidth = width - cutWidth;
-                if (drawMain)
-                {
-                    g.DrawLine(pen, new(DrawRect.Left, top), new(DrawRect.Left + saveWidth, top));
-                }
-                if (drawAppend)
-                {
-                    g.DrawLine(pen, new(left, top), new(left + cutWidth, top));
-                }
-            }
-            else if (right > DrawRect.Right)
-            {
-                var testRight = right % DrawRect.Width;
-                if (testRight > DrawRect.Left) { right = testRight; }
-                var cutWidth = right - DrawRect.Left;
-                if (cutWidth > width) { cutWidth = width; }
-                var saveWidth = width - cutWidth;
-                if (drawMain)
-                {
-                    g.DrawLine(pen, new(DrawRect.Right - saveWidth, top), new(DrawRect.Right, top));
-                }
-                if (drawAppend)
-                {
-                    g.DrawLine(pen, new(right - cutWidth, top), new(right, top));
-                }
-            }
+                true, true);
         }
     }
 }
