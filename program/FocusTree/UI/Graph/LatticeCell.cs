@@ -186,16 +186,16 @@ namespace FocusTree.UI.Graph
                 {
                     if (part != LastTouchInRect)
                     {
-                        Lattice.DrawCell(g, this);
+                        Lattice.ReDrawCell(g, this);
                         LastTouchInRect = part;
                         part = Lattice.RectWithinDrawRect(part);
-                        if (i == 3) { g.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.Orange)), part); }
-                        else { g.FillRectangle(new SolidBrush(Color.FromArgb(100, Color.Gray)), part); }
+                        //if (i == 3) { g.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.Orange)), part); }
+                        //else { g.FillRectangle(new SolidBrush(Color.FromArgb(100, Color.Gray)), part); }
                     }
                     return i == 0 ? CellParts.Left : i == 1 ? CellParts.Top : i == 2 ?  CellParts.LeftTop : CellParts.Node;
                 }
             }
-            Lattice.DrawCell(g, this);
+            Lattice.ReDrawCell(g, this);
             return CellParts.Leave;
         }
     }

@@ -35,7 +35,7 @@ namespace FocusTree.UI.test
             Info.WordWrap = false;
             Info.ZoomFactor = 2f;
             //TopMost = true;
-            testFormatter.Show();
+            //testFormatter.Show();
         }
 
         public void Initialize()

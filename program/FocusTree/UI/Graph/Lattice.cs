@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using FocusTree.UI.test;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -109,12 +110,12 @@ namespace FocusTree.UI.Graph
         public static Pen NodePen = new(Color.Orange, 1.5f);
         /// <summary>
         /// ===绘制栅格时调用===
-        /// 从左向右的水平线在栅格绘图区域内的绘制
+        /// 从左向右的循环横坐标
         /// </summary>
         /// <param name="left">左端点</param>
-        /// <param name="width">线长</param>
-        /// <returns>返回从左向右的水平线的起点坐标和终点坐标的数对。如果线需要分割，则返回数组里有一个额外的分割剩余线段的坐标数对。</returns>
-        public static (int, int)[] LineToDrawInHorizon(int left, int width)
+        /// <param name="width">循环单位宽度</param>
+        /// <returns>返回间隔循环单位宽度的起点横坐标和终点横坐标的数对。如果起点或终点超出绘图区域，则返回数组里有一个额外的分割剩余线段的坐标数对。</returns>
+        public static (int, int)[] LoopInHorizon(int left, int width)
         {
             if (left < DrawRect.Left) { left += DrawRect.Width; }
             else if (left > DrawRect.Right) { left -= DrawRect.Width; }
@@ -134,12 +135,12 @@ namespace FocusTree.UI.Graph
         }
         /// <summary>
         /// ===绘制栅格时调用===
-        /// 从上向下的垂直线在栅格绘图区域内的绘制
+        /// 从上向下的循环纵坐标
         /// </summary>
         /// <param name="top">上端点</param>
-        /// <param name="height">线高</param>
+        /// <param name="height">循环单位高度</param>
         /// <returns>返回从上向下的垂直线的起点坐标和终点坐标的数对。如果线需要分割，则返回数组里有一个额外的分割剩余线段的坐标数对。</returns>
-        public static (int, int)[] LineToDrawInVertical(int top, int height)
+        public static (int, int)[] LoopInVertical(int top, int height)
         {
             if (top < DrawRect.Top) { top += DrawRect.Height; }
             else if (top > DrawRect.Bottom) { top -= DrawRect.Height; }
@@ -158,76 +159,94 @@ namespace FocusTree.UI.Graph
             }
         }
         /// <summary>
+        /// 需要单独绘制的格元列表
+        /// </summary>
+        public static List<LatticeCell> CellsToDraw = new();
+        public static List<(LatticeCell, Rectangle, SolidBrush)> CellsToFill = new();
+        /// <summary>
         /// 绘制无限制栅格
         /// </summary>
         /// <param name="g"></param>
         public static void Draw(Graphics g)
         {
+            foreach(var cell in CellsToDraw)
+            {
+
+            }
             for (int i = 0; i < ColNumber; i++)
             {
                 for (int j = 0; j < RowNumber; j++)
                 {
-                    var cellLeft = i * LatticeCell.Width + (OriginLeft - DrawRect.X) % LatticeCell.Width + DeviDiffInDrawRectWidth;
-                    var cellTop = j * LatticeCell.Height + (OriginTop - DrawRect.Y) % LatticeCell.Height + DeviDiffInDrawRectHeight;
-                    var cellLeftLine = LineToDrawInHorizon(cellLeft, LatticeCell.Width);
-                    var cellTopLine = LineToDrawInVertical(cellTop, LatticeCell.Height);
-                    //
-                    // cell main: LeftBottom -> LeftTop -> TopRight
-                    //
-                    g.DrawLines(CellPen, new Point[]
-                    {
+                    //DrawLoopCell(g,
+                    //    i * LatticeCell.Width + (OriginLeft - DrawRect.X) % LatticeCell.Width + DeviDiffInDrawRectWidth,
+                    //    j * LatticeCell.Height + (OriginTop - DrawRect.Y) % LatticeCell.Height + DeviDiffInDrawRectHeight
+                    //    );
+                }
+            }
+        }
+        /// <summary>
+        /// 循环往复地在栅格绘图区域内绘制格元
+        /// </summary>
+        /// <param name="g"></param>
+        private static void DrawLoopCell(Graphics g, int cellLeft, int cellTop)
+        {
+            var cellLeftLine = LoopInHorizon(cellLeft, LatticeCell.Width);
+            var cellTopLine = LoopInVertical(cellTop, LatticeCell.Height);
+            //
+            // cell main: LeftBottom -> LeftTop -> TopRight
+            //
+            g.DrawLines(CellPen, new Point[]
+            {
                         new(cellLeftLine[0].Item1, cellTopLine[0].Item2),
                         new(cellLeftLine[0].Item1, cellTopLine[0].Item1),
                         new(cellLeftLine[0].Item2, cellTopLine[0].Item1)
-                    });
-                    //
-                    // cell append
-                    //
-                    if (cellLeftLine.Length > 1)
-                    {
-                        g.DrawLine(CellPen,
-                            new(cellLeftLine[1].Item1, cellTopLine[0].Item1),
-                            new(cellLeftLine[1].Item2, cellTopLine[0].Item1)
-                            );
-                    }
-                    if (cellTopLine.Length > 1)
-                    {
-                        g.DrawLine(CellPen,
-                            new(cellLeftLine[0].Item1, cellTopLine[1].Item1),
-                            new(cellLeftLine[0].Item1, cellTopLine[1].Item2)
-                            );
-                    }
-                    var nodeLeft = cellLeft + LatticeCell.NodePaddingWidth;
-                    var nodeTop = cellTop + LatticeCell.NodePaddingHeight;
-                    var nodeLeftLine = LineToDrawInHorizon(nodeLeft, LatticeCell.NodeWidth);
-                    var nodeTopLine = LineToDrawInVertical(nodeTop, LatticeCell.NodeHeight);
-                    //
-                    // node main: LeftBottom -> LeftTop -> TopRight
-                    //
-                    g.DrawLines(NodePen, new Point[]
-                    {
+            });
+            //
+            // cell append
+            //
+            if (cellLeftLine.Length > 1)
+            {
+                g.DrawLine(CellPen,
+                    new(cellLeftLine[1].Item1, cellTopLine[0].Item1),
+                    new(cellLeftLine[1].Item2, cellTopLine[0].Item1)
+                    );
+            }
+            if (cellTopLine.Length > 1)
+            {
+                g.DrawLine(CellPen,
+                    new(cellLeftLine[0].Item1, cellTopLine[1].Item1),
+                    new(cellLeftLine[0].Item1, cellTopLine[1].Item2)
+                    );
+            }
+            var nodeLeft = cellLeft + LatticeCell.NodePaddingWidth;
+            var nodeTop = cellTop + LatticeCell.NodePaddingHeight;
+            var nodeLeftLine = LoopInHorizon(nodeLeft, LatticeCell.NodeWidth);
+            var nodeTopLine = LoopInVertical(nodeTop, LatticeCell.NodeHeight);
+            //
+            // node main: LeftBottom -> LeftTop -> TopRight
+            //
+            g.DrawLines(NodePen, new Point[]
+            {
                         new(nodeLeftLine[0].Item1, nodeTopLine[0].Item2),
                         new(nodeLeftLine[0].Item1, nodeTopLine[0].Item1),
                         new(nodeLeftLine[0].Item2, nodeTopLine[0].Item1)
-                    });
-                    //
-                    // node append
-                    //
-                    if (nodeLeftLine.Length > 1)
-                    {
-                        g.DrawLine(NodePen,
-                            new(nodeLeftLine[1].Item1, nodeTopLine[0].Item1),
-                            new(nodeLeftLine[1].Item2, nodeTopLine[0].Item1)
-                            );
-                    }
-                    if (nodeTopLine.Length > 1)
-                    {
-                        g.DrawLine(NodePen,
-                            new(nodeLeftLine[0].Item1, nodeTopLine[1].Item1),
-                            new(nodeLeftLine[0].Item1, nodeTopLine[1].Item2)
-                            );
-                    }
-                }
+            });
+            //
+            // node append
+            //
+            if (nodeLeftLine.Length > 1)
+            {
+                g.DrawLine(NodePen,
+                    new(nodeLeftLine[1].Item1, nodeTopLine[0].Item1),
+                    new(nodeLeftLine[1].Item2, nodeTopLine[0].Item1)
+                    );
+            }
+            if (nodeTopLine.Length > 1)
+            {
+                g.DrawLine(NodePen,
+                    new(nodeLeftLine[0].Item1, nodeTopLine[1].Item1),
+                    new(nodeLeftLine[0].Item1, nodeTopLine[1].Item2)
+                    );
             }
         }
 
@@ -267,18 +286,19 @@ namespace FocusTree.UI.Graph
         /// </summary>
         /// <param name="g"></param>
         /// <param name="cell"></param>
-        public static void DrawCell(Graphics g, LatticeCell cell)
+        public static void ReDrawCell(Graphics g, LatticeCell cell)
         {
             g.FillRectangle(new SolidBrush(Color.White), cell.RealRect);
-            DrawCell(g, CellPen, 
+            ReDrawCell(g, CellPen, 
                 new(cell.RealLeft, cell.RealTop),
                 new(LatticeCell.Width, LatticeCell.Height)
                 );
-            DrawCell(g, NodePen, 
+            ReDrawCell(g, NodePen, 
                 new(cell.NodeRealLeft, cell.NodeRealTop), 
                 new(LatticeCell.NodeWidth, LatticeCell.NodeHeight)
                 );
         }
+        static TestInfo test = new();
         /// <summary>
         /// 在栅格绘图区域内绘制左下-左上-上右的七形线
         /// </summary>
@@ -286,28 +306,74 @@ namespace FocusTree.UI.Graph
         /// <param name="pen"></param>
         /// <param name="LeftTop">七形线左上角坐标</param>
         /// <param name="size">七形线尺寸</param>
-        static void DrawCell(Graphics g, Pen pen, Point LeftTop, Size size)
+        static void ReDrawCell(Graphics g, Pen pen, Point LeftTop, Size size)
         {
+            test.Show();
             var left = LeftTop.X;
             var top = LeftTop.Y;
             if (top > DrawRect.Top && top < DrawRect.Bottom)
             {
+                test.InfoText = $"raw left: {left}\nrect left: {DrawRect.Left}, right: {DrawRect.Right}, width: {DrawRect.Width}\n";
                 var right = left + size.Width;
-                if (left > DrawRect.Right || right < DrawRect.Left) { return; }
-                g.DrawLine(pen,
-                    new(left < DrawRect.Left ? DrawRect.Left : left, top),
-                    new(right > DrawRect.Right ? DrawRect.Right : right, top)
-                    );
+                //
+                if (left < DrawRect.Left)
+                {
+                    left = DrawRect.Width + (left % DrawRect.Right);
+                    test.InfoText += $"mode right left: {left % DrawRect.Right}\n";
+                    test.InfoText += $"mode width left: {left % DrawRect.Width}\n";
+                    var cutWidth = DrawRect.Right - left;
+                    if (cutWidth > size.Width) { cutWidth = size.Width; }
+                    g.DrawLine(pen,
+                        new(DrawRect.Left, top),
+                        new(DrawRect.Left + size.Width - cutWidth, top)
+                        );
+                    // IF append
+                    g.DrawLine(pen,
+                        new(left, top),
+                        new(left + cutWidth, top)
+                        );
+                    //return;
+                }
+                else if (right > DrawRect.Right)
+                {
+                    right %= DrawRect.Width;
+                    left %= DrawRect.Right;
+                    test.InfoText += $"mode left: {left}";
+                    var saveWidth = DrawRect.Right - left;
+                    if (saveWidth > size.Width) { saveWidth = 0; }
+                    g.DrawLine(pen,
+                        new(left, top),
+                        new(left +saveWidth, top)
+                        );
+                    // IF append
+                    g.DrawLine(pen,
+                        new(right - (size.Width - saveWidth), top),
+                        new(right, top)
+                        );
+                }
+                    //g.DrawLine(pen,
+                    //    new(DrawRect.Left, top),
+                    //    new(right, top)
+                    //    );
+                    //g.DrawLine(pen,
+                    //    new(left + DrawRect.Width, top),
+                    //    new(DrawRect.Right, top)
+                    //    );
+                    //return; 
+                //g.DrawLine(pen,
+                //    new(left < DrawRect.Left ? DrawRect.Left : left, top),
+                //    new(right > DrawRect.Right ? DrawRect.Right : right, top)
+                //    );
             }
-            if (left > DrawRect.Left && left < DrawRect.Right)
-            {
-                var bottom = top + size.Height;
-                if (top > DrawRect.Bottom || bottom < DrawRect.Top) {  return; }
-                g.DrawLine(pen,
-                    new(left, top < DrawRect.Top ? DrawRect.Top : top),
-                    new(left, bottom > DrawRect.Bottom ? DrawRect.Bottom : bottom)
-                    );
-            }
+            //if (left > DrawRect.Left && left < DrawRect.Right)
+            //{
+            //    var bottom = top + size.Height;
+            //    if (top > DrawRect.Bottom || bottom < DrawRect.Top) {  return; }
+            //    g.DrawLine(pen,
+            //        new(left, top < DrawRect.Top ? DrawRect.Top : top),
+            //        new(left, bottom > DrawRect.Bottom ? DrawRect.Bottom : bottom)
+            //        );
+            //}
         }
     }
 }
