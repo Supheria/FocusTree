@@ -313,12 +313,14 @@ namespace FocusTree.UI.Graph
             var top = LeftTop.Y;
             if (top > DrawRect.Top && top < DrawRect.Bottom)
             {
-                test.InfoText = $"raw left: {left}\nrect left: {DrawRect.Left}, right: {DrawRect.Right}, width: {DrawRect.Width}\n";
+                
                 var right = left + size.Width;
+                test.InfoText = $"raw left: {left}, raw right: {right}\nrect left: {DrawRect.Left}, right: {DrawRect.Right}, width: {DrawRect.Width}\n";
                 //
                 if (left < DrawRect.Left)
                 {
-                    left = DrawRect.Width + (left % DrawRect.Right);
+                    left = DrawRect.Width + (left % DrawRect.Width);
+                    if (left < DrawRect.Left) { left += DrawRect.Width; }
                     test.InfoText += $"mode right left: {left % DrawRect.Right}\n";
                     test.InfoText += $"mode width left: {left % DrawRect.Width}\n";
                     var cutWidth = DrawRect.Right - left;
@@ -336,18 +338,18 @@ namespace FocusTree.UI.Graph
                 }
                 else if (right > DrawRect.Right)
                 {
-                    right %= DrawRect.Width;
-                    left %= DrawRect.Right;
-                    test.InfoText += $"mode left: {left}";
-                    var saveWidth = DrawRect.Right - left;
-                    if (saveWidth > size.Width) { saveWidth = 0; }
+                    test.InfoText += $"mode right to Right: {right % DrawRect.Right}, to Width{right % DrawRect.Width}";
+                    var testRight = right % DrawRect.Width;
+                    if (testRight >= DrawRect.Left) { right = testRight; }
+                    var cutWidth = right - DrawRect.Left;
+                    if (cutWidth > size.Width) { cutWidth = size.Width; }
                     g.DrawLine(pen,
-                        new(left, top),
-                        new(left +saveWidth, top)
+                        new(DrawRect.Right - (size.Width - cutWidth), top),
+                        new(DrawRect.Right, top)
                         );
                     // IF append
                     g.DrawLine(pen,
-                        new(right - (size.Width - saveWidth), top),
+                        new(right - cutWidth, top),
                         new(right, top)
                         );
                 }
