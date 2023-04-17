@@ -141,6 +141,16 @@ namespace FocusTree.UI.Graph
         {
             return lhd.LatticedLeft != rhd.LatticedLeft || lhd.LatticedTop != rhd.LatticedTop;
         }
+
+        public override bool Equals(object obj)
+        {
+            var cell = (LatticeCell)obj;
+            return LatticedLeft == cell.LatticedLeft && LatticedTop == cell.LatticedTop;
+        }
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
         public enum CellParts
         {
             /// <summary>
@@ -189,8 +199,8 @@ namespace FocusTree.UI.Graph
                         Lattice.ReDrawCell(g, this);
                         LastTouchInRect = part;
                         part = Lattice.RectWithinDrawRect(part);
-                        //if (i == 3) { g.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.Orange)), part); }
-                        //else { g.FillRectangle(new SolidBrush(Color.FromArgb(100, Color.Gray)), part); }
+                        if (i == 3) { g.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.Orange)), part); }
+                        else { g.FillRectangle(new SolidBrush(Color.FromArgb(100, Color.Gray)), part); }
                     }
                     return i == 0 ? CellParts.Left : i == 1 ? CellParts.Top : i == 2 ?  CellParts.LeftTop : CellParts.Node;
                 }

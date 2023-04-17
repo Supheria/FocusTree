@@ -15,54 +15,16 @@ namespace FocusTree.UI.Graph
     /// </summary>
     static class Lattice
     {
-        #region ==== 设置列行数 ====
+        #region ==== 基本参数 ====
 
         /// <summary>
         /// 栅格行数（根据格元高自动生成）
         /// </summary>
-        public static int RowNumber { get; private set; }
+        static int RowNumber;
         /// <summary>
         /// 栅格列数（根据格元宽自动生成）
         /// </summary>
-        public static int ColNumber { get; private set; }
-
-        #endregion
-
-        #region ==== 设置边界区域 ====
-
-        /// <summary>
-        /// 栅格放置区域（绘图区域应该调用 DrawRect）
-        /// </summary>
-        public static Rectangle Bounds
-        {
-            set
-            {
-                ColNumber = value.Width / LatticeCell.Width;
-                RowWidth = ColNumber * LatticeCell.Width;
-                RowNumber = value.Height / LatticeCell.Height;
-                ColHeight = RowNumber * LatticeCell.Height;
-                DeviDiffInDrawRectWidth = (int)((float)(value.Width - RowWidth) * 0.5f);
-                DeviDiffInDrawRectHeight = (int)((float)(value.Height - ColHeight) * 0.5f);
-                DrawRect = new Rectangle(
-                    value.X + DeviDiffInDrawRectWidth,
-                    value.Y + DeviDiffInDrawRectHeight,
-                    RowWidth,
-                    ColHeight
-                    );
-            }
-        }
-        /// <summary>
-        /// 栅格绘图区域与放置区域的宽的差值的一半
-        /// </summary>
-        static int DeviDiffInDrawRectWidth;
-        /// <summary>
-        /// 栅格绘图区域与放置区域的高的差值的一半
-        /// </summary>
-        static int DeviDiffInDrawRectHeight;
-        /// <summary>
-        /// 栅格绘图区域（根据给定放置区域、列数、行数自动生成，并在给定放置区域内居中）
-        /// </summary>
-        public static Rectangle DrawRect { get; private set; }
+        static int ColNumber;
         /// <summary>
         /// 栅格总列宽
         /// </summary>
@@ -71,11 +33,18 @@ namespace FocusTree.UI.Graph
         /// 栅格总行高
         /// </summary>
         public static int ColHeight;
-
-        #endregion
-
-        #region ==== 设置栅格坐标系原点 ====
-
+        /// <summary>
+        /// 栅格绘图区域（根据给定放置区域、列数、行数自动生成，并在给定放置区域内居中）
+        /// </summary>
+        public static Rectangle DrawRect { get; private set; }
+        /// <summary>
+        /// 栅格绘图区域与放置区域的宽的差值的一半
+        /// </summary>
+        static int DeviDiffInDrawRectWidth;
+        /// <summary>
+        /// 栅格绘图区域与放置区域的高的差值的一半
+        /// </summary>
+        static int DeviDiffInDrawRectHeight;
         /// <summary>
         /// 栅格坐标系原点 x 坐标
         /// </summary>
@@ -95,11 +64,6 @@ namespace FocusTree.UI.Graph
 
         #endregion
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public static int ScaleFactor = 1;
-
         #region ==== 绘制栅格 ====
 
         /// <summary>
@@ -116,11 +80,18 @@ namespace FocusTree.UI.Graph
         public static List<LatticeCell> CellsToDraw = new();
         public static List<(LatticeCell, Rectangle, SolidBrush)> CellsToFill = new();
         /// <summary>
+        /// 上一次绘制栅格时光标的位置
+        /// </summary>
+        static Point LastCursor = new();
+        /// <summary>
         /// 绘制无限制栅格
         /// </summary>
         /// <param name="g"></param>
-        public static void Draw(Graphics g)
+        /// <param name="bounds">栅格放置区域</param>
+        /// <param name="cursor">新的光标位置</param>
+        public static void Draw(Graphics g, Rectangle bounds, Point? cursor = null)
         {
+            SetBounds(bounds);
             foreach(var cell in CellsToDraw)
             {
 
@@ -129,24 +100,69 @@ namespace FocusTree.UI.Graph
             {
                 for (int j = 0; j < RowNumber; j++)
                 {
-                    DrawLoopCell(g,
-                        i * LatticeCell.Width + (OriginLeft - DrawRect.X) % LatticeCell.Width + DeviDiffInDrawRectWidth,
-                        j * LatticeCell.Height + (OriginTop - DrawRect.Y) % LatticeCell.Height + DeviDiffInDrawRectHeight
-                        );
+                    DrawLoopCell(g, i, j, cursor ?? LastCursor);
                 }
             }
+            LastCursor = cursor ?? LastCursor;
         }
         /// <summary>
-        /// 循环往复地在栅格绘图区域内绘制格元
+        /// 设置边界及绘图参数
+        /// </summary>
+        /// <param name="bounds"></param>
+        private static void SetBounds(Rectangle bounds)
+        {
+            ColNumber = bounds.Width / LatticeCell.Width;
+            RowWidth = ColNumber * LatticeCell.Width;
+            RowNumber = bounds.Height / LatticeCell.Height;
+            ColHeight = RowNumber * LatticeCell.Height;
+            DeviDiffInDrawRectWidth = (int)((float)(bounds.Width - RowWidth) * 0.5f);
+            DeviDiffInDrawRectHeight = (int)((float)(bounds.Height - ColHeight) * 0.5f);
+            DrawRect = new Rectangle(
+                bounds.X + DeviDiffInDrawRectWidth,
+                bounds.Y + DeviDiffInDrawRectHeight,
+                RowWidth,
+                ColHeight
+                );
+        }
+        /// <summary>
+        /// 绘制循环格元（格元左上角坐标与栅格坐标系中心偏移量近似投射在一个格元大小范围内）
         /// </summary>
         /// <param name="g"></param>
-        private static void DrawLoopCell(Graphics g, int cellLeft, int cellTop)
+        /// <param name="col">循环到的列数</param>
+        /// <param name="row">循环到的行数</param>
+        private static void DrawLoopCell(Graphics g, int col, int row, Point cursor)
         {
-            DrawCellLine(g, CellPen, new(cellLeft, cellTop), new(LatticeCell.Width, LatticeCell.Height), true, false);
+
+            int cellLeft = 0;
+            if (cursor.X - LastCursor.X >= 0)
+            {
+                if (OriginLeft - DrawRect.X > 0)
+                {
+                    cellLeft = col * LatticeCell.Width + Math.Abs((OriginLeft % DrawRect.Width - DrawRect.X) ) % LatticeCell.Width + DeviDiffInDrawRectWidth;
+                }
+                else
+                cellLeft = col * LatticeCell.Width + Math.Abs((DrawRect.Right + OriginLeft % DrawRect.Width) ) % LatticeCell.Width + DeviDiffInDrawRectWidth;
+            }
+            if (cursor.X - LastCursor.X < 0)
+            {
+                if (OriginLeft - DrawRect.X > 0)
+                {
+                    cellLeft = col * LatticeCell.Width - Math.Abs((DrawRect.Right - OriginLeft % DrawRect.Width) ) % LatticeCell.Width + DeviDiffInDrawRectWidth;
+                }
+                else
+                cellLeft = col * LatticeCell.Width - Math.Abs((OriginLeft % DrawRect.Width - DrawRect.Right)) % LatticeCell.Width + DeviDiffInDrawRectWidth;
+            }
+            var cellTop = row * LatticeCell.Height + (cursor.Y -LastCursor.Y) % LatticeCell.Height + DeviDiffInDrawRectHeight;
+            DrawCellLine(g, CellPen, new(cellLeft, cellTop), new(LatticeCell.Width, LatticeCell.Height), true, true);
             var nodeLeft = cellLeft + LatticeCell.NodePaddingWidth;
             var nodeTop = cellTop + LatticeCell.NodePaddingHeight;
-            DrawCellLine(g, NodePen, new(nodeLeft, nodeTop), new(LatticeCell.NodeWidth, LatticeCell.NodeHeight), true, false);
+            DrawCellLine(g, NodePen, new(nodeLeft, nodeTop), new(LatticeCell.NodeWidth, LatticeCell.NodeHeight), false, true);
         }
+
+        #endregion
+
+        #region ==== 格元绘制核心 ====
+
         /// <summary>
         /// 在栅格绘图区域内绘制左下-左上-上右的七形线
         /// </summary>
@@ -302,7 +318,7 @@ namespace FocusTree.UI.Graph
                 );
         }
         /// <summary>
-        /// 重绘格元
+        /// 重绘格元（停止绘制超出部分）
         /// </summary>
         /// <param name="g"></param>
         /// <param name="cell"></param>
@@ -312,11 +328,11 @@ namespace FocusTree.UI.Graph
             DrawCellLine(g, CellPen, 
                 new(cell.RealLeft, cell.RealTop),
                 new(LatticeCell.Width, LatticeCell.Height),
-                true, true);
+                true, false);
             DrawCellLine(g, NodePen, 
                 new(cell.NodeRealLeft, cell.NodeRealTop), 
                 new(LatticeCell.NodeWidth, LatticeCell.NodeHeight),
-                true, true);
+                true, false);
         }
     }
 }

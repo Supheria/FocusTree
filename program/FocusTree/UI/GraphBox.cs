@@ -205,25 +205,21 @@ namespace FocusTree.UI.Controls
             ControlResize.SetTag(this);
         }
 
-        public void DrawLattice()
+        public void DrawLattice(Point? cursor = null)
         {
             Image ??= new Bitmap(Width, Height);
             Graphics g = Graphics.FromImage(Image);
-            DrawLattice(g);
-            g.Flush(); g.Dispose();
-            Invalidate();
-        }
-        private void DrawLattice(Graphics g)
-        {
             g.Clear(Color.White);
 
-            Lattice.Bounds = ClientRectangle;
-            Lattice.Draw(g);
-            
+            //Lattice.Bounds = ClientRectangle;
+            Lattice.Draw(g, ClientRectangle, cursor);
 
             var testPen = new Pen(Color.Red, 0.5f);
             g.DrawLine(testPen, new(Lattice.OriginLeft, Lattice.DrawRect.Top), new(Lattice.OriginLeft, Lattice.DrawRect.Bottom));
             g.DrawLine(testPen, new(Lattice.DrawRect.Left, Lattice.OriginTop), new(Lattice.DrawRect.Right, Lattice.OriginTop));
+            
+            g.Flush(); g.Dispose();
+            Invalidate();
         }
 
 
@@ -379,7 +375,7 @@ namespace FocusTree.UI.Controls
             Image?.Dispose();
             ControlResize.SetTag(this);
             Image = new Bitmap(Width, Height);
-            DrawLattice(Graphics.FromImage(Image));
+            DrawLattice();
             Invalidate();
         }
 
@@ -553,7 +549,7 @@ namespace FocusTree.UI.Controls
                 Lattice.OriginLeft += newPoint.X - DragLatticeMouseFlagPoint.X;
                 Lattice.OriginTop += newPoint.Y - DragLatticeMouseFlagPoint.Y;
                 DragLatticeMouseFlagPoint = newPoint;
-                DrawLattice();
+                DrawLattice(newPoint);
             }
         }
         private void DragNode(Point newPoint)
@@ -622,11 +618,11 @@ namespace FocusTree.UI.Controls
             var diffInHeight = args.Location.Y - Height / 2;
             Lattice.OriginLeft += diffInWidth / LatticeCell.Width * Lattice.DrawRect.Width / 200;
             Lattice.OriginTop += diffInHeight / LatticeCell.Height * Lattice.DrawRect.Height / 200;
+            DrawLattice(new(Lattice.OriginLeft, Lattice.OriginTop));
 
             LatticeCell.Width += args.Delta / 100 * Lattice.DrawRect.Width / 200;
             LatticeCell.Height += args.Delta / 100 * Lattice.DrawRect.Width / 200;
 
-            DrawLattice();
             Parent.UpdateText("打开节点选项");
         }
 
