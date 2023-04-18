@@ -85,7 +85,6 @@ namespace FocusTree.UI.Graph
         /// <param name="cursor">新的光标位置</param>
         public static void Draw(Graphics g, Rectangle bounds)
         {
-            test.Show();
             g.Clear(Color.White);
             //DrawCell += delegate (Graphics g) { DrawCellQueue.Clear(); };
             SetBounds(bounds);
@@ -99,10 +98,6 @@ namespace FocusTree.UI.Graph
                     skipColRow[index.X].Add(index.Y);
                 }
             }
-            if (DrawCellQueue.Count > 1) 
-            { 
-                test.InfoText = "dsfdfdsf"; 
-            }
             DrawCellQueue.Clear();
 
             for (int i = 0; i < ColNumber; i++)
@@ -110,14 +105,13 @@ namespace FocusTree.UI.Graph
                 var skip = skipColRow.TryGetValue(i, out var skipCols);
                 for (int j = 0; j < RowNumber; j++)
                 {
-                    if (skip && skipCols.TryGetValue(j, out var value) && value == j)
-                    {
-                        test.InfoText = $"col num:{ColNumber}\ncol index: {i}\n";
-                        //if (i == ColNumber - 1 || i == 0 || )
-                        DrawLoopCell(g, i, j, true, false, true, true);
-                        continue;
-                    }
-                    //DrawLoopCell(g, i, j, false, true, true, false);
+                    //if (skip && skipCols.TryGetValue(j, out var value) && value == j)
+                    //{
+                    //    //if (i == ColNumber - 1 || i == 0 || )
+                    //    //DrawLoopCell(g, i, j, true, false, true, true);
+                    //    continue;
+                    //}
+                    DrawLoopCell(g, i, j);
                 }
             }
             LastOrigin = new(OriginLeft, OriginTop);
@@ -149,37 +143,15 @@ namespace FocusTree.UI.Graph
         /// <param name="row">循环到的行数</param>
         /// <param name="drawMain">是否绘制未超出栅格绘图区域的部分</param>
         /// <param name="drawAppend">是否补绘超出栅格绘图区域的部分</param>
-        private static void DrawLoopCell(Graphics g, int col, int row, bool drawMain, bool drawAppend, bool Normal, bool Special)
+        private static void DrawLoopCell(Graphics g, int col, int row)
         {
-            //col *= LatticeCell.Width;
-            var direct = OriginLeft - LastOrigin.X;
-            //var oleft = OriginLeft % DrawRect.Width;
-            var drLeft = DrawRect.Left;
-            var drRight = DrawRect.Right;
-            var cellLeft = GetLoopCellLeftTop(col, direct, OriginLeft, drLeft, drRight, LatticeCell.Width, DrawRect.Width, DeviDiffInDrawRectWidth);
-            //row *= LatticeCell.Height;
-            direct = OriginTop - LastOrigin.Y;
-            var otop = OriginTop % DrawRect.Height;
-            var drtop = DrawRect.Top;
-            var drbottom = DrawRect.Bottom;
-            var cellTop = GetLoopCellLeftTop(row, direct, OriginTop, drtop, drbottom, LatticeCell.Height, DrawRect.Height, DeviDiffInDrawRectHeight);
-            if (Normal)
-            {
-
-            }
-            if (Special)
-            {
-                DrawCellLine(g, CellPen, new(col * LatticeCell.Width, col * LatticeCell.Height), new(LatticeCell.Width, LatticeCell.Height), drawMain, drawAppend);
-                var nodeLeft = cellLeft + LatticeCell.NodePaddingWidth;
-                var nodeTop = cellTop + LatticeCell.NodePaddingHeight;
-                DrawCellLine(g, NodePen, new(nodeLeft, nodeTop), new(LatticeCell.NodeWidth, LatticeCell.NodeHeight), drawMain, drawAppend);
-                test.InfoText += $"drwidth: {DrawRect.Width}, drHeight: {DrawRect.Height}\noleft: {OriginLeft % LatticeCell.Width}, otop: {OriginTop % LatticeCell.Height}, otop: {otop}\ncleft: {cellLeft}, ctop: {cellTop}\ndevW: {DeviDiffInDrawRectWidth}, devH: {DeviDiffInDrawRectHeight}";
-                //test.InfoText += $"{LatticeCell.Width * col}";
-            }
-            
-            
+            var cellLeft = col * LatticeCell.Width + (OriginLeft - DrawRect.Left) % LatticeCell.Width + DeviDiffInDrawRectWidth;
+            var cellTop = row * LatticeCell.Height + (OriginTop - DrawRect.Top) % LatticeCell.Height + DeviDiffInDrawRectHeight;
+            DrawCellLine(g, CellPen, new(cellLeft, cellTop), new(LatticeCell.Width, LatticeCell.Height), true, true);
+            var nodeLeft = cellLeft + LatticeCell.NodePaddingWidth;
+            var nodeTop = cellTop + LatticeCell.NodePaddingHeight;
+            DrawCellLine(g, NodePen, new(nodeLeft, nodeTop), new(LatticeCell.NodeWidth, LatticeCell.NodeHeight), true, true);
         }
-        static TestInfo test = new();
         /// <summary>
         /// 得到循环格元的左上角坐标。难点在于解决移动的方向性，例如原点向左偏移，那么补绘应该在栅格绘图区域右侧；如果向右，那就应该补绘在左侧
         /// （现在的算法是硬试出来的，因为烧脑不想严格论证，目前看起来没什么问题）
