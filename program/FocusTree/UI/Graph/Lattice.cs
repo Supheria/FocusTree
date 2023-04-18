@@ -150,24 +150,28 @@ namespace FocusTree.UI.Graph
         {
 
             int cellLeft = 0;
+            int colLength = col * LatticeCell.Width;
             var mod = OriginLeft % DrawRect.Width;
-            if (cursor.X - LastCursor.X >= 0)
+            if (cursor.X - LastCursor.X >= 0) //to right
             {
-                if (OriginLeft - DrawRect.X > 0)
+                if (OriginLeft > DrawRect.Left)
                 {
-                    cellLeft = col * LatticeCell.Width + /*Math.Abs*/((mod - DrawRect.Left)) % LatticeCell.Width + DeviDiffInDrawRectWidth;
+                    cellLeft = colLength + (mod - DrawRect.Left) % LatticeCell.Width + DeviDiffInDrawRectWidth;
                 }
-                //else
-                    //cellLeft = col * LatticeCell.Width + Math.Abs((DrawRect.Right + OriginLeft % DrawRect.Width)) % LatticeCell.Width + DeviDiffInDrawRectWidth;
+                else
+                {
+                    cellLeft = colLength - (DrawRect.Right - mod) % LatticeCell.Width + LatticeCell.Width + DeviDiffInDrawRectWidth;
+                }
+                    
             }
             if (cursor.X - LastCursor.X < 0)
             {
-                if (OriginLeft - DrawRect.X > 0)
+                if (OriginLeft > DrawRect.Left)
                 {
-                    cellLeft = col * LatticeCell.Width - /*Math.Abs*/((DrawRect.Right - mod)) % LatticeCell.Width + DeviDiffInDrawRectWidth;
+                    cellLeft = colLength - (DrawRect.Right - mod) % LatticeCell.Width + DeviDiffInDrawRectWidth;
                 }
-                //else
-                    //cellLeft = col * LatticeCell.Width - Math.Abs((OriginLeft % DrawRect.Width - DrawRect.Right)) % LatticeCell.Width + DeviDiffInDrawRectWidth;
+                else
+                    cellLeft = colLength + (mod - DrawRect.Left) % LatticeCell.Width + DeviDiffInDrawRectWidth;
             }
             //cellLeft = col * LatticeCell.Width + (OriginLeft % DrawRect.Width - DrawRect.X) % LatticeCell.Width + DeviDiffInDrawRectWidth;
             var cellTop = row * LatticeCell.Height + (cursor.Y -LastCursor.Y) % LatticeCell.Height + DeviDiffInDrawRectHeight;
@@ -356,7 +360,7 @@ namespace FocusTree.UI.Graph
             };
 
         }
-        static TestInfo test = new();
+        //static TestInfo test = new();
         /// <summary>
         /// 添加格元及其重绘方法添加到格元绘制队列
         /// </summary>
@@ -364,12 +368,12 @@ namespace FocusTree.UI.Graph
         /// <param name="cellDrawer"></param>
         public static void AddCellToDrawQueue(LatticeCell cell, CellDrawer cellDrawer)
         {
-            test.Show();
+            //test.Show();
             var ColRowIndex = cell.GetRealColRowIndex();
             DrawCellQueue[ColRowIndex] = cellDrawer;
-            test.InfoText = $"ColRowIndex: {ColRowIndex}\n" +
-                $"Real LeftTop: {new Point(cell.RealLeft, cell.RealTop)}\n" +
-                $"latticed again: {new Point(ColRowIndex.Item1 * LatticeCell.Width, ColRowIndex.Item2 * LatticeCell.Height)}";
+            //test.InfoText = $"ColRowIndex: {ColRowIndex}\n" +
+            //    $"Real LeftTop: {new Point(cell.RealLeft, cell.RealTop)}\n" +
+            //    $"latticed again: {new Point(ColRowIndex.Item1 * LatticeCell.Width, ColRowIndex.Item2 * LatticeCell.Height)}";
         }
         /// <summary>
         /// 从格元绘制队列里移除可能存在的格元
