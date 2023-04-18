@@ -205,14 +205,14 @@ namespace FocusTree.UI.Controls
             ControlResize.SetTag(this);
         }
 
-        public void DrawLattice(Point? cursor = null)
+        public void DrawLattice()
         {
             Image ??= new Bitmap(Width, Height);
             Graphics g = Graphics.FromImage(Image);
             g.Clear(Color.White);
 
             //Lattice.Bounds = ClientRectangle;
-            Lattice.Draw(g, ClientRectangle, cursor);
+            Lattice.Draw(g, ClientRectangle);
 
             var testPen = new Pen(Color.Red, 0.5f);
             g.DrawLine(testPen, new(Lattice.OriginLeft, Lattice.DrawRect.Top), new(Lattice.OriginLeft, Lattice.DrawRect.Bottom));
@@ -549,7 +549,7 @@ namespace FocusTree.UI.Controls
                 Lattice.OriginLeft += newPoint.X - DragLatticeMouseFlagPoint.X;
                 Lattice.OriginTop += newPoint.Y - DragLatticeMouseFlagPoint.Y;
                 DragLatticeMouseFlagPoint = newPoint;
-                DrawLattice(newPoint);
+                DrawLattice();
             }
         }
         private void DragNode(Point newPoint)
@@ -618,7 +618,7 @@ namespace FocusTree.UI.Controls
             var diffInHeight = args.Location.Y - Height / 2;
             Lattice.OriginLeft += diffInWidth / LatticeCell.Width * Lattice.DrawRect.Width / 200;
             Lattice.OriginTop += diffInHeight / LatticeCell.Height * Lattice.DrawRect.Height / 200;
-            DrawLattice(new(Lattice.OriginLeft, Lattice.OriginTop));
+            DrawLattice();
 
             LatticeCell.Width += args.Delta / 100 * Lattice.DrawRect.Width / 200;
             LatticeCell.Height += args.Delta / 100 * Lattice.DrawRect.Width / 200;
