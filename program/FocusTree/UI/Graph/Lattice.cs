@@ -145,52 +145,116 @@ namespace FocusTree.UI.Graph
         /// <param name="drawAppend">是否补绘超出栅格绘图区域的部分</param>
         private static void DrawLoopCell(Graphics g, int col, int row)
         {
-            var cellLeft = col * LatticeCell.Width + (OriginLeft - DrawRect.Left) % LatticeCell.Width + DeviDiffInDrawRectWidth;
-            var cellTop = row * LatticeCell.Height + (OriginTop - DrawRect.Top) % LatticeCell.Height + DeviDiffInDrawRectHeight;
-            DrawCellLine(g, CellPen, new(cellLeft, cellTop), new(LatticeCell.Width, LatticeCell.Height), true, true);
+            var cellLeft = col * LatticeCell.Width + (OriginLeft - DrawRect.X) % LatticeCell.Width + DeviDiffInDrawRectWidth;
+            var cellTop = row * LatticeCell.Height + (OriginTop - DrawRect.Y) % LatticeCell.Height + DeviDiffInDrawRectHeight;
+            var cellLeftLine = LineToDrawInHorizon(cellLeft, LatticeCell.Width);
+            var cellTopLine = LineToDrawInVertical(cellTop, LatticeCell.Height);
+            //
+            // cell main: LeftBottom -> LeftTop -> TopRight
+            //
+            g.DrawLines(CellPen, new Point[]
+            {
+                        new(cellLeftLine[0].Item1, cellTopLine[0].Item2),
+                        new(cellLeftLine[0].Item1, cellTopLine[0].Item1),
+                        new(cellLeftLine[0].Item2, cellTopLine[0].Item1)
+            });
+            //
+            // cell append
+            //
+            if (cellLeftLine.Length > 1)
+            {
+                g.DrawLine(CellPen,
+                    new(cellLeftLine[1].Item1, cellTopLine[0].Item1),
+                    new(cellLeftLine[1].Item2, cellTopLine[0].Item1)
+                    );
+            }
+            if (cellTopLine.Length > 1)
+            {
+                g.DrawLine(CellPen,
+                    new(cellLeftLine[0].Item1, cellTopLine[1].Item1),
+                    new(cellLeftLine[0].Item1, cellTopLine[1].Item2)
+                    );
+            }
             var nodeLeft = cellLeft + LatticeCell.NodePaddingWidth;
             var nodeTop = cellTop + LatticeCell.NodePaddingHeight;
-            DrawCellLine(g, NodePen, new(nodeLeft, nodeTop), new(LatticeCell.NodeWidth, LatticeCell.NodeHeight), true, true);
+            var nodeLeftLine = LineToDrawInHorizon(nodeLeft, LatticeCell.NodeWidth);
+            var nodeTopLine = LineToDrawInVertical(nodeTop, LatticeCell.NodeHeight);
+            //
+            // node main: LeftBottom -> LeftTop -> TopRight
+            //
+            g.DrawLines(NodePen, new Point[]
+            {
+                        new(nodeLeftLine[0].Item1, nodeTopLine[0].Item2),
+                        new(nodeLeftLine[0].Item1, nodeTopLine[0].Item1),
+                        new(nodeLeftLine[0].Item2, nodeTopLine[0].Item1)
+            });
+            //
+            // node append
+            //
+            if (nodeLeftLine.Length > 1)
+            {
+                g.DrawLine(NodePen,
+                    new(nodeLeftLine[1].Item1, nodeTopLine[0].Item1),
+                    new(nodeLeftLine[1].Item2, nodeTopLine[0].Item1)
+                    );
+            }
+            if (nodeTopLine.Length > 1)
+            {
+                g.DrawLine(NodePen,
+                    new(nodeLeftLine[0].Item1, nodeTopLine[1].Item1),
+                    new(nodeLeftLine[0].Item1, nodeTopLine[1].Item2)
+                    );
+            }
         }
         /// <summary>
-        /// 得到循环格元的左上角坐标。难点在于解决移动的方向性，例如原点向左偏移，那么补绘应该在栅格绘图区域右侧；如果向右，那就应该补绘在左侧
-        /// （现在的算法是硬试出来的，因为烧脑不想严格论证，目前看起来没什么问题）
+        /// ===绘制栅格时调用===
+        /// 从左向右的水平线在栅格绘图区域内的绘制
         /// </summary>
-        /// <param name="col">格元所处于栅格绘图区域的列（行）初始位置</param>
-        /// <param name="direct">原点偏移方向</param>
-        /// <param name="oleft">取栅格绘图区域宽度（高度）的模后的原点横（纵）坐标</param>
-        /// <param name="drLeft">栅格绘图区域的左边界（上边界）</param>
-        /// <param name="drRight">栅格绘图区域的右边界（下边界）</param>
-        /// <param name="cellWidth">格元宽（高）</param>
-        /// <param name="devDiff">栅格绘图区域与放置区域的宽（高）的差值的一半</param>
-        /// <returns>转换后的格元左（上）坐标</returns>
-        static int GetLoopCellLeftTop(int col, int direct, int oleft, int drLeft, int drRight, int cellWidth, int drWidth, int devDiff)
+        /// <param name="left">左端点</param>
+        /// <param name="width">线长</param>
+        /// <returns>返回从左向右的水平线的起点坐标和终点坐标的数对。如果线需要分割，则返回数组里有一个额外的分割剩余线段的坐标数对。</returns>
+        public static (int, int)[] LineToDrawInHorizon(int left, int width)
         {
-            var colLength = col/* * cellWidth*/;
-            var mod = oleft % cellWidth;
-            //if (mod == 0 && oleft / cellWidth < col + 1) { mod += cellWidth; }
-            //if (mod == 0 && oleft / cellWidth > col + 1) { mod -= cellWidth; }
-            //if (oleft <= 0) { oleft-= cellWidth; }
-            var reault = col * cellWidth + mod;
-            if (reault > col * cellWidth + devDiff) { reault -= cellWidth; } 
-            else if ( reault < col * cellWidth + devDiff) { reault += cellWidth; }
+            if (left < DrawRect.Left) { left += DrawRect.Width; }
+            else if (left > DrawRect.Right) { left -= DrawRect.Width; }
+            var realWidth = DrawRect.Right - left;
+            if (realWidth >= width)
+            {
+                return new (int, int)[] { (left, left + width) };
+            }
             else
-                reault = col* cellWidth +mod;
-            return /*colLength + */ reault;
-            //if (direct > 0) //to right
-            //{
-            //    if (oleft > drLeft)
-            //    { return colLength + oleft % cellWidth + devDiff; }
-            //    else
-            //    { return colLength - oleft % cellWidth + cellWidth + devDiff; }
-            //}
-            //else
-            //{
-            //    if (oleft > drLeft)
-            //    { return colLength - (drRight - oleft) % cellWidth + devDiff; }
-            //    else
-            //    { return colLength + (oleft - drLeft) % cellWidth + devDiff; }
-            //}
+            {
+                return new (int, int)[]
+                {
+                    (left, left + realWidth),
+                    (DrawRect.Left, DrawRect.Left + width - realWidth)
+                };
+            }
+        }
+        /// <summary>
+        /// ===绘制栅格时调用===
+        /// 从上向下的垂直线在栅格绘图区域内的绘制
+        /// </summary>
+        /// <param name="top">上端点</param>
+        /// <param name="height">线高</param>
+        /// <returns>返回从上向下的垂直线的起点坐标和终点坐标的数对。如果线需要分割，则返回数组里有一个额外的分割剩余线段的坐标数对。</returns>
+        public static (int, int)[] LineToDrawInVertical(int top, int height)
+        {
+            if (top < DrawRect.Top) { top += DrawRect.Height; }
+            else if (top > DrawRect.Bottom) { top -= DrawRect.Height; }
+            var realHeight = DrawRect.Bottom - top;
+            if (realHeight >= height)
+            {
+                return new (int, int)[] { (top, top + height) };
+            }
+            else
+            {
+                return new (int, int)[]
+                {
+                    (top, top + realHeight),
+                    (DrawRect.Top, DrawRect.Top + height - realHeight)
+                };
+            }
         }
 
         #endregion
