@@ -1,4 +1,4 @@
-﻿#define VERTIC
+﻿#define DEBUG
 using FocusTree.UI.test;
 using static System.Formats.Asn1.AsnWriter;
 
@@ -61,10 +61,6 @@ namespace FocusTree.UI.Graph
         #region ==== 绘制栅格 ====
 
         /// <summary>
-        /// 核心 GDI
-        /// </summary>
-        static Graphics gCore;
-        /// <summary>
         /// 格元边界绘制用笔
         /// </summary>
         public static Pen CellPen = new(Color.AliceBlue, 1.5f);
@@ -89,8 +85,7 @@ namespace FocusTree.UI.Graph
         /// <param name="cursor">新的光标位置</param>
         public static void Draw(Graphics g, Rectangle bounds)
         {
-            gCore = g;
-            gCore.Clear(Color.White);
+            g.Clear(Color.White);
             SetBounds(bounds);
 
             foreach(var drawer in DrawCellQueue)
@@ -103,9 +98,14 @@ namespace FocusTree.UI.Graph
             {
                 for (int j = 0; j < RowNumber; j++)
                 {
-                    DrawLoopCell(i, j);
+                    DrawLoopCell(g, i, j);
                 }
             }
+#if DEBUG
+            var testPen = new Pen(Color.Red, 0.5f);
+            g.DrawLine(testPen, new(OriginLeft, DrawRect.Top), new(OriginLeft, DrawRect.Bottom));
+            g.DrawLine(testPen, new(DrawRect.Left, OriginTop), new(DrawRect.Right, OriginTop));
+#endif
         }
         /// <summary>
         /// 设置边界及绘图参数
@@ -134,15 +134,15 @@ namespace FocusTree.UI.Graph
         /// <param name="row">循环到的行数</param>
         /// <param name="drawMain">是否绘制未超出栅格绘图区域的部分</param>
         /// <param name="drawAppend">是否补绘超出栅格绘图区域的部分</param>
-        private static void DrawLoopCell(int col, int row)
+        private static void DrawLoopCell(Graphics g, int col, int row)
         {
             var cellLeft = col * LatticeCell.Width + (OriginLeft - DrawRect.X) % LatticeCell.Width + DeviDiffInDrawRectWidth;
             var cellTop = row * LatticeCell.Height + (OriginTop - DrawRect.Y) % LatticeCell.Height + DeviDiffInDrawRectHeight;
-            DrawLoopCellLine(CellPen, new(cellLeft, cellTop), new(LatticeCell.Width, LatticeCell.Height));
+            DrawLoopCellLine(g, CellPen, new(cellLeft, cellTop), new(LatticeCell.Width, LatticeCell.Height));
             
             var nodeLeft = cellLeft + LatticeCell.NodePaddingWidth;
             var nodeTop = cellTop + LatticeCell.NodePaddingHeight;
-            DrawLoopCellLine(NodePen, new(nodeLeft, nodeTop), new(LatticeCell.NodeWidth, LatticeCell.NodeHeight));
+            DrawLoopCellLine(g, NodePen, new(nodeLeft, nodeTop), new(LatticeCell.NodeWidth, LatticeCell.NodeHeight));
         }
         /// <summary>
         /// 绘制循环格元的边界线或节点线
@@ -150,16 +150,16 @@ namespace FocusTree.UI.Graph
         /// <param name="pen">绘制格元或节点用的笔刷</param>
         /// <param name="LeftTop">格元或节点的左上角坐标</param>
         /// <param name="size">格元或节点的大小</param>
-        private static void DrawLoopCellLine(Pen pen, Point LeftTop, Size size)
+        private static void DrawLoopCellLine(Graphics g, Pen pen, Point LeftTop, Size size)
         {
-            var LeftRight = GetLoopedLineEndPair(LeftTop.X, size.Width, (DrawRect.Left, DrawRect.Right), DrawRect.Width);
-            var TopBottom = GetLoopedLineEndPair(LeftTop.Y, size.Height, (DrawRect.Top, DrawRect.Bottom), DrawRect.Height);
+            var LeftRight = GetLoopedLineEnds(LeftTop.X, size.Width, (DrawRect.Left, DrawRect.Right), DrawRect.Width);
+            var TopBottom = GetLoopedLineEnds(LeftTop.Y, size.Height, (DrawRect.Top, DrawRect.Bottom), DrawRect.Height);
             var left = LeftRight[0].Item1;
             var top = TopBottom[0].Item1;
             //
             // draw main: LeftBottom -> LeftTop -> TopRight
             //
-            gCore.DrawLines(pen, new Point[]
+            g.DrawLines(pen, new Point[]
             {
                         new(left, TopBottom[0].Item2),
                         new(left, top),
@@ -170,14 +170,14 @@ namespace FocusTree.UI.Graph
             //
             if (LeftRight.Length > 1)
             {
-                gCore.DrawLine(pen,
+                g.DrawLine(pen,
                     new(LeftRight[1].Item1, top),
                     new(LeftRight[1].Item2, top)
                     );
             }
             if (TopBottom.Length > 1)
             {
-                gCore.DrawLine(pen,
+                g.DrawLine(pen,
                     new(left, TopBottom[1].Item1),
                     new(left, TopBottom[1].Item2)
                     );
@@ -191,7 +191,7 @@ namespace FocusTree.UI.Graph
         /// <param name="drBounds">head在DrawRect(dr)里的限制范围</param>
         /// <param name="drLength">DrawRect(dr)的宽度（长度）</param>
         /// <returns>转换后的坐标数对，前者是起点横（纵）坐标，后者是终点的。如果线需要分割，则返回数组里有一个额外的分割后另一部分线段的坐标数对。</returns>
-        private static (int, int)[] GetLoopedLineEndPair(int head, int length, (int, int) drBounds, int drLength)
+        private static (int, int)[] GetLoopedLineEnds(int head, int length, (int, int) drBounds, int drLength)
         {
             var left_top = drBounds.Item1;
             var right_bottom = drBounds.Item2;
@@ -245,57 +245,45 @@ namespace FocusTree.UI.Graph
                 );
         }
         /// <summary>
-        /// 重绘格元（停止绘制超出部分）
+        /// 重绘格元（裁去超出部分）
         /// </summary>
         /// <param name="g"></param>
         /// <param name="cell"></param>
-        public static void ReDrawCell(LatticeCell cell)
+        public static void ReDrawCell(Graphics g, LatticeCell cell)
         {
-            var col = cell.RealColIndex;
-            var row = cell.RealRowIndex;
-            if (col < 0 || col >= ColNumber || row < 0 || row >= RowNumber) 
-            { 
-                return; 
-            }
-            DrawLoopCell(col, row);
+            g.FillRectangle(new SolidBrush(Color.White), cell.RealRect);
+            DrawCell(g, CellPen, new(cell.RealLeft, cell.RealTop), new(LatticeCell.Width, LatticeCell.Height));
+            DrawCell(g, NodePen, new(cell.NodeRealLeft, cell.NodeRealTop), new(LatticeCell.NodeWidth, LatticeCell.NodeHeight));
         }
         /// <summary>
-        /// 光标进入格元后高亮光标所处其中的部分，或取消高亮光标刚离开的部分
+        /// 在栅格绘图区域内绘制左下-左上-上右的七形线
         /// </summary>
         /// <param name="g"></param>
-        /// <param name="cell"></param>
-        /// <param name="cursor"></param>
-        /// <returns></returns>
-        public static LatticeCell.CellParts HightLightCursorOnCell(LatticeCell cell, Point cursor)
+        /// <param name="pen"></param>
+        /// <param name="LeftTop">七形线左上角坐标</param>
+        /// <param name="size">七形线尺寸</param>
+        static void DrawCell(Graphics g, Pen pen, Point LeftTop, Size size)
         {
-            for (int i = 0; i < cell.SideParts.Length; i++)
+            var left = LeftTop.X;
+            var top = LeftTop.Y;
+            if (top > DrawRect.Top && top < DrawRect.Bottom)
             {
-                var part = cell.SideParts[i];
-                if (!part.Contains(cursor)) { continue; }
-                if (part != cell.LastTouchInRect)
-                {
-                    ReDrawCell(cell);
-                    cell.LastTouchInRect = part;
-                    part = RectWithinDrawRect(part);
-                    gCore.FillRectangle(new SolidBrush(Color.FromArgb(100, Color.Gray)), part);
-                }
-                return i == 0 ? LatticeCell.CellParts.Left : i == 1 ? LatticeCell.CellParts.Top : LatticeCell.CellParts.LeftTop;
+                var right = left + size.Width;
+                if (left > DrawRect.Right || right < DrawRect.Left) { return; }
+                g.DrawLine(pen,
+                    new(left < DrawRect.Left ? DrawRect.Left : left, top),
+                    new(right > DrawRect.Right ? DrawRect.Right : right, top)
+                    );
             }
-            var rect = cell.NodeRealRect;
-            if (rect.Contains(cursor))
+            if (left > DrawRect.Left && left < DrawRect.Right)
             {
-                if (cell.LastTouchInRect != rect)
-                {
-                    cell.LastTouchInRect = rect;
-                    rect = RectWithinDrawRect(rect);
-                    Point ColRow = new(cell.RealColIndex, cell.RealRowIndex);
-                    CellDrawer drawer = (g) => { g.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.Orange)), rect); };
-                    DrawCellQueue.Add(drawer);
-                }
-                return LatticeCell.CellParts.Node;
+                var bottom = top + size.Height;
+                if (top > DrawRect.Bottom || bottom < DrawRect.Top) { return; }
+                g.DrawLine(pen,
+                    new(left, top < DrawRect.Top ? DrawRect.Top : top),
+                    new(left, bottom > DrawRect.Bottom ? DrawRect.Bottom : bottom)
+                    );
             }
-            ReDrawCell(cell);
-            return LatticeCell.CellParts.Leave;
         }
     }
 }

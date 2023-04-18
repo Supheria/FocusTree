@@ -1,4 +1,6 @@
 ﻿
+using static System.Formats.Asn1.AsnWriter;
+
 namespace FocusTree.UI.Graph
 {
     /// <summary>
@@ -71,7 +73,7 @@ namespace FocusTree.UI.Graph
         /// <summary>
         /// 格元宽最小值
         /// </summary>
-        public static int WidthMinimum = 50;
+        public static int WidthMinimum = 16;
         /// <summary>
         /// 格元宽最小值
         /// </summary>
@@ -79,7 +81,7 @@ namespace FocusTree.UI.Graph
         /// <summary>
         /// 格元高最小值
         /// </summary>
-        public static int HeightMinimum = 30;
+        public static int HeightMinimum = 10;
         /// <summary>
         /// 格元高最大值
         /// </summary>
@@ -189,11 +191,13 @@ namespace FocusTree.UI.Graph
             };
         }
         /// <summary>
-        /// 光标进入格元后高亮光标所处部分，或取消高亮光标刚离开的部分
+        /// 光标进入格元后高亮光标所处其中的部分，或取消高亮光标刚离开的部分
         /// </summary>
+        /// <param name="g"></param>
+        /// <param name="cell"></param>
         /// <param name="cursor"></param>
         /// <returns></returns>
-        public CellParts HighlightCursor(Graphics g, Point cursor)
+        public CellParts HightLightCursorTouchOn(Graphics g, Point cursor)
         {
             for (int i = 0; i < SideParts.Length; i++)
             {
@@ -201,7 +205,41 @@ namespace FocusTree.UI.Graph
                 if (!part.Contains(cursor)) { continue; }
                 if (part != LastTouchInRect)
                 {
-                    //ReDrawCell(g, this);
+                    Lattice.ReDrawCell(g, this);
+                    LastTouchInRect = part;
+                    part = Lattice.RectWithinDrawRect(part);
+                    g.FillRectangle(new SolidBrush(Color.FromArgb(100, Color.Gray)), part);
+                }
+                return i == 0 ? CellParts.Left : i == 1 ? CellParts.Top : CellParts.LeftTop;
+            }
+            var rect = NodeRealRect;
+            if (rect.Contains(cursor))
+            {
+                if (LastTouchInRect != rect)
+                {
+                    Lattice.ReDrawCell(g, this);
+                    LastTouchInRect = rect;
+                    rect = Lattice.RectWithinDrawRect(rect);
+                    g.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.Orange)), rect);
+                }
+                return CellParts.Node;
+            }
+            Lattice.ReDrawCell(g, this);
+            return CellParts.Leave;
+        }
+        /// <summary>
+        /// 高亮格元被选中的部分，并在重绘栅格时绘制高亮
+        /// </summary>
+        /// <param name="cursor">选中坐标</param>
+        /// <returns></returns>
+        public CellParts HighlightSelection(Point cursor)
+        {
+            for (int i = 0; i < SideParts.Length; i++)
+            {
+                var part = SideParts[i];
+                if (!part.Contains(cursor)) { continue; }
+                if (part != LastTouchInRect)
+                {
                     LastTouchInRect = part;
                     part = Lattice.RectWithinDrawRect(part);
                     Point ColRow = new(RealColIndex, RealRowIndex);
@@ -213,7 +251,7 @@ namespace FocusTree.UI.Graph
             var rect = NodeRealRect;
             if (rect.Contains(cursor))
             {
-                if(LastTouchInRect != rect)
+                if (LastTouchInRect != rect)
                 {
                     LastTouchInRect = rect;
                     rect = Lattice.RectWithinDrawRect(rect);
@@ -223,10 +261,7 @@ namespace FocusTree.UI.Graph
                 }
                 return CellParts.Node;
             }
-            //ReDrawCell(g, this);
-            //CancelCellFromDrawQueue(this);
             return CellParts.Leave;
         }
-        //public CellParts HighlightSelection(Graphics g, Point cursor)
     }
 }

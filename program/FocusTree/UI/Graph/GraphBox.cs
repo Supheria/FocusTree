@@ -203,22 +203,17 @@ namespace FocusTree.UI.Graph
             Invalidated += UpdateGraph;
             ControlResize.SetTag(this);
         }
-
-        public void DrawLattice()
+        public Graphics gCore 
         {
-            Image ??= new Bitmap(Width, Height);
-            Graphics g = Graphics.FromImage(Image);
-
-            //Lattice.Bounds = ClientRectangle;
-            Lattice.Draw(g, ClientRectangle);
-
-            var testPen = new Pen(Color.Red, 0.5f);
-            g.DrawLine(testPen, new(Lattice.OriginLeft, Lattice.DrawRect.Top), new(Lattice.OriginLeft, Lattice.DrawRect.Bottom));
-            g.DrawLine(testPen, new(Lattice.DrawRect.Left, Lattice.OriginTop), new(Lattice.DrawRect.Right, Lattice.OriginTop));
-
-            g.Flush(); g.Dispose();
-            Invalidate();
+            get
+            {
+                gcore?.Flush(); gcore?.Dispose();
+                Image ??= new Bitmap(Width, Height);
+                gcore = Graphics.FromImage(Image);
+                return gcore;
+            }
         }
+        Graphics gcore;
 
 
         private void UpdateGraph(object sender, InvalidateEventArgs e)
@@ -373,7 +368,7 @@ namespace FocusTree.UI.Graph
             Image?.Dispose();
             ControlResize.SetTag(this);
             Image = new Bitmap(Width, Height);
-            DrawLattice();
+            Lattice.Draw(Graphics.FromImage(Image), ClientRectangle);
             Invalidate();
         }
 
@@ -522,16 +517,18 @@ namespace FocusTree.UI.Graph
                 ShowNodeInfoTip(args.Location);
 
                 var cursor = args.Location;
-                var cellPart = Lattice.HightLightCursorOnCell(LastCell, cursor);
+
+                var cellPart = LastCell.HightLightCursorTouchOn(gCore, cursor);
                 if (cellPart == CellParts.Leave)
                 {
                     LatticeCell cell = new(cursor);
                     LastCell = cell;
                 }
-            }
+                Parent.Text = $"W {LatticeCell.Width},H {LatticeCell.Height}, o: {Lattice.OriginLeft}, {Lattice.OriginTop}, cursor: {cursor}, cellPart: {cellPart}, lastCell{new Point(LastCell.LatticedLeft, LastCell.LatticedTop)}";
 
+            }
             
-            //Invalidate();
+            Invalidate();
             //Parent.Text = $"W {LatticeCell.Width},H {LatticeCell.Height}, o: {Lattice.OriginLeft}, {Lattice.OriginTop}, cursor: {args.Location}, cellPart: {cellPart}, lastCell{new Point(LastCell.LatticedLeft, LastCell.LatticedTop)}";
 
             
@@ -539,19 +536,13 @@ namespace FocusTree.UI.Graph
         }
         private void DragGraph(Point newPoint)
         {
-            var cursor = newPoint;
-            Image ??= new Bitmap(Size.Width, Size.Height);
-            Graphics g = Graphics.FromImage(Image);
-
-            var cellPart = LastCell.HighlightCursor(g, cursor);
+            var cellPart = LastCell.HighlightSelection(newPoint);
             if (cellPart == CellParts.Leave)
             {
-                LatticeCell cell = new(cursor);
+                LatticeCell cell = new(newPoint);
                 LastCell = cell;
             }
-            g.Flush(); g.Dispose();
-            //Invalidate();
-            Parent.Text = $"W {LatticeCell.Width},H {LatticeCell.Height}, o: {Lattice.OriginLeft}, {Lattice.OriginTop}, cursor: {cursor}, cellPart: {cellPart}, lastCell{new Point(LastCell.LatticedLeft, LastCell.LatticedTop)}";
+            Parent.Text = $"W {LatticeCell.Width},H {LatticeCell.Height}, o: {Lattice.OriginLeft}, {Lattice.OriginTop}, cursor: {newPoint}, cellPart: {cellPart}, lastCell{new Point(LastCell.LatticedLeft, LastCell.LatticedTop)}";
 
 
             var diffInWidth = newPoint.X - DragLatticeMouseFlagPoint.X;
@@ -561,7 +552,8 @@ namespace FocusTree.UI.Graph
                 Lattice.OriginLeft += newPoint.X - DragLatticeMouseFlagPoint.X;
                 Lattice.OriginTop += newPoint.Y - DragLatticeMouseFlagPoint.Y;
                 DragLatticeMouseFlagPoint = newPoint;
-                DrawLattice();
+                Lattice.Draw(gCore, ClientRectangle);
+                Invalidate();
             }
 
             
@@ -632,11 +624,12 @@ namespace FocusTree.UI.Graph
             var diffInHeight = args.Location.Y - Height / 2;
             Lattice.OriginLeft += diffInWidth / LatticeCell.Width * Lattice.DrawRect.Width / 200;
             Lattice.OriginTop += diffInHeight / LatticeCell.Height * Lattice.DrawRect.Height / 200;
-            DrawLattice();
 
             LatticeCell.Width += args.Delta / 100 * Lattice.DrawRect.Width / 200;
             LatticeCell.Height += args.Delta / 100 * Lattice.DrawRect.Width / 200;
 
+            Lattice.Draw(gCore, ClientRectangle);
+            Invalidate();
             Parent.UpdateText("打开节点选项");
         }
 

@@ -42,7 +42,8 @@ namespace FocusTree.UI
 
         private void MainForm_Shown(object sender, EventArgs e)
         {
-            Display.DrawLattice();
+            Lattice.Draw(Display.gCore, ClientRectangle);
+            Display.Invalidate();
         }
 
         #region ==== File ====
