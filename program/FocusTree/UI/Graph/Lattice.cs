@@ -99,6 +99,10 @@ namespace FocusTree.UI.Graph
                     skipColRow[index.X].Add(index.Y);
                 }
             }
+            if (DrawCellQueue.Count > 1) 
+            { 
+                test.InfoText = "dsfdfdsf"; 
+            }
             DrawCellQueue.Clear();
 
             for (int i = 0; i < ColNumber; i++)
@@ -110,10 +114,10 @@ namespace FocusTree.UI.Graph
                     {
                         test.InfoText = $"col num:{ColNumber}\ncol index: {i}\n";
                         //if (i == ColNumber - 1 || i == 0 || )
-                        DrawLoopCell(g, i, j, false, true, true, true);
+                        DrawLoopCell(g, i, j, true, false, true, true);
                         continue;
                     }
-                    DrawLoopCell(g, i, j, false, true, true, false);
+                    //DrawLoopCell(g, i, j, false, true, true, false);
                 }
             }
             LastOrigin = new(OriginLeft, OriginTop);
@@ -152,24 +156,25 @@ namespace FocusTree.UI.Graph
             //var oleft = OriginLeft % DrawRect.Width;
             var drLeft = DrawRect.Left;
             var drRight = DrawRect.Right;
-            var cellLeft = GetLoopCellLeftTop(col, direct, OriginLeft, drLeft, drRight, DrawRect.Width, LatticeCell.Width, DeviDiffInDrawRectWidth);
+            var cellLeft = GetLoopCellLeftTop(col, direct, OriginLeft, drLeft, drRight, LatticeCell.Width, DrawRect.Width, DeviDiffInDrawRectWidth);
             //row *= LatticeCell.Height;
-            //direct = OriginTop - LastOrigin.Y;
+            direct = OriginTop - LastOrigin.Y;
             var otop = OriginTop % DrawRect.Height;
             var drtop = DrawRect.Top;
             var drbottom = DrawRect.Bottom;
-            var cellTop = GetLoopCellLeftTop(row, direct, OriginTop, drtop, drbottom, DrawRect.Height, LatticeCell.Height, DeviDiffInDrawRectHeight);
+            var cellTop = GetLoopCellLeftTop(row, direct, OriginTop, drtop, drbottom, LatticeCell.Height, DrawRect.Height, DeviDiffInDrawRectHeight);
             if (Normal)
             {
 
             }
             if (Special)
             {
-                DrawCellLine(g, CellPen, new(cellLeft, cellTop), new(LatticeCell.Width, LatticeCell.Height), drawMain, drawAppend);
+                DrawCellLine(g, CellPen, new(col * LatticeCell.Width, col * LatticeCell.Height), new(LatticeCell.Width, LatticeCell.Height), drawMain, drawAppend);
                 var nodeLeft = cellLeft + LatticeCell.NodePaddingWidth;
                 var nodeTop = cellTop + LatticeCell.NodePaddingHeight;
                 DrawCellLine(g, NodePen, new(nodeLeft, nodeTop), new(LatticeCell.NodeWidth, LatticeCell.NodeHeight), drawMain, drawAppend);
-                test.InfoText += $"drwidth: {DrawRect.Width}, drHeight: {DrawRect.Height}\noleft: {OriginLeft / LatticeCell.Width}, otop: {OriginTop / LatticeCell.Height}, otop: {otop}\ncleft: {cellLeft}, ctop: {cellTop}";
+                test.InfoText += $"drwidth: {DrawRect.Width}, drHeight: {DrawRect.Height}\noleft: {OriginLeft % LatticeCell.Width}, otop: {OriginTop % LatticeCell.Height}, otop: {otop}\ncleft: {cellLeft}, ctop: {cellTop}\ndevW: {DeviDiffInDrawRectWidth}, devH: {DeviDiffInDrawRectHeight}";
+                //test.InfoText += $"{LatticeCell.Width * col}";
             }
             
             
@@ -189,8 +194,17 @@ namespace FocusTree.UI.Graph
         /// <returns>转换后的格元左（上）坐标</returns>
         static int GetLoopCellLeftTop(int col, int direct, int oleft, int drLeft, int drRight, int cellWidth, int drWidth, int devDiff)
         {
-            var colLength = col * cellWidth;
-            return colLength + (oleft - drLeft) / drWidth / cellWidth + devDiff;
+            var colLength = col/* * cellWidth*/;
+            var mod = oleft % cellWidth;
+            //if (mod == 0 && oleft / cellWidth < col + 1) { mod += cellWidth; }
+            //if (mod == 0 && oleft / cellWidth > col + 1) { mod -= cellWidth; }
+            //if (oleft <= 0) { oleft-= cellWidth; }
+            var reault = col * cellWidth + mod;
+            if (reault > col * cellWidth + devDiff) { reault -= cellWidth; } 
+            else if ( reault < col * cellWidth + devDiff) { reault += cellWidth; }
+            else
+                reault = col* cellWidth +mod;
+            return /*colLength + */ reault;
             //if (direct > 0) //to right
             //{
             //    if (oleft > drLeft)
@@ -261,10 +275,10 @@ namespace FocusTree.UI.Graph
             {
                 if (top <= drTop)
                 {
-                    top = (top / drHeight) + drHeight;
+                    top = (top % drHeight) + drHeight;
                     if (top <= drTop) { top += drHeight; }
                 }
-                if (top >= drBottom) { top /= drHeight; }
+                if (top >= drBottom) { top %= drHeight; }
             }
             else
             {
@@ -295,7 +309,7 @@ namespace FocusTree.UI.Graph
         static KeyValuePair<int, List<(int, int)>> CellLeftBeyondDRLeft(int left, int top, int width, int drLeft, int drRight, int drWidth, bool drawMain, bool drawAppend)
         {
             KeyValuePair<int, List<(int, int)>> result = new(top, new());
-            left = drWidth + (left / drWidth);
+            left = drWidth + (left % drWidth);
             if (left <= drLeft) { left += drWidth; }
             var cutWidth = drRight - left;
             if (cutWidth > width) { cutWidth = width; }
@@ -318,7 +332,7 @@ namespace FocusTree.UI.Graph
         static KeyValuePair<int, List<(int, int)>> CellRightBeyondDRRight(int right, int top, int width, int drLeft, int drRight, int drWidth, bool drawMain, bool drawAppend)
         {
             KeyValuePair<int, List<(int, int)>> result = new(top, new());
-            var testRight = right / drWidth;
+            var testRight = right % drWidth;
             if (testRight > drLeft) { right = testRight; }
             var cutWidth = right - drLeft;
             if (cutWidth > width) { cutWidth = width; }
