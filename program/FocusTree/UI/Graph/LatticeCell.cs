@@ -1,5 +1,4 @@
-﻿using static FocusTree.UI.Graph.Lattice;
-
+﻿
 namespace FocusTree.UI.Graph
 {
     /// <summary>
@@ -18,11 +17,11 @@ namespace FocusTree.UI.Graph
         /// <summary>
         /// 格元真实左边界
         /// </summary>
-        public int RealLeft { get => Width * LatticedLeft + CellOffsetLeft; }
+        public int RealLeft { get => Width * LatticedLeft + Lattice.CellOffsetLeft; }
         /// <summary>
         /// 格元真实上边界
         /// </summary>
-        public int RealTop { get => Height * LatticedTop + CellOffsetTop; }
+        public int RealTop { get => Height * LatticedTop + Lattice.CellOffsetTop; }
         /// <summary>
         /// 格元真实列索引
         /// </summary>
@@ -110,8 +109,8 @@ namespace FocusTree.UI.Graph
         }
         public LatticeCell(Point realPoint)
         {
-            var widthDiff = realPoint.X - OriginLeft;
-            var heightDiff = realPoint.Y - OriginTop;
+            var widthDiff = realPoint.X - Lattice.OriginLeft;
+            var heightDiff = realPoint.Y - Lattice.OriginTop;
             LatticedLeft = widthDiff / Width;
             LatticedTop = heightDiff / Height;
             if (widthDiff < 0) { LatticedLeft--; }
@@ -147,6 +146,9 @@ namespace FocusTree.UI.Graph
         {
             throw new NotImplementedException();
         }
+        /// <summary>
+        /// 格元的内部区域
+        /// </summary>
         public enum CellParts
         {
             /// <summary>
@@ -170,8 +172,14 @@ namespace FocusTree.UI.Graph
             /// </summary>
             Node
         }
-        Rectangle LastTouchInRect = new();
-        Rectangle[] SideParts 
+        /// <summary>
+        /// 上一次进入的格元区域
+        /// </summary>
+        public Rectangle LastTouchInRect = new();
+        /// <summary>
+        /// 节点旁三个区域的矩形
+        /// </summary>
+        public Rectangle[] SideParts 
         { 
             get => new Rectangle[]
             {
@@ -195,14 +203,10 @@ namespace FocusTree.UI.Graph
                 {
                     //ReDrawCell(g, this);
                     LastTouchInRect = part;
-                    part = RectWithinDrawRect(part);
+                    part = Lattice.RectWithinDrawRect(part);
                     Point ColRow = new(RealColIndex, RealRowIndex);
-                    CellDrawer drawer = (g) => 
-                    {
-                        g.FillRectangle(new SolidBrush(Color.FromArgb(100, Color.Gray)), part);
-                        return ColRow;
-                    };
-                    DrawCellQueue.Add(drawer);
+                    Lattice.CellDrawer drawer = (g) => { g.FillRectangle(new SolidBrush(Color.FromArgb(100, Color.Gray)), part); };
+                    Lattice.DrawCellQueue.Add(drawer);
                 }
                 return i == 0 ? CellParts.Left : i == 1 ? CellParts.Top : i == 2 ? CellParts.LeftTop : CellParts.Node;
             }
@@ -212,14 +216,10 @@ namespace FocusTree.UI.Graph
                 if(LastTouchInRect != rect)
                 {
                     LastTouchInRect = rect;
-                    rect = RectWithinDrawRect(rect);
+                    rect = Lattice.RectWithinDrawRect(rect);
                     Point ColRow = new(RealColIndex, RealRowIndex);
-                    CellDrawer drawer = (g) =>
-                    {
-                        g.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.Orange)), rect);
-                        return ColRow;
-                    }; 
-                    DrawCellQueue.Add(drawer);
+                    Lattice.CellDrawer drawer = (g) => { g.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.Orange)), rect); };
+                    Lattice.DrawCellQueue.Add(drawer);
                 }
                 return CellParts.Node;
             }
@@ -227,5 +227,6 @@ namespace FocusTree.UI.Graph
             //CancelCellFromDrawQueue(this);
             return CellParts.Leave;
         }
+        //public CellParts HighlightSelection(Graphics g, Point cursor)
     }
 }

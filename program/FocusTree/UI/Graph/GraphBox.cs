@@ -520,20 +520,14 @@ namespace FocusTree.UI.Graph
             else if (args.Button == MouseButtons.None)
             {
                 ShowNodeInfoTip(args.Location);
-            }
-            else
-            {
-                var cursor = args.Location;
-                Image ??= new Bitmap(Size.Width, Size.Height);
-                Graphics g = Graphics.FromImage(Image);
 
-                var cellPart = LastCell.HighlightCursor(g, cursor);
+                var cursor = args.Location;
+                var cellPart = Lattice.HightLightCursorOnCell(LastCell, cursor);
                 if (cellPart == CellParts.Leave)
                 {
                     LatticeCell cell = new(cursor);
                     LastCell = cell;
                 }
-                g.Flush(); g.Dispose();
             }
 
             
