@@ -1,14 +1,11 @@
 #define DEBUG
 using FocusTree.IO;
 using FocusTree.IO.FileManege;
-using Newtonsoft.Json;
 using System.Numerics;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
-using System.Xml.Serialization;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace FocusTree.Data.Focus
 {

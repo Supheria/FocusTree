@@ -1,9 +1,6 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
-using System.Diagnostics;
-using System.Security.Cryptography;
-using System;
 
 namespace FocusTree.IO.FileManege
 {
@@ -99,7 +96,7 @@ namespace FocusTree.IO.FileManege
                     if (dir == null)
                     {
                         bkdir.Delete(true);
-                        continue; 
+                        continue;
                     }
                     string bkPath = dir.FullName;
                     var testbkdir = Path.GetDirectoryName(BackupPath<T>(bkPath));

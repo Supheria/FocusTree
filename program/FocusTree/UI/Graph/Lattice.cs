@@ -1,14 +1,4 @@
-﻿using FocusTree.UI.test;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FocusTree.UI.Graph
+﻿namespace FocusTree.UI.Graph
 {
     /// <summary>
     /// 栅格
@@ -93,13 +83,13 @@ namespace FocusTree.UI.Graph
         {
             SetBounds(bounds);
             Dictionary<int, Dictionary<int, CellDrawer>> cellsToDraw = new();
-            foreach(var cellToDraw in DrawCellQueue)
+            foreach (var cellToDraw in DrawCellQueue)
             {
                 var colIndex = cellToDraw.Key.Item1;
                 var rowIndex = cellToDraw.Key.Item2;
                 if (colIndex < 0 || colIndex >= ColNumber || rowIndex < 0 || rowIndex >= RowNumber) { continue; }
                 var cellDrawer = cellToDraw.Value;
-                if (!cellsToDraw.TryAdd(colIndex, new() { [rowIndex] = cellDrawer}))
+                if (!cellsToDraw.TryAdd(colIndex, new() { [rowIndex] = cellDrawer }))
                 {
                     if (!cellsToDraw[colIndex].TryAdd(rowIndex, cellDrawer))
                     {
@@ -160,7 +150,7 @@ namespace FocusTree.UI.Graph
             var drtop = DrawRect.Top;
             var drbottom = DrawRect.Bottom;
             var cellTop = GetLoopCellLeftTop(row, direct, otop, drtop, drbottom, LatticeCell.Height, DeviDiffInDrawRectHeight);
-            
+
             DrawCellLine(g, CellPen, new(cellLeft, cellTop), new(LatticeCell.Width, LatticeCell.Height), true, true);
             var nodeLeft = cellLeft + LatticeCell.NodePaddingWidth;
             var nodeTop = cellTop + LatticeCell.NodePaddingHeight;

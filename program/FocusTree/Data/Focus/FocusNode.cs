@@ -44,7 +44,7 @@ namespace FocusTree.Data.Focus
         /// </summary>
         public Vector2 MetaPoint
         {
-            get 
+            get
             {
                 var pair = ArrayString.Reader(Data.MetaPoint);
                 try
@@ -296,6 +296,6 @@ namespace FocusTree.Data.Focus
             writer.WriteEndElement();
         }
 
-#endregion
+        #endregion
     }
 }

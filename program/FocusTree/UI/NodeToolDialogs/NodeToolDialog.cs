@@ -1,4 +1,4 @@
-﻿using FocusTree.UI.Controls;
+﻿using FocusTree.UI.Graph;
 
 namespace FocusTree.UI.NodeToolDialogs
 {

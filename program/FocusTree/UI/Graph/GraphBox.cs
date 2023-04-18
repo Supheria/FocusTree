@@ -4,15 +4,14 @@ using FocusTree.Data;
 using FocusTree.Data.Focus;
 using FocusTree.IO;
 using FocusTree.IO.FileManege;
-using FocusTree.UI.Graph;
+using FocusTree.UI.Controls;
 using FocusTree.UI.NodeToolDialogs;
-using System.IO;
 using System.Numerics;
 using static FocusTree.UI.Graph.LatticeCell;
 
-namespace FocusTree.UI.Controls
+namespace FocusTree.UI.Graph
 {
-    internal class GraphBox : PictureBox
+    public class GraphBox : PictureBox
     {
         //===== 变量 =====//
 
@@ -193,8 +192,8 @@ namespace FocusTree.UI.Controls
             //SizeMode = PictureBoxSizeMode.Zoom;
             Dock = DockStyle.Fill;
             //DoubleBuffered = true;
-            
-            
+
+
             SizeChanged += OnSizeChanged;
             MouseDown += OnMouseDown;
             MouseMove += OnMouseMove;
@@ -217,7 +216,7 @@ namespace FocusTree.UI.Controls
             var testPen = new Pen(Color.Red, 0.5f);
             g.DrawLine(testPen, new(Lattice.OriginLeft, Lattice.DrawRect.Top), new(Lattice.OriginLeft, Lattice.DrawRect.Bottom));
             g.DrawLine(testPen, new(Lattice.DrawRect.Left, Lattice.OriginTop), new(Lattice.DrawRect.Right, Lattice.OriginTop));
-            
+
             g.Flush(); g.Dispose();
             Invalidate();
         }
@@ -263,7 +262,7 @@ namespace FocusTree.UI.Controls
 #endif
         }
 
-#endregion
+        #endregion
 
         #region ---- 绘图 ----
 #if REBUILD
@@ -360,7 +359,7 @@ namespace FocusTree.UI.Controls
             return false;
         }
 #endif
-#endregion
+        #endregion
 
         #region ---- 事件 ----
 
@@ -441,7 +440,7 @@ namespace FocusTree.UI.Controls
         }
         private void NodeRightClicked()
         {
-            CloseAllNodeToolDialogs(); 
+            CloseAllNodeToolDialogs();
             NodeInfoTip.Hide(this);
             SelectedNode = PrevSelectNode;
             RescaleToNode(SelectedNode.Value, false);
@@ -451,7 +450,7 @@ namespace FocusTree.UI.Controls
         }
         private void OpenGraphContextMenu(MouseButtons button)
         {
-            SelectedNode = PrevSelectNode; 
+            SelectedNode = PrevSelectNode;
             NodeInfoTip.Hide(this);
             PicGraphContextMenu = new(this, Cursor.Position, button);
             Invalidate();
@@ -627,7 +626,7 @@ namespace FocusTree.UI.Controls
         }
 
         //---- Public ----//
-        
+
         /// <summary>
         /// 检查预选择节点
         /// </summary>
@@ -641,7 +640,7 @@ namespace FocusTree.UI.Controls
             ToolDialogs.ToList().ForEach(x => x.Value.Close());
         }
 
-#endregion
+        #endregion
 
         #region ---- 坐标工具 ----
 
@@ -914,9 +913,9 @@ namespace FocusTree.UI.Controls
 
         #endregion
 
-            #region ---- 绘图操作调用 ----
+        #region ---- 绘图操作调用 ----
 
-            public void DrawAddtionalInfo(string info)
+        public void DrawAddtionalInfo(string info)
         {
             Invalidate();
             DrawInfo(info);

@@ -2,9 +2,8 @@
 using FocusTree.Data.Focus;
 using FocusTree.IO;
 using FocusTree.IO.FileManege;
-using FocusTree.UI.Controls;
+using FocusTree.UI.Graph;
 using System.IO.Compression;
-using System.Text.RegularExpressions;
 
 namespace FocusTree.UI
 {

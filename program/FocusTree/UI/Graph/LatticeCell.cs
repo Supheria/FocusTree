@@ -1,12 +1,4 @@
-﻿using FocusTree.UI.test;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static FocusTree.UI.Graph.Lattice;
+﻿using static FocusTree.UI.Graph.Lattice;
 
 namespace FocusTree.UI.Graph
 {
@@ -54,7 +46,7 @@ namespace FocusTree.UI.Graph
         /// <summary>
         /// 格元宽（限制最小值和最大值）
         /// </summary>
-        public static int Width 
+        public static int Width
         {
             get => width = width < WidthMinimum ? WidthMinimum : width > WidthMaximum ? WidthMaximum : width;
             set => width = value < WidthMinimum ? WidthMinimum : value > WidthMaximum ? WidthMaximum : value;
@@ -103,7 +95,7 @@ namespace FocusTree.UI.Graph
         public static int NodePaddingHeight { get => (int)(height * 0.3f); }
 
         #endregion
-        public LatticeCell() 
+        public LatticeCell()
         {
             LatticedLeft = 0;
             LatticedTop = 0;
@@ -176,7 +168,7 @@ namespace FocusTree.UI.Graph
         /// </summary>
         /// <param name="cursor"></param>
         /// <returns></returns>
-        public CellParts HighlightCursor(Graphics g,Point cursor)
+        public CellParts HighlightCursor(Graphics g, Point cursor)
         {
             Rectangle[] sideParts = new Rectangle[]
             {
@@ -195,7 +187,8 @@ namespace FocusTree.UI.Graph
                     LastTouchInRect = part;
                     part = RectWithinDrawRect(part);
                     CellDrawer drawer = i == 3 ?
-                        () => { g.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.Orange)), part); } : // node part
+                        () => { g.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.Orange)), part); }
+                    : // node part
                         () => { g.FillRectangle(new SolidBrush(Color.FromArgb(100, Color.Gray)), part); }; // else parts
                     AddCellToDrawQueue(this, drawer);
                 }
