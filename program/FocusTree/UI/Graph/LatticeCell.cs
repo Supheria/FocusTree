@@ -24,6 +24,14 @@ namespace FocusTree.UI.Graph
         /// </summary>
         public int RealTop { get => Height * LatticedTop + CellOffsetTop; }
         /// <summary>
+        /// 格元真实列索引
+        /// </summary>
+        public int RealColIndex { get => RealLeft / Width; }
+        /// <summary>
+        /// 格元真实行索引
+        /// </summary>
+        public int RealRowIndex { get => RealTop / Height; }
+        /// <summary>
         /// 格元真实坐标矩形
         /// </summary>
         /// <returns></returns>
@@ -163,6 +171,15 @@ namespace FocusTree.UI.Graph
             Node
         }
         Rectangle LastTouchInRect = new();
+        Rectangle[] SideParts 
+        { 
+            get => new Rectangle[]
+            {
+                new(RealLeft, NodeRealTop, Width - NodeWidth, Height - NodePaddingHeight), // left
+                new(NodeRealLeft, RealTop, Width - NodePaddingWidth, Height - NodeHeight), // top
+                new(RealLeft, RealTop, Width - NodeWidth, Height - NodeHeight) // left top
+            };
+        }
         /// <summary>
         /// 光标进入格元后高亮光标所处部分，或取消高亮光标刚离开的部分
         /// </summary>
@@ -170,45 +187,45 @@ namespace FocusTree.UI.Graph
         /// <returns></returns>
         public CellParts HighlightCursor(Graphics g, Point cursor)
         {
-            Rectangle[] sideParts = new Rectangle[]
+            for (int i = 0; i < SideParts.Length; i++)
             {
-                new(RealLeft, NodeRealTop, Width - NodeWidth, Height - NodePaddingHeight), // left
-                new(NodeRealLeft, RealTop, Width - NodePaddingWidth, Height - NodeHeight), // top
-                new(RealLeft, RealTop, Width - NodeWidth, Height - NodeHeight), // left top
-                NodeRealRect
-            };
-            for (int i = 0; i < sideParts.Length; i++)
-            {
-                var part = sideParts[i];
+                var part = SideParts[i];
                 if (!part.Contains(cursor)) { continue; }
                 if (part != LastTouchInRect)
                 {
-                    ReDrawCell(g, this);
+                    //ReDrawCell(g, this);
                     LastTouchInRect = part;
                     part = RectWithinDrawRect(part);
-                    CellDrawer drawer = i == 3 ?
-                        () => { g.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.Orange)), part); }
-                    : // node part
-                        () => { g.FillRectangle(new SolidBrush(Color.FromArgb(100, Color.Gray)), part); }; // else parts
-                    AddCellToDrawQueue(this, drawer);
+                    Point ColRow = new(RealColIndex, RealRowIndex);
+                    CellDrawer drawer = (g) => 
+                    {
+                        g.FillRectangle(new SolidBrush(Color.FromArgb(100, Color.Gray)), part);
+                        return ColRow;
+                    };
+                    DrawCellQueue.Add(drawer);
                 }
                 return i == 0 ? CellParts.Left : i == 1 ? CellParts.Top : i == 2 ? CellParts.LeftTop : CellParts.Node;
             }
-            ReDrawCell(g, this);
-            CancelCellFromDrawQueue(this);
+            var rect = NodeRealRect;
+            if (rect.Contains(cursor))
+            {
+                if(LastTouchInRect != rect)
+                {
+                    LastTouchInRect = rect;
+                    rect = RectWithinDrawRect(rect);
+                    Point ColRow = new(RealColIndex, RealRowIndex);
+                    CellDrawer drawer = (g) =>
+                    {
+                        g.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.Orange)), rect);
+                        return ColRow;
+                    }; 
+                    DrawCellQueue.Add(drawer);
+                }
+                return CellParts.Node;
+            }
+            //ReDrawCell(g, this);
+            //CancelCellFromDrawQueue(this);
             return CellParts.Leave;
-        }
-        /// <summary>
-        /// 获取格元的真实列、行索引
-        /// </summary>
-        /// <returns></returns>
-        public (int, int) GetRealColRowIndex()
-        {
-            var colIndex = RealLeft / Width;
-            //if (RealLeft < 0) { colIndex--; }
-            var rowIndex = RealTop / Height;
-            //if (RealTop < 0) { rowIndex--; }
-            return (colIndex, rowIndex);
         }
     }
 }

@@ -208,7 +208,6 @@ namespace FocusTree.UI.Graph
         {
             Image ??= new Bitmap(Width, Height);
             Graphics g = Graphics.FromImage(Image);
-            g.Clear(Color.White);
 
             //Lattice.Bounds = ClientRectangle;
             Lattice.Draw(g, ClientRectangle);
@@ -522,8 +521,31 @@ namespace FocusTree.UI.Graph
             {
                 ShowNodeInfoTip(args.Location);
             }
+            else
+            {
+                var cursor = args.Location;
+                Image ??= new Bitmap(Size.Width, Size.Height);
+                Graphics g = Graphics.FromImage(Image);
 
-            var cursor = args.Location;
+                var cellPart = LastCell.HighlightCursor(g, cursor);
+                if (cellPart == CellParts.Leave)
+                {
+                    LatticeCell cell = new(cursor);
+                    LastCell = cell;
+                }
+                g.Flush(); g.Dispose();
+            }
+
+            
+            //Invalidate();
+            //Parent.Text = $"W {LatticeCell.Width},H {LatticeCell.Height}, o: {Lattice.OriginLeft}, {Lattice.OriginTop}, cursor: {args.Location}, cellPart: {cellPart}, lastCell{new Point(LastCell.LatticedLeft, LastCell.LatticedTop)}";
+
+            
+
+        }
+        private void DragGraph(Point newPoint)
+        {
+            var cursor = newPoint;
             Image ??= new Bitmap(Size.Width, Size.Height);
             Graphics g = Graphics.FromImage(Image);
 
@@ -533,14 +555,11 @@ namespace FocusTree.UI.Graph
                 LatticeCell cell = new(cursor);
                 LastCell = cell;
             }
-            Invalidate();
-            Parent.Text = $"W {LatticeCell.Width},H {LatticeCell.Height}, o: {Lattice.OriginLeft}, {Lattice.OriginTop}, cursor: {args.Location}, cellPart: {cellPart}, lastCell{new Point(LastCell.LatticedLeft, LastCell.LatticedTop)}";
-
             g.Flush(); g.Dispose();
+            //Invalidate();
+            Parent.Text = $"W {LatticeCell.Width},H {LatticeCell.Height}, o: {Lattice.OriginLeft}, {Lattice.OriginTop}, cursor: {cursor}, cellPart: {cellPart}, lastCell{new Point(LastCell.LatticedLeft, LastCell.LatticedTop)}";
 
-        }
-        private void DragGraph(Point newPoint)
-        {
+
             var diffInWidth = newPoint.X - DragLatticeMouseFlagPoint.X;
             var diffInHeight = newPoint.Y - DragLatticeMouseFlagPoint.Y;
             if (Math.Abs(diffInWidth) >= 1 || Math.Abs(diffInHeight) >= 1)
@@ -550,6 +569,8 @@ namespace FocusTree.UI.Graph
                 DragLatticeMouseFlagPoint = newPoint;
                 DrawLattice();
             }
+
+            
         }
         private void DragNode(Point newPoint)
         {

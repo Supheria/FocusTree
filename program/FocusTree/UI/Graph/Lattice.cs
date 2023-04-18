@@ -64,11 +64,12 @@
         /// 节点边界绘制用笔
         /// </summary>
         public static Pen NodePen = new(Color.Orange, 1.5f);
-        public delegate void CellDrawer();
+        public delegate Point CellDrawer(Graphics g);
+        public static CellDrawer DrawCell;
         /// <summary>
         /// 需要单独绘制的格元队列
         /// </summary>
-        public static Dictionary<(int, int), CellDrawer> DrawCellQueue = new();
+        public static List<CellDrawer> DrawCellQueue = new();
         /// <summary>
         /// 上一次绘制栅格时的原点位置
         /// </summary>
@@ -81,32 +82,33 @@
         /// <param name="cursor">新的光标位置</param>
         public static void Draw(Graphics g, Rectangle bounds)
         {
+            g.Clear(Color.White);
+            //DrawCell += delegate (Graphics g) { DrawCellQueue.Clear(); };
             SetBounds(bounds);
-            Dictionary<int, Dictionary<int, CellDrawer>> cellsToDraw = new();
-            foreach (var cellToDraw in DrawCellQueue)
+
+            Dictionary<int, HashSet<int>> skipColRow = new();
+            foreach(var drawer in  DrawCellQueue)
             {
-                var colIndex = cellToDraw.Key.Item1;
-                var rowIndex = cellToDraw.Key.Item2;
-                if (colIndex < 0 || colIndex >= ColNumber || rowIndex < 0 || rowIndex >= RowNumber) { continue; }
-                var cellDrawer = cellToDraw.Value;
-                if (!cellsToDraw.TryAdd(colIndex, new() { [rowIndex] = cellDrawer }))
+                var index = drawer(g);
+                if (skipColRow.TryAdd(index.X, new() { index.Y }) == false)
                 {
-                    if (!cellsToDraw[colIndex].TryAdd(rowIndex, cellDrawer))
-                    {
-                        cellsToDraw[colIndex][rowIndex] = cellDrawer;
-                    }
+                    skipColRow[index.X].Add(index.Y);
                 }
             }
+            DrawCellQueue.Clear();
+
             for (int i = 0; i < ColNumber; i++)
             {
-                var hasCol = cellsToDraw.TryGetValue(i, out var cellsInCol);
+                var skip = skipColRow.TryGetValue(i, out var skipCols);
                 for (int j = 0; j < RowNumber; j++)
                 {
-                    if (hasCol)
+                    if (skip && skipCols.Contains(j))
                     {
-                        DrawLoopCell(g, i, j);
+                        //if (i == ColNumber - 1 || i == 0 || )
+                        DrawLoopCell(g, i, j, true, true);
+                        continue;
                     }
-                    else { DrawLoopCell(g, i, j); }
+                    DrawLoopCell(g, i, j, true, true);
                 }
             }
             LastOrigin = new(OriginLeft, OriginTop);
@@ -136,7 +138,9 @@
         /// <param name="g"></param>
         /// <param name="col">循环到的列数</param>
         /// <param name="row">循环到的行数</param>
-        private static void DrawLoopCell(Graphics g, int col, int row)
+        /// <param name="drawMain">是否绘制未超出栅格绘图区域的部分</param>
+        /// <param name="drawAppend">是否补绘超出栅格绘图区域的部分</param>
+        private static void DrawLoopCell(Graphics g, int col, int row, bool drawMain, bool drawAppend)
         {
             col *= LatticeCell.Width;
             var direct = OriginLeft - LastOrigin.X;
@@ -151,10 +155,10 @@
             var drbottom = DrawRect.Bottom;
             var cellTop = GetLoopCellLeftTop(row, direct, otop, drtop, drbottom, LatticeCell.Height, DeviDiffInDrawRectHeight);
 
-            DrawCellLine(g, CellPen, new(cellLeft, cellTop), new(LatticeCell.Width, LatticeCell.Height), true, true);
+            DrawCellLine(g, CellPen, new(cellLeft, cellTop), new(LatticeCell.Width, LatticeCell.Height), drawMain, drawAppend);
             var nodeLeft = cellLeft + LatticeCell.NodePaddingWidth;
             var nodeTop = cellTop + LatticeCell.NodePaddingHeight;
-            DrawCellLine(g, NodePen, new(nodeLeft, nodeTop), new(LatticeCell.NodeWidth, LatticeCell.NodeHeight), true, true);
+            DrawCellLine(g, NodePen, new(nodeLeft, nodeTop), new(LatticeCell.NodeWidth, LatticeCell.NodeHeight), drawMain, drawAppend);
         }
         /// <summary>
         /// 得到循环格元的左上角坐标。难点在于解决移动的方向性，例如原点向左偏移，那么补绘应该在栅格绘图区域右侧；如果向右，那就应该补绘在左侧
@@ -365,29 +369,28 @@
             };
 
         }
-        //static TestInfo test = new();
-        /// <summary>
-        /// 添加格元及其重绘方法添加到格元绘制队列
-        /// </summary>
-        /// <param name="cell"></param>
-        /// <param name="cellDrawer"></param>
-        public static void AddCellToDrawQueue(LatticeCell cell, CellDrawer cellDrawer)
-        {
-            //test.Show();
-            var ColRowIndex = cell.GetRealColRowIndex();
-            DrawCellQueue[ColRowIndex] = cellDrawer;
-            //test.InfoText = $"ColRowIndex: {ColRowIndex}\n" +
-            //    $"Real LeftTop: {new Point(cell.RealLeft, cell.RealTop)}\n" +
-            //    $"latticed again: {new Point(ColRowIndex.Item1 * LatticeCell.Width, ColRowIndex.Item2 * LatticeCell.Height)}";
-        }
-        /// <summary>
-        /// 从格元绘制队列里移除可能存在的格元
-        /// </summary>
-        /// <param name="cell"></param>
-        public static void CancelCellFromDrawQueue(LatticeCell cell)
-        {
-            var ColRowIndex = cell.GetRealColRowIndex();
-            DrawCellQueue.Remove(ColRowIndex);
-        }
+        ////static TestInfo test = new();
+        ///// <summary>
+        ///// 添加格元及其重绘方法添加到格元绘制队列
+        ///// </summary>
+        ///// <param name="cell"></param>
+        ///// <param name="cellDrawer"></param>
+        //public static void AddCellToDrawQueue(LatticeCell cell, CellDrawer cellDrawer)
+        //{
+        //    //test.Show();
+        //    //var ColRowIndex = cell.GetRealColRowIndex();
+        //    DrawCellQueue[cell] = cellDrawer;
+        //    //test.InfoText = $"ColRowIndex: {ColRowIndex}\n" +
+        //    //    $"Real LeftTop: {new Point(cell.RealLeft, cell.RealTop)}\n" +
+        //    //    $"latticed again: {new Point(ColRowIndex.Item1 * LatticeCell.Width, ColRowIndex.Item2 * LatticeCell.Height)}";
+        //}
+        ///// <summary>
+        ///// 从格元绘制队列里移除可能存在的格元
+        ///// </summary>
+        ///// <param name="cell"></param>
+        //public static void CancelCellFromDrawQueue(LatticeCell cell)
+        //{
+        //    DrawCellQueue.Remove(cell);
+        //}
     }
 }
