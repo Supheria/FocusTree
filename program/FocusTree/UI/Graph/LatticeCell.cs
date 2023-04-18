@@ -1,10 +1,12 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using FocusTree.UI.test;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static FocusTree.UI.Graph.Lattice;
 
 namespace FocusTree.UI.Graph
 {
@@ -24,11 +26,11 @@ namespace FocusTree.UI.Graph
         /// <summary>
         /// 格元真实左边界
         /// </summary>
-        public int RealLeft { get => Width * LatticedLeft + Lattice.CellOffsetLeft; }
+        public int RealLeft { get => Width * LatticedLeft + CellOffsetLeft; }
         /// <summary>
         /// 格元真实上边界
         /// </summary>
-        public int RealTop { get => Height * LatticedTop + Lattice.CellOffsetTop; }
+        public int RealTop { get => Height * LatticedTop + CellOffsetTop; }
         /// <summary>
         /// 格元真实坐标矩形
         /// </summary>
@@ -108,18 +110,12 @@ namespace FocusTree.UI.Graph
         }
         public LatticeCell(Point realPoint)
         {
-            var widthDiff = realPoint.X - Lattice.OriginLeft;
-            var heightDiff = realPoint.Y - Lattice.OriginTop;
+            var widthDiff = realPoint.X - OriginLeft;
+            var heightDiff = realPoint.Y - OriginTop;
             LatticedLeft = widthDiff / Width;
             LatticedTop = heightDiff / Height;
-            if (widthDiff < 0)
-            {
-                LatticedLeft -= 1;
-            }
-            if (heightDiff < 0)
-            {
-                LatticedTop -= 1;
-            }
+            if (widthDiff < 0) { LatticedLeft--; }
+            if (heightDiff < 0) { LatticedTop--; }
         }
         /// <summary>
         /// 判断两个格元的左边界和上边界是否同时相等
@@ -192,21 +188,34 @@ namespace FocusTree.UI.Graph
             for (int i = 0; i < sideParts.Length; i++)
             {
                 var part = sideParts[i];
-                if (part.Contains(cursor))
+                if (!part.Contains(cursor)) { continue; }
+                if (part != LastTouchInRect)
                 {
-                    if (part != LastTouchInRect)
-                    {
-                        Lattice.ReDrawCell(g, this);
-                        LastTouchInRect = part;
-                        part = Lattice.RectWithinDrawRect(part);
-                        if (i == 3) { g.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.Orange)), part); }
-                        else { g.FillRectangle(new SolidBrush(Color.FromArgb(100, Color.Gray)), part); }
-                    }
-                    return i == 0 ? CellParts.Left : i == 1 ? CellParts.Top : i == 2 ?  CellParts.LeftTop : CellParts.Node;
+                    ReDrawCell(g, this);
+                    LastTouchInRect = part;
+                    part = RectWithinDrawRect(part);
+                    CellDrawer drawer = i == 3 ?
+                        () => { g.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.Orange)), part); } : // node part
+                        () => { g.FillRectangle(new SolidBrush(Color.FromArgb(100, Color.Gray)), part); }; // else parts
+                    AddCellToDrawQueue(this, drawer);
                 }
+                return i == 0 ? CellParts.Left : i == 1 ? CellParts.Top : i == 2 ? CellParts.LeftTop : CellParts.Node;
             }
-            Lattice.ReDrawCell(g, this);
+            ReDrawCell(g, this);
+            CancelCellFromDrawQueue(this);
             return CellParts.Leave;
+        }
+        /// <summary>
+        /// 获取格元的真实列、行索引
+        /// </summary>
+        /// <returns></returns>
+        public (int, int) GetRealColRowIndex()
+        {
+            var colIndex = RealLeft / Width;
+            //if (RealLeft < 0) { colIndex--; }
+            var rowIndex = RealTop / Height;
+            //if (RealTop < 0) { rowIndex--; }
+            return (colIndex, rowIndex);
         }
     }
 }
