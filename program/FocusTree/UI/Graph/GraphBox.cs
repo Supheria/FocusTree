@@ -1,4 +1,4 @@
-#define DEBUG
+//#define DEBUG
 #define REBUILD
 using FocusTree.Data;
 using FocusTree.Data.Focus;
@@ -7,7 +7,6 @@ using FocusTree.IO.FileManege;
 using FocusTree.UI.Controls;
 using FocusTree.UI.NodeToolDialogs;
 using System.Numerics;
-using static FocusTree.UI.Graph.LatticeCell;
 
 namespace FocusTree.UI.Graph
 {
@@ -106,11 +105,11 @@ namespace FocusTree.UI.Graph
         /// <summary>
         /// 元坐标转画布坐标时的单位坐标伸长倍数
         /// </summary>
-        Vector2 ScalingUnit { get { return new(NodeSize.Width + 10, NodeSize.Height + 30); } }
+        Point ScalingUnit { get { return new(NodeSize.Width + 10, NodeSize.Height + 30); } }
         /// <summary>
         ///  节点尺寸
         /// </summary>
-        SizeF NodeSize = new(55, 35);
+        Size NodeSize = new(55, 35);
         /// <summary>
         /// 节点字体
         /// </summary>
@@ -162,7 +161,7 @@ namespace FocusTree.UI.Graph
         /// <summary>
         /// 绘图中心
         /// </summary>
-        Vector2 DrawingCenter = new(0, 0);
+        Point DrawingCenter = new(0, 0);
         /// <summary>
         /// 拖动图像时使用的鼠标参照坐标
         /// </summary>
@@ -219,6 +218,7 @@ namespace FocusTree.UI.Graph
         private void UpdateGraph(object sender, InvalidateEventArgs e)
         {
 #if REBUILD
+            LoadNodeMap();
             //DrawLattice(sender, e);
 #else
             if (Graph == null)
@@ -260,13 +260,27 @@ namespace FocusTree.UI.Graph
 
         #region ---- 绘图 ----
 #if REBUILD
+
+        private void LoadNodeMap()
+        {
+            //Graph.ResetNodeMetaPoints();
+            //if (Graph == null) { return; }
+            foreach (var node in Graph.GetNodes())
+            {
+                var point = node.LatticedPoint;
+                LatticeCell cell = new(point.X, point.Y);
+                Lattice.DrawCell += (g) => { g.FillRectangle(NodeBG, cell.NodeRealRect); };
+            }
+            Lattice.DrawCell(gCore);
+        }
 #else
-        private void DrawNodeMap()
+
+        private void LoadNodeMap()
         {
             if (Graph == null) { return; }
-            Image ??= new Bitmap(Size.Width, Size.Height);
-            var g = Graphics.FromImage(Image);
-            g.Clear(Color.White);
+            //Image ??= new Bitmap(Size.Width, Size.Height);
+            //var g = Graphics.FromImage(Image);
+            //g.Clear(Color.White);
 
             foreach (var node in Graph.GetNodes())
             {
@@ -498,7 +512,14 @@ namespace FocusTree.UI.Graph
 
         //---- OnMouseMove ----//
 
-        static LatticeCell LastCell = new();
+        /// <summary>
+        /// 光标所处的节点
+        /// </summary>
+        LatticeCell CellCursorOn = new();
+        /// <summary>
+        /// 上次光标所处的节点部分
+        /// </summary>
+        LatticeCell.InnerParts LastCellPart = new();
 
         private void OnMouseMove(object sender, MouseEventArgs args)
         {
@@ -518,14 +539,28 @@ namespace FocusTree.UI.Graph
 
                 var cursor = args.Location;
 
-                var cellPart = LastCell.HightLightCursorTouchOn(gCore, cursor);
-                if (cellPart == CellParts.Leave)
+                var part = CellCursorOn.GetInnerPartCursorOn(cursor);
+                if (part == LatticeCell.InnerParts.Leave)
                 {
-                    LatticeCell cell = new(cursor);
-                    LastCell = cell;
+                    Lattice.ReDrawCell(gCore, CellCursorOn);
+                    LastCellPart = part;
+                    CellCursorOn = new(cursor);
+                    return;
                 }
-                Parent.Text = $"W {LatticeCell.Width},H {LatticeCell.Height}, o: {Lattice.OriginLeft}, {Lattice.OriginTop}, cursor: {cursor}, cellPart: {cellPart}, lastCell{new Point(LastCell.LatticedLeft, LastCell.LatticedTop)}";
-
+                if (part == LastCellPart) { return; }
+                LastCellPart = part;
+                Lattice.ReDrawCell(gCore, CellCursorOn);
+                var rect = CellCursorOn.InnerPartRealRects[part];
+                if (part == LatticeCell.InnerParts.Node)
+                {
+                    gCore.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.Orange)), rect);
+                }
+                else
+                {
+                    gCore.FillRectangle(new SolidBrush(Color.FromArgb(100, Color.Gray)), rect);
+                }
+                //Parent.Text = $"W {LatticeCell.Width},H {LatticeCell.Height}, o: {Lattice.OriginLeft}, {Lattice.OriginTop}, cursor: {cursor}, cellPart: {cellPart}, lastCell{new Point(LastCell.LatticedLeft, LastCell.LatticedTop)}";
+                Parent.Text = $"cell left: {CellCursorOn.LatticedLeft}, cell top: {CellCursorOn.LatticedTop}, last part: {LastCellPart}, part: {part}";
             }
             
             Invalidate();
@@ -536,13 +571,13 @@ namespace FocusTree.UI.Graph
         }
         private void DragGraph(Point newPoint)
         {
-            var cellPart = LastCell.HighlightSelection(newPoint);
-            if (cellPart == CellParts.Leave)
-            {
-                LatticeCell cell = new(newPoint);
-                LastCell = cell;
-            }
-            Parent.Text = $"W {LatticeCell.Width},H {LatticeCell.Height}, o: {Lattice.OriginLeft}, {Lattice.OriginTop}, cursor: {newPoint}, cellPart: {cellPart}, lastCell{new Point(LastCell.LatticedLeft, LastCell.LatticedTop)}";
+            //var cellPart = LastCell.HighlightSelection(newPoint);
+            //if (cellPart == LatticeCell.InnerParts.Leave)
+            //{
+            //    LatticeCell cell = new(newPoint);
+            //    LastCell = cell;
+            //}
+            //Parent.Text = $"W {LatticeCell.Width},H {LatticeCell.Height}, o: {Lattice.OriginLeft}, {Lattice.OriginTop}, cursor: {newPoint}, cellPart: {cellPart}, lastCell{new Point(LastCell.LatticedLeft, LastCell.LatticedTop)}";
 
 
             var diffInWidth = newPoint.X - DragLatticeMouseFlagPoint.X;
@@ -575,7 +610,7 @@ namespace FocusTree.UI.Graph
                     new SolidBrush(Color.FromArgb(255, Color.WhiteSmoke))
                     );
                 Graphics g = Graphics.FromImage(Image);
-                RectangleF pointerRect = new(
+                Rectangle pointerRect = new(
                     dif.X,
                     dif.Y,
                     NodeSize.Width * GScale,
@@ -658,37 +693,38 @@ namespace FocusTree.UI.Graph
         /// <param name="rect">矩形真实坐标</param>
         /// <param name="cam">相机位置</param>
         /// <returns>矩形显示坐标</returns>
-        private RectangleF CanvasRectToDrawingRect(RectangleF rect)
+        private Rectangle CanvasRectToDrawingRect(Rectangle rect)
         {
-            return new RectangleF(
-                (rect.X - DrawingCenter.X) * GScale + Width / 2,
-                (rect.Y - DrawingCenter.Y) * GScale + Height / 2,
-                rect.Width * GScale,
-                rect.Height * GScale
-                );
+            //return new Rectangle(
+            //    (rect.X - DrawingCenter.X) * GScale + Width / 2,
+            //    (rect.Y - DrawingCenter.Y) * GScale + Height / 2,
+            //    rect.Width * GScale,
+            //    rect.Height * GScale
+            //    );
+            return new();
         }
-        private Vector2 CanvasPointToDrawingPoint(Vector2 point)
-        {
-            return new Vector2(
-                (point.X - DrawingCenter.X) * GScale + Width / 2,
-                (point.Y - DrawingCenter.Y) * GScale + Height / 2
-                );
-        }
+        //private Point CanvasPointToDrawingPoint(Point point)
+        //{
+        //    return new Point(
+        //        (point.X - DrawingCenter.X) * GScale + Width / 2,
+        //        (point.Y - DrawingCenter.Y) * GScale + Height / 2
+        //        );
+        //}
         /// <summary>
         /// 元坐标转换为绘图坐标
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
-        private Vector2 MetaPointToCanvasPoint(Vector2 point)
+        private Point MetaPointToCanvasPoint(Point point)
         {
-            return new Vector2(
+            return new Point(
                 point.X * ScalingUnit.X,
                 point.Y * ScalingUnit.Y
                 );
         }
-        private SizeF MetaSizeToCanvasSize(SizeF size)
+        private Size MetaSizeToCanvasSize(Size size)
         {
-            return new SizeF(
+            return new Size(
                 size.Width * ScalingUnit.X,
                 size.Height * ScalingUnit.Y
                 );
@@ -715,10 +751,10 @@ namespace FocusTree.UI.Graph
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
-        private RectangleF NodeDrawingRect(int id)
+        private Rectangle NodeDrawingRect(int id)
         {
-            var point = MetaPointToCanvasPoint(Graph.GetNode(id).MetaPoint);
-            var rect = new RectangleF(new(point.X, point.Y), NodeSize);
+            var point = MetaPointToCanvasPoint(Graph.GetNode(id).LatticedPoint);
+            var rect = new Rectangle(new(point.X, point.Y), NodeSize);
             return CanvasRectToDrawingRect(rect);
         }
         /// <summary>
@@ -736,7 +772,7 @@ namespace FocusTree.UI.Graph
         /// </summary>
         /// <param name="r">矩形</param>
         /// <returns>是否可见</returns>
-        private bool IsRectVisible(RectangleF rect)
+        private bool IsRectVisible(Rectangle rect)
         {
             return rect.Right >= 0
                 && rect.Left <= Size.Width
@@ -764,7 +800,7 @@ namespace FocusTree.UI.Graph
         /// <param name="zoom">是否聚焦</param>
         private void RescaleToNode(int id, bool zoom)
         {
-            var point = Graph.GetNode(id).MetaPoint;
+            var point = Graph.GetNode(id).LatticedPoint;
             var canvasPoint = MetaPointToCanvasPoint(point);
             DrawingCenter = new(canvasPoint.X + NodeSize.Width / 2, canvasPoint.Y + NodeSize.Height / 2);
             if (zoom)
@@ -914,7 +950,7 @@ namespace FocusTree.UI.Graph
         public void ResetNodeMetaPoints()
         {
             if (Graph == null) { return; }
-            Graph.ResetNodeMetaPoints(true);
+            Graph.ResetNodeMetaPoints();
             Invalidate();
             Parent.UpdateText("自动排版");
         }

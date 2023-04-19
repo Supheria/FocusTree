@@ -8,48 +8,6 @@ namespace FocusTree.UI.Graph
     /// </summary>
     struct LatticeCell
     {
-        /// <summary>
-        /// 格元栅格化左边界
-        /// </summary>
-        public int LatticedLeft;
-        /// <summary>
-        /// 格元栅格化上边界
-        /// </summary>
-        public int LatticedTop;
-        /// <summary>
-        /// 格元真实左边界
-        /// </summary>
-        public int RealLeft { get => Width * LatticedLeft + Lattice.CellOffsetLeft; }
-        /// <summary>
-        /// 格元真实上边界
-        /// </summary>
-        public int RealTop { get => Height * LatticedTop + Lattice.CellOffsetTop; }
-        /// <summary>
-        /// 格元真实列索引
-        /// </summary>
-        public int RealColIndex { get => RealLeft / Width; }
-        /// <summary>
-        /// 格元真实行索引
-        /// </summary>
-        public int RealRowIndex { get => RealTop / Height; }
-        /// <summary>
-        /// 格元真实坐标矩形
-        /// </summary>
-        /// <returns></returns>
-        public Rectangle RealRect { get => new(RealLeft, RealTop, Width, Height); }
-        /// <summary>
-        /// 节点真实左边界
-        /// </summary>
-        public int NodeRealLeft { get => RealLeft + NodePaddingWidth; }
-        /// <summary>
-        /// 节点真实上边界
-        /// </summary>
-        public int NodeRealTop { get => RealTop + NodePaddingHeight; }
-        /// <summary>
-        /// 节点真实坐标矩形
-        /// </summary>
-        public Rectangle NodeRealRect { get => new(NodeRealLeft, NodeRealTop, NodeWidth, NodeHeight); }
-
         #region ==== 设置宽高和间距 ====
 
         /// <summary>
@@ -113,20 +71,81 @@ namespace FocusTree.UI.Graph
         public static PointF npf;
 
         #endregion
+
+        #region ==== 坐标 ====
+
+        /// <summary>
+        /// 格元栅格化左边界
+        /// </summary>
+        public int LatticedLeft;
+        /// <summary>
+        /// 格元栅格化上边界
+        /// </summary>
+        public int LatticedTop;
+        /// <summary>
+        /// 格元真实左边界
+        /// </summary>
+        public int RealLeft { get => Width * LatticedLeft + Lattice.CellOffsetLeft; }
+        /// <summary>
+        /// 格元真实上边界
+        /// </summary>
+        public int RealTop { get => Height * LatticedTop + Lattice.CellOffsetTop; }
+        /// <summary>
+        /// 格元真实坐标矩形
+        /// </summary>
+        /// <returns></returns>
+        public Rectangle RealRect { get => new(RealLeft, RealTop, Width, Height); }
+        /// <summary>
+        /// 节点真实左边界
+        /// </summary>
+        public int NodeRealLeft { get => RealLeft + NodePaddingWidth; }
+        /// <summary>
+        /// 节点真实上边界
+        /// </summary>
+        public int NodeRealTop { get => RealTop + NodePaddingHeight; }
+        /// <summary>
+        /// 节点真实坐标矩形
+        /// </summary>
+        public Rectangle NodeRealRect { get => new(NodeRealLeft, NodeRealTop, NodeWidth, NodeHeight); }
+
+        #endregion
+
+        #region ==== 构造函数 ====
+
+        /// <summary>
+        /// 默认构造函数：(0, 0)
+        /// </summary>
         public LatticeCell()
         {
             LatticedLeft = 0;
             LatticedTop = 0;
         }
-        public LatticeCell(Point realPoint)
+        /// <summary>
+        /// 使用坐标位置创建，将坐标自动转换为栅格化坐标
+        /// </summary>
+        /// <param name="cursor"></param>
+        public LatticeCell(Point cursor)
         {
-            var widthDiff = realPoint.X - Lattice.OriginLeft;
-            var heightDiff = realPoint.Y - Lattice.OriginTop;
+            var widthDiff = cursor.X - Lattice.OriginLeft;
+            var heightDiff = cursor.Y - Lattice.OriginTop;
             LatticedLeft = widthDiff / Width;
             LatticedTop = heightDiff / Height;
             if (widthDiff < 0) { LatticedLeft--; }
             if (heightDiff < 0) { LatticedTop--; }
         }
+        /// <summary>
+        /// 使用已有的栅格化坐标创建
+        /// </summary>
+        /// <param name="col"></param>
+        /// <param name="row"></param>
+        public LatticeCell(int col, int row)
+        {
+            LatticedLeft = col;
+            LatticedTop = row;
+        }
+
+        #endregion
+
         /// <summary>
         /// 判断两个格元的左边界和上边界是否同时相等
         /// </summary>
@@ -160,10 +179,10 @@ namespace FocusTree.UI.Graph
         /// <summary>
         /// 格元的内部区域
         /// </summary>
-        public enum CellParts
+        public enum InnerParts
         {
             /// <summary>
-            /// 已离开格元
+            /// 离开格元
             /// </summary>
             Leave,
             /// <summary>
@@ -171,32 +190,61 @@ namespace FocusTree.UI.Graph
             /// </summary>
             Left,
             /// <summary>
-            /// 节点头上区域
+            /// 节点上方区域
             /// </summary>
             Top,
             /// <summary>
-            /// 节点右上区域
+            /// 节点左上方区域
             /// </summary>
             LeftTop,
             /// <summary>
-            /// 节点内
+            /// 节点区域
             /// </summary>
             Node
         }
         /// <summary>
-        /// 上一次进入的格元区域
+        /// 上一次接触的区域
         /// </summary>
-        public Rectangle LastTouchInRect = new();
+        public Rectangle LastTouchRect = new();
         /// <summary>
-        /// 节点旁三个区域的矩形
+        /// 节点左侧区域填充颜色
         /// </summary>
-        public Rectangle[] SideParts 
-        { 
-            get => new Rectangle[]
+        public Color InnerPartColor_Left = Color.FromArgb(100, Color.Gray);
+        /// <summary>
+        /// 节点上方区域填充颜色
+        /// </summary>
+        public Color InnerPartColor_Top = Color.FromArgb(100, Color.Gray);
+        /// <summary>
+        /// 节点左上方区域填充颜色
+        /// </summary>
+        public Color InnerPartColor_LeftTop = Color.FromArgb(100, Color.Gray);
+        /// <summary>
+        /// 节点区域填充颜色
+        /// </summary>
+        public Color InnerPartColor_Node = Color.FromArgb(150, Color.Orange);
+        /// <summary>
+        /// 格元内部各个区域的真实矩形
+        /// </summary>
+        /// <param name="lattice"></param>
+        /// <returns></returns>
+        //public Dictionary<InnerParts, (Rectangle, SolidBrush)> InnerPartRealRects
+        //{
+        //    get => new()
+        //    {
+        //        [InnerParts.Left] = (new(RealLeft, NodeRealTop, Width - NodeWidth, Height - NodePaddingHeight), new(InnerPartColor_Left)),
+        //        [InnerParts.Top] = (new(NodeRealLeft, RealTop, Width - NodePaddingWidth, Height - NodeHeight), new(InnerPartColor_Top)),
+        //        [InnerParts.LeftTop] = (new(RealLeft, RealTop, Width - NodeWidth, Height - NodeHeight), new(InnerPartColor_LeftTop)),
+        //        [InnerParts.Node] = (NodeRealRect, new(InnerPartColor_Node))
+        //    };
+        //}
+        public Dictionary<InnerParts, Rectangle> InnerPartRealRects
+        {
+            get => new()
             {
-                new(RealLeft, NodeRealTop, Width - NodeWidth, Height - NodePaddingHeight), // left
-                new(NodeRealLeft, RealTop, Width - NodePaddingWidth, Height - NodeHeight), // top
-                new(RealLeft, RealTop, Width - NodeWidth, Height - NodeHeight) // left top
+                [InnerParts.Left] = new(RealLeft, NodeRealTop, Width - NodeWidth, Height - NodePaddingHeight),
+                [InnerParts.Top] = new(NodeRealLeft, RealTop, Width - NodePaddingWidth, Height - NodeHeight),
+                [InnerParts.LeftTop] = new(RealLeft, RealTop, Width - NodeWidth, Height - NodeHeight),
+                [InnerParts.Node] = NodeRealRect
             };
         }
         /// <summary>
@@ -206,75 +254,65 @@ namespace FocusTree.UI.Graph
         /// <param name="cell"></param>
         /// <param name="cursor"></param>
         /// <returns></returns>
-        public CellParts HightLightCursorTouchOn(Graphics g, Point cursor)
+        public InnerParts HightLightCursorTouchOn(Graphics g, Point cursor)
         {
-            for (int i = 0; i < SideParts.Length; i++)
+            //foreach (var pair in InnerPartRealRects)
+            //{
+            //    var rect = pair.Value.Item1;
+            //    if (!rect.Contains(cursor)) { continue; }
+            //    if (rect != LastTouchRect)
+            //    {
+            //        Lattice.ReDrawCell(g, this);
+            //        LastTouchRect = rect;
+            //        if (Lattice.RectWithinDrawRect(rect, out var saveRect))
+            //        {
+            //            g.FillRectangle(pair.Value.Item2, saveRect);
+            //        }
+            //    }
+            //    return pair.Key;
+            //}
+            //Lattice.ReDrawCell(g, this);
+            return InnerParts.Leave;
+        }
+        /// <summary>
+        /// 获取光标在格元上所处的部分
+        /// </summary>
+        /// <param name="cursor"></param>
+        /// <returns></returns>
+        public InnerParts GetInnerPartCursorOn(Point cursor)
+        {
+            foreach (var pair in InnerPartRealRects)
             {
-                var part = SideParts[i];
-                if (!part.Contains(cursor)) { continue; }
-                if (part != LastTouchInRect)
+                var rect = pair.Value;
+                if (rect.Contains(cursor))
                 {
-                    Lattice.ReDrawCell(g, this);
-                    LastTouchInRect = part;
-                    if (Lattice.RectWithinDrawRect(part, out var saveRect))
-                    {
-                        g.FillRectangle(new SolidBrush(Color.FromArgb(100, Color.Gray)), saveRect);
-                    }
+                    return pair.Key;
                 }
-                return i == 0 ? CellParts.Left : i == 1 ? CellParts.Top : CellParts.LeftTop;
             }
-            var rect = NodeRealRect;
-            if (rect.Contains(cursor))
-            {
-                if (LastTouchInRect != rect)
-                {
-                    Lattice.ReDrawCell(g, this);
-                    LastTouchInRect = rect;
-                    if (Lattice.RectWithinDrawRect(rect, out var saveRect))
-                    {
-                        g.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.Orange)), saveRect);
-                    }
-                }
-                return CellParts.Node;
-            }
-            Lattice.ReDrawCell(g, this);
-            return CellParts.Leave;
+            return InnerParts.Leave;
         }
         /// <summary>
         /// 高亮格元被选中的部分，并在重绘栅格时绘制高亮
         /// </summary>
         /// <param name="cursor">选中坐标</param>
-        /// <returns></returns>
-        public CellParts HighlightSelection(Point cursor)
+        /// <returns>格元选中的部分</returns>
+        public InnerParts HighlightSelection(Point cursor)
         {
-            for (int i = 0; i < SideParts.Length; i++)
-            {
-                var part = SideParts[i];
-                if (!part.Contains(cursor)) { continue; }
-                if (part != LastTouchInRect)
-                {
-                    LastTouchInRect = part;
-                    if (Lattice.RectWithinDrawRect(part, out var saveRect))
-                    {
-                        Lattice.DrawCell += (g) => { g.FillRectangle(new SolidBrush(Color.FromArgb(100, Color.Gray)), saveRect); };
-                    }
-                }
-                return i == 0 ? CellParts.Left : i == 1 ? CellParts.Top : i == 2 ? CellParts.LeftTop : CellParts.Node;
-            }
-            var rect = NodeRealRect;
-            if (rect.Contains(cursor))
-            {
-                if (LastTouchInRect != rect)
-                {
-                    LastTouchInRect = rect;
-                    if (Lattice.RectWithinDrawRect(rect, out var saveRect))
-                    {
-                        Lattice.DrawCell += (g) => { g.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.Orange)), rect); };
-                    }
-                }
-                return CellParts.Node;
-            }
-            return CellParts.Leave;
+            //foreach (var pair in InnerPartRealRects)
+            //{
+            //    var rect = pair.Value.Item1;
+            //    if (!rect.Contains(cursor)) { continue; }
+            //    if (rect != LastTouchRect)
+            //    {
+            //        LastTouchRect = rect;
+            //        if (Lattice.RectWithinDrawRect(rect, out var saveRect))
+            //        {
+            //            Lattice.DrawCell += (g) => { g.FillRectangle(pair.Value.Item2, saveRect); };
+            //        }
+            //    }
+            //    return pair.Key;
+            //}
+            return InnerParts.Leave;
         }
     }
 }

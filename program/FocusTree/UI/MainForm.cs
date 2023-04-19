@@ -29,6 +29,7 @@ namespace FocusTree.UI
             }
 #if DEBUG
             Display.LoadGraph("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\program\\FILES\\隐居村落.xml");
+
             //WindowState = FormWindowState.Minimized;
             //Display.SaveAsNew("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\国策\\国策测试\\test.xml");
             //Display.LoadGraph("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\国策\\国策测试\\test.xml");
@@ -237,7 +238,7 @@ namespace FocusTree.UI
         }
         private void MainForm_Menu_graph_setNodePointAuto_Click(object sender, EventArgs e)
         {
-
+            Display.ResetNodeMetaPoints();
         }
 
         #endregion

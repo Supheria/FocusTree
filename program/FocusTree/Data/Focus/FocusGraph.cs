@@ -206,7 +206,7 @@ namespace FocusTree.Data.Focus
         /// </summary>
         /// <param name="resetAll">是否重置所有：无论元坐标有无值都重置</param>
         /// <returns></returns>
-        public void ResetNodeMetaPoints(bool resetAll)
+        public void ResetNodeMetaPoints()
         {
             var branches = GetBranches(GetRootNodes(), true, true);
             if (branches.Count == 0) { return; }
@@ -234,12 +234,11 @@ namespace FocusTree.Data.Focus
                     }
                 }
             }
-            Dictionary<int, Vector2> metaPoints = new();
+            Dictionary<int, Point> metaPoints = new();
             foreach (var coordinate in nodeCoordinates)
             {
-                if (!resetAll && NodeCatalog[coordinate.Key].MetaPoint != new Vector2(-1, -1)) { continue; }
                 var x = coordinate.Value[0] + (coordinate.Value[1] - coordinate.Value[0]) / 2;
-                var point = new Vector2(x, coordinate.Value[2]);
+                Point point = new(x, coordinate.Value[2]);
                 metaPoints[coordinate.Key] = point;
             }
             if (metaPoints.Count == 0) { return; }
@@ -249,16 +248,16 @@ namespace FocusTree.Data.Focus
         /// 清除横坐标之间无节点的间隙
         /// </summary>
         /// <returns>id对应元坐标的字典</returns>
-        private void CleanBlanksForX(Dictionary<int, Vector2> metaPoints)
+        private void CleanBlanksForX(Dictionary<int, Point> metaPoints)
         {
             // 集合相同x值的元坐标
-            Dictionary<float, Dictionary<int, Vector2>> xMetaPoints = new();
+            Dictionary<int, Dictionary<int, Point>> xMetaPoints = new();
             foreach (var pair in metaPoints)
             {
                 var x = pair.Value.X;
                 if (xMetaPoints.ContainsKey(x) == false)
                 {
-                    xMetaPoints.Add(x, new Dictionary<int, Vector2>());
+                    xMetaPoints.Add(x, new Dictionary<int, Point>());
                 }
                 xMetaPoints[x].Add(pair.Key, pair.Value);
             }
@@ -270,8 +269,8 @@ namespace FocusTree.Data.Focus
                 {
                     foreach (var nodePoint in xMetaPoints[x])
                     {
-                        var point = new Vector2(nodePoint.Value.X - blank, nodePoint.Value.Y);
-                        NodeCatalog[nodePoint.Key].MetaPoint = point;
+                        Point point = new(nodePoint.Value.X - blank, nodePoint.Value.Y);
+                        NodeCatalog[nodePoint.Key].LatticedPoint = point;
                     }
                 }
                 else { blank++; }
@@ -339,16 +338,17 @@ namespace FocusTree.Data.Focus
         /// 全图的元中心坐标和元尺寸
         /// </summary>
         /// <returns></returns>
-        public (Vector2, SizeF) GetGraphMetaData()
+        public (Point, Size) GetGraphMetaData()
         {
+            //ResetNodeMetaPoints();
             bool first = true;
-            var bounds = new RectangleF();
+            var bounds = new Rectangle();
             foreach (var node in NodeCatalog.Values)
             {
-                var point = node.MetaPoint;
+                var point = node.LatticedPoint;
                 if (first)
                 {
-                    bounds = new RectangleF(point.X, point.Y, point.X, point.Y);
+                    bounds = new Rectangle(point.X, point.Y, point.X, point.Y);
                     first = false;
                 }
                 else
@@ -360,8 +360,8 @@ namespace FocusTree.Data.Focus
                 }
             }
             return (
-                new Vector2((bounds.X + bounds.Width) / 2, (bounds.Y + bounds.Height) / 2),
-                new SizeF(bounds.Width - bounds.X + 1, bounds.Height - bounds.Y + 1)
+                new((bounds.X + bounds.Width) / 2, (bounds.Y + bounds.Height) / 2),
+                new(bounds.Width - bounds.X + 1, bounds.Height - bounds.Y + 1)
                 );
         }
 
@@ -411,7 +411,6 @@ namespace FocusTree.Data.Focus
                 }
             } while (reader.Read());
             CreateNodesLinkes();
-            ResetNodeMetaPoints(false);
         }
         public void WriteXml(XmlWriter writer)
         {

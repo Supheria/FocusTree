@@ -36,67 +36,38 @@ namespace FocusTree.Data.Focus
         /// </summary>
         public List<string> Effects
         {
-            get { return Data.Effects.Select(x => x.ToString()).ToList(); }
-            set { value.ForEach(x => Data.Effects.Add(Sentence.FromString(x))); }
+            get { return effects.Select(x => x.ToString()).ToList(); }
+            set { value.ForEach(x => effects.Add(Sentence.FromString(x))); }
         }
+        public List<Sentence> effects = new();
         /// <summary>
-        /// 元坐标
+        /// 栅格化坐标（nullable 给初始化节点位置用的，读取存储文件后不会为null，可以忽略）
         /// </summary>
-        public Vector2 MetaPoint
-        {
-            get
-            {
-                var pair = ArrayString.Reader(Data.MetaPoint);
-                try
-                {
-                    float x = float.Parse(pair[0]);
-                    float y = float.Parse(pair[1]);
-                    return new(x < 0 ? -1 : x, y < 0 ? -1 : y);
-                }
-                catch { return new(-1, -1); }
-            }
-            set { Data.MetaPoint = ArrayString.Writer(new string[] { value.X.ToString(), value.Y.ToString() }); }
-        }
+        public Point LatticedPoint;
         /// <summary>
         /// 节点ID
         /// </summary>
-        public int ID
-        {
-            get { return int.Parse(Data.ID); }
-            set { Data.ID = value.ToString(); }
-        }
+        public int ID;
         /// <summary>
         /// 国策名称
         /// </summary>
-        public string Name
-        {
-            get { return Data.Name; }
-            set { Data.Name = value; }
-        }
+        public string Name;
         /// <summary>
         /// 实施国策所需的天数
         /// </summary>
-        public int Duration
-        {
-            get { return int.Parse(Data.Duration); }
-            set { Data.Duration = value.ToString(); }
-        }
+        public int Duration;
         /// <summary>
         /// 国策描述
         /// </summary>
-        public string Descript
-        {
-            get { return Data.Descript; }
-            set { Data.Descript = value; }
-        }
+        public string Descript;
         /// <summary>
         /// 备注
         /// </summary>
-        public string Ps
-        {
-            get { return Data.Ps; }
-            set { Data.Ps = value; }
-        }
+        public string Ps;
+        /// <summary>
+        /// 字段是否以 * 开头
+        /// </summary>
+        public bool BeginWithStar;
 
         #endregion
 
@@ -124,23 +95,14 @@ namespace FocusTree.Data.Focus
             Requires = new();
 
             //==== 读取 Data ====//
-            var id = reader.GetAttribute("ID");
-            if (id == null) { throw new Exception("缺失必要的节点id"); }
-            var name = reader.GetAttribute("Name");
-            var star = reader.GetAttribute("Star");
-            var duration = reader.GetAttribute("Duration");
-            var descript = reader.GetAttribute("Descript");
-            var ps = reader.GetAttribute("Ps.");
-            var metaPoint = reader.GetAttribute("Point");
-            Data = new(
-                id,
-                name ?? string.Empty,
-                star ?? "false",
-                duration ?? "0",
-                descript ?? string.Empty,
-                ps ?? string.Empty,
-                metaPoint ?? "-1, -1"
-                );
+            ID = int.Parse(reader.GetAttribute("ID"));
+            if (ID == null) { throw new Exception("缺失必要的节点id"); }
+            Name = reader.GetAttribute("Name");
+            BeginWithStar = bool.Parse(reader.GetAttribute("Star"));
+            Duration = int.Parse(reader.GetAttribute("Duration"));
+            Descript = reader.GetAttribute("Descript");
+            Ps = reader.GetAttribute("Ps.");
+            //LatticedPoint = Point.reader.GetAttribute("Point");
 
             while (reader.Read())
             {
@@ -183,7 +145,7 @@ namespace FocusTree.Data.Focus
                 }
                 foreach (var formatted in formattedList)
                 {
-                    Data.Effects.Add(formatted);
+                    effects.Add(formatted);
                 }
             }
         }
@@ -203,7 +165,7 @@ namespace FocusTree.Data.Focus
                 {
                     Sentence sentence = new();
                     sentence.ReadXml(reader);
-                    Data.Effects.Add(sentence);
+                    effects.Add(sentence);
                 }
             } while (reader.Read());
             throw new Exception("[2304060212] 读取 Effects 时未能找到结束标签");
@@ -251,13 +213,13 @@ namespace FocusTree.Data.Focus
             // <Node>
             writer.WriteStartElement("Node");
 
-            writer.WriteAttributeString("ID", Data.ID);
-            writer.WriteAttributeString("Name", Data.Name);
-            writer.WriteAttributeString("Star", Data.BeginWithStar);
-            writer.WriteAttributeString("Duration", Data.Duration);
-            writer.WriteAttributeString("Descript", Data.Descript);
-            writer.WriteAttributeString("Ps.", Data.Ps);
-            writer.WriteAttributeString("Point", Data.MetaPoint);
+            writer.WriteAttributeString("ID", ID.ToString());
+            writer.WriteAttributeString("Name", Name);
+            writer.WriteAttributeString("Star", BeginWithStar.ToString());
+            writer.WriteAttributeString("Duration", Duration.ToString());
+            writer.WriteAttributeString("Descript", Descript.ToString());
+            writer.WriteAttributeString("Ps.", Ps);
+            writer.WriteAttributeString("Point", LatticedPoint.ToString());
 #if RAW_EFFECTS
             // <RawEffects>
             writer.WriteStartElement("RawEffects");

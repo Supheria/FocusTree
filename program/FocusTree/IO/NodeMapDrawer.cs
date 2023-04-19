@@ -108,7 +108,7 @@ namespace FocusTree.IO
         }
         private static RectangleF NodeDrawingRect(FocusGraph Graph, int id)
         {
-            var point = Graph.GetNode(id).MetaPoint;
+            var point = Graph.GetNode(id).LatticedPoint;
             return new(
                     point.X * ScalingUnit.X + Border,
                     point.Y * ScalingUnit.Y + Border,
