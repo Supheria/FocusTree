@@ -13,7 +13,6 @@ namespace FocusTree.Data.Focus
     {
         #region ==== 基本变量 ====
 
-        public FocusData Data;
         /// <summary>
         /// 依赖组
         /// </summary>
@@ -71,7 +70,7 @@ namespace FocusTree.Data.Focus
 
         #endregion
 
-        #region ==== 构造函数 ====
+        #region ==== 序列化方法 ====
 
         /// <summary>
         /// 用于序列化
@@ -79,16 +78,6 @@ namespace FocusTree.Data.Focus
         public FocusNode()
         {
         }
-
-        public FocusNode(FocusData data)
-        {
-            Data = data;
-        }
-
-        #endregion
-
-        #region ==== 序列化方法 ====
-
         public void ReadXml(XmlReader reader)
         {
             Effects = new();
@@ -96,7 +85,6 @@ namespace FocusTree.Data.Focus
 
             //==== 读取 Data ====//
             ID = int.Parse(reader.GetAttribute("ID"));
-            if (ID == null) { throw new Exception("缺失必要的节点id"); }
             Name = reader.GetAttribute("Name");
             BeginWithStar = bool.Parse(reader.GetAttribute("Star"));
             Duration = int.Parse(reader.GetAttribute("Duration"));
