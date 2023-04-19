@@ -42,7 +42,7 @@ namespace FocusTree.UI
 
         private void MainForm_Shown(object sender, EventArgs e)
         {
-            Lattice.Draw(Display.gCore, ClientRectangle);
+            Display.Graph.Draw(Display.gCore, ClientRectangle);
             Display.Invalidate();
         }
 
@@ -102,7 +102,7 @@ namespace FocusTree.UI
             if (Display.Graph == null) { return; }
 
             MainForm_Menu_file_backup_open.DropDownItems.Clear();
-            var backupList = Display.Graph.GetBackupsList(Display.FilePath);
+            var backupList = Display.GMeta.GetBackupsList(Display.FilePath);
             if (backupList.Count == 1) { return; }
 
             MainForm_Menu_file_backup_open.Visible = true;
@@ -132,7 +132,7 @@ namespace FocusTree.UI
         }
         private void MainForm_Menu_file_backup_delete_Click(object sender, EventArgs e)
         {
-            Display.Graph.DeleteBackup();
+            Display.GMeta.DeleteBackup();
             Display.LoadGraph(Display.FilePath);
             MainForm_StatusStrip_status.Text = "已删除";
         }
@@ -229,7 +229,7 @@ namespace FocusTree.UI
         private void MainForm_Menu_graph_saveas_Click(object sender, EventArgs e)
         {
             var savePath = Path.ChangeExtension(Display.FilePath, ".jpg");
-            NodeMapDrawer.SaveasImage(Display.Graph, savePath);
+            NodeMapDrawer.SaveasImage(Display.GMeta, savePath);
         }
         private void MainForm_Menu_graph_reorderIds_Click(object sender, EventArgs e)
         {

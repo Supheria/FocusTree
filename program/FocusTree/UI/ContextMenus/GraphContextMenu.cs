@@ -65,7 +65,7 @@ namespace FocusTree.UI.Controls
         }
         private void InitializeInMiddleClick()
         {
-            var backupList = Display.Graph.GetBackupsList(Display.FilePath);
+            var backupList = Display.GMeta.GetBackupsList(Display.FilePath);
             if (backupList.Count == 1) { return; }
 
             ToolStripMenuItem item;
@@ -139,7 +139,7 @@ namespace FocusTree.UI.Controls
         }
         private void DeleteBackupClicked(object sender, EventArgs e)
         {
-            Display.Graph.DeleteBackup();
+            Display.GMeta.DeleteBackup();
             Display.LoadGraph(Display.FilePath);
         }
 
