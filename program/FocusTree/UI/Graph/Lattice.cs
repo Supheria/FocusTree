@@ -69,14 +69,19 @@ namespace FocusTree.UI.Graph
         /// </summary>
         public static Pen NodePen = new(Color.Orange, 1.5f);
         /// <summary>
-        /// 绘制栅格时，绘制非循环节点的委托
+        /// 绘制栅格时，绘制非循环节点的委托类型
         /// </summary>
         /// <param name="g">传入栅格的 GDI</param>
         public delegate void CellDrawer(Graphics g);
         /// <summary>
-        /// 需要单独绘制的格元队列
+        /// 需要单独绘制的格元委托
         /// </summary>
-        public static List<CellDrawer> DrawCellQueue = new();
+        public static CellDrawer DrawCell 
+        { 
+            get => drawCell ??= (g) => { }; 
+            set => drawCell = value;
+        }
+        static CellDrawer drawCell;
         /// <summary>
         /// 绘制无限制栅格
         /// </summary>
@@ -88,11 +93,7 @@ namespace FocusTree.UI.Graph
             g.Clear(Color.White);
             SetBounds(bounds);
 
-            foreach(var drawer in DrawCellQueue)
-            {
-                drawer(g);
-            }
-            DrawCellQueue.Clear();
+            
 
             for (int i = 0; i < ColNumber; i++)
             {
@@ -100,6 +101,12 @@ namespace FocusTree.UI.Graph
                 {
                     DrawLoopCell(g, i, j);
                 }
+            }
+            DrawCell(g);
+            var delArray = DrawCell.GetInvocationList();
+            foreach (var del in delArray)
+            {
+                DrawCell -= del as CellDrawer;
             }
 #if DEBUG
             var testPen = new Pen(Color.Red, 0.5f);
@@ -218,13 +225,12 @@ namespace FocusTree.UI.Graph
         /// <summary>
         /// 获取一个在栅格绘图区域内的矩形
         /// </summary>
-        /// <param name="left">预设矩形左边界</param>
-        /// <param name="top">预设矩形上边界</param>
-        /// <param name="width">预设矩形宽</param>
-        /// <param name="height">预设矩形高</param>
-        /// <returns>在绘图区域内的可能被裁剪过的矩形</returns>
-        public static Rectangle RectWithinDrawRect(Rectangle rect)
+        /// <param name="rect"></param>
+        /// <param name="saveRect">在绘图区域内的可能被裁剪过的矩形（默认为 empty）</param>
+        /// <returns>如果裁剪后宽度或高度小于等于0，返回false；否则返回true</returns>
+        public static bool RectWithinDrawRect(Rectangle rect, out Rectangle saveRect)
         {
+            saveRect = Rectangle.Empty;
             var left = rect.Left;
             var top = rect.Top;
             var width = rect.Width;
@@ -232,17 +238,20 @@ namespace FocusTree.UI.Graph
             if (left < DrawRect.Left)
             {
                 width -= DrawRect.Left - left;
+                if (width <= 0) { return false; }
                 left = DrawRect.Left;
             }
             if (top < DrawRect.Top)
             {
                 height -= DrawRect.Top - top;
+                if (height <= 0) { return false; }
                 top = DrawRect.Top;
             }
-            return new(left, top,
+            saveRect =  new(left, top,
                 left + width > DrawRect.Right ? DrawRect.Right - left : width,
                 top + height > DrawRect.Bottom ? DrawRect.Bottom - top : height
                 );
+            return true;
         }
         /// <summary>
         /// 重绘格元（裁去超出部分）
@@ -252,8 +261,8 @@ namespace FocusTree.UI.Graph
         public static void ReDrawCell(Graphics g, LatticeCell cell)
         {
             g.FillRectangle(new SolidBrush(Color.White), cell.RealRect);
-            DrawCell(g, CellPen, new(cell.RealLeft, cell.RealTop), new(LatticeCell.Width, LatticeCell.Height));
-            DrawCell(g, NodePen, new(cell.NodeRealLeft, cell.NodeRealTop), new(LatticeCell.NodeWidth, LatticeCell.NodeHeight));
+            DrawCellLines(g, CellPen, new(cell.RealLeft, cell.RealTop), new(LatticeCell.Width, LatticeCell.Height));
+            DrawCellLines(g, NodePen, new(cell.NodeRealLeft, cell.NodeRealTop), new(LatticeCell.NodeWidth, LatticeCell.NodeHeight));
         }
         /// <summary>
         /// 在栅格绘图区域内绘制左下-左上-上右的七形线
@@ -262,7 +271,7 @@ namespace FocusTree.UI.Graph
         /// <param name="pen"></param>
         /// <param name="LeftTop">七形线左上角坐标</param>
         /// <param name="size">七形线尺寸</param>
-        static void DrawCell(Graphics g, Pen pen, Point LeftTop, Size size)
+        static void DrawCellLines(Graphics g, Pen pen, Point LeftTop, Size size)
         {
             var left = LeftTop.X;
             var top = LeftTop.Y;

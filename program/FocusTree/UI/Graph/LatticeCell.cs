@@ -73,11 +73,11 @@ namespace FocusTree.UI.Graph
         /// <summary>
         /// 格元宽最小值
         /// </summary>
-        public static int WidthMinimum = 16;
+        public static int WidthMinimum = 24;
         /// <summary>
         /// 格元宽最小值
         /// </summary>
-        public static int WidthMaximum = 200;
+        public static int WidthMaximum = 240;
         /// <summary>
         /// 格元高最小值
         /// </summary>
@@ -97,11 +97,20 @@ namespace FocusTree.UI.Graph
         /// <summary>
         /// 节点 Left 到格元 Left 的空隙
         /// </summary>
-        public static int NodePaddingWidth { get => (int)(width * 0.3f); }
+        public static int NodePaddingWidth { get => (int)(width * NodePaddingFactor.X); }
         /// <summary>
         /// 节点 Top 到格元 Top 的空隙
         /// </summary>
-        public static int NodePaddingHeight { get => (int)(height * 0.3f); }
+        public static int NodePaddingHeight { get => (int)(height * NodePaddingFactor.Y); }
+        /// <summary>
+        /// 节点空隙系数（0.3 < X < 0.5, 0.3 < Y < 0.5)
+        /// </summary>
+        public static PointF NodePaddingFactor
+        {
+            get => new(npf.X < 0.3f ? 0.3f : npf.X > 0.5f ? 0.5f : npf.X, npf.Y < 0.3f ? 0.3f : npf.Y > 0.5f ? 0.5f : npf.Y);
+            set => npf = new(value.X < 0.3f ? 0.3f : value.X > 0.5f ? 0.5f : value.X, value.Y < 0.3f ? 0.3f : value.Y > 0.5f ? 0.5f : value.Y);
+        }
+        public static PointF npf;
 
         #endregion
         public LatticeCell()
@@ -207,8 +216,10 @@ namespace FocusTree.UI.Graph
                 {
                     Lattice.ReDrawCell(g, this);
                     LastTouchInRect = part;
-                    part = Lattice.RectWithinDrawRect(part);
-                    g.FillRectangle(new SolidBrush(Color.FromArgb(100, Color.Gray)), part);
+                    if (Lattice.RectWithinDrawRect(part, out var saveRect))
+                    {
+                        g.FillRectangle(new SolidBrush(Color.FromArgb(100, Color.Gray)), saveRect);
+                    }
                 }
                 return i == 0 ? CellParts.Left : i == 1 ? CellParts.Top : CellParts.LeftTop;
             }
@@ -219,8 +230,10 @@ namespace FocusTree.UI.Graph
                 {
                     Lattice.ReDrawCell(g, this);
                     LastTouchInRect = rect;
-                    rect = Lattice.RectWithinDrawRect(rect);
-                    g.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.Orange)), rect);
+                    if (Lattice.RectWithinDrawRect(rect, out var saveRect))
+                    {
+                        g.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.Orange)), saveRect);
+                    }
                 }
                 return CellParts.Node;
             }
@@ -241,10 +254,10 @@ namespace FocusTree.UI.Graph
                 if (part != LastTouchInRect)
                 {
                     LastTouchInRect = part;
-                    part = Lattice.RectWithinDrawRect(part);
-                    Point ColRow = new(RealColIndex, RealRowIndex);
-                    Lattice.CellDrawer drawer = (g) => { g.FillRectangle(new SolidBrush(Color.FromArgb(100, Color.Gray)), part); };
-                    Lattice.DrawCellQueue.Add(drawer);
+                    if (Lattice.RectWithinDrawRect(part, out var saveRect))
+                    {
+                        Lattice.DrawCell += (g) => { g.FillRectangle(new SolidBrush(Color.FromArgb(100, Color.Gray)), saveRect); };
+                    }
                 }
                 return i == 0 ? CellParts.Left : i == 1 ? CellParts.Top : i == 2 ? CellParts.LeftTop : CellParts.Node;
             }
@@ -254,10 +267,10 @@ namespace FocusTree.UI.Graph
                 if (LastTouchInRect != rect)
                 {
                     LastTouchInRect = rect;
-                    rect = Lattice.RectWithinDrawRect(rect);
-                    Point ColRow = new(RealColIndex, RealRowIndex);
-                    Lattice.CellDrawer drawer = (g) => { g.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.Orange)), rect); };
-                    Lattice.DrawCellQueue.Add(drawer);
+                    if (Lattice.RectWithinDrawRect(rect, out var saveRect))
+                    {
+                        Lattice.DrawCell += (g) => { g.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.Orange)), rect); };
+                    }
                 }
                 return CellParts.Node;
             }
