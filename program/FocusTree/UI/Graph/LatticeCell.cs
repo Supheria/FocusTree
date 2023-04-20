@@ -1,7 +1,4 @@
-﻿
-using static System.Formats.Asn1.AsnWriter;
-
-namespace FocusTree.UI.Graph
+﻿namespace FocusTree.UI.Graph
 {
     /// <summary>
     /// 格元
@@ -15,8 +12,8 @@ namespace FocusTree.UI.Graph
         /// </summary>
         public static int Width
         {
-            get => width = width < WidthMinimum ? WidthMinimum : width > WidthMaximum ? WidthMaximum : width;
-            set => width = value < WidthMinimum ? WidthMinimum : value > WidthMaximum ? WidthMaximum : value;
+            get => width = width < SizeMin.Width ? SizeMin.Width : width > SizeMax.Width ? SizeMax.Width : width;
+            set => width = value < SizeMin.Width ? SizeMin.Width : value > SizeMax.Width ? SizeMax.Width : value;
         }
         static int width;
         /// <summary>
@@ -24,26 +21,18 @@ namespace FocusTree.UI.Graph
         /// </summary>
         public static int Height
         {
-            get => height = height < HeightMinimum ? HeightMinimum : height > HeightMaximum ? HeightMaximum : height;
-            set => height = value < HeightMinimum ? HeightMinimum : value > HeightMaximum ? HeightMaximum : value;
+            get => height = height < SizeMin.Height ? SizeMin.Height : height > SizeMax.Height ? SizeMax.Height : height;
+            set => height = value < SizeMin.Height ? SizeMin.Height : value > SizeMax.Height ? SizeMax.Height : value;
         }
         static int height;
         /// <summary>
-        /// 格元宽最小值
+        /// 最小尺寸
         /// </summary>
-        public static int WidthMinimum = 24;
+        public static Size SizeMin = new(25, 25);
         /// <summary>
-        /// 格元宽最小值
+        /// 最大尺寸
         /// </summary>
-        public static int WidthMaximum = 240;
-        /// <summary>
-        /// 格元高最小值
-        /// </summary>
-        public static int HeightMinimum = 10;
-        /// <summary>
-        /// 格元高最大值
-        /// </summary>
-        public static int HeightMaximum = 100;
+        public static Size SizeMax = new(100, 100);
         /// <summary>
         /// 节点宽
         /// </summary>
@@ -55,18 +44,18 @@ namespace FocusTree.UI.Graph
         /// <summary>
         /// 节点 Left 到格元 Left 的空隙
         /// </summary>
-        public static int NodePaddingWidth { get => (int)(width * NodePaddingFactor.X); }
+        public static int NodePaddingWidth { get => (int)(width * NodePaddingZoomFactor.X); }
         /// <summary>
         /// 节点 Top 到格元 Top 的空隙
         /// </summary>
-        public static int NodePaddingHeight { get => (int)(height * NodePaddingFactor.Y); }
+        public static int NodePaddingHeight { get => (int)(height * NodePaddingZoomFactor.Y); }
         /// <summary>
-        /// 节点空隙系数（0.3 < X < 0.5, 0.3 < Y < 0.5)
+        /// 节点空隙系数（0.3 < X < 0.7, 0.3 < Y < 0.7)
         /// </summary>
-        public static PointF NodePaddingFactor
+        public static PointF NodePaddingZoomFactor
         {
-            get => new(npf.X < 0.3f ? 0.3f : npf.X > 0.5f ? 0.5f : npf.X, npf.Y < 0.3f ? 0.3f : npf.Y > 0.5f ? 0.5f : npf.Y);
-            set => npf = new(value.X < 0.3f ? 0.3f : value.X > 0.5f ? 0.5f : value.X, value.Y < 0.3f ? 0.3f : value.Y > 0.5f ? 0.5f : value.Y);
+            get => new(npf.X < 0.3f ? 0.3f : npf.X > 0.7f ? 0.7f : npf.X, npf.Y < 0.3f ? 0.3f : npf.Y > 0.7f ? 0.7f : npf.Y);
+            set => npf = new(value.X < 0.3f ? 0.3f : value.X > 0.7f ? 0.7f : value.X, value.Y < 0.3f ? 0.3f : value.Y > 0.7f ? 0.7f : value.Y);
         }
         public static PointF npf;
 
@@ -146,36 +135,8 @@ namespace FocusTree.UI.Graph
 
         #endregion
 
-        /// <summary>
-        /// 判断两个格元的左边界和上边界是否同时相等
-        /// </summary>
-        /// <param name="lhd"></param>
-        /// <param name="rhd"></param>
-        /// <returns></returns>
-        public static bool operator ==(LatticeCell lhd, LatticeCell rhd)
-        {
-            return lhd.LatticedLeft == rhd.LatticedLeft && lhd.LatticedTop == rhd.LatticedTop;
-        }
-        /// <summary>
-        /// 判断两个格元的左边界或上边界是否不相等
-        /// </summary>
-        /// <param name="lhd"></param>
-        /// <param name="rhd"></param>
-        /// <returns></returns>
-        public static bool operator !=(LatticeCell lhd, LatticeCell rhd)
-        {
-            return lhd.LatticedLeft != rhd.LatticedLeft || lhd.LatticedTop != rhd.LatticedTop;
-        }
+        #region ==== 格元内部区域 ====
 
-        public override bool Equals(object obj)
-        {
-            var cell = (LatticeCell)obj;
-            return LatticedLeft == cell.LatticedLeft && LatticedTop == cell.LatticedTop;
-        }
-        public override int GetHashCode()
-        {
-            throw new NotImplementedException();
-        }
         /// <summary>
         /// 格元的内部区域
         /// </summary>
@@ -222,21 +183,6 @@ namespace FocusTree.UI.Graph
         /// 节点区域填充颜色
         /// </summary>
         public Color InnerPartColor_Node = Color.FromArgb(150, Color.Orange);
-        /// <summary>
-        /// 格元内部各个区域的真实矩形
-        /// </summary>
-        /// <param name="lattice"></param>
-        /// <returns></returns>
-        //public Dictionary<InnerParts, (Rectangle, SolidBrush)> InnerPartRealRects
-        //{
-        //    get => new()
-        //    {
-        //        [InnerParts.Left] = (new(RealLeft, NodeRealTop, Width - NodeWidth, Height - NodePaddingHeight), new(InnerPartColor_Left)),
-        //        [InnerParts.Top] = (new(NodeRealLeft, RealTop, Width - NodePaddingWidth, Height - NodeHeight), new(InnerPartColor_Top)),
-        //        [InnerParts.LeftTop] = (new(RealLeft, RealTop, Width - NodeWidth, Height - NodeHeight), new(InnerPartColor_LeftTop)),
-        //        [InnerParts.Node] = (NodeRealRect, new(InnerPartColor_Node))
-        //    };
-        //}
         public Dictionary<InnerParts, Rectangle> InnerPartRealRects
         {
             get => new()
@@ -248,71 +194,163 @@ namespace FocusTree.UI.Graph
             };
         }
         /// <summary>
-        /// 光标进入格元后高亮光标所处其中的部分，或取消高亮光标刚离开的部分
+        /// 获取坐标在格元上所处的部分
         /// </summary>
-        /// <param name="g"></param>
-        /// <param name="cell"></param>
-        /// <param name="cursor"></param>
+        /// <param name="point">坐标</param>
         /// <returns></returns>
-        public InnerParts HightLightCursorTouchOn(Graphics g, Point cursor)
-        {
-            //foreach (var pair in InnerPartRealRects)
-            //{
-            //    var rect = pair.Value.Item1;
-            //    if (!rect.Contains(cursor)) { continue; }
-            //    if (rect != LastTouchRect)
-            //    {
-            //        Lattice.ReDrawCell(g, this);
-            //        LastTouchRect = rect;
-            //        if (Lattice.RectWithinDrawRect(rect, out var saveRect))
-            //        {
-            //            g.FillRectangle(pair.Value.Item2, saveRect);
-            //        }
-            //    }
-            //    return pair.Key;
-            //}
-            //Lattice.ReDrawCell(g, this);
-            return InnerParts.Leave;
-        }
-        /// <summary>
-        /// 获取光标在格元上所处的部分
-        /// </summary>
-        /// <param name="cursor"></param>
-        /// <returns></returns>
-        public InnerParts GetInnerPartCursorOn(Point cursor)
+        public InnerParts GetInnerPartPointOn(Point point)
         {
             foreach (var pair in InnerPartRealRects)
             {
                 var rect = pair.Value;
-                if (rect.Contains(cursor))
+                if (rect.Contains(point))
                 {
                     return pair.Key;
                 }
             }
             return InnerParts.Leave;
         }
+
+        #endregion
+
+        #region ==== 绘图 ====
+
         /// <summary>
-        /// 高亮格元被选中的部分，并在重绘栅格时绘制高亮
+        /// 格元绘图方法事件（自动添加到栅格委托列表）
+        public event CellDrawer Drawer
         /// </summary>
-        /// <param name="cursor">选中坐标</param>
-        /// <returns>格元选中的部分</returns>
-        public InnerParts HighlightSelection(Point cursor)
         {
-            //foreach (var pair in InnerPartRealRects)
-            //{
-            //    var rect = pair.Value.Item1;
-            //    if (!rect.Contains(cursor)) { continue; }
-            //    if (rect != LastTouchRect)
-            //    {
-            //        LastTouchRect = rect;
-            //        if (Lattice.RectWithinDrawRect(rect, out var saveRect))
-            //        {
-            //            Lattice.DrawCell += (g) => { g.FillRectangle(pair.Value.Item2, saveRect); };
-            //        }
-            //    }
-            //    return pair.Key;
-            //}
-            return InnerParts.Leave;
+            add
+            {
+                drawer += value;
+                Point point = new(RealLeft, RealTop);
+                if (Lattice.DrawCell.ContainsKey(point))
+                {
+                    Lattice.DrawCell[point] += drawer;
+                }
+                else { Lattice.DrawCell[point] = drawer; }
+            }
+            remove { }
         }
+        CellDrawer drawer = null;
+        public void DrawFillPart(Brush brush, InnerParts part)
+        {
+            var rect = InnerPartRealRects[part];
+            if (!Lattice.RectWithin(rect, out var saveRect)) { return; }
+            Drawer += (g) => { g.FillRectangle(brush, saveRect); };
+        }
+        public enum LineDirects
+        {
+            /// <summary>
+            /// 向上
+            /// </summary>
+            Up = 0b1,
+            /// <summary>
+            /// 一半向上
+            /// </summary>
+            HalfUp = Up << 1,
+            /// <summary>
+            /// 一半向下
+            /// </summary>
+            HalfDown = HalfUp << 1,
+            /// <summary>
+            /// 一半向左
+            /// </summary>
+            HalfLeft = HalfDown << 1,
+            /// <summary>
+            /// 一半向右
+            /// </summary>
+            HalfRight = HalfLeft << 1,
+            /// <summary>
+            /// 横向贯穿
+            /// </summary>
+            LeftRight = HalfRight << 1,
+            /// <summary>
+            /// 竖向贯穿
+            /// </summary>
+            TopBottom = LeftRight << 1,
+            /// <summary>
+            /// 竖向穿到节点上空隙一半
+            /// </summary>
+            HalfTopBottom = TopBottom << 1
+
+        }
+        public void DrawLine(Pen pen, LineDirects direct)
+        {
+            var halfNodeWidth = NodeRealLeft + NodeWidth / 2;
+            var halfPadHeight = RealTop + NodePaddingHeight / 2;
+            var nodeTop = NodeRealTop;
+            var cellTop = RealTop;
+            var nodeRight = NodeRealRect.Right;
+            var cellLeft = RealLeft;
+            var cellBottom = RealRect.Bottom;
+
+            if ((direct & LineDirects.Up) > 0)
+            {
+                if (Lattice.VerticLineWithin(halfNodeWidth, (nodeTop, cellTop), pen.Width, out var saveLine))
+                {
+                    var line = saveLine;
+                    Drawer += (g) => g.DrawLine(pen, line.Item1, line.Item2);
+                }
+            }
+            if ((direct & LineDirects.HalfUp) > 0)
+            {
+                if (Lattice.VerticLineWithin(halfNodeWidth, (halfPadHeight, cellTop), pen.Width, out var saveLine))
+                {
+                    var line = saveLine;
+                    Drawer += (g) => g.DrawLine(pen, line.Item1, line.Item2);
+                }
+            }
+            if ((direct & LineDirects.HalfDown) > 0)
+            {
+                if (Lattice.VerticLineWithin(halfNodeWidth, (halfPadHeight, nodeTop), pen.Width, out var saveLine))
+                {
+                    var line = saveLine;
+                    Drawer += (g) => g.DrawLine(pen, line.Item1, line.Item2);
+                }
+            }
+            if ((direct & LineDirects.HalfLeft) > 0)
+            {
+                if (Lattice.HorizonLineWithin((halfNodeWidth, cellLeft), halfPadHeight, pen.Width, out var saveLine))
+                {
+                    var line = saveLine;
+                    Drawer += (g) => g.DrawLine(pen, line.Item1, line.Item2);
+                }
+            }
+            if ((direct & LineDirects.HalfRight) > 0)
+            {
+                if (Lattice.HorizonLineWithin((halfNodeWidth, nodeRight), halfPadHeight, pen.Width, out var saveLine))
+                {
+                    var line = saveLine;
+                    Drawer += (g) => g.DrawLine(pen, line.Item1, line.Item2);
+                }
+            }
+            if ((direct & LineDirects.LeftRight) > 0)
+            {
+                if (Lattice.HorizonLineWithin((cellLeft, nodeRight), halfPadHeight, pen.Width, out var saveLine))
+                {
+                    var line = saveLine;
+                    Drawer += (g) => g.DrawLine(pen, line.Item1, line.Item2);
+                }
+            }
+            if ((direct & LineDirects.TopBottom) > 0)
+            {
+                if (Lattice.VerticLineWithin(halfNodeWidth, (cellBottom, cellTop), pen.Width, out var saveLine))
+                {
+                    var line = saveLine;
+                    Drawer += (g) => g.DrawLine(pen, line.Item1, line.Item2);
+                }
+            }
+            if ((direct & LineDirects.HalfTopBottom) > 0)
+            {
+                if (Lattice.VerticLineWithin(halfNodeWidth, (cellBottom, halfPadHeight), pen.Width, out var saveLine))
+                {
+                    var line = saveLine;
+                    Drawer += (g) => g.DrawLine(pen, line.Item1, line.Item2);
+                }
+            }
+        }
+
+        #endregion
     }
 }

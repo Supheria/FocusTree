@@ -1,6 +1,4 @@
-﻿using FocusTree.UI.Graph;
-
-namespace FocusTree.UI.Controls
+﻿namespace FocusTree.UI.Controls
 {
     class NodeContextMenu : ContextMenuStrip
     {

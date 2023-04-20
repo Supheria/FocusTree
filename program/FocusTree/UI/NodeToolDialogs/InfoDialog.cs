@@ -1,5 +1,4 @@
 using FocusTree.Data;
-using FocusTree.UI.Graph;
 
 namespace FocusTree.UI.NodeToolDialogs
 {

@@ -1,9 +1,12 @@
 ﻿#define DEBUG
-using FocusTree.UI.test;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace FocusTree.UI.Graph
 {
+    /// <summary>
+    /// 绘制栅格时，绘制非循环节点的委托类型
+    /// </summary>
+    /// <param name="g">传入栅格的 GDI</param>
+    public delegate void CellDrawer(Graphics g);
     /// <summary>
     /// 栅格
     /// </summary>
@@ -22,11 +25,11 @@ namespace FocusTree.UI.Graph
         /// <summary>
         /// 栅格总列宽
         /// </summary>
-        public static int RowWidth;
+        static int RowWidth;
         /// <summary>
         /// 栅格总行高
         /// </summary>
-        public static int ColHeight;
+        static int ColHeight;
         /// <summary>
         /// 栅格绘图区域（根据给定放置区域、列数、行数自动生成，并在给定放置区域内居中）
         /// </summary>
@@ -58,7 +61,7 @@ namespace FocusTree.UI.Graph
 
         #endregion
 
-        #region ==== 绘制栅格 ====
+        #region ==== 绘图工具 ====
 
         /// <summary>
         /// 格元边界绘制用笔
@@ -69,56 +72,20 @@ namespace FocusTree.UI.Graph
         /// </summary>
         public static Pen NodePen = new(Color.Orange, 1.5f);
         /// <summary>
-        /// 绘制栅格时，绘制非循环节点的委托类型
+        /// 需要单独绘制的格元委托列表
         /// </summary>
-        /// <param name="g">传入栅格的 GDI</param>
-        public delegate void CellDrawer(Graphics g);
+        public static Dictionary<Point, CellDrawer> DrawCell = new();
+
+        #endregion
+
+        #region ==== 绘制栅格 ====
+
         /// <summary>
-        /// 需要单独绘制的格元委托
-        /// </summary>
-        public static CellDrawer DrawCell 
-        { 
-            get => drawCell ??= (g) => { }; 
-            set => drawCell = value;
-        }
-        static CellDrawer drawCell;
-        /// <summary>
-        /// 绘制无限制栅格
+        /// 设置栅格放置区域，绘制栅格（首次绘制或重设放置区域）
         /// </summary>
         /// <param name="g"></param>
-        /// <param name="bounds">栅格放置区域</param>
-        /// <param name="cursor">新的光标位置</param>
+        /// <param name="bounds">放置区域</param>
         public static void Draw(Graphics g, Rectangle bounds)
-        {
-            g.Clear(Color.White);
-            SetBounds(bounds);
-
-            
-
-            for (int i = 0; i < ColNumber; i++)
-            {
-                for (int j = 0; j < RowNumber; j++)
-                {
-                    DrawLoopCell(g, i, j);
-                }
-            }
-            DrawCell(g);
-            var delArray = DrawCell.GetInvocationList();
-            foreach (var del in delArray)
-            {
-                DrawCell -= del as CellDrawer;
-            }
-#if DEBUG
-            var testPen = new Pen(Color.Red, 0.5f);
-            g.DrawLine(testPen, new(OriginLeft, DrawRect.Top), new(OriginLeft, DrawRect.Bottom));
-            g.DrawLine(testPen, new(DrawRect.Left, OriginTop), new(DrawRect.Right, OriginTop));
-#endif
-        }
-        /// <summary>
-        /// 设置边界及绘图参数
-        /// </summary>
-        /// <param name="bounds"></param>
-        private static void SetBounds(Rectangle bounds)
         {
             ColNumber = bounds.Width / LatticeCell.Width;
             RowWidth = ColNumber * LatticeCell.Width;
@@ -132,7 +99,39 @@ namespace FocusTree.UI.Graph
                 RowWidth,
                 ColHeight
                 );
+            Draw(g);
         }
+        /// <summary>
+        /// 绘制无限制栅格，并调用绘制格元的委托
+        /// </summary>
+        /// <param name="g"></param>
+        public static void Draw(Graphics g)
+        {
+            g.Clear(Color.White);
+
+            foreach (var drawer in DrawCell.Values)
+            {
+                drawer?.Invoke(g);
+            }
+
+            for (int i = 0; i < ColNumber; i++)
+            {
+                for (int j = 0; j < RowNumber; j++)
+                {
+                    //DrawLoopCell(g, i, j);
+                }
+            }
+#if DEBUG
+            var testPen = new Pen(Color.Red, 0.5f);
+            g.DrawLine(testPen, new(OriginLeft, DrawRect.Top), new(OriginLeft, DrawRect.Bottom));
+            g.DrawLine(testPen, new(DrawRect.Left, OriginTop), new(DrawRect.Right, OriginTop));
+#endif
+        }
+
+        #endregion
+
+        #region ==== 循环格元绘制方法 ====
+
         /// <summary>
         /// 绘制循环格元（格元左上角坐标与栅格坐标系中心偏移量近似投射在一个格元大小范围内）
         /// </summary>
@@ -146,7 +145,7 @@ namespace FocusTree.UI.Graph
             var cellLeft = col * LatticeCell.Width + (OriginLeft - DrawRect.X) % LatticeCell.Width + DeviDiffInDrawRectWidth;
             var cellTop = row * LatticeCell.Height + (OriginTop - DrawRect.Y) % LatticeCell.Height + DeviDiffInDrawRectHeight;
             DrawLoopCellLine(g, CellPen, new(cellLeft, cellTop), new(LatticeCell.Width, LatticeCell.Height));
-            
+
             var nodeLeft = cellLeft + LatticeCell.NodePaddingWidth;
             var nodeTop = cellTop + LatticeCell.NodePaddingHeight;
             DrawLoopCellLine(g, NodePen, new(nodeLeft, nodeTop), new(LatticeCell.NodeWidth, LatticeCell.NodeHeight));
@@ -222,37 +221,9 @@ namespace FocusTree.UI.Graph
 
         #endregion
 
-        /// <summary>
-        /// 获取一个在栅格绘图区域内的矩形
-        /// </summary>
-        /// <param name="rect"></param>
-        /// <param name="saveRect">在绘图区域内的可能被裁剪过的矩形（默认为 empty）</param>
-        /// <returns>如果裁剪后宽度或高度小于等于0，返回false；否则返回true</returns>
-        public static bool RectWithinDrawRect(Rectangle rect, out Rectangle saveRect)
-        {
-            saveRect = Rectangle.Empty;
-            var left = rect.Left;
-            var top = rect.Top;
-            var width = rect.Width;
-            var height = rect.Height;
-            if (left < DrawRect.Left)
-            {
-                width -= DrawRect.Left - left;
-                if (width <= 0) { return false; }
-                left = DrawRect.Left;
-            }
-            if (top < DrawRect.Top)
-            {
-                height -= DrawRect.Top - top;
-                if (height <= 0) { return false; }
-                top = DrawRect.Top;
-            }
-            saveRect =  new(left, top,
-                left + width > DrawRect.Right ? DrawRect.Right - left : width,
-                top + height > DrawRect.Bottom ? DrawRect.Bottom - top : height
-                );
-            return true;
-        }
+        #region ==== 非循环格元绘制方法 ====
+
+
         /// <summary>
         /// 重绘格元（裁去超出部分）
         /// </summary>
@@ -293,6 +264,125 @@ namespace FocusTree.UI.Graph
                     new(left, bottom > DrawRect.Bottom ? DrawRect.Bottom : bottom)
                     );
             }
+        }
+
+        #endregion
+
+        /// <summary>
+        /// 获取一个在栅格绘图区域内的矩形
+        /// </summary>
+        /// <param name="rect"></param>
+        /// <param name="saveRect">在绘图区域内的可能被裁剪过的矩形（默认为 empty）</param>
+        /// <returns>如果裁剪后宽度或高度小于等于0，返回false；否则返回true</returns>
+        public static bool RectWithin(Rectangle rect, out Rectangle saveRect)
+        {
+            saveRect = Rectangle.Empty;
+            var left = rect.Left;
+            var top = rect.Top;
+            var width = rect.Width;
+            var height = rect.Height;
+            if (left < DrawRect.Left)
+            {
+                width -= DrawRect.Left - left;
+                if (width <= 0) { return false; }
+                left = DrawRect.Left;
+            }
+            if (top < DrawRect.Top)
+            {
+                height -= DrawRect.Top - top;
+                if (height <= 0) { return false; }
+                top = DrawRect.Top;
+            }
+            saveRect = new(left, top,
+                left + width > DrawRect.Right ? DrawRect.Right - left : width,
+                top + height > DrawRect.Bottom ? DrawRect.Bottom - top : height
+                );
+            return true;
+        }
+        ///// <summary>
+        ///// 判断矩形是否在栅格绘图区域内
+        ///// </summary>
+        ///// <param name="rect"></param>
+        ///// <returns></returns>
+        //public static bool RectWithin(Rectangle rect)
+        //{
+        //    var left = rect.Left;
+        //    var top = rect.Top;
+        //    var width = rect.Width;
+        //    var height = rect.Height;
+        //    if (left < DrawRect.Left)
+        //    {
+        //        width -= DrawRect.Left - left;
+        //        if (width <= 0) { return false; }
+        //    }
+        //    if (top < DrawRect.Top)
+        //    {
+        //        height -= DrawRect.Top - top;
+        //        if (height <= 0) { return false; }
+        //    }
+        //    return true;
+        //}
+        /// <summary>
+        /// 获取一个在栅格绘图区域内的水平线
+        /// </summary>
+        /// <param name="x">端点的横坐标数对</param>
+        /// <param name="y">端点的纵坐标</param>
+        /// <param name="saveLine">在绘图区域内可能被裁剪过的线段的两个端点坐标的数对</param>
+        /// <returns>如果线有部分在绘图区域内，返回true；否则返回false</returns>
+        public static bool HorizonLineWithin((int, int) x, int y, float penWidth, out (Point, Point) saveLine)
+        {
+            saveLine = new();
+            if (y - penWidth < DrawRect.Top || y + penWidth > DrawRect.Bottom) { return false; }
+            var x1 = x.Item1;
+            var x2 = x.Item2;
+            if (x1 == x2) { return false; }
+            var Left = DrawRect.Left;
+            var Right = DrawRect.Right;
+            if (x1 < x2)
+            {
+                if (x1 > Right || x2 < Left) { return false; }
+                if (x1 < Left) { x1 = Left; }
+                if (x2 > Right) { x2 = Right; }
+            }
+            else if (x2 < x1)
+            {
+                if (x2 > Right || x1 < Left) { return false; }
+                if (x2 < Left) { x2 = Left; }
+                if (x1 > Right) { x1 = Right; }
+            }
+            saveLine = (new(x1, y), new(x2, y));
+            return true;
+        }
+        /// <summary>
+        /// 获取一个在栅格绘图区域内的垂直线
+        /// </summary>
+        /// <param name="x">端点的横坐标</param>
+        /// <param name="y">端点的纵坐标数对</param>
+        /// <param name="saveLine">在绘图区域内可能被裁剪过的线段的两个端点坐标的数对</param>
+        /// <returns>如果线有部分在绘图区域内，返回true；否则返回false</returns>
+        public static bool VerticLineWithin(int x, (int, int) y, float penWidth, out (Point, Point) saveLine)
+        {
+            saveLine = new();
+            if (x - penWidth < DrawRect.Left || x + penWidth > DrawRect.Right) { return false; }
+            var y1 = y.Item1;
+            var y2 = y.Item2;
+            if (y1 == y2) { return false; }
+            var Top = DrawRect.Top;
+            var Bottom = DrawRect.Bottom;
+            if (y1 < y2)
+            {
+                if (y1 > Bottom || y2 < Top) { return false; }
+                if (y1 < Top) { y1 = Top; }
+                if (y2 > Bottom) { y2 = Bottom; }
+            }
+            else if (y2 < y1)
+            {
+                if (y2 > Bottom || y1 < Top) { return false; }
+                if (y2 < Top) { y2 = Top; }
+                if (y1 > Bottom) { y1 = Bottom; }
+            }
+            saveLine = (new(x, y1), new(x, y2));
+            return true;
         }
     }
 }

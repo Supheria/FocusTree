@@ -1,7 +1,6 @@
 #define DEBUG
 using FocusTree.IO;
 using FocusTree.IO.FileManege;
-using System.Numerics;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
@@ -512,6 +511,14 @@ namespace FocusTree.Data.Focus
         public FocusNode[] GetNodes()
         {
             return NodeCatalog.Values.ToArray();
+        }
+        public bool ContainLatticedPoint(Point latticedPoint)
+        {
+            foreach (var node in NodeCatalog.Values)
+            {
+                if (latticedPoint == node.LatticedPoint) { return true; }
+            }
+            return false;
         }
 
         #endregion

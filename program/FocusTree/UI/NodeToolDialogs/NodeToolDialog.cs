@@ -1,6 +1,4 @@
-﻿using FocusTree.UI.Graph;
-
-namespace FocusTree.UI.NodeToolDialogs
+﻿namespace FocusTree.UI.NodeToolDialogs
 {
     public partial class NodeToolDialog : Form
     {

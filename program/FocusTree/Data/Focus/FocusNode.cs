@@ -1,7 +1,6 @@
 ﻿//#define FORMAT_TEST
 #define RAW_EFFECTS
 using FocusTree.Data.Hoi4Object;
-using System.Numerics;
 using System.Xml;
 
 namespace FocusTree.Data.Focus
@@ -11,7 +10,7 @@ namespace FocusTree.Data.Focus
     /// </summary>
     public class FocusNode
     {
-        #region ==== 基本变量 ====
+        #region ==== 节点信息 ====
 
         /// <summary>
         /// 依赖组
@@ -28,7 +27,7 @@ namespace FocusTree.Data.Focus
 
         #endregion
 
-        #region ==== 变量获取器 ====
+        #region ==== 国策信息 ====
 
         /// <summary>
         /// 国策效果
@@ -42,7 +41,20 @@ namespace FocusTree.Data.Focus
         /// <summary>
         /// 栅格化坐标（nullable 给初始化节点位置用的，读取存储文件后不会为null，可以忽略）
         /// </summary>
-        public Point LatticedPoint;
+        public Point LatticedPoint
+        {
+            get
+            {
+                var pair = ArrayString.Reader(xmlPoint);
+                if (pair == null || pair.Length != 2) { return new(0, 0); }
+                return new(int.Parse(pair[0]), int.Parse(pair[1]));
+            }
+            set { xmlPoint = ArrayString.Writer(new string[] { value.X.ToString(), value.Y.ToString() }); }
+        }
+        /// <summary>
+        /// 栅格化坐标(xml序列化用）
+        /// </summary>
+        string xmlPoint;
         /// <summary>
         /// 节点ID
         /// </summary>
@@ -90,7 +102,7 @@ namespace FocusTree.Data.Focus
             Duration = int.Parse(reader.GetAttribute("Duration"));
             Descript = reader.GetAttribute("Descript");
             Ps = reader.GetAttribute("Ps.");
-            //LatticedPoint = Point.reader.GetAttribute("Point");
+            xmlPoint = reader.GetAttribute("Point");
 
             while (reader.Read())
             {
@@ -207,7 +219,7 @@ namespace FocusTree.Data.Focus
             writer.WriteAttributeString("Duration", Duration.ToString());
             writer.WriteAttributeString("Descript", Descript.ToString());
             writer.WriteAttributeString("Ps.", Ps);
-            writer.WriteAttributeString("Point", LatticedPoint.ToString());
+            writer.WriteAttributeString("Point", xmlPoint);
 #if RAW_EFFECTS
             // <RawEffects>
             writer.WriteStartElement("RawEffects");
