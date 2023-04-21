@@ -148,25 +148,12 @@ namespace FocusTree.UI
             get
             {
                 gcore?.Flush(); gcore?.Dispose();
-                Image ??= new Bitmap(Width, Height);
+                Image ??= new Bitmap(ClientRectangle.Width, ClientRectangle.Height);
                 gcore = Graphics.FromImage(Image);
                 return gcore;
             }
         }
         Graphics gcore;
-        /// <summary>
-        /// 绘图缩放倍率
-        /// </summary>
-        float GScale
-        {
-            get { return gscale; }
-            set { gscale = value < 0.1f ? 0.1f : value > 5f ? 5f : value; }
-        }
-        float gscale = 1f; // 不要调用这个，不安全，用上边的访问器，有缩放尺寸限制
-        /// <summary>
-        /// 绘图中心
-        /// </summary>
-        Point DrawingCenter = new(0, 0);
         /// <summary>
         /// 拖动图像时使用的鼠标参照坐标
         /// </summary>
@@ -236,7 +223,7 @@ namespace FocusTree.UI
         #region ==== 绘图 ====
 
         /// <summary>
-        /// 将节点绘制上载到栅格绘图委托
+        /// 将节点绘制上载到栅格绘图委托（要更新栅格放置区域，应该先更新再调用此方法，因为使用了裁剪超出绘图区域的绘图方法）
         /// </summary>
         private void UploadNodeMap()
         {
@@ -347,9 +334,10 @@ namespace FocusTree.UI
                 return;
             }
             Image?.Dispose();
-            ControlResize.SetTag(this);
-            Image = new Bitmap(Width, Height);
-            Lattice.Draw(Graphics.FromImage(Image), ClientRectangle);
+            Image = new Bitmap(ClientRectangle.Width, ClientRectangle.Height);
+            Lattice.SetBounds(ClientRectangle);
+            UploadNodeMap();
+            Lattice.Draw(gCore);
             Invalidate();
         }
 
@@ -419,7 +407,6 @@ namespace FocusTree.UI
             NodeInfoTip.Hide(this);
             SelectedNode = PrevSelectNode;
             RescaleToNode(SelectedNode.Value, false);
-            Lattice.Draw(gCore, ClientRectangle);
             PicNodeContextMenu = new(this, Cursor.Position);
             Invalidate();
             Parent.UpdateText("打开节点选项");
@@ -465,7 +452,6 @@ namespace FocusTree.UI
                     ReadOnly = false;
                     SelectedNode = null;
                     RescaleToPanorama();
-                    Lattice.Draw(gCore, ClientRectangle);
                 }
                 Parent.UpdateText("恢复备份");
             }
@@ -631,8 +617,9 @@ namespace FocusTree.UI
             LatticeCell.Width += args.Delta / 100 * Lattice.DrawRect.Width / 200;
             LatticeCell.Height += args.Delta / 100 * Lattice.DrawRect.Width / 200;
 
+            Lattice.SetBounds(ClientRectangle);
             UploadNodeMap();
-            Lattice.Draw(gCore, ClientRectangle);
+            Lattice.Draw(gCore);
             DrawNodeMapInfo();
             Invalidate();
             Parent.UpdateText("打开节点选项");
@@ -714,17 +701,29 @@ namespace FocusTree.UI
         /// </summary>
         private void RescaleToPanorama()
         {
-            var drRect = Lattice.DrawRect;
-            var rect = Graph.GetGraphRect();
-            LatticeCell.Width = drRect.Width / (rect.Width + 1);
-            LatticeCell.Height = drRect.Height / (rect.Height + 1);
-            int GraphCenterX = rect.Left + rect.Width * LatticeCell.Width / 2;
-            int GraphCenterY = rect.Top + rect.Height * LatticeCell.Height / 2;
-            int WidthCenterDiff = (drRect.Left + drRect.Width / 2) - GraphCenterX;
-            int HeightCenterDiff = (drRect.Top + drRect.Height / 2) - GraphCenterY;
+            var gRect = Graph.GetGraphRect();
+            if (Lattice.DrawRect.Width < (gRect.Width + 1) * LatticeCell.SizeMin.Width)
+            {
+                LatticeCell.Width = LatticeCell.SizeMin.Width;
+                Parent.Width = (gRect.Width + 2) * LatticeCell.SizeMin.Width + Parent.Width - ClientRectangle.Width;
+            }
+            if (Lattice.DrawRect.Height < (gRect.Height + 1) * LatticeCell.SizeMin.Height)
+            {
+                LatticeCell.Height = LatticeCell.SizeMin.Height;
+                Parent.Height = (gRect.Height + 2) * LatticeCell.SizeMin.Height + Parent.Height - ClientRectangle.Height;
+            }
+            Lattice.SetBounds(ClientRectangle);
+            LatticeCell.Width = Lattice.DrawRect.Width / (gRect.Width + 1);
+            LatticeCell.Height = Lattice.DrawRect.Height / (gRect.Height + 1);
+            int GraphCenterX = gRect.Left + gRect.Width * LatticeCell.Width / 2;
+            int GraphCenterY = gRect.Top + gRect.Height * LatticeCell.Height / 2;
+            int WidthCenterDiff = (Lattice.DrawRect.Left + Lattice.DrawRect.Width / 2) - GraphCenterX;
+            int HeightCenterDiff = (Lattice.DrawRect.Top + Lattice.DrawRect.Height / 2) - GraphCenterY;
             Lattice.OriginLeft = WidthCenterDiff - LatticeCell.NodePaddingWidth - LatticeCell.NodeWidth / 2;
             Lattice.OriginTop = HeightCenterDiff - LatticeCell.NodePaddingHeight - LatticeCell.NodeHeight / 2;
+            Lattice.SetBounds(ClientRectangle);
             UploadNodeMap();
+            Lattice.Draw(gCore);
         }
         /// <summary>
         /// 缩放居中至节点
@@ -734,8 +733,8 @@ namespace FocusTree.UI
         private void RescaleToNode(int id, bool zoom)
         {
             var drRect = Lattice.DrawRect;
-            LatticeCell.Width = drRect.Width / 11;
-            LatticeCell.Height = drRect.Height / 11;
+            LatticeCell.Width = LatticeCell.SizeMax.Width;
+            LatticeCell.Height = LatticeCell.SizeMax.Height;
             LatticeCell cell = new(Graph.GetFocus(id));
             int NodeCenterX = cell.NodeRealLeft + LatticeCell.NodeWidth / 2;
             int NodeCenterY = cell.NodeRealTop + LatticeCell.NodeHeight / 2;
@@ -743,7 +742,9 @@ namespace FocusTree.UI
             int HeightCenterDiff = (drRect.Top + drRect.Height / 2) - NodeCenterY;
             Lattice.OriginLeft += WidthCenterDiff;
             Lattice.OriginTop += HeightCenterDiff;
+            Lattice.SetBounds(ClientRectangle);
             UploadNodeMap();
+            Lattice.Draw(gCore);
             Cursor.Position = Parent.PointToScreen(new Point(
                 Bounds.X + Bounds.Width / 2,
                 Bounds.Y + Bounds.Height / 2
@@ -794,7 +795,6 @@ namespace FocusTree.UI
             Graph.NewHistory();
             SelectedNode = null;
             RescaleToPanorama();
-            Lattice.Draw(gCore, ClientRectangle);
             DrawNodeMapInfo();
             Invalidate();
         }
@@ -834,7 +834,6 @@ namespace FocusTree.UI
         {
             if (Graph == null) { return; }
             RescaleToPanorama();
-            Lattice.Draw(gCore, ClientRectangle);
             Invalidate();
         }
         /// <summary>
@@ -844,7 +843,6 @@ namespace FocusTree.UI
         {
             if (Graph == null || SelectedNode == null) { return; }
             RescaleToNode(SelectedNode.Value, true);
-            Lattice.Draw(gCore, ClientRectangle);
             Invalidate();
         }
 

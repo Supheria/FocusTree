@@ -83,11 +83,11 @@ namespace FocusTree.UI.Graph
         #region ==== 绘制栅格 ====
 
         /// <summary>
-        /// 设置栅格放置区域，绘制栅格（首次绘制或重置列行数）
+        /// 设置栅格放置区域（自动重置列行数）
         /// </summary>
         /// <param name="g"></param>
         /// <param name="bounds">放置区域</param>
-        public static void Draw(Graphics g, Rectangle bounds)
+        public static void SetBounds(Rectangle bounds)
         {
             ColNumber = bounds.Width / LatticeCell.Width;
             RowWidth = ColNumber * LatticeCell.Width;
@@ -101,16 +101,13 @@ namespace FocusTree.UI.Graph
                 RowWidth,
                 ColHeight
                 );
-            Draw(g);
         }
-        static TestInfo test = new();
         /// <summary>
         /// 绘制无限制栅格，并调用绘制格元的委托
         /// </summary>
         /// <param name="g"></param>
         public static void Draw(Graphics g)
         {
-            test.Show();
             g.Clear(Color.White);
 
             Drawing?.Invoke(g);
@@ -119,7 +116,7 @@ namespace FocusTree.UI.Graph
             {
                 for (int j = 0; j < RowNumber; j++)
                 {
-                    DrawLoopCell(g, i, j);
+                    //DrawLoopCell(g, i, j);
                 }
             }
 #if DEBUG

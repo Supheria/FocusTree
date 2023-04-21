@@ -44,7 +44,8 @@ namespace FocusTree.UI
 
         private void MainForm_Shown(object sender, EventArgs e)
         {
-            Lattice.Draw(Display.gCore, Display.ClientRectangle);
+            Lattice.SetBounds(Display.ClientRectangle);
+            Lattice.Draw(Display.gCore);
             Display.Invalidate();
         }
 

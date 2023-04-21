@@ -10,6 +10,12 @@ namespace FocusTree.UI
             control.Tag = control.Width + SPLITER +
                 control.Height + SPLITER;
         }
+        public static Size GetPrevSize(Control control)
+        {
+            if (control.Tag == null) { return control.Size; }
+            string[] tagContent = control.Tag.ToString().Split(SPLITER);
+            return new(int.Parse(tagContent[0]), int.Parse(tagContent[1]));
+        }
         public static Size GetDifference(Control control)
         {
             if (control.Tag == null)
