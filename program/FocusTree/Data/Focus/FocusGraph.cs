@@ -224,7 +224,7 @@ namespace FocusTree.Data.Focus
         /// </summary>
         /// <param name="resetAll">是否重置所有：无论元坐标有无值都重置</param>
         /// <returns></returns>
-        public void ResetNodeMetaPoints()
+        public void ResetNodeLatticedPoints()
         {
             var branches = GetBranches(GetRootNodes(), true, true);
             if (branches.Count == 0) { return; }
@@ -322,7 +322,6 @@ namespace FocusTree.Data.Focus
                 }
             }
             FocusCatalog = TempFocusCatalog;
-            if (this.IsEdit()) { this.EnqueueHistory(); }
         }
         /// <summary>
         /// 按新节点id更新原节点的所有子链接节点的依赖组
@@ -375,18 +374,15 @@ namespace FocusTree.Data.Focus
             }
             return new(left, top, right - left, bottom - top);
         }
-
-        ///// <summary>
-        ///// 获取当前的所有 Node
-        ///// </summary>
-        ///// <returns></returns>
-        //public FocusNode[] GetFocuss()
-        //{
-        //    return FocusCatalog.Values.ToArray();
-        //}
+        /// <summary>
+        /// 判断给定栅格化坐标是否存在于节点列表中
+        /// </summary>
+        /// <param name="latticedPoint"></param>
+        /// <param name="id">默认为-1</param>
+        /// <returns>如果有则返回true，id为节点id；否则返回false，id为-1</returns>
         public bool ContainLatticedPoint(Point latticedPoint, out int id)
         {
-            id = 0;
+            id = -1;
             foreach (var focus in FocusCatalog.Values)
             {
                 if (latticedPoint == focus.LatticedPoint)

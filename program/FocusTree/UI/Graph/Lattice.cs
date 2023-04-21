@@ -72,11 +72,15 @@ namespace FocusTree.UI.Graph
         /// <summary>
         /// 节点边界绘制用笔
         /// </summary>
-        public static Pen NodePen = new(Color.Orange, 1.5f);
+        public static Pen NodePen = new(Color.FromArgb(150, Color.Orange), 1.5f);
         /// <summary>
         /// 需要单独绘制的格元委托列表
         /// </summary>
         public static event CellDrawer Drawing;
+        /// <summary>
+        /// 是否绘制背景栅格
+        /// </summary>
+        public static bool DrawBackLattice = false;
 
         #endregion
 
@@ -112,11 +116,14 @@ namespace FocusTree.UI.Graph
 
             Drawing?.Invoke(g);
 
-            for (int i = 0; i < ColNumber; i++)
+            if (DrawBackLattice)
             {
-                for (int j = 0; j < RowNumber; j++)
+                for (int i = 0; i < ColNumber; i++)
                 {
-                    //DrawLoopCell(g, i, j);
+                    for (int j = 0; j < RowNumber; j++)
+                    {
+                        DrawLoopCell(g, i, j);
+                    }
                 }
             }
 #if DEBUG
@@ -360,7 +367,7 @@ namespace FocusTree.UI.Graph
             return true;
         }
         /// <summary>
-        /// 绘制栅格时绘制水平线
+        /// 绘制栅格时绘制水平线（添加到委托）
         /// </summary>
         /// <param name="x">端点的横坐标数对</param>
         /// <param name="y">端点的纵坐标</param>
@@ -374,7 +381,7 @@ namespace FocusTree.UI.Graph
             }
         }
         /// <summary>
-        /// 绘制栅格时绘制垂直线
+        /// 绘制栅格时绘制垂直线（添加到委托）
         /// </summary>
         /// <param name="x">端点的横坐标</param>
         /// <param name="y">端点的纵坐标数对</param>
@@ -388,7 +395,7 @@ namespace FocusTree.UI.Graph
             }
         }
         /// <summary>
-        /// 绘制栅格时填充矩形
+        /// 绘制栅格时填充矩形（添加到委托）
         /// </summary>
         /// <param name="rect"></param>
         /// <param name="brush"></param>

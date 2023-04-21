@@ -58,16 +58,7 @@
                 MessageBox.Show("没有选中的节点。");
                 return;
             }
-            var point = Display.GetSelectedNodeCenterOnScreen();
-            Show(point);
-        }
-        public void Show(Point pos)
-        {
-            if (Display.SelectedNode == null)
-            {
-                return;
-            }
-
+            var pos = Display.GetSelectedNodeCenterOnScreen();
             Location = pos;
             base.Show();
         }

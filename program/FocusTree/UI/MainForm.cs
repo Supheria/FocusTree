@@ -240,7 +240,7 @@ namespace FocusTree.UI
         }
         private void MainForm_Menu_graph_setNodePointAuto_Click(object sender, EventArgs e)
         {
-            Display.ResetNodeMetaPoints();
+            Display.ResetNodeLatticedPoints();
         }
 
         #endregion
