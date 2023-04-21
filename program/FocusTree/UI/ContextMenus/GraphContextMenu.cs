@@ -1,5 +1,4 @@
 ﻿using FocusTree.IO.FileManege;
-using System.Text.RegularExpressions;
 
 namespace FocusTree.UI.Controls
 {
@@ -123,7 +122,7 @@ namespace FocusTree.UI.Controls
             menuItem_edit_undo.Enabled = Display.HasPrevHistory();
             menuItem_edit_redo.Enabled = Display.HasNextHistory();
         }
-        
+
         private void BackupItemClicked(object sender, EventArgs args)
         {
             ToolStripMenuItem item = (ToolStripMenuItem)sender;
@@ -142,6 +141,6 @@ namespace FocusTree.UI.Controls
             Display.Graph.DeleteBackup();
             Display.LoadGraph(Display.FilePath);
         }
-        
+
     }
 }

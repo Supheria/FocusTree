@@ -2,9 +2,8 @@
 using FocusTree.Data.Focus;
 using FocusTree.IO;
 using FocusTree.IO.FileManege;
-using FocusTree.UI.Controls;
+using FocusTree.UI.Graph;
 using System.IO.Compression;
-using System.Text.RegularExpressions;
 
 namespace FocusTree.UI
 {
@@ -17,6 +16,9 @@ namespace FocusTree.UI
             InitializeComponent();
             UpdateText();
 
+            
+            Shown += MainForm_Shown;
+
             foreach (var name in Display.ToolDialogs.Keys)
             {
                 ToolStripMenuItem item = new()
@@ -27,16 +29,24 @@ namespace FocusTree.UI
                 this.MainForm_Menu_window.DropDownItems.Add(item);
             }
 #if DEBUG
-            Display.LoadGraph("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\program\\FILES\\隐居村落.xml");
+            //Display.LoadGraph("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\program\\FILES\\隐居村落.xml");
+
             //WindowState = FormWindowState.Minimized;
             //Display.SaveAsNew("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\国策\\国策测试\\test.xml");
-            //Display.LoadGraph("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\国策\\国策测试\\test.xml");
+            //Display.LoadGraph("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\国策\\国策测试\\test.xml");77
             //var a = new InfoDialog(Display);
             //Display.SelectedNode = 1;
             //a.Show(new(Screen.PrimaryScreen.Bounds.Width / 3, Screen.PrimaryScreen.Bounds.Height / 3));
 #endif
 
 
+        }
+
+        private void MainForm_Shown(object sender, EventArgs e)
+        {
+            Lattice.SetBounds(Display.ClientRectangle);
+            Lattice.Draw(Display.gCore);
+            Display.Invalidate();
         }
 
         #region ==== File ====
@@ -230,7 +240,7 @@ namespace FocusTree.UI
         }
         private void MainForm_Menu_graph_setNodePointAuto_Click(object sender, EventArgs e)
         {
-
+            Display.ResetNodeLatticedPoints();
         }
 
         #endregion

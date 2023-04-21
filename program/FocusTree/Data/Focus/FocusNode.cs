@@ -1,106 +1,43 @@
 ﻿//#define FORMAT_TEST
 #define RAW_EFFECTS
 using FocusTree.Data.Hoi4Object;
-using System.Numerics;
+using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 using System.Xml;
 
 namespace FocusTree.Data.Focus
 {
     /// <summary>
-    /// 国策节点
+    /// 国策节点控制类
     /// </summary>
     public class FocusNode
     {
-        #region ==== 基本变量 ====
-
-        public FocusData Data;
-        /// <summary>
-        /// 依赖组
-        /// </summary>
-        public List<HashSet<int>> Requires = new();
-        /// <summary>
-        /// （自动生成）子链接
-        /// </summary>
-        public HashSet<int> Links = new();
-        /// <summary>
-        /// 原始效果语句
-        /// </summary>
-        public List<string> RawEffects = new();
+        #region ==== 节点信息 ====
 
         #endregion
 
-        #region ==== 变量获取器 ====
+        #region ==== 国策信息 ====
 
+        public FocusData FData;
         /// <summary>
         /// 国策效果
         /// </summary>
         public List<string> Effects
         {
-            get { return Data.Effects.Select(x => x.ToString()).ToList(); }
-            set { value.ForEach(x => Data.Effects.Add(Sentence.FromString(x))); }
+            get { return effects.Select(x => x.ToString()).ToList(); }
+            set { value.ForEach(x => effects.Add(Sentence.FromString(x))); }
         }
-        /// <summary>
-        /// 元坐标
-        /// </summary>
-        public Vector2 MetaPoint
-        {
-            get 
-            {
-                var pair = ArrayString.Reader(Data.MetaPoint);
-                try
-                {
-                    float x = float.Parse(pair[0]);
-                    float y = float.Parse(pair[1]);
-                    return new(x < 0 ? -1 : x, y < 0 ? -1 : y);
-                }
-                catch { return new(-1, -1); }
-            }
-            set { Data.MetaPoint = ArrayString.Writer(new string[] { value.X.ToString(), value.Y.ToString() }); }
-        }
-        /// <summary>
-        /// 节点ID
-        /// </summary>
-        public int ID
-        {
-            get { return int.Parse(Data.ID); }
-            set { Data.ID = value.ToString(); }
-        }
-        /// <summary>
-        /// 国策名称
-        /// </summary>
-        public string Name
-        {
-            get { return Data.Name; }
-            set { Data.Name = value; }
-        }
-        /// <summary>
-        /// 实施国策所需的天数
-        /// </summary>
-        public int Duration
-        {
-            get { return int.Parse(Data.Duration); }
-            set { Data.Duration = value.ToString(); }
-        }
-        /// <summary>
-        /// 国策描述
-        /// </summary>
-        public string Descript
-        {
-            get { return Data.Descript; }
-            set { Data.Descript = value; }
-        }
-        /// <summary>
-        /// 备注
-        /// </summary>
-        public string Ps
-        {
-            get { return Data.Ps; }
-            set { Data.Ps = value; }
-        }
+        public List<Sentence> effects = new();
+        
 
         #endregion
 
-        #region ==== 构造函数 ====
+        public FocusNode(FocusData fData)
+        {
+            FData = fData;
+        }
+
+        #region ==== 序列化方法 ====
 
         /// <summary>
         /// 用于序列化
@@ -108,20 +45,11 @@ namespace FocusTree.Data.Focus
         public FocusNode()
         {
         }
-
-        public FocusNode(FocusData data)
-        {
-            Data = data;
-        }
-
-        #endregion
-
-        #region ==== 序列化方法 ====
-
         public void ReadXml(XmlReader reader)
         {
             Effects = new();
-            Requires = new();
+            List<HashSet<int>> requires = new();
+            List<string> rawEffects = new();
 
             //==== 读取 Data ====//
             var id = reader.GetAttribute("ID");
@@ -131,22 +59,16 @@ namespace FocusTree.Data.Focus
             var duration = reader.GetAttribute("Duration");
             var descript = reader.GetAttribute("Descript");
             var ps = reader.GetAttribute("Ps.");
-            var metaPoint = reader.GetAttribute("Point");
-            Data = new(
-                id,
-                name ?? string.Empty,
-                star ?? "false",
-                duration ?? "0",
-                descript ?? string.Empty,
-                ps ?? string.Empty,
-                metaPoint ?? "-1, -1"
-                );
+            var pair = ArrayString.Reader(reader.GetAttribute("Point"));
+            Point latticedPoint = new();
+            if (pair == null || pair.Length != 2) { latticedPoint = new(0, 0); }
+            else { latticedPoint = new(int.Parse(pair[0]), int.Parse(pair[1])); }
 
             while (reader.Read())
             {
                 if (reader.Name == "Node" && reader.NodeType == XmlNodeType.EndElement)
                 {
-                    return;
+                    break;
                 }
                 //==== 读取 Effects ====//
                 if (reader.Name == "Effects")
@@ -156,20 +78,31 @@ namespace FocusTree.Data.Focus
                 //==== 读取 Requires ====//
                 if (reader.Name == "Requires")
                 {
-                    ReadRequires(reader);
+                    ReadRequires(reader, ref requires);
                 }
                 //==== 读取 RawEffects ====//
                 if (reader.Name == "RawEffects")
                 {
-                    ReadRawEffects(reader);
-                    FormatRawEffects();
+                    ReadRawEffects(reader, ref rawEffects);
                 }
             }
+            FData = new(
+                int.Parse(id),
+                name ?? string.Empty,
+                bool.Parse(star),
+                int.Parse(duration),
+                descript ?? string.Empty,
+                ps ?? string.Empty,
+                latticedPoint,
+                rawEffects,
+                requires
+                );
+            FormatRawEffects(rawEffects, int.Parse(id));
         }
         [Obsolete("临时使用，作为转换语句格式的过渡")]
-        private void FormatRawEffects()
+        private void FormatRawEffects(List<string> rawEffects, int id)
         {
-            foreach (var raw in RawEffects)
+            foreach (var raw in rawEffects)
             {
                 Program.testInfo.total++;
                 if (!FormatRawEffectSentence.Formatter(raw, out var formattedList))
@@ -177,13 +110,13 @@ namespace FocusTree.Data.Focus
 #if RAW_EFFECTS
                     Program.testInfo.erro++;
                     Program.testInfo.good = Program.testInfo.total - Program.testInfo.erro;
-                    Program.testInfo.InfoText += $"{ID}. {raw}\n";
+                    Program.testInfo.InfoText += $"{id}. {raw}\n";
 #endif
                     continue;
                 }
                 foreach (var formatted in formattedList)
                 {
-                    Data.Effects.Add(formatted);
+                    effects.Add(formatted);
                 }
             }
         }
@@ -203,7 +136,7 @@ namespace FocusTree.Data.Focus
                 {
                     Sentence sentence = new();
                     sentence.ReadXml(reader);
-                    Data.Effects.Add(sentence);
+                    effects.Add(sentence);
                 }
             } while (reader.Read());
             throw new Exception("[2304060212] 读取 Effects 时未能找到结束标签");
@@ -213,7 +146,7 @@ namespace FocusTree.Data.Focus
         /// </summary>
         /// <param name="reader"></param>
         /// <exception cref="Exception"></exception>
-        private void ReadRequires(XmlReader reader)
+        private void ReadRequires(XmlReader reader, ref List<HashSet<int>> requires)
         {
             if (reader.ReadToDescendant("Require") == false) { return; }
             do
@@ -222,7 +155,7 @@ namespace FocusTree.Data.Focus
                 if (reader.Name == "Require" && reader.NodeType == XmlNodeType.Element)
                 {
                     reader.Read();
-                    Requires.Add(ArrayString.Reader(reader.Value).Select(x => int.Parse(x)).ToHashSet());
+                    requires.Add(ArrayString.Reader(reader.Value).Select(x => int.Parse(x)).ToHashSet());
                 }
             } while (reader.Read());
             throw new Exception("[2302191020] 读取 Requires 时未能找到结束标签");
@@ -232,7 +165,7 @@ namespace FocusTree.Data.Focus
         /// </summary>
         /// <param name="reader"></param>
         /// <exception cref="Exception"></exception>
-        private void ReadRawEffects(XmlReader reader)
+        private void ReadRawEffects(XmlReader reader, ref List<string> rawEffects)
         {
             if (reader.ReadToDescendant("Effect") == false) { return; }
             do
@@ -241,7 +174,7 @@ namespace FocusTree.Data.Focus
                 if (reader.Name == "Effect" && reader.NodeType == XmlNodeType.Element)
                 {
                     reader.Read();
-                    RawEffects.Add(reader.Value);
+                    rawEffects.Add(reader.Value);
                 }
             } while (reader.Read());
             throw new Exception("[2304082217] 读取 RawEffects 时未能找到结束标签");
@@ -251,17 +184,18 @@ namespace FocusTree.Data.Focus
             // <Node>
             writer.WriteStartElement("Node");
 
-            writer.WriteAttributeString("ID", Data.ID);
-            writer.WriteAttributeString("Name", Data.Name);
-            writer.WriteAttributeString("Star", Data.BeginWithStar);
-            writer.WriteAttributeString("Duration", Data.Duration);
-            writer.WriteAttributeString("Descript", Data.Descript);
-            writer.WriteAttributeString("Ps.", Data.Ps);
-            writer.WriteAttributeString("Point", Data.MetaPoint);
+            writer.WriteAttributeString("ID", FData.ID.ToString());
+            writer.WriteAttributeString("Name", FData.Name);
+            writer.WriteAttributeString("Star", FData.BeginWithStar.ToString());
+            writer.WriteAttributeString("Duration", FData.Duration.ToString());
+            writer.WriteAttributeString("Descript", FData.Descript.ToString());
+            writer.WriteAttributeString("Ps.", FData.Ps);
+            var point = FData.LatticedPoint;
+            writer.WriteAttributeString("Point", ArrayString.Writer(new string[] { point.X.ToString(), point.Y.ToString() }));
 #if RAW_EFFECTS
             // <RawEffects>
             writer.WriteStartElement("RawEffects");
-            foreach (var effect in RawEffects)
+            foreach (var effect in FData.RawEffects)
             {
                 writer.WriteElementString("Effect", effect);
             }
@@ -280,7 +214,7 @@ namespace FocusTree.Data.Focus
 #endif
             // <Requires>
             writer.WriteStartElement("Requires");
-            foreach (var require in Requires)
+            foreach (var require in FData.Requires)
             {
                 if (require.ToArray().Length > 0)
                 {
@@ -296,6 +230,6 @@ namespace FocusTree.Data.Focus
             writer.WriteEndElement();
         }
 
-#endregion
+        #endregion
     }
 }

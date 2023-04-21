@@ -71,14 +71,14 @@ namespace FocusTree.IO
             {
                 DrawNodeLinks(g, Graph, id);
             }
-            foreach (var node in Graph.GetNodes())
+            foreach (var id in Graph.IdList)
             {
-                var drawingRect = NodeDrawingRect(Graph, node.ID);
+                var drawingRect = NodeDrawingRect(Graph, id);
                 g.FillRectangle(
                     new SolidBrush(Color.FromArgb(60, Color.DimGray)),
                     drawingRect
                     );
-                DrawNodeInfo(g, drawingRect, node);
+                DrawNodeInfo(g, drawingRect, Graph.GetFocus(id));
                 Drawer.StepNext();
                 Drawer.Text = $"{Graph.Name}.jpg: {(int)(Drawer.Percent)}%";
             }
@@ -99,16 +99,17 @@ namespace FocusTree.IO
         static float Border = 1000f;
         private static Image GetCanvas(FocusGraph Graph)
         {
-            var center = Graph.GetGraphMetaData();
+            var rect = Graph.GetGraphRect();
+            Point center = new(rect.X + rect.Width / 2, rect.Y + rect.Height / 2);
             var size = new Size(
-                (int)(center.Item2.Width * ScalingUnit.X + Border * 2),
-                (int)(center.Item2.Height * ScalingUnit.Y + Border * 2)
+                (int)(center.X * ScalingUnit.X + Border * 2),
+                (int)(center.Y * ScalingUnit.Y + Border * 2)
                 );
             return new Bitmap(size.Width, size.Height);
         }
         private static RectangleF NodeDrawingRect(FocusGraph Graph, int id)
         {
-            var point = Graph.GetNode(id).MetaPoint;
+            var point = Graph.GetFocus(id).LatticedPoint;
             return new(
                     point.X * ScalingUnit.X + Border,
                     point.Y * ScalingUnit.Y + Border,
@@ -123,7 +124,7 @@ namespace FocusTree.IO
         private static void DrawNodeLinks(Graphics g, FocusGraph Graph, int id)
         {
             var drawingRect = NodeDrawingRect(Graph, id);
-            var requires = Graph.GetNode(id).Requires;
+            var requires = Graph.GetFocus(id).Requires;
             // 对于根节点，requires 为 null
             if (requires == null)
             {
@@ -145,12 +146,12 @@ namespace FocusTree.IO
                 }
             }
         }
-        private static void DrawNodeInfo(Graphics g, RectangleF drawingRect, FocusNode node)
+        private static void DrawNodeInfo(Graphics g, RectangleF drawingRect, FocusData focus)
         {
-            var name = node.Name;
-            var duration = $"{node.Duration}日";
-            var descript = node.Descript;
-            var effects = string.Join("\n\n", node.Effects);
+            var name = focus.Name;
+            var duration = $"{focus.Duration}日";
+            var descript = focus.Descript;
+            var effects = string.Join("\n\n", focus.RawEffects);
             float padding = 10f;
 
             RectangleF nameRect = new(
