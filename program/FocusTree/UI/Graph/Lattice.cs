@@ -83,7 +83,7 @@ namespace FocusTree.UI.Graph
         #region ==== 绘制栅格 ====
 
         /// <summary>
-        /// 设置栅格放置区域，绘制栅格（首次绘制或重设放置区域）
+        /// 设置栅格放置区域，绘制栅格（首次绘制或重置列行数）
         /// </summary>
         /// <param name="g"></param>
         /// <param name="bounds">放置区域</param>
@@ -114,7 +114,6 @@ namespace FocusTree.UI.Graph
             g.Clear(Color.White);
 
             Drawing?.Invoke(g);
-            Drawing = null;
 
             for (int i = 0; i < ColNumber; i++)
             {
@@ -403,6 +402,13 @@ namespace FocusTree.UI.Graph
                 rect = saveRect;
                 Drawing += (g) => { g.FillRectangle(brush, rect); };
             }
+        }
+        /// <summary>
+        /// 清空绘制委托
+        /// </summary>
+        public static void DrawingClear()
+        {
+            Drawing = null;
         }
     }
 }

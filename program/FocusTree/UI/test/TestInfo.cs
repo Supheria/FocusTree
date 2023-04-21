@@ -58,10 +58,10 @@ namespace FocusTree.UI.test
                 Text = openFile.FileName;
                 var g = XmlIO.LoadFromXml<FocusGraph>(openFile.FileName);
                 Info.Text += "\n\n=====Successfull=====\n";
-                foreach (var node in g.GetNodes())
+                foreach (var id in g.IdList)
                 {
-                    Info.Text += node.ID + ". ";
-                    foreach (var effect in node.Effects)
+                    Info.Text += id + ". ";
+                    foreach (var effect in g.GetFocus(id).RawEffects)
                     {
                         Info.Text += effect.ToString() + "\n";
                     }

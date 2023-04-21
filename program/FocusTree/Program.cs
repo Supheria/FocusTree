@@ -36,8 +36,8 @@ internal static class Program
 
 //        DataHistory.Redo(graph);
 
-//        var graphRequire = graph.GetNodeRequires(81);
-//        var graphLink = graph.GetNodeChildLinkes(81);
+//        var graphRequire = graph.GetFocusRequires(81);
+//        var graphLink = graph.GetFocusChildLinkes(81);
 
 //        Console.WriteLine();
 //    }

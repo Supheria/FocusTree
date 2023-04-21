@@ -16,6 +16,7 @@ namespace FocusTree.UI
             InitializeComponent();
             UpdateText();
 
+            
             Shown += MainForm_Shown;
 
             foreach (var name in Display.ToolDialogs.Keys)
@@ -28,7 +29,7 @@ namespace FocusTree.UI
                 this.MainForm_Menu_window.DropDownItems.Add(item);
             }
 #if DEBUG
-            Display.LoadGraph("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\program\\FILES\\隐居村落.xml");
+            //Display.LoadGraph("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\program\\FILES\\隐居村落.xml");
 
             //WindowState = FormWindowState.Minimized;
             //Display.SaveAsNew("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\国策\\国策测试\\test.xml");
@@ -43,7 +44,7 @@ namespace FocusTree.UI
 
         private void MainForm_Shown(object sender, EventArgs e)
         {
-            Lattice.Draw(Display.gCore, ClientRectangle);
+            Lattice.Draw(Display.gCore, Display.ClientRectangle);
             Display.Invalidate();
         }
 

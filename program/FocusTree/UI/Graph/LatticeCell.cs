@@ -1,4 +1,7 @@
-﻿namespace FocusTree.UI.Graph
+﻿using FocusTree.Data.Focus;
+using System.Windows.Forms;
+
+namespace FocusTree.UI.Graph
 {
     /// <summary>
     /// 格元
@@ -32,7 +35,7 @@
         /// <summary>
         /// 最大尺寸
         /// </summary>
-        public static Size SizeMax = new(100, 100);
+        public static Size SizeMax = new(75, 75);
         /// <summary>
         /// 节点宽
         /// </summary>
@@ -66,11 +69,12 @@
         /// <summary>
         /// 格元栅格化左边界
         /// </summary>
-        public int LatticedLeft;
+        public int LatticedLeft { get; set; }
         /// <summary>
         /// 格元栅格化上边界
         /// </summary>
-        public int LatticedTop;
+        public int LatticedTop { get; set; }
+        public Point LatticedPoint { get => new(LatticedLeft, LatticedTop); }
         /// <summary>
         /// 格元真实左边界
         /// </summary>
@@ -113,14 +117,11 @@
         /// 使用坐标位置创建，将坐标自动转换为栅格化坐标
         /// </summary>
         /// <param name="cursor"></param>
-        public LatticeCell(Point cursor)
+        public LatticeCell(Point point)
         {
-            var widthDiff = cursor.X - Lattice.OriginLeft;
-            var heightDiff = cursor.Y - Lattice.OriginTop;
-            LatticedLeft = widthDiff / Width;
-            LatticedTop = heightDiff / Height;
-            if (widthDiff < 0) { LatticedLeft--; }
-            if (heightDiff < 0) { LatticedTop--; }
+            point = PointToLatticedPoint(point);
+            LatticedLeft = point.X;
+            LatticedTop = point.Y;
         }
         /// <summary>
         /// 使用已有的栅格化坐标创建
@@ -131,6 +132,15 @@
         {
             LatticedLeft = col;
             LatticedTop = row;
+        }
+        /// <summary>
+        /// 使用国策对象创建
+        /// </summary>
+        /// <param name="focus"></param>
+        public LatticeCell(FocusData focus)
+        {
+            LatticedLeft = focus.LatticedPoint.X;
+            LatticedTop = focus.LatticedPoint.Y;
         }
 
         #endregion
@@ -212,5 +222,21 @@
         }
 
         #endregion
+
+        /// <summary>
+        /// 将坐标转换为栅格化坐标
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public static Point PointToLatticedPoint(Point point)
+        {
+            var widthDiff = point.X - Lattice.OriginLeft;
+            var heightDiff = point.Y - Lattice.OriginTop;
+            var latticedLeft = widthDiff / Width;
+            var latticedTop = heightDiff / Height;
+            if (widthDiff < 0) { latticedLeft--; }
+            if (heightDiff < 0) {latticedTop--; }
+            return new(latticedLeft, latticedTop);
+        }
     }
 }
