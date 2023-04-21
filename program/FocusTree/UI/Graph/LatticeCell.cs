@@ -135,12 +135,12 @@
 
         #endregion
 
-        #region ==== 格元内部区域 ====
+        #region ==== 格元区域 ====
 
         /// <summary>
         /// 格元的内部区域
         /// </summary>
-        public enum InnerParts
+        public enum Parts
         {
             /// <summary>
             /// 离开格元
@@ -183,14 +183,14 @@
         /// 节点区域填充颜色
         /// </summary>
         public Color InnerPartColor_Node = Color.FromArgb(150, Color.Orange);
-        public Dictionary<InnerParts, Rectangle> InnerPartRealRects
+        public Dictionary<Parts, Rectangle> InnerPartRealRects
         {
             get => new()
             {
-                [InnerParts.Left] = new(RealLeft, NodeRealTop, Width - NodeWidth, Height - NodePaddingHeight),
-                [InnerParts.Top] = new(NodeRealLeft, RealTop, Width - NodePaddingWidth, Height - NodeHeight),
-                [InnerParts.LeftTop] = new(RealLeft, RealTop, Width - NodeWidth, Height - NodeHeight),
-                [InnerParts.Node] = NodeRealRect
+                [Parts.Left] = new(RealLeft, NodeRealTop, Width - NodeWidth, Height - NodePaddingHeight),
+                [Parts.Top] = new(NodeRealLeft, RealTop, Width - NodePaddingWidth, Height - NodeHeight),
+                [Parts.LeftTop] = new(RealLeft, RealTop, Width - NodeWidth, Height - NodeHeight),
+                [Parts.Node] = NodeRealRect
             };
         }
         /// <summary>
@@ -198,7 +198,7 @@
         /// </summary>
         /// <param name="point">坐标</param>
         /// <returns></returns>
-        public InnerParts GetInnerPartPointOn(Point point)
+        public Parts GetInnerPartPointOn(Point point)
         {
             foreach (var pair in InnerPartRealRects)
             {
@@ -208,147 +208,7 @@
                     return pair.Key;
                 }
             }
-            return InnerParts.Leave;
-        }
-
-        #endregion
-
-        #region ==== 绘图 ====
-
-        /// <summary>
-        /// 格元绘图方法事件（自动添加到栅格委托列表）
-        public event CellDrawer Drawer
-        /// </summary>
-        {
-            add
-            {
-                drawer += value;
-                Point point = new(RealLeft, RealTop);
-                if (Lattice.DrawCell.ContainsKey(point))
-                {
-                    Lattice.DrawCell[point] += drawer;
-                }
-                else { Lattice.DrawCell[point] = drawer; }
-            }
-            remove { }
-        }
-        CellDrawer drawer = null;
-        public void DrawFillPart(Brush brush, InnerParts part)
-        {
-            var rect = InnerPartRealRects[part];
-            if (!Lattice.RectWithin(rect, out var saveRect)) { return; }
-            Drawer += (g) => { g.FillRectangle(brush, saveRect); };
-        }
-        public enum LineDirects
-        {
-            /// <summary>
-            /// 向上
-            /// </summary>
-            Up = 0b1,
-            /// <summary>
-            /// 一半向上
-            /// </summary>
-            HalfUp = Up << 1,
-            /// <summary>
-            /// 一半向下
-            /// </summary>
-            HalfDown = HalfUp << 1,
-            /// <summary>
-            /// 一半向左
-            /// </summary>
-            HalfLeft = HalfDown << 1,
-            /// <summary>
-            /// 一半向右
-            /// </summary>
-            HalfRight = HalfLeft << 1,
-            /// <summary>
-            /// 横向贯穿
-            /// </summary>
-            LeftRight = HalfRight << 1,
-            /// <summary>
-            /// 竖向贯穿
-            /// </summary>
-            TopBottom = LeftRight << 1,
-            /// <summary>
-            /// 竖向穿到节点上空隙一半
-            /// </summary>
-            HalfTopBottom = TopBottom << 1
-
-        }
-        public void DrawLine(Pen pen, LineDirects direct)
-        {
-            var halfNodeWidth = NodeRealLeft + NodeWidth / 2;
-            var halfPadHeight = RealTop + NodePaddingHeight / 2;
-            var nodeTop = NodeRealTop;
-            var cellTop = RealTop;
-            var nodeRight = NodeRealRect.Right;
-            var cellLeft = RealLeft;
-            var cellBottom = RealRect.Bottom;
-
-            if ((direct & LineDirects.Up) > 0)
-            {
-                if (Lattice.VerticLineWithin(halfNodeWidth, (nodeTop, cellTop), pen.Width, out var saveLine))
-                {
-                    var line = saveLine;
-                    Drawer += (g) => g.DrawLine(pen, line.Item1, line.Item2);
-                }
-            }
-            if ((direct & LineDirects.HalfUp) > 0)
-            {
-                if (Lattice.VerticLineWithin(halfNodeWidth, (halfPadHeight, cellTop), pen.Width, out var saveLine))
-                {
-                    var line = saveLine;
-                    Drawer += (g) => g.DrawLine(pen, line.Item1, line.Item2);
-                }
-            }
-            if ((direct & LineDirects.HalfDown) > 0)
-            {
-                if (Lattice.VerticLineWithin(halfNodeWidth, (halfPadHeight, nodeTop), pen.Width, out var saveLine))
-                {
-                    var line = saveLine;
-                    Drawer += (g) => g.DrawLine(pen, line.Item1, line.Item2);
-                }
-            }
-            if ((direct & LineDirects.HalfLeft) > 0)
-            {
-                if (Lattice.HorizonLineWithin((halfNodeWidth, cellLeft), halfPadHeight, pen.Width, out var saveLine))
-                {
-                    var line = saveLine;
-                    Drawer += (g) => g.DrawLine(pen, line.Item1, line.Item2);
-                }
-            }
-            if ((direct & LineDirects.HalfRight) > 0)
-            {
-                if (Lattice.HorizonLineWithin((halfNodeWidth, nodeRight), halfPadHeight, pen.Width, out var saveLine))
-                {
-                    var line = saveLine;
-                    Drawer += (g) => g.DrawLine(pen, line.Item1, line.Item2);
-                }
-            }
-            if ((direct & LineDirects.LeftRight) > 0)
-            {
-                if (Lattice.HorizonLineWithin((cellLeft, nodeRight), halfPadHeight, pen.Width, out var saveLine))
-                {
-                    var line = saveLine;
-                    Drawer += (g) => g.DrawLine(pen, line.Item1, line.Item2);
-                }
-            }
-            if ((direct & LineDirects.TopBottom) > 0)
-            {
-                if (Lattice.VerticLineWithin(halfNodeWidth, (cellBottom, cellTop), pen.Width, out var saveLine))
-                {
-                    var line = saveLine;
-                    Drawer += (g) => g.DrawLine(pen, line.Item1, line.Item2);
-                }
-            }
-            if ((direct & LineDirects.HalfTopBottom) > 0)
-            {
-                if (Lattice.VerticLineWithin(halfNodeWidth, (cellBottom, halfPadHeight), pen.Width, out var saveLine))
-                {
-                    var line = saveLine;
-                    Drawer += (g) => g.DrawLine(pen, line.Item1, line.Item2);
-                }
-            }
+            return Parts.Leave;
         }
 
         #endregion

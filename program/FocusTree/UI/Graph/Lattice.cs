@@ -1,5 +1,7 @@
 ﻿#define DEBUG
 
+using FocusTree.UI.test;
+
 namespace FocusTree.UI.Graph
 {
     /// <summary>
@@ -74,7 +76,7 @@ namespace FocusTree.UI.Graph
         /// <summary>
         /// 需要单独绘制的格元委托列表
         /// </summary>
-        public static Dictionary<Point, CellDrawer> DrawCell = new();
+        public static event CellDrawer Drawing;
 
         #endregion
 
@@ -101,24 +103,24 @@ namespace FocusTree.UI.Graph
                 );
             Draw(g);
         }
+        static TestInfo test = new();
         /// <summary>
         /// 绘制无限制栅格，并调用绘制格元的委托
         /// </summary>
         /// <param name="g"></param>
         public static void Draw(Graphics g)
         {
+            test.Show();
             g.Clear(Color.White);
 
-            foreach (var drawer in DrawCell.Values)
-            {
-                drawer?.Invoke(g);
-            }
+            Drawing?.Invoke(g);
+            Drawing = null;
 
             for (int i = 0; i < ColNumber; i++)
             {
                 for (int j = 0; j < RowNumber; j++)
                 {
-                    //DrawLoopCell(g, i, j);
+                    DrawLoopCell(g, i, j);
                 }
             }
 #if DEBUG
@@ -299,29 +301,6 @@ namespace FocusTree.UI.Graph
                 );
             return true;
         }
-        ///// <summary>
-        ///// 判断矩形是否在栅格绘图区域内
-        ///// </summary>
-        ///// <param name="rect"></param>
-        ///// <returns></returns>
-        //public static bool RectWithin(Rectangle rect)
-        //{
-        //    var left = rect.Left;
-        //    var top = rect.Top;
-        //    var width = rect.Width;
-        //    var height = rect.Height;
-        //    if (left < DrawRect.Left)
-        //    {
-        //        width -= DrawRect.Left - left;
-        //        if (width <= 0) { return false; }
-        //    }
-        //    if (top < DrawRect.Top)
-        //    {
-        //        height -= DrawRect.Top - top;
-        //        if (height <= 0) { return false; }
-        //    }
-        //    return true;
-        //}
         /// <summary>
         /// 获取一个在栅格绘图区域内的水平线
         /// </summary>
@@ -329,7 +308,7 @@ namespace FocusTree.UI.Graph
         /// <param name="y">端点的纵坐标</param>
         /// <param name="saveLine">在绘图区域内可能被裁剪过的线段的两个端点坐标的数对</param>
         /// <returns>如果线有部分在绘图区域内，返回true；否则返回false</returns>
-        public static bool HorizonLineWithin((int, int) x, int y, float penWidth, out (Point, Point) saveLine)
+        public static bool LineWithin((int, int) x, int y, float penWidth, out (Point, Point) saveLine)
         {
             saveLine = new();
             if (y - penWidth < DrawRect.Top || y + penWidth > DrawRect.Bottom) { return false; }
@@ -360,7 +339,7 @@ namespace FocusTree.UI.Graph
         /// <param name="y">端点的纵坐标数对</param>
         /// <param name="saveLine">在绘图区域内可能被裁剪过的线段的两个端点坐标的数对</param>
         /// <returns>如果线有部分在绘图区域内，返回true；否则返回false</returns>
-        public static bool VerticLineWithin(int x, (int, int) y, float penWidth, out (Point, Point) saveLine)
+        public static bool LineWithin(int x, (int, int) y, float penWidth, out (Point, Point) saveLine)
         {
             saveLine = new();
             if (x - penWidth < DrawRect.Left || x + penWidth > DrawRect.Right) { return false; }
@@ -383,6 +362,47 @@ namespace FocusTree.UI.Graph
             }
             saveLine = (new(x, y1), new(x, y2));
             return true;
+        }
+        /// <summary>
+        /// 绘制栅格时绘制水平线
+        /// </summary>
+        /// <param name="x">端点的横坐标数对</param>
+        /// <param name="y">端点的纵坐标</param>
+        /// <param name="pen"></param>
+        public static void DrawLineWhileDrawing((int, int) x, int y, Pen pen)
+        {
+            if (LineWithin(x, y, pen.Width, out var saveLine))
+            {
+                var line = saveLine;
+                Drawing += (g) => g.DrawLine(pen, saveLine.Item1, saveLine.Item2);
+            }
+        }
+        /// <summary>
+        /// 绘制栅格时绘制垂直线
+        /// </summary>
+        /// <param name="x">端点的横坐标</param>
+        /// <param name="y">端点的纵坐标数对</param>
+        /// <param name="pen"></param>
+        public static void DrawLineWhileDrawing(int x, (int, int)y, Pen pen)
+        {
+            if (LineWithin(x, y, pen.Width, out var saveLine))
+            {
+                var line = saveLine;
+                Drawing += (g) => g.DrawLine(pen, line.Item1, line.Item2);
+            }
+        }
+        /// <summary>
+        /// 绘制栅格时填充矩形
+        /// </summary>
+        /// <param name="rect"></param>
+        /// <param name="brush"></param>
+        public static void DrawFillWhileDrawing(Rectangle rect, Brush brush)
+        {
+            if (RectWithin(rect, out var saveRect))
+            {
+                rect = saveRect;
+                Drawing += (g) => { g.FillRectangle(brush, rect); };
+            }
         }
     }
 }

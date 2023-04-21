@@ -7,6 +7,7 @@ using FocusTree.IO.FileManege;
 using FocusTree.UI.Controls;
 using FocusTree.UI.Graph;
 using FocusTree.UI.NodeToolDialogs;
+using Newtonsoft.Json;
 
 namespace FocusTree.UI
 {
@@ -226,75 +227,70 @@ namespace FocusTree.UI
 
         #region ---- 绘图 ----
 #if REBUILD
+        /// <summary>
+        /// 加载节点绘制到栅格绘图委托
+        /// </summary>
         private void LoadNodeMap()
         {
             if (Graph == null) { return; }
-            Lattice.DrawCell.Clear();
             foreach (var node in Graph.GetNodes())
             {
-                var point = node.LatticedPoint;
+                var nodeLoc = node.LatticedPoint;
                 int color = 0; //不同需求要变色
                 foreach (var require in node.Requires)
                 {
                     foreach (var nodeID in require)
                     {
-                        LoadRequireLine(NodeRequire[color], point, nodeID);
+                        var endLoc = Graph.GetNode(nodeID).LatticedPoint;
+                        LoadRequireLine(NodeRequire[color], nodeLoc, endLoc);
                     }
                     color++;
                 }
-                LatticeCell cell = new(point.X, point.Y);
-                cell.DrawFillPart(NodeBG, LatticeCell.InnerParts.Node);
+                LatticeCell cell = new(nodeLoc.X, nodeLoc.Y);
+                var rect = cell.InnerPartRealRects[LatticeCell.Parts.Node];
+                Lattice.DrawFillWhileDrawing(rect, NodeBG);
             }
         }
-        private void LoadRequireLine(Pen pen, Point point, int requireID)
+        /// <summary>
+        /// 加载节点关系线绘制到栅格绘图委托
+        /// </summary>
+        /// <param name="pen"></param>
+        /// <param name="startLoc"></param>
+        /// <param name="endLoc"></param>
+        private void LoadRequireLine(Pen pen, Point startLoc, Point endLoc)
         {
-            var node = Graph.GetNode(requireID);
-            var widthDiff = node.LatticedPoint.X - point.X;
-            var heightDiff = point.Y - node.LatticedPoint.Y;
+            var widthDiff = endLoc.X - startLoc.X;
+            var heightDiff = startLoc.Y - endLoc.Y;
+            LatticeCell cell = new(startLoc.X, startLoc.Y);
 
-            LatticeCell cell = new(point.X, point.Y);
-            if (heightDiff == 1)
+            var paddingHeight = LatticeCell.NodePaddingHeight;
+            var nodeWidth = LatticeCell.NodeWidth;
+            //
+            // 竖线1
+            //
+            var y1 = cell.RealTop + paddingHeight;
+            int halfHeight = heightDiff / 2;
+            cell.LatticedTop -= halfHeight;
+            var y2 = cell.RealTop + paddingHeight / 2;
+            var x = cell.NodeRealLeft + nodeWidth / 2;
+            Lattice.DrawLineWhileDrawing(x, (y1, y2), pen);
+            //
+            // 横线
+            //
+            if (Math.Abs(widthDiff) > 0)
             {
-                if (widthDiff == 0)
-                {
-                    cell.DrawLine(pen, LatticeCell.LineDirects.Up);
-                    return;
-                }
-                cell.DrawLine(pen, LatticeCell.LineDirects.HalfDown | (widthDiff < 0 ? LatticeCell.LineDirects.HalfLeft : LatticeCell.LineDirects.HalfRight));
-                for (int i = 1; i < Math.Abs(widthDiff); i++)
-                {
-                    cell.LatticedLeft += widthDiff < 0 ? -1 : 1;
-                    cell.DrawLine(pen, LatticeCell.LineDirects.LeftRight);
-                }
-                cell.LatticedLeft += (widthDiff < 0 ? -1 : 1);
-                cell.DrawLine(pen, LatticeCell.LineDirects.HalfUp | (widthDiff < 0 ? LatticeCell.LineDirects.HalfRight : LatticeCell.LineDirects.HalfLeft));
+                cell.LatticedLeft += widthDiff;
+                var x2 = cell.NodeRealLeft + nodeWidth / 2;
+                Lattice.DrawLineWhileDrawing((x, x2), y2, pen);
             }
-            else if (heightDiff > 1)
-            {
-                cell.DrawLine(pen, LatticeCell.LineDirects.Up);
-                int halfHeight = heightDiff / 2;
-                for (int i = 1; i < halfHeight; i++)
-                {
-                    cell.LatticedTop--;
-                    cell.DrawLine(pen, LatticeCell.LineDirects.TopBottom);
-                }
-                cell.LatticedTop--;
-                cell.DrawLine(pen, LatticeCell.LineDirects.HalfTopBottom |
-                    (widthDiff == 0 ? LatticeCell.LineDirects.Up : widthDiff < 0 ? LatticeCell.LineDirects.HalfLeft : LatticeCell.LineDirects.HalfRight));
-                for (int i = 1; i < Math.Abs(widthDiff); i++)
-                {
-                    cell.LatticedLeft += widthDiff < 0 ? -1 : 1;
-                    cell.DrawLine(pen, LatticeCell.LineDirects.LeftRight);
-                }
-                cell.LatticedLeft += widthDiff < 0 ? -1 : 1;
-                cell.DrawLine(pen, LatticeCell.LineDirects.HalfUp |
-                    (widthDiff == 0 ? LatticeCell.LineDirects.Up : widthDiff < 0 ? LatticeCell.LineDirects.HalfRight : LatticeCell.LineDirects.HalfLeft));
-                for (int i = 1; i < heightDiff - halfHeight; i++)
-                {
-                    cell.LatticedTop--;
-                    cell.DrawLine(pen, LatticeCell.LineDirects.TopBottom);
-                }
-            }
+            //
+            // 竖线2
+            //
+            y1 = y2;
+            cell.LatticedTop -= heightDiff - halfHeight - 1;
+            y2 = cell.RealTop;
+            x = cell.NodeRealLeft + nodeWidth / 2;
+            Lattice.DrawLineWhileDrawing(x, (y1, y2), pen);
         }
         public void DrawNodeMapInfo()
         {
@@ -570,7 +566,7 @@ namespace FocusTree.UI
         /// <summary>
         /// 上次光标所处的节点部分
         /// </summary>
-        LatticeCell.InnerParts LastCellPart = new();
+        LatticeCell.Parts LastCellPart = new();
 
         private void OnMouseMove(object sender, MouseEventArgs args)
         {
@@ -591,7 +587,7 @@ namespace FocusTree.UI
                 var cursor = args.Location;
 
                 var part = CellCursorOn.GetInnerPartPointOn(cursor);
-                if (part == LatticeCell.InnerParts.Leave)
+                if (part == LatticeCell.Parts.Leave)
                 {
                     Lattice.ReDrawCell(gCore, CellCursorOn);
                     LastCellPart = part;
@@ -602,7 +598,7 @@ namespace FocusTree.UI
                 LastCellPart = part;
                 Lattice.ReDrawCell(gCore, CellCursorOn);
                 var rect = CellCursorOn.InnerPartRealRects[part];
-                if (part == LatticeCell.InnerParts.Node)
+                if (part == LatticeCell.Parts.Node)
                 {
                     gCore.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.Orange)), rect);
                 }
