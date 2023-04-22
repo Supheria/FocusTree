@@ -166,12 +166,13 @@ namespace FocusTree.UI
         #region ==== 绘图 ====
 
         /// <summary>
-        /// 将节点绘制上载到栅格绘图委托（要更新栅格放置区域，应该先更新再调用此方法，因为使用了裁剪超出绘图区域的绘图方法）
+        /// 将节点绘制上载到栅格绘图委托（初始化节点列表时仅需上载第一次，除非节点列表或节点关系或节点位置信息发生变更才重新上载）
         /// </summary>
         private void UploadNodeMap()
         {
             if (Graph == null) { return; }
-            //Lattice.DrawingClear();
+            Lattice.DrawingClear();
+            GraphDrawer.NodeDrawerCatalog.Clear();
             foreach (var id in Graph.IdList)
             {
                 var focus = Graph.GetFocus(id);
@@ -187,6 +188,10 @@ namespace FocusTree.UI
                 }
                 var brush = id == SelectedNode ? GraphDrawer.NodeBG_Selected : GraphDrawer.NodeBG_Normal;
                 GraphDrawer.UploadNodeMap(focus, brush);
+                foreach(var drawer in GraphDrawer.NodeDrawerCatalog.Values)
+                {
+                    Lattice.Drawing += drawer;
+                }
             }
         }
         public void DrawNodeMapInfo()
@@ -235,7 +240,6 @@ namespace FocusTree.UI
             Image = new Bitmap(ClientRectangle.Width, ClientRectangle.Height);
             gCore = Graphics.FromImage(Image);
             Lattice.SetBounds(ClientRectangle);
-            UploadNodeMap();
             Lattice.Draw(gCore);
             Invalidate();
         }
@@ -376,12 +380,12 @@ namespace FocusTree.UI
         {
             var diffInWidth = newPoint.X - DragLatticeMouseFlagPoint.X;
             var diffInHeight = newPoint.Y - DragLatticeMouseFlagPoint.Y;
-            if (Math.Abs(diffInWidth) >= 1 || Math.Abs(diffInHeight) >= 1)
+            if (Math.Abs(diffInWidth) > 0 || Math.Abs(diffInHeight) > 0)
             {
                 Lattice.OriginLeft += newPoint.X - DragLatticeMouseFlagPoint.X;
                 Lattice.OriginTop += newPoint.Y - DragLatticeMouseFlagPoint.Y;
                 DragLatticeMouseFlagPoint = newPoint;
-                UploadNodeMap();
+                //UploadNodeMap();
                 Lattice.Draw(gCore);
                 DrawNodeMapInfo();
             }
@@ -461,7 +465,7 @@ namespace FocusTree.UI
                 {
                     DragNode_Flag = false;
                     Lattice.DrawBackLattice = false;
-                    UploadNodeMap();
+                    //UploadNodeMap();
                     Lattice.Draw(gCore);
                 }
             }
@@ -481,7 +485,7 @@ namespace FocusTree.UI
             LatticeCell.Height += args.Delta / 100 * Lattice.DrawRect.Width / 200;
 
             Lattice.SetBounds(ClientRectangle);
-            UploadNodeMap();
+            //UploadNodeMap();
             Lattice.Draw(gCore);
             DrawNodeMapInfo();
             Invalidate();
@@ -578,7 +582,6 @@ namespace FocusTree.UI
             Lattice.OriginLeft = WidthCenterDiff - LatticeCell.NodePaddingWidth - LatticeCell.NodeWidth / 2;
             Lattice.OriginTop = HeightCenterDiff - LatticeCell.NodePaddingHeight - LatticeCell.NodeHeight / 2;
             Lattice.SetBounds(ClientRectangle);
-            UploadNodeMap();
             Lattice.Draw(gCore);
         }
         /// <summary>
@@ -603,7 +606,6 @@ namespace FocusTree.UI
             Lattice.OriginLeft += WidthCenterDiff;
             Lattice.OriginTop += HeightCenterDiff;
             Lattice.SetBounds(ClientRectangle);
-            UploadNodeMap();
             Lattice.Draw(gCore);
             Cursor.Position = Parent.PointToScreen(new Point(
                 Bounds.X + Bounds.Width / 2,
@@ -645,7 +647,6 @@ namespace FocusTree.UI
         /// <param name="path"></param>
         public void LoadGraph(string path)
         {
-            //UnloadNodeMap();
             CloseAllNodeToolDialogs();
             ReadOnly = Graph == null ? false : Graph.IsBackupFile(path);
             if (!ReadOnly) { FilePath = path; }
@@ -654,6 +655,7 @@ namespace FocusTree.UI
             FileBackup.Backup<FocusGraph>(FilePath);
             Graph.NewHistory();
             SelectedNode = null;
+            UploadNodeMap();
             RescaleToPanorama();
             DrawNodeMapInfo();
             Invalidate();
@@ -758,6 +760,7 @@ namespace FocusTree.UI
             if (Graph == null) { return; }
             Graph.ResetNodeLatticedPoints();
             Graph.EnqueueHistory();
+            UploadNodeMap();
             RescaleToPanorama();
             Invalidate();
             Parent.UpdateText("自动排版");

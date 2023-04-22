@@ -95,7 +95,6 @@ namespace FocusTree.UI.Graph
         public static void SetBounds(Rectangle bounds)
         {
             test.Show();
-            test.InfoText = $"{bounds}";
             ColNumber = bounds.Width / LatticeCell.Width;
             RowWidth = ColNumber * LatticeCell.Width;
             RowNumber = bounds.Height / LatticeCell.Height;
@@ -118,6 +117,8 @@ namespace FocusTree.UI.Graph
             g.Clear(Color.White);
 
             Drawing?.Invoke(g);
+
+            test.InfoText = $"{DrawRect}" +  Drawing?.GetInvocationList().Length;
 
             if (DrawBackLattice)
             {
