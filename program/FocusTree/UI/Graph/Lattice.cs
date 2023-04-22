@@ -86,6 +86,7 @@ namespace FocusTree.UI.Graph
 
         #region ==== 绘制栅格 ====
 
+        static TestInfo test = new();
         /// <summary>
         /// 设置栅格放置区域（自动重置列行数）
         /// </summary>
@@ -93,6 +94,8 @@ namespace FocusTree.UI.Graph
         /// <param name="bounds">放置区域</param>
         public static void SetBounds(Rectangle bounds)
         {
+            test.Show();
+            test.InfoText = $"{bounds}";
             ColNumber = bounds.Width / LatticeCell.Width;
             RowWidth = ColNumber * LatticeCell.Width;
             RowNumber = bounds.Height / LatticeCell.Height;
@@ -131,6 +134,7 @@ namespace FocusTree.UI.Graph
             g.DrawLine(testPen, new(OriginLeft, DrawRect.Top), new(OriginLeft, DrawRect.Bottom));
             g.DrawLine(testPen, new(DrawRect.Left, OriginTop), new(DrawRect.Right, OriginTop));
 #endif
+            g.Flush();
         }
 
         #endregion
@@ -244,19 +248,18 @@ namespace FocusTree.UI.Graph
             if (left < DrawRect.Left)
             {
                 width -= DrawRect.Left - left;
-                if (width <= 0) { return false; }
                 left = DrawRect.Left;
             }
             if (top < DrawRect.Top)
             {
                 height -= DrawRect.Top - top;
-                if (height <= 0) { return false; }
                 top = DrawRect.Top;
             }
             saveRect = new(left, top,
                 left + width > DrawRect.Right ? DrawRect.Right - left : width,
                 top + height > DrawRect.Bottom ? DrawRect.Bottom - top : height
                 );
+            if (saveRect.Height <= 0 || saveRect.Width <= 0) { return false; }
             return true;
         }
         /// <summary>
