@@ -172,7 +172,6 @@ namespace FocusTree.UI
         {
             if (Graph == null) { return; }
             Lattice.DrawingClear();
-            GraphDrawer.NodeDrawerCatalog.Clear();
             foreach (var id in Graph.IdList)
             {
                 var focus = Graph.GetFocus(id);
@@ -188,10 +187,6 @@ namespace FocusTree.UI
                 }
                 var brush = id == SelectedNode ? GraphDrawer.NodeBG_Selected : GraphDrawer.NodeBG_Normal;
                 GraphDrawer.UploadNodeMap(focus, brush);
-                foreach(var drawer in GraphDrawer.NodeDrawerCatalog.Values)
-                {
-                    Lattice.Drawing += drawer;
-                }
             }
         }
         public void DrawNodeMapInfo()
