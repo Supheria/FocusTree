@@ -103,7 +103,7 @@ namespace FocusTree.UI
         /// <summary>
         /// 节点字体
         /// </summary>
-        const string NodeFont = "黑体";
+        const string NodeFont = "仿宋";
         /// <summary>
         /// 节点字体样式
         /// </summary>
@@ -111,7 +111,7 @@ namespace FocusTree.UI
         /// <summary>
         /// 节点文字颜色
         /// </summary>
-        readonly SolidBrush NodeFG = new(Color.Black);
+        readonly SolidBrush NodeFG = new(Color.FromArgb(175, Color.DarkBlue));
         /// <summary>
         /// 默认节点背景颜色
         /// </summary>
@@ -177,7 +177,7 @@ namespace FocusTree.UI
 
         //===== 方法 =====//
 
-        #region ---- 初始化和更新 ----
+        #region ---- 初始化 ----
 
         public GraphBox(MainForm mainForm)
         {
@@ -202,25 +202,6 @@ namespace FocusTree.UI
             //Invalidated += UpdateGraph;
             ControlResize.SetTag(this);
         }
-
-#if REBUILD
-#else
-            if (Graph == null)
-            {
-                return;
-            }
-            Invalidated -= UpdateGraph;
-
-            UploadNodeMap();
-            _draw_info(info,
-                new Font(NodeFont, 25, FontStyle.Bold, GraphicsUnit.Pixel),
-                new SolidBrush(Color.FromArgb(160, Color.DarkGray)),
-                new SolidBrush(Color.FromArgb(255, Color.WhiteSmoke))
-                );
-
-            Invalidate();
-            Invalidated += UpdateGraph;
-#endif
 
         #endregion
 
@@ -257,7 +238,7 @@ namespace FocusTree.UI
                 if (Lattice.RectWithin(rect, out var saveRect))
                 {
                     rect = saveRect;
-                    Lattice.Drawing += NodeDrawerCatalog[id] = (g) => g.FillRectangle(brush, rect);
+                    Lattice.Drawing += NodeDrawerCatalog[id] = (g) => DrawNode(g, id, brush);
                 }
             }
         }
@@ -301,6 +282,41 @@ namespace FocusTree.UI
             y2 = cell.RealTop;
             x = cell.NodeRealLeft + nodeWidth / 2;
             Lattice.DrawLineWhileDrawing(x, (y1, y2), pen);
+        }
+        /// <summary>
+        /// 绘制节点
+        /// </summary>
+        /// <param name="g"></param>
+        /// <param name="id"></param>
+        /// <param name="brush"></param>
+        private void DrawNode(Graphics g, int id, SolidBrush brush)
+        {
+
+            var focus = Graph.GetFocus(id);
+            LatticeCell cell = new(focus);
+            var rect = cell.InnerPartRealRects[LatticeCell.Parts.Node];
+            g.FillRectangle(new SolidBrush(Color.White), rect);
+            g.FillRectangle(brush, rect);
+            var testRect = cell.RealRect;
+            if (testRect.Width < LatticeCell.SizeMax.Width / 2 || testRect.Height < LatticeCell.SizeMax.Height / 2) { return; }
+            var name = focus.Name;
+            var fontHeight = name.Length / 4 + 1;
+            var fontWidth = name.Length / fontHeight;
+            var fontSizeH = 0.7f * rect.Height / fontHeight;
+            var fontSizeW = 0.7f * rect.Width / fontWidth;
+            var fontSize = Math.Min(fontSizeH, fontSizeW);
+            string sName = name;
+            if (fontHeight > 1)
+            {
+                sName = string.Empty;
+                for (int i = 0; i < fontHeight; i++)
+                {
+                    sName += $"{name.Substring(i * fontWidth, fontWidth)}\n";
+                }
+                sName = sName[..^1];
+            }
+            var font = new Font(NodeFont, fontSize, FontStyle.Bold, GraphicsUnit.Pixel);
+            g.DrawString(sName, font, NodeFG, rect, NodeFontFormat);
         }
         public void DrawNodeMapInfo()
         {
@@ -369,7 +385,6 @@ namespace FocusTree.UI
                 else
                 {
                     NodeLeftClicked(PrevSelectNode.Value);
-                    WriteNodeDragFlags(args.Location);
                 }
             }
 
@@ -401,16 +416,11 @@ namespace FocusTree.UI
         }
         private void NodeLeftClicked(int id)
         {
+            DragNode_Flag = true;
             var data = Graph.GetFocus(id);
             var info = $"{data.Name}, {data.Duration}日\n{data.Descript}";
             DrawInfo(info);
             Parent.UpdateText("选择节点");
-        }
-        private void WriteNodeDragFlags(Point startPoint)
-        {
-            DragNode_Flag = true;
-            var nodeRect = NodeDrawingRect(PrevSelectNode.Value);
-            DragNodeMouseFlagPoint = new(startPoint.X - (int)nodeRect.X, startPoint.Y - (int)nodeRect.Y);
         }
         private void NodeRightClicked()
         {
@@ -434,47 +444,31 @@ namespace FocusTree.UI
 
         private void OnMouseDoubleClick(object sender, MouseEventArgs args)
         {
-            //if (Graph == null) { return; }
-
             CheckPrevSelect();
 
-            if ((args.Button & MouseButtons.Left) == MouseButtons.Left)
+            if ((args.Button & MouseButtons.Left) == MouseButtons.Left && PrevSelectNode == null)
             {
-                if (PrevSelectNode == null)
-                {
-                    GraphLeftDoubleClicked();
-                }
-                else
-                {
-                    //NodeLeftDoubleClicked();
-                }
+                GraphLeftDoubleClicked();
             }
+
+            Invalidate();
         }
         private void GraphLeftDoubleClicked()
         {
-            SelectedNode = null;
-            if (ReadOnly)
+            if (SelectedNode != null)
             {
-                if (MessageBox.Show("[202303052340]是否恢复备份？", "提示", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                {
-                    CloseAllNodeToolDialogs();
-                    FileBackup.Backup<FocusGraph>(FilePath);
-                    Graph.SaveToXml(FilePath);
-                    ReadOnly = false;
-                    SelectedNode = null;
-                    RescaleToPanorama();
-                }
-                Parent.UpdateText("恢复备份");
+                DrawNode(gCore, SelectedNode.Value, NodeBG_Normal);
+                SelectedNode = null;
             }
-            Invalidate();
+            if (!ReadOnly || MessageBox.Show("[202303052340]是否恢复备份？", "提示", MessageBoxButtons.YesNo) == DialogResult.No) { return; }
+            CloseAllNodeToolDialogs();
+            FileBackup.Backup<FocusGraph>(FilePath);
+            Graph.SaveToXml(FilePath);
+            ReadOnly = false;
+            SelectedNode = null;
+            RescaleToPanorama();
+            Parent.UpdateText("恢复备份");
         }
-        //private void NodeLeftDoubleClicked()
-        //{
-        //    SelectedNode = PrevSelectNode;
-        //    RescaleToNode(SelectedNode.Value, false);
-        //    NodeInfoTip.Hide(this);
-        //    Invalidate();
-        //}
 
         //---- OnMouseMove ----//
 
@@ -513,16 +507,6 @@ namespace FocusTree.UI
         }
         private void DragGraph(Point newPoint)
         {
-            //var cellPart = LastCell.HighlightSelection(newPoint);
-            //if (cellPart == LatticeCell.InnerParts.Leave)
-            //{
-            //    LatticeCell cell = new(newPoint);
-            //    LastCell = cell;
-            //}
-            //Parent.Text = $"W {LatticeCell.Width},H {LatticeCell.Height}, o: {Lattice.OriginLeft}, {Lattice.OriginTop}, cursor: {newPoint}, cellPart: {cellPart}, lastCell{new Point(LastCell.LatticedLeft, LastCell.LatticedTop)}";
-
-            //UploadNodeMap();
-
             var diffInWidth = newPoint.X - DragLatticeMouseFlagPoint.X;
             var diffInHeight = newPoint.Y - DragLatticeMouseFlagPoint.Y;
             if (Math.Abs(diffInWidth) >= 1 || Math.Abs(diffInHeight) >= 1)
