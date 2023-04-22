@@ -97,13 +97,10 @@ namespace FocusTree.UI
         {
             get
             {
-                if (gcore == null)
+                if (gcore == null || Image == null)
                 {
-                    if (Image == null)
-                    {
-                        gcore?.Flush(); gcore?.Dispose();
-                        Image = new Bitmap(ClientRectangle.Width, ClientRectangle.Height);
-                    }
+                    gcore?.Flush(); gcore?.Dispose();
+                    Image = new Bitmap(ClientRectangle.Width, ClientRectangle.Height);
                     gcore = Graphics.FromImage(Image); 
                 }
                 return gcore;
@@ -186,7 +183,7 @@ namespace FocusTree.UI
                     color++;
                 }
                 var brush = id == SelectedNode ? GraphDrawer.NodeBG_Selected : GraphDrawer.NodeBG_Normal;
-                GraphDrawer.UploadNodeMap(focus, brush);
+                GraphDrawer.UploadNodeMap(focus);
             }
         }
         public void DrawNodeMapInfo()
@@ -385,6 +382,7 @@ namespace FocusTree.UI
                 DrawNodeMapInfo();
             }
         }
+        CellDrawer cache;
         private void DragNode(Point newPoint)
         {
             NodeInfoTip.Hide(this);
@@ -392,7 +390,8 @@ namespace FocusTree.UI
             var part = CellCursorOn.GetInnerPartPointOn(newPoint);
             if (Graph.ContainLatticedPoint(CellCursorOn.LatticedPoint, out var id))
             {
-                //Lattice.Drawing -= GraphDrawer.NodeDrawerCatalog[id].Item2;
+                Lattice.Drawing -= GraphDrawer.NodeDrawerCatalog[id];
+                cache = GraphDrawer.NodeDrawerCatalog[id];
             }
             if (part == LatticeCell.Parts.Leave)
             {
@@ -401,7 +400,7 @@ namespace FocusTree.UI
                     var rect = sv;
                     //CellDrawer drawer = (g) => g.FillRectangle(GraphDrawer.NodeBG_Normal, rect); 
                     //GraphDrawer.NodeDrawerCatalog[id] = (null, drawer);
-                    //Lattice.Drawing += drawer;
+                    Lattice.Drawing += cache;
                 }
                 LastCellPart = part;
                 CellCursorOn = new(newPoint);
@@ -419,7 +418,7 @@ namespace FocusTree.UI
                 var rect = sv;
                 //CellDrawer drawer = (g) => g.FillRectangle(GraphDrawer.NodeBG_Normal, rect);
                 //GraphDrawer.NodeDrawerCatalog[id] = (null, drawer);
-                //Lattice.Drawing += drawer;
+                Lattice.Drawing += cache;
             }
             Lattice.Drawing -= LastCellDrawer; 
             if (Lattice.RectWithin(CellCursorOn.InnerPartRealRects[part], out var saveRect))
@@ -460,6 +459,7 @@ namespace FocusTree.UI
                 {
                     DragNode_Flag = false;
                     Lattice.DrawBackLattice = false;
+                    Lattice.Drawing -= LastCellDrawer;
                     //UploadNodeMap();
                     Lattice.Draw(gCore);
                 }

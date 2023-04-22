@@ -17,7 +17,7 @@ namespace FocusTree.UI.Graph
         /// <summary>
         /// 节点字体
         /// </summary>
-        public static string NodeFont { get; private set; } = "仿宋";
+        public static string NodeFont { get; private set; } = "黑体";
         /// <summary>
         /// 节点字体样式
         /// </summary>
@@ -65,7 +65,7 @@ namespace FocusTree.UI.Graph
         /// <summary>
         /// 将节点绘制上载到栅格绘图委托（要更新栅格放置区域，应该先更新再调用此方法，因为使用了裁剪超出绘图区域的绘图方法）
         /// </summary>
-        public static void UploadNodeMap(FocusData focus, SolidBrush brush)
+        public static void UploadNodeMap(FocusData focus)
         {
             var id = focus.ID; 
             LatticeCell cell = new(focus);
@@ -73,7 +73,7 @@ namespace FocusTree.UI.Graph
             {
                 Lattice.Drawing -= drawer;
             }
-            Lattice.Drawing += NodeDrawerCatalog[id] = (g) => DrawNode(g, focus, brush);
+            Lattice.Drawing += NodeDrawerCatalog[id] = (g) => DrawNode(g, focus, NodeBG_Normal);
 
         }
         /// <summary>
@@ -149,14 +149,20 @@ namespace FocusTree.UI.Graph
         {
             LatticeCell cell = new(focus);
             var rect = cell.InnerPartRealRects[LatticeCell.Parts.Node];
+            var testRect = cell.RealRect;
             if (!Lattice.RectWithin(rect, out var saveRect)) { return; }
             rect = saveRect;
-            g.FillRectangle(new SolidBrush(Color.White), rect);
-            g.FillRectangle(brush, rect);
-            var testRect = cell.RealRect;
-            if (testRect.Width < LatticeCell.SizeMax.Width / 2 || testRect.Height < LatticeCell.SizeMax.Height / 2) { return; }
+            if (testRect.Width < LatticeCell.SizeMax.Width / 2 || testRect.Height < LatticeCell.SizeMax.Height / 2)
+            {
+                g.FillRectangle(new SolidBrush(Color.White), rect);
+                g.FillRectangle(brush, rect);
+                g.Flush();
+                return;
+            }
             var name = focus.Name;
-            var fontHeight = name.Length / 4 + 1;
+            var fontHeight = name.Length / 3;
+            if (fontHeight == 1 && name.Length % 3 != 0) { fontHeight++; }
+            else if (fontHeight == 0) { fontHeight++; }
             var fontWidth = name.Length / fontHeight;
             var fontSizeH = 0.7f * rect.Height / fontHeight;
             var fontSizeW = 0.7f * rect.Width / fontWidth;

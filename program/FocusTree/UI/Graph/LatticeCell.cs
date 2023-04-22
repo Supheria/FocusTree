@@ -35,7 +35,7 @@ namespace FocusTree.UI.Graph
         /// <summary>
         /// 最大尺寸
         /// </summary>
-        public static Size SizeMax = new(75, 75);
+        public static Size SizeMax = new(100, 100);
         /// <summary>
         /// 节点宽
         /// </summary>
