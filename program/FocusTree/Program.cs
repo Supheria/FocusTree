@@ -34,7 +34,7 @@ class Test
     {
         var graph = XmlIO.LoadFromXml<FocusGraph>("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\program\\FILES\\神佑村落.xml");
         UploadNodeMap(graph);
-        var gRect = graph.GetGraphRect();
+        var gRect = graph.GetGraphMetaRect();
         var canvasWidth = LatticeCell.SizeMax.Width * (gRect.Width);
         var canvasHeight = LatticeCell.SizeMax.Height * (gRect.Height);
         LatticeCell.Width = LatticeCell.SizeMax.Width;

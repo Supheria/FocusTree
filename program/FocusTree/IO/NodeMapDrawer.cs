@@ -99,7 +99,7 @@ namespace FocusTree.IO
         static float Border = 1000f;
         private static Image GetCanvas(FocusGraph Graph)
         {
-            var rect = Graph.GetGraphRect();
+            var rect = Graph.GetGraphMetaRect();
             Point center = new(rect.X + rect.Width / 2, rect.Y + rect.Height / 2);
             var size = new Size(
                 (int)(center.X * ScalingUnit.X + Border * 2),

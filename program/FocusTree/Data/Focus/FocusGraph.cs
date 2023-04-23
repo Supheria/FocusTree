@@ -363,7 +363,7 @@ namespace FocusTree.Data.Focus
         /// 全图的元中心坐标和元尺寸
         /// </summary>
         /// <returns></returns>
-        public Rectangle GetGraphRect()
+        public Rectangle GetGraphMetaRect()
         {
             int left, top, right, bottom;
             left = top = right = bottom = 0;

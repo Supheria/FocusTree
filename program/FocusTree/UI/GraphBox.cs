@@ -1,5 +1,3 @@
-//#define DEBUG
-//#define BUILD
 using FocusTree.Data;
 using FocusTree.Data.Focus;
 using FocusTree.IO;
@@ -10,6 +8,7 @@ using FocusTree.UI.NodeToolDialogs;
 using Newtonsoft.Json;
 using System.Drawing;
 using System.Security.Permissions;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace FocusTree.UI
 {
@@ -93,29 +92,7 @@ namespace FocusTree.UI
         /// <summary>
         /// 核心 GDI（Image绘制Graph专用，因为调用时会先 Clear Image）
         /// </summary>
-        public Graphics gCore
-        {
-            get
-            {
-                if (gcore == null || Image == null)
-                {
-                    gcore?.Flush(); gcore?.Dispose();
-                    //Image = new Bitmap(ClientRectangle.Width, ClientRectangle.Height);
-                    gcore = Graphics.FromImage(Image);
-                }
-                Image = new Bitmap(ClientRectangle.Width, ClientRectangle.Height);
-                gcore = Graphics.FromImage(Image);
-                //gcore.Clear(Color.White); 
-                gcore?.Flush();
-                return gcore;
-            }
-            set
-            {
-                gcore?.Flush(); gcore?.Dispose();
-                gcore = value;
-            }
-        }
-        Graphics gcore;
+        public readonly Graphics gCore;
         /// <summary>
         /// 拖动图像时使用的鼠标参照坐标
         /// </summary>
@@ -130,9 +107,13 @@ namespace FocusTree.UI
         /// </summary>
         bool DragNode_Flag = false;
         /// <summary>
-        /// 图片缓存
+        /// 背景图片
         /// </summary>
-        Image ImageCacher;
+        Image BackImage;
+        /// <summary>
+        /// 背景图片在当前 Client Rect 范围中的缓存
+        /// </summary>
+        Image BackImageCacher;
 
         #endregion
 
@@ -146,8 +127,14 @@ namespace FocusTree.UI
             base.Parent = Parent = mainForm;
             NodeInfo = new InfoDialog(this);
             //SizeMode = PictureBoxSizeMode.Zoom;
-            Dock = DockStyle.Fill;
+            //Dock = DockStyle.Fill;
             //DoubleBuffered = true;
+            BackColor = Color.White;
+            var workArea = Screen.GetWorkingArea(this);
+            Image = new Bitmap(workArea.Width, workArea.Height);
+            gCore = Graphics.FromImage(Image);
+
+            BackImage = Image.FromFile("Background.jpg");
 
             LatticeCell.Width = 30;
             LatticeCell.Height = 30;
@@ -167,19 +154,31 @@ namespace FocusTree.UI
         #region ==== 绘图 ====
 
         /// <summary>
+        /// 根据给定矩形将背景图片缓存的矩形部分填充到 Image
+        /// </summary>
+        /// <param name="rect"></param>
+        public void DrawBackground(Rectangle rect)
+        {
+            DrawBackground(new Rectangle[] { rect });
+        }
+        /// <summary>
+        /// 根据给定矩形数组将背景图片缓存的矩形部分填充到 Image
+        /// </summary>
+        public void DrawBackground(Rectangle[] rects)
+        {
+            
+            foreach(var rect in rects)
+            {
+                gCore.DrawImage(BackImageCacher, rect, rect, GraphicsUnit.Pixel);
+            }
+            gCore.Flush();
+        }
+        /// <summary>
         /// 将节点绘制上载到栅格绘图委托（初始化节点列表时仅需上载第一次，除非节点列表或节点关系或节点位置信息发生变更才重新上载）
         /// </summary>
         private void UploadNodeMap()
         {
             if (Graph == null) { return; }
-#if BUILD
-            var gRect = Graph.GetGraphRect();
-            LatticeCell.Width = LatticeCell.SizeMax.Width;
-            LatticeCell.Height = LatticeCell.SizeMax.Height;
-            var canvasWidth = LatticeCell.Width * (gRect.Width);
-            var canvasHeight = LatticeCell.Height * (gRect.Height);
-            Lattice.SetBounds(new(0, 0, canvasWidth, canvasHeight));
-#endif
             Lattice.DrawingClear();
             foreach (var id in Graph.IdList)
             {
@@ -197,10 +196,6 @@ namespace FocusTree.UI
                 var brush = id == SelectedNode ? GraphDrawer.NodeBG_Selected : GraphDrawer.NodeBG_Normal;
                 GraphDrawer.UploadNodeMap(focus);
             }
-#if BUILD
-            ImageCacher = new Bitmap(canvasWidth, canvasHeight);
-            Lattice.Draw(Graphics.FromImage(ImageCacher));
-#endif
         }
         public void DrawNodeMapInfo()
         {
@@ -232,6 +227,19 @@ namespace FocusTree.UI
                 infoRect,
                 GraphDrawer.NodeFontFormat);
         }
+        /// <summary>
+        /// 获取 Graph 的真实矩形
+        /// </summary>
+        /// <returns></returns>
+        public Rectangle GetGraphRealRect()
+        {
+            var rect = Graph.GetGraphMetaRect();
+            return new(rect.Left * LatticeCell.Width, 
+                rect.Top * LatticeCell.Height,
+                rect.Width * LatticeCell.Width,
+                rect.Height * LatticeCell.Height
+                );
+        }
 
         #endregion
 
@@ -245,12 +253,53 @@ namespace FocusTree.UI
             {
                 return;
             }
-            Image?.Dispose();
-            Image = new Bitmap(ClientRectangle.Width, ClientRectangle.Height);
-            gCore = Graphics.FromImage(Image);
+            SetBackImageCacher();
+            DrawBackground(ClientRectangle); 
             Lattice.SetBounds(ClientRectangle);
             Lattice.Draw(gCore);
             Invalidate();
+        }
+        /// <summary>
+        /// 根据当前 Client Rect 大小设置背景图片缓存
+        /// </summary>
+        private void SetBackImageCacher()
+        {
+            var bkWidth = Width;
+            var bkHeight = Height;
+            float sourceRatio = (float)BackImage.Width / (float)BackImage.Height;
+            float clientRatio = (float)Width / (float)Height;
+            if (sourceRatio < clientRatio)
+            {
+                bkWidth = Width;
+                bkHeight = (int)(Width / sourceRatio);
+            }
+            else if (sourceRatio > clientRatio)
+            {
+                bkHeight = Height;
+                bkWidth = (int)(Height * sourceRatio);
+            }
+            if (BackImageCacher != null && bkWidth == BackImageCacher.Width && bkHeight == BackImageCacher.Height) { return; }
+            BackImageCacher?.Dispose();
+            BackImageCacher = new Bitmap(bkWidth, bkHeight);
+            var g = Graphics.FromImage(BackImageCacher);
+            g.DrawImage(BackImage, 0, 0, bkWidth, bkHeight);
+            g.Flush(); g.Dispose();
+        }
+        private void SetImageBackColorWhileResized()
+        {
+            var prevSize = ControlResize.GetTag(this);
+            var diffWidth = Width - prevSize.Width;
+            var diffHeight = Height - prevSize.Height;
+            //if (diffWidth > 0)
+            //{
+            //    Image.W
+            //    Rectangle fillRect = new(Left + prevSize.Width, Top, diffWidth, prevSize.Height);
+            //    gCore.
+            //}
+            //if (diffHeight > 0)
+            //{
+
+            //}
         }
 
         //---- OnMouseDown ----//
@@ -572,19 +621,19 @@ namespace FocusTree.UI
         private void RescaleToPanorama()
         {
             if (Graph == null) { return; }
-            var gRect = Graph.GetGraphRect();
+            var gRect = Graph.GetGraphMetaRect();
             //
             // 自适应大小
             //
             if (Lattice.DrawRect.Width < (gRect.Width) * LatticeCell.SizeMin.Width)
             {
                 LatticeCell.Width = LatticeCell.SizeMin.Width;
-                Parent.Width = (gRect.Width) * LatticeCell.SizeMin.Width + Parent.Width - ClientRectangle.Width;
+                Parent.Width = (gRect.Width + 1) * LatticeCell.SizeMin.Width + Parent.Width - Width;
             }
             if (Lattice.DrawRect.Height < (gRect.Height) * LatticeCell.SizeMin.Height)
             {
                 LatticeCell.Height = LatticeCell.SizeMin.Height;
-                Parent.Height = (gRect.Height) * LatticeCell.SizeMin.Height + Parent.Height - ClientRectangle.Height;
+                Parent.Height = (gRect.Height + 1) * LatticeCell.SizeMin.Height + Parent.Height - Height;
             }
             Lattice.SetBounds(ClientRectangle);
             //
@@ -597,8 +646,8 @@ namespace FocusTree.UI
             int GraphCenterY = gRect.Top + gRect.Height * LatticeCell.Height / 2;
             int WidthCenterDiff = (Lattice.DrawRect.Left + Lattice.DrawRect.Width / 2) - GraphCenterX;
             int HeightCenterDiff = (Lattice.DrawRect.Top + Lattice.DrawRect.Height / 2) - GraphCenterY;
-            Lattice.OriginLeft = WidthCenterDiff - LatticeCell.NodePaddingWidth - LatticeCell.NodeWidth / 2;
-            Lattice.OriginTop = HeightCenterDiff - LatticeCell.NodePaddingHeight - LatticeCell.NodeHeight / 2;
+            Lattice.OriginLeft = WidthCenterDiff;
+            Lattice.OriginTop = HeightCenterDiff;
             Lattice.SetBounds(ClientRectangle);
             Lattice.Draw(gCore);
         }
