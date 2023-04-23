@@ -234,8 +234,8 @@ namespace FocusTree.UI
         public Rectangle GetGraphRealRect()
         {
             var rect = Graph.GetGraphMetaRect();
-            return new(rect.Left * LatticeCell.Width, 
-                rect.Top * LatticeCell.Height,
+            return new(rect.Left * LatticeCell.Width + Lattice.OriginLeft, 
+                rect.Top * LatticeCell.Height + Lattice.OriginTop,
                 rect.Width * LatticeCell.Width,
                 rect.Height * LatticeCell.Height
                 );
@@ -285,7 +285,9 @@ namespace FocusTree.UI
             g.DrawImage(BackImage, 0, 0, bkWidth, bkHeight);
             g.Flush(); g.Dispose();
         }
-        private void SetImageBackColorWhileResized()
+
+        Rectangle LastGraphRect;
+        private void RedrawBackgroundWithinGraphRealRect()
         {
             var prevSize = ControlResize.GetTag(this);
             var diffWidth = Width - prevSize.Width;
@@ -434,6 +436,7 @@ namespace FocusTree.UI
 
             Invalidate();
         }
+        Dictionary<int, Rectangle> LastCellRects = new();
         private void DragGraph(Point newPoint)
         {
             var diffInWidth = newPoint.X - DragMouseFlagPoint.X;
@@ -447,7 +450,20 @@ namespace FocusTree.UI
                 //Rectangle cutRect = new(Lattice.OriginLeft, Lattice.OriginTop, )
                 //gCore.DrawImage(ImageCacher, ClientRectangle, )
 #endif
-                UploadNodeMap();
+
+                DrawBackground(LastCellRects.Values.ToArray());
+                foreach (var id in GraphDrawer.NodeDrawerCatalog.Keys)
+                {
+                    LatticeCell cell = new(Graph.GetFocus(id));
+                    var rect = cell.RealRect;
+                    if (!LastCellRects.TryAdd(id, rect))
+                    {
+                        LastCellRects[id] = rect;
+                    }
+                }
+                
+                //UploadNodeMap();
+                LastGraphRect =  GetGraphRealRect();
                 Lattice.Draw(gCore);
                 DrawNodeMapInfo();
             }
