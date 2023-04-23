@@ -19,6 +19,10 @@ namespace FocusTree.UI.Graph
         /// </summary>
         public static string NodeFont { get; private set; } = "黑体";
         /// <summary>
+        /// 展示信息字体
+        /// </summary>
+        public static string InfoFont { get; private set; } = "仿宋";
+        /// <summary>
         /// 节点字体样式
         /// </summary>
         public static StringFormat NodeFontFormat { get; private set; } = new()
@@ -33,7 +37,7 @@ namespace FocusTree.UI.Graph
         /// <summary>
         /// 默认节点背景颜色
         /// </summary>
-        public static SolidBrush NodeBG_Normal { get; private set; } = new(Color.FromArgb(80, Color.Aqua));
+        public static SolidBrush NodeBG_Normal { get; private set; } = new(Color.FromArgb(100, Color.Cyan));
         /// <summary>
         /// 冲突节点的背景颜色
         /// </summary>
@@ -46,6 +50,7 @@ namespace FocusTree.UI.Graph
         /// 选中节点背景颜色
         /// </summary>
         public static SolidBrush NodeBG_Selecting { get; private set; } = new(Color.FromArgb(80, Color.BlueViolet));
+        public static int NodeShadowLength = 0;
         /// <summary>
         /// 节点连接线条（每个依赖组使用单独的颜色）
         /// </summary>
@@ -149,12 +154,14 @@ namespace FocusTree.UI.Graph
         {
             LatticeCell cell = new(focus);
             var rect = cell.InnerPartRealRects[LatticeCell.Parts.Node];
-            var testRect = cell.RealRect;
             if (!Lattice.RectWithin(rect, out var saveRect)) { return; }
             rect = saveRect;
-            g.FillRectangle(new SolidBrush(Color.White), rect);
+            var testRect = cell.RealRect;
+            Rectangle shadowRect = new(rect.Left + NodeShadowLength, rect.Top + NodeShadowLength, rect.Width, rect.Height);
+            g.FillRectangle(new SolidBrush(Color.White), shadowRect);
             g.FillRectangle(brush, rect);
-            //g.Flush();
+            if (testRect.Width < LatticeCell.SizeMax.Width / 2 || testRect.Height < LatticeCell.SizeMax.Height / 2) { return; }
+
             var name = focus.Name;
             var fontHeight = name.Length / 3;
             if (fontHeight == 1 && name.Length % 3 != 0) { fontHeight++; }
@@ -174,7 +181,7 @@ namespace FocusTree.UI.Graph
                 }
                 sName = sName[..^1];
             }
-            var font = new Font(NodeFont, fontSize, FontStyle.Regular, GraphicsUnit.Pixel);
+            var font = new Font(NodeFont, fontSize, FontStyle.Bold, GraphicsUnit.Pixel);
             g.DrawString(sName, font, NodeFG, rect, NodeFontFormat);
             g.Flush();
         }

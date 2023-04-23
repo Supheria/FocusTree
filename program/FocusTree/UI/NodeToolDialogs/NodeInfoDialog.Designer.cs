@@ -1,6 +1,6 @@
 ﻿namespace FocusTree.UI.NodeToolDialogs
 {
-    partial class InfoDialog : NodeToolDialog
+    partial class NodeInfoDialog : ToolDialog
     {
         /// <summary>
         /// Required designer variable.

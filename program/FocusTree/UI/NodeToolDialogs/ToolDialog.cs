@@ -1,6 +1,6 @@
 ﻿namespace FocusTree.UI.NodeToolDialogs
 {
-    public partial class NodeToolDialog : Form
+    public partial class ToolDialog : Form
     {
         internal GraphBox Display;
         /// <summary>
@@ -8,7 +8,7 @@
         /// </summary>
         internal float SizeRatio = 0.618f;
         internal float HeightMaxlRatio = 3f;
-        internal NodeToolDialog()
+        internal ToolDialog()
         {
             ResizeEnd += NodeToolDialog_ResizeEnd;
             SizeChanged += NodeToolDialog_SizeChanged;

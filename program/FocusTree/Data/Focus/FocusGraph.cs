@@ -7,6 +7,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TreeView;
 
 namespace FocusTree.Data.Focus
 {
@@ -39,7 +40,7 @@ namespace FocusTree.Data.Focus
         /// <summary>
         /// 分支数量
         /// </summary>
-        public int BranchesCount { get; private set; }
+        public int BranchesCount { get => GetBranches(GetRootNodes(), true, true).Count; }
         /// <summary>
         /// 节点id列表
         /// </summary>

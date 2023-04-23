@@ -74,9 +74,22 @@ namespace FocusTree.UI.Graph
         /// </summary>
         public static Pen NodePen = new(Color.FromArgb(150, Color.Orange), 1.5f);
         /// <summary>
+        /// 坐标辅助线绘制用笔
+        /// </summary>
+        public static Pen GuidePen = new Pen(Color.FromArgb(200, Color.Red), 0.5f);
+        /// <summary>
         /// 需要单独绘制的格元委托列表
         /// </summary>
         public static event CellDrawer Drawing;
+
+        #endregion
+
+        #region ==== 指示器 ====
+
+        /// <summary>
+        /// 是否绘制坐标辅助线
+        /// </summary>
+        public static bool DrawGuideLine = true;
         /// <summary>
         /// 是否绘制背景栅格
         /// </summary>
@@ -114,8 +127,6 @@ namespace FocusTree.UI.Graph
         /// <param name="g"></param>
         public static void Draw(Graphics g)
         {
-            //g.Clear(Color.White);
-
             Drawing?.Invoke(g);
 
             test.InfoText = $"{DrawRect}" +  Drawing?.GetInvocationList().Length;
@@ -130,11 +141,11 @@ namespace FocusTree.UI.Graph
                     }
                 }
             }
-#if DEBUG
-            var testPen = new Pen(Color.Red, 0.5f);
-            g.DrawLine(testPen, new(OriginLeft, DrawRect.Top), new(OriginLeft, DrawRect.Bottom));
-            g.DrawLine(testPen, new(DrawRect.Left, OriginTop), new(DrawRect.Right, OriginTop));
-#endif
+            if (DrawGuideLine)
+            {
+                g.DrawLine(GuidePen, new(OriginLeft, DrawRect.Top), new(OriginLeft, DrawRect.Bottom));
+                g.DrawLine(GuidePen, new(DrawRect.Left, OriginTop), new(DrawRect.Right, OriginTop));
+            }
             g.Flush();
         }
 

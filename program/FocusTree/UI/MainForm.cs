@@ -16,8 +16,6 @@ namespace FocusTree.UI
             InitializeComponent();
             UpdateText();
 
-            
-            Shown += MainForm_Shown;
             SizeChanged += MainForm_ResizeEnd;
 
             foreach (var name in Display.ToolDialogs.Keys)
@@ -48,15 +46,7 @@ namespace FocusTree.UI
             Display.Left = ClientRectangle.Left;
             Display.Top = ClientRectangle.Top + MainForm_Menu.Height;
             Display.Width = ClientRectangle.Width;
-            Display.Height = ClientRectangle.Height - MainForm_Menu.Height;
-        }
-
-        private void MainForm_Shown(object sender, EventArgs e)
-        {
-            //Display.DrawBackground(Display.ClientRectangle);
-            //Lattice.SetBounds(Display.ClientRectangle);
-            //Lattice.Draw(Display.gCore);
-            //Display.Invalidate();
+            Display.Height = ClientRectangle.Height - MainForm_Menu.Height - MainForm_StatusStrip.Height;
         }
 
         #region ==== File ====

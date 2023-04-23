@@ -2,14 +2,14 @@ using FocusTree.Data;
 
 namespace FocusTree.UI.NodeToolDialogs
 {
-    public partial class InfoDialog : NodeToolDialog, IHistoryable
+    public partial class NodeInfoDialog : ToolDialog, IHistoryable
     {
         bool DoFontScale = false;
         bool DoTextEditCheck = false;
 
         #region ==== 初始化和更新 ====
 
-        internal InfoDialog(GraphBox display)
+        internal NodeInfoDialog(GraphBox display)
         {
             Display = display;
             InitializeComponent();
