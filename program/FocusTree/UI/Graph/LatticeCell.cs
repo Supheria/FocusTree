@@ -15,7 +15,7 @@ namespace FocusTree.UI.Graph
         /// </summary>
         public static int Width
         {
-            get => width = width < SizeMin.Width ? SizeMin.Width : width > SizeMax.Width ? SizeMax.Width : width;
+            get => width;
             set => width = value < SizeMin.Width ? SizeMin.Width : value > SizeMax.Width ? SizeMax.Width : value;
         }
         static int width;
@@ -24,7 +24,7 @@ namespace FocusTree.UI.Graph
         /// </summary>
         public static int Height
         {
-            get => height = height < SizeMin.Height ? SizeMin.Height : height > SizeMax.Height ? SizeMax.Height : height;
+            get => height;
             set => height = value < SizeMin.Height ? SizeMin.Height : value > SizeMax.Height ? SizeMax.Height : value;
         }
         static int height;

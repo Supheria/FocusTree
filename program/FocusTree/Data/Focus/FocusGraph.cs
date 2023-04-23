@@ -375,7 +375,7 @@ namespace FocusTree.Data.Focus
                 right = point.X > right ? point.X : right;
                 bottom = point.Y > bottom ? point.Y : bottom;
             }
-            return new(left, top, right - left, bottom - top);
+            return new(left, top, right - left + 1, bottom - top + 1);
         }
         /// <summary>
         /// 判断给定栅格化坐标是否存在于节点列表中

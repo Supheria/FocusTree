@@ -152,13 +152,9 @@ namespace FocusTree.UI.Graph
             var testRect = cell.RealRect;
             if (!Lattice.RectWithin(rect, out var saveRect)) { return; }
             rect = saveRect;
-            if (testRect.Width < LatticeCell.SizeMax.Width / 2 || testRect.Height < LatticeCell.SizeMax.Height / 2)
-            {
-                g.FillRectangle(new SolidBrush(Color.White), rect);
-                g.FillRectangle(brush, rect);
-                g.Flush();
-                return;
-            }
+            g.FillRectangle(new SolidBrush(Color.White), rect);
+            g.FillRectangle(brush, rect);
+            //g.Flush();
             var name = focus.Name;
             var fontHeight = name.Length / 3;
             if (fontHeight == 1 && name.Length % 3 != 0) { fontHeight++; }
@@ -178,7 +174,7 @@ namespace FocusTree.UI.Graph
                 }
                 sName = sName[..^1];
             }
-            var font = new Font(NodeFont, fontSize, FontStyle.Bold, GraphicsUnit.Pixel);
+            var font = new Font(NodeFont, fontSize, FontStyle.Regular, GraphicsUnit.Pixel);
             g.DrawString(sName, font, NodeFG, rect, NodeFontFormat);
             g.Flush();
         }

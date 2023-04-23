@@ -114,7 +114,7 @@ namespace FocusTree.UI.Graph
         /// <param name="g"></param>
         public static void Draw(Graphics g)
         {
-            g.Clear(Color.White);
+            //g.Clear(Color.White);
 
             Drawing?.Invoke(g);
 
