@@ -30,7 +30,7 @@ namespace FocusTree.UI
                 this.MainForm_Menu_window.DropDownItems.Add(item);
             }
 #if DEBUG
-            Display.LoadGraph("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\program\\FILES\\隐居村落_测试连线用.xml");
+            Display.LoadGraph("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\program\\FILES\\神佑村落.xml");
 
             //WindowState = FormWindowState.Minimized;
             //Display.SaveAsNew("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\国策\\国策测试\\test.xml");
@@ -46,9 +46,9 @@ namespace FocusTree.UI
         private void MainForm_ResizeEnd(object sender, EventArgs e)
         {
             Display.Left = ClientRectangle.Left;
-            Display.Top = ClientRectangle.Top;
+            Display.Top = ClientRectangle.Top + MainForm_Menu.Height;
             Display.Width = ClientRectangle.Width;
-            Display.Height = ClientRectangle.Height;
+            Display.Height = ClientRectangle.Height - MainForm_Menu.Height;
         }
 
         private void MainForm_Shown(object sender, EventArgs e)

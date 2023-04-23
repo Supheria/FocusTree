@@ -114,6 +114,10 @@ namespace FocusTree.UI
         /// 背景图片在当前 Client Rect 范围中的缓存
         /// </summary>
         Image BackImageCacher;
+        /// <summary>
+        /// 光标灵敏度（移动、放大）
+        /// </summary>
+        static int CursorSensibility = 15;
 
         #endregion
 
@@ -441,17 +445,17 @@ namespace FocusTree.UI
         {
             var diffInWidth = newPoint.X - DragMouseFlagPoint.X;
             var diffInHeight = newPoint.Y - DragMouseFlagPoint.Y;
-            if (Math.Abs(diffInWidth) > 0 || Math.Abs(diffInHeight) > 0)
+            if (Math.Abs(diffInWidth) > CursorSensibility || Math.Abs(diffInHeight) > CursorSensibility)
             {
-                Lattice.OriginLeft += newPoint.X - DragMouseFlagPoint.X;
-                Lattice.OriginTop += newPoint.Y - DragMouseFlagPoint.Y;
+                Lattice.OriginLeft += (newPoint.X - DragMouseFlagPoint.X) / CursorSensibility * LatticeCell.Width;
+                Lattice.OriginTop += (newPoint.Y - DragMouseFlagPoint.Y) / CursorSensibility * LatticeCell.Height;
                 DragMouseFlagPoint = newPoint;
 #if BUILD
                 //Rectangle cutRect = new(Lattice.OriginLeft, Lattice.OriginTop, )
                 //gCore.DrawImage(ImageCacher, ClientRectangle, )
 #endif
 
-                DrawBackground(LastCellRects.Values.ToArray());
+                DrawBackground(LastGraphRect);
                 foreach (var id in GraphDrawer.NodeDrawerCatalog.Keys)
                 {
                     LatticeCell cell = new(Graph.GetFocus(id));
@@ -566,6 +570,19 @@ namespace FocusTree.UI
             LatticeCell.Height += args.Delta / 100 * Lattice.DrawRect.Width / 200;
 
             Lattice.SetBounds(ClientRectangle);
+            DrawBackground(LastCellRects.Values.ToArray());
+            foreach (var id in GraphDrawer.NodeDrawerCatalog.Keys)
+            {
+                LatticeCell cell = new(Graph.GetFocus(id));
+                var rect = cell.RealRect;
+                if (!LastCellRects.TryAdd(id, rect))
+                {
+                    LastCellRects[id] = rect;
+                }
+            }
+
+            //UploadNodeMap();
+            LastGraphRect = GetGraphRealRect();
 #if BUILD
 #else
             Lattice.Draw(gCore);
