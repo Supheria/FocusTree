@@ -66,7 +66,7 @@ class Test
                 color++;
             }
             //var brush = id == SelectedNode ? GraphDrawer.NodeBG_Selected : GraphDrawer.NodeBG_Normal;
-            GraphDrawer.UploadNodeMap(focus);
+            //GraphDrawer.UploadNodeMap(focus);
         }
     }
 }
