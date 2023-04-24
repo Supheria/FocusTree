@@ -8,7 +8,7 @@ namespace FocusTree.UI.Graph
     /// 绘制栅格时，绘制非循环节点的委托类型
     /// </summary>
     /// <param name="g">传入栅格的 GDI</param>
-    public delegate void CellDrawer(Bitmap image);
+    public delegate void CellDrawer();
     /// <summary>
     /// 栅格
     /// </summary>
@@ -39,11 +39,11 @@ namespace FocusTree.UI.Graph
         /// <summary>
         /// 栅格绘图区域与放置区域的宽的差值的一半
         /// </summary>
-        static int DeviDiffInDrawRectWidth;
+        public static int DeviDiffInDrawRectWidth;
         /// <summary>
         /// 栅格绘图区域与放置区域的高的差值的一半
         /// </summary>
-        static int DeviDiffInDrawRectHeight;
+        public static int DeviDiffInDrawRectHeight;
         /// <summary>
         /// 栅格坐标系原点 x 坐标
         /// </summary>
@@ -94,6 +94,22 @@ namespace FocusTree.UI.Graph
         /// 是否绘制背景栅格
         /// </summary>
         public static bool DrawBackLattice = false;
+        /// <summary>
+        /// 上一次绘图时的栅格原点横坐标
+        /// </summary>
+        public static int LastOriginLeft;
+        /// <summary>
+        /// 上一次绘图时的栅格原点纵坐标
+        /// </summary>
+        public static int LastOriginTop;
+        /// <summary>
+        /// 上一次绘图时的格元宽
+        /// </summary>
+        public static int LastCellWidth;
+        /// <summary>
+        /// 上一次绘图时的格元高
+        /// </summary>
+        public static int LastCellHeight;
 
         #endregion
 
@@ -125,9 +141,9 @@ namespace FocusTree.UI.Graph
         /// 绘制无限制栅格，并调用绘制格元的委托
         /// </summary>
         /// <param name="g"></param>
-        public static void Draw(Image image)
+        public static void Draw(Graphics g)
         {
-            Drawing?.Invoke((Bitmap)image);
+            Drawing?.Invoke();
 
             test.InfoText = $"{DrawRect}" + Drawing?.GetInvocationList().Length;
 
@@ -137,16 +153,20 @@ namespace FocusTree.UI.Graph
                 {
                     for (int j = 0; j < RowNumber; j++)
                     {
-                        //DrawLoopCell(g, i, j);
+                        DrawLoopCell(g, i, j);
                     }
                 }
             }
             if (DrawGuideLine)
             {
-                //g.DrawLine(GuidePen, new(OriginLeft, DrawRect.Top), new(OriginLeft, DrawRect.Bottom));
-                //g.DrawLine(GuidePen, new(DrawRect.Left, OriginTop), new(DrawRect.Right, OriginTop));
+                g.DrawLine(GuidePen, new(OriginLeft, DrawRect.Top), new(OriginLeft, DrawRect.Bottom));
+                g.DrawLine(GuidePen, new(DrawRect.Left, OriginTop), new(DrawRect.Right, OriginTop));
             }
-            //g.Flush();
+            g.Flush();
+            LastOriginLeft = OriginLeft;
+            LastOriginTop = OriginTop;
+            LastCellWidth = LatticeCell.Width;
+            LastCellHeight = LatticeCell.Height;
         }
         /// <summary>
         /// 清空绘制委托

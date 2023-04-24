@@ -8,50 +8,41 @@
         /// <summary>
         /// 栅格化坐标
         /// </summary>
-        public Point LatticedPoint;
+        public Point LatticedPoint = new();
         /// <summary>
         /// 节点ID
         /// </summary>
-        public int ID;
+        public int ID = 0;
         /// <summary>
         /// 国策名称
         /// </summary>
-        public string Name;
+        public string Name = string.Empty;
         /// <summary>
         /// 实施国策所需的天数
         /// </summary>
-        public int Duration;
+        public int Duration = 0;
         /// <summary>
         /// 国策描述
         /// </summary>
-        public string Descript;
+        public string Descript = string.Empty;
         /// <summary>
         /// 备注
         /// </summary>
-        public string Ps;
+        public string Ps = string.Empty;
         /// <summary>
         /// 字段是否以 * 开头
         /// </summary>
-        public bool BeginWithStar;
+        public bool BeginWithStar = false;
         /// <summary>
         /// 原始效果语句
         /// </summary>
-        public List<string> RawEffects;
+        public List<string> RawEffects = new();
         /// <summary>
         /// 依赖组
         /// </summary>
-        public List<HashSet<int>> Requires;
-        public FocusData(int id, string name, bool beginWithStar, int duration, string descript, string ps, Point latticedPoint, List<string> rawEffects, List<HashSet<int>> requires)
+        public List<HashSet<int>> Requires = new();
+        public FocusData()
         {
-            ID = id;
-            Name = name;
-            BeginWithStar = beginWithStar;
-            Duration = duration;
-            Descript = descript;
-            Ps = ps;
-            LatticedPoint = latticedPoint;
-            RawEffects = rawEffects;
-            Requires = requires;
         }
     }
 }

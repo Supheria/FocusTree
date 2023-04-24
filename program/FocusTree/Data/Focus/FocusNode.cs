@@ -2,6 +2,7 @@
 #define RAW_EFFECTS
 using FocusTree.Data.Hoi4Object;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace FocusTree.Data.Focus
 {
@@ -46,21 +47,18 @@ namespace FocusTree.Data.Focus
         public void ReadXml(XmlReader reader)
         {
             Effects = new();
-            List<HashSet<int>> requires = new();
-            List<string> rawEffects = new();
+            FData = new();
 
             //==== 读取 Data ====//
-            var id = reader.GetAttribute("ID");
-            if (id == null) { throw new Exception("缺失必要的节点id"); }
-            var name = reader.GetAttribute("Name");
-            var star = reader.GetAttribute("Star");
-            var duration = reader.GetAttribute("Duration");
-            var descript = reader.GetAttribute("Descript");
-            var ps = reader.GetAttribute("Ps.");
+            FData.ID = int.Parse(reader.GetAttribute("ID"));
+            FData.Name = reader.GetAttribute("Name");
+            FData.BeginWithStar = bool.Parse(reader.GetAttribute("Star"));
+            FData.Duration = int.Parse(reader.GetAttribute("Duration"));
+            FData.Descript = reader.GetAttribute("Descript");
+            FData.Ps = reader.GetAttribute("Ps.");
             var pair = ArrayString.Reader(reader.GetAttribute("Point"));
-            Point latticedPoint = new();
-            if (pair == null || pair.Length != 2) { latticedPoint = new(0, 0); }
-            else { latticedPoint = new(int.Parse(pair[0]), int.Parse(pair[1])); }
+            if (pair == null || pair.Length != 2) { FData.LatticedPoint = new(0, 0); }
+            else { FData.LatticedPoint = new(int.Parse(pair[0]), int.Parse(pair[1])); }
 
             while (reader.Read())
             {
@@ -76,39 +74,29 @@ namespace FocusTree.Data.Focus
                 //==== 读取 Requires ====//
                 if (reader.Name == "Requires")
                 {
-                    ReadRequires(reader, ref requires);
+                    ReadRequires(reader, ref FData.Requires);
                 }
                 //==== 读取 RawEffects ====//
                 if (reader.Name == "RawEffects")
                 {
-                    ReadRawEffects(reader, ref rawEffects);
+                    ReadRawEffects(reader, ref FData.RawEffects);
                 }
             }
-            FData = new(
-                int.Parse(id),
-                name ?? string.Empty,
-                bool.Parse(star),
-                int.Parse(duration),
-                descript ?? string.Empty,
-                ps ?? string.Empty,
-                latticedPoint,
-                rawEffects,
-                requires
-                );
-            FormatRawEffects(rawEffects, int.Parse(id));
+
+            FormatRawEffects(FData.RawEffects, FData.ID);
         }
         [Obsolete("临时使用，作为转换语句格式的过渡")]
         private void FormatRawEffects(List<string> rawEffects, int id)
         {
             foreach (var raw in rawEffects)
             {
-                Program.testInfo.total++;
+                //Program.testInfo.total++;
                 if (!FormatRawEffectSentence.Formatter(raw, out var formattedList))
                 {
 #if RAW_EFFECTS
-                    Program.testInfo.erro++;
-                    Program.testInfo.good = Program.testInfo.total - Program.testInfo.erro;
-                    Program.testInfo.InfoText += $"{id}. {raw}\n";
+                    //Program.testInfo.erro++;
+                    //Program.testInfo.good = Program.testInfo.total - Program.testInfo.erro;
+                    //Program.testInfo.InfoText += $"{id}. {raw}\n";
 #endif
                     continue;
                 }
