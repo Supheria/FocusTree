@@ -1,11 +1,4 @@
-﻿using FocusTree.Data.Hoi4Object;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FocusTree.Data.Focus
+﻿namespace FocusTree.Data.Focus
 {
     /// <summary>
     /// 国策数据
@@ -48,15 +41,15 @@ namespace FocusTree.Data.Focus
         /// 依赖组
         /// </summary>
         public List<HashSet<int>> Requires;
-        public FocusData(int id, string name, bool beginWithStar, int duration, string descript, string ps, Point latticedPoint, List<string> rawEffects, List<HashSet<int>> requires) 
-        { 
-            ID = id; 
-            Name = name; 
-            BeginWithStar = beginWithStar; 
-            Duration = duration; 
-            Descript = descript; 
+        public FocusData(int id, string name, bool beginWithStar, int duration, string descript, string ps, Point latticedPoint, List<string> rawEffects, List<HashSet<int>> requires)
+        {
+            ID = id;
+            Name = name;
+            BeginWithStar = beginWithStar;
+            Duration = duration;
+            Descript = descript;
             Ps = ps;
-            LatticedPoint = latticedPoint; 
+            LatticedPoint = latticedPoint;
             RawEffects = rawEffects;
             Requires = requires;
         }

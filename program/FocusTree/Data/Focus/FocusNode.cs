@@ -1,8 +1,6 @@
 ﻿//#define FORMAT_TEST
 #define RAW_EFFECTS
 using FocusTree.Data.Hoi4Object;
-using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
 using System.Xml;
 
 namespace FocusTree.Data.Focus
@@ -28,7 +26,7 @@ namespace FocusTree.Data.Focus
             set { value.ForEach(x => effects.Add(Sentence.FromString(x))); }
         }
         public List<Sentence> effects = new();
-        
+
 
         #endregion
 

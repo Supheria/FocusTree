@@ -1,5 +1,4 @@
 ﻿using FocusTree.Data.Focus;
-using System.Windows.Forms;
 
 namespace FocusTree.UI.Graph
 {
@@ -235,7 +234,7 @@ namespace FocusTree.UI.Graph
             var latticedLeft = widthDiff / Width;
             var latticedTop = heightDiff / Height;
             if (widthDiff < 0) { latticedLeft--; }
-            if (heightDiff < 0) {latticedTop--; }
+            if (heightDiff < 0) { latticedTop--; }
             return new(latticedLeft, latticedTop);
         }
     }

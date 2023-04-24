@@ -8,7 +8,7 @@ namespace FocusTree.UI.Graph
     /// 绘制栅格时，绘制非循环节点的委托类型
     /// </summary>
     /// <param name="g">传入栅格的 GDI</param>
-    public delegate void CellDrawer(Graphics g);
+    public delegate void CellDrawer(Bitmap image);
     /// <summary>
     /// 栅格
     /// </summary>
@@ -125,11 +125,11 @@ namespace FocusTree.UI.Graph
         /// 绘制无限制栅格，并调用绘制格元的委托
         /// </summary>
         /// <param name="g"></param>
-        public static void Draw(Graphics g)
+        public static void Draw(Image image)
         {
-            Drawing?.Invoke(g);
+            Drawing?.Invoke((Bitmap)image);
 
-            test.InfoText = $"{DrawRect}" +  Drawing?.GetInvocationList().Length;
+            test.InfoText = $"{DrawRect}" + Drawing?.GetInvocationList().Length;
 
             if (DrawBackLattice)
             {
@@ -137,16 +137,23 @@ namespace FocusTree.UI.Graph
                 {
                     for (int j = 0; j < RowNumber; j++)
                     {
-                        DrawLoopCell(g, i, j);
+                        //DrawLoopCell(g, i, j);
                     }
                 }
             }
             if (DrawGuideLine)
             {
-                g.DrawLine(GuidePen, new(OriginLeft, DrawRect.Top), new(OriginLeft, DrawRect.Bottom));
-                g.DrawLine(GuidePen, new(DrawRect.Left, OriginTop), new(DrawRect.Right, OriginTop));
+                //g.DrawLine(GuidePen, new(OriginLeft, DrawRect.Top), new(OriginLeft, DrawRect.Bottom));
+                //g.DrawLine(GuidePen, new(DrawRect.Left, OriginTop), new(DrawRect.Right, OriginTop));
             }
-            g.Flush();
+            //g.Flush();
+        }
+        /// <summary>
+        /// 清空绘制委托
+        /// </summary>
+        public static void DrawingClear()
+        {
+            Drawing = null;
         }
 
         #endregion
@@ -335,46 +342,6 @@ namespace FocusTree.UI.Graph
             }
             saveLine = (new(x, y1), new(x, y2));
             return true;
-        }
-
-        #endregion
-
-        #region ==== 绘图 ====
-
-        /// <summary>
-        /// 绘制栅格时绘制水平线（添加到委托）
-        /// </summary>
-        /// <param name="x">端点的横坐标数对</param>
-        /// <param name="y">端点的纵坐标</param>
-        /// <param name="pen"></param>
-        public static void DrawLineWhileDrawing((int, int) x, int y, Pen pen)
-        {
-            if (LineWithin(x, y, pen.Width, out var saveLine))
-            {
-                var line = saveLine;
-                Drawing += (g) => g.DrawLine(pen, saveLine.Item1, saveLine.Item2);
-            }
-        }
-        /// <summary>
-        /// 绘制栅格时绘制垂直线（添加到委托）
-        /// </summary>
-        /// <param name="x">端点的横坐标</param>
-        /// <param name="y">端点的纵坐标数对</param>
-        /// <param name="pen"></param>
-        public static void DrawLineWhileDrawing(int x, (int, int)y, Pen pen)
-        {
-            if (LineWithin(x, y, pen.Width, out var saveLine))
-            {
-                var line = saveLine;
-                Drawing += (g) => g.DrawLine(pen, line.Item1, line.Item2);
-            }
-        }
-        /// <summary>
-        /// 清空绘制委托
-        /// </summary>
-        public static void DrawingClear()
-        {
-            Drawing = null;
         }
 
         #endregion

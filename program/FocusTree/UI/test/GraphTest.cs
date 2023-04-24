@@ -1,13 +1,4 @@
 ﻿using FocusTree.UI.Graph;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace FocusTree.UI
 {
@@ -76,8 +67,8 @@ namespace FocusTree.UI
             GraphRect = gRect;
             if (gBox.Width <= 0 || gBox.Height <= 0) return;
             var g = Graphics.FromImage(ImageCacher);
-            Lattice.Draw(g);
+            //Lattice.Draw(g);
         }
-        
+
     }
 }

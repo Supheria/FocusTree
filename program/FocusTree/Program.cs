@@ -6,7 +6,6 @@ using FocusTree.IO;
 using FocusTree.UI;
 using FocusTree.UI.Graph;
 using FocusTree.UI.test;
-using static System.ComponentModel.Design.ObjectSelectorEditor;
 
 internal static class Program
 {

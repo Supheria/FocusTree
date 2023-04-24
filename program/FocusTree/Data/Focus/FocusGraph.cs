@@ -1,13 +1,10 @@
 #define DEBUG
 using FocusTree.IO;
 using FocusTree.IO.FileManege;
-using Newtonsoft.Json;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
-using System.Xml.Linq;
 using System.Xml.Schema;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TreeView;
 
 namespace FocusTree.Data.Focus
 {
