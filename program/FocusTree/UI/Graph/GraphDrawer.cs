@@ -636,20 +636,25 @@ namespace FocusTree.UI.Graph
         }
         public static void RedrawLastDrawnCells(Image image)
         {
+            DateTime t1 = DateTime.Now;
+            
             if (!ShowBackGroung)
             {
                 return;
             }
-            //PointBitmap pImage = new((Bitmap)image);
-            //pImage.LockBits();
-            //PointBitmap pCacher = new(BkCacher);
-            //pCacher.LockBits();
+            PointBitmap pImage = new((Bitmap)image);
+            pImage.LockBits();
+            PointBitmap pCacher = new(BkCacher);
+            pCacher.LockBits();
             foreach (var point in LastDrawnCells)
             {
                 LatticeCell cell = new(point.X, point.Y);
-                var rect = cell.RealRect;
-                rect.X -= Lattice.OriginLeft - Lattice.LastOriginLeft;
-                rect.Y -= Lattice.OriginTop - Lattice.LastOriginTop;
+                var left = Lattice.LastCellWidth * point.X + Lattice.LastOriginLeft - Lattice.DrawRect.X + Lattice.DeviDiffInDrawRectWidth; ;
+                var top = Lattice.LastCellHeight * point.Y + Lattice.LastOriginTop - Lattice.DrawRect.Y + Lattice.DeviDiffInDrawRectHeight;
+                Rectangle rect = new(left, top, Lattice.LastCellWidth, Lattice.LastCellHeight);
+                //var rect = cell.RealRect;
+                //rect.X -= Lattice.OriginLeft - Lattice.LastOriginLeft;
+                //rect.Y -= Lattice.OriginTop - Lattice.LastOriginTop;
                 if (!Lattice.RectWithin(rect, out rect)) { return; }
                 
                 for (int i = 0; i < rect.Width; i++)
@@ -658,14 +663,18 @@ namespace FocusTree.UI.Graph
                     {
                         var x = rect.Left + i;
                         var y = rect.Top + j;
-                        var pixel = BkCacher.GetPixel(x, y);
-                        ((Bitmap)image).SetPixel(x, y, pixel);
+                        var pixel = pCacher.GetPixel(x, y);
+                        (pImage).SetPixel(x, y, pixel);
                     }
                 }
                 LastDrawnCells.Remove(point);
             }
-            //pCacher.UnlockBits();
-            //pImage.UnlockBits();
+            pCacher.UnlockBits();
+            pImage.UnlockBits();
+            DateTime t2 = DateTime.Now;
+            TimeSpan ts = t2 - t1;
+            test.Show();
+            test.InfoText = $"{ts.TotalMilliseconds}";
         }
     }
 }

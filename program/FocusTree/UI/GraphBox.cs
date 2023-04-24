@@ -165,29 +165,29 @@ namespace FocusTree.UI
         /// 根据给定矩形将背景图片缓存的矩形部分填充到 Image，或填充空白到指定区域
         /// </summary>
         /// <param name="rect"></param>
-        //public void RedrawBackground(Rectangle rect)
-        //{
-        //    RedrawBackground(new List<Rectangle>() { rect });
-        //}
+        public void RedrawBackground(Rectangle rect)
+        {
+            RedrawBackground(new List<Rectangle>() { rect });
+        }
         /// <summary>
         /// 根据给定矩形数组将背景图片缓存的矩形部分填充到 Image，或填充空白到指定区域
         /// </summary>
-        //public void RedrawBackground(List<Rectangle> rects)
-        //{
-        //    if (rects == null || rects.Count == 0) { return; }
-        //    foreach (var rect in rects)
-        //    {
-        //        if (GraphDrawer.ShowBackGroung)
-        //        {
-        //            gCore.DrawImage(GraphDrawer.GetBackImageCacher(Size), rect, rect, GraphicsUnit.Pixel);
-        //        }
-        //        else
-        //        {
-        //            gCore.FillRectangle(new SolidBrush(Color.White), rect);
-        //        }
-        //    }
-        //    gCore.Flush();
-        //}
+        public void RedrawBackground(List<Rectangle> rects)
+        {
+            if (rects == null || rects.Count == 0) { return; }
+            foreach (var rect in rects)
+            {
+                if (GraphDrawer.ShowBackGroung)
+                {
+                    gCore.DrawImage(GraphDrawer.GetBackImageCacher(Size), rect, rect, GraphicsUnit.Pixel);
+                }
+                else
+                {
+                    gCore.FillRectangle(new SolidBrush(Color.White), rect);
+                }
+            }
+            gCore.Flush();
+        }
         /// <summary>
         /// 将节点绘制上载到栅格绘图委托（初始化节点列表时仅需上载第一次，除非节点列表或节点关系或节点位置信息发生变更才重新上载）
         /// </summary>
@@ -298,7 +298,7 @@ namespace FocusTree.UI
             }
             if (GraphDrawer.ShowBackGroung) { GraphDrawer.SetBackImageCacher(ClientSize); }
             Lattice.SetBounds(ClientRectangle);
-            //GraphDrawer.RedrawLastDrawnCells(Image);
+            RedrawBackground(ClientRectangle);
             SetLastDrawArea();
             Lattice.Draw(Image);
             Invalidate();
@@ -555,9 +555,9 @@ namespace FocusTree.UI
             Lattice.SetBounds(ClientRectangle);
 
             GraphDrawer.RedrawLastDrawnCells(Image);
-            SetLastDrawArea();
+            //SetLastDrawArea();
             Lattice.Draw(Image);
-            DrawNodeMapInfo();
+            //DrawNodeMapInfo();
             Invalidate();
             Parent.UpdateText("打开节点选项");
         }

@@ -39,11 +39,11 @@ namespace FocusTree.UI.Graph
         /// <summary>
         /// 栅格绘图区域与放置区域的宽的差值的一半
         /// </summary>
-        static int DeviDiffInDrawRectWidth;
+        public static int DeviDiffInDrawRectWidth;
         /// <summary>
         /// 栅格绘图区域与放置区域的高的差值的一半
         /// </summary>
-        static int DeviDiffInDrawRectHeight;
+        public static int DeviDiffInDrawRectHeight;
         /// <summary>
         /// 栅格坐标系原点 x 坐标
         /// </summary>
@@ -102,6 +102,14 @@ namespace FocusTree.UI.Graph
         /// 上一次绘图时的栅格原点纵坐标
         /// </summary>
         public static int LastOriginTop;
+        /// <summary>
+        /// 上一次绘图时的格元宽
+        /// </summary>
+        public static int LastCellWidth;
+        /// <summary>
+        /// 上一次绘图时的格元高
+        /// </summary>
+        public static int LastCellHeight;
 
         #endregion
 
@@ -157,6 +165,8 @@ namespace FocusTree.UI.Graph
             //g.Flush();
             LastOriginLeft = OriginLeft;
             LastOriginTop = OriginTop;
+            LastCellWidth = LatticeCell.Width;
+            LastCellHeight = LatticeCell.Height;
         }
         /// <summary>
         /// 清空绘制委托
