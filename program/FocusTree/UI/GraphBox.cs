@@ -497,7 +497,7 @@ namespace FocusTree.UI
             if (Lattice.RectWithin(CellCursorOn.InnerPartRealRects[part], out var saveRect))
             {
                 var rect = saveRect;
-                //LastCellDrawer = (g) => g.FillRectangle(brush, rect);
+                LastCellDrawer = () => gCore.FillRectangle(brush, rect);
             }
             Lattice.Drawing += LastCellDrawer;
             RedrawBackground(LastDrawArea);
@@ -535,6 +535,8 @@ namespace FocusTree.UI
                     DragNode_Flag = false;
                     Lattice.DrawBackLattice = false;
                     Lattice.Drawing -= LastCellDrawer;
+                    Lattice.Drawing -= cache;
+                    Lattice.Drawing += cache;
                     RedrawBackground(LastDrawArea);
                     SetLastDrawArea();
                     Lattice.Draw(gCore);

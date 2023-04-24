@@ -72,12 +72,12 @@ namespace FocusTree.UI.Graph
         /// <summary>
         /// 节点连接线条（每个依赖组使用单独的颜色）
         /// </summary>
-        public static Color[] NodeRequire { get; private set; } = new Color[]{
-            Color.FromArgb(100, Color.Cyan),
-            Color.FromArgb(100, Color.Yellow),
-            Color.FromArgb(100, Color.Green),
-            Color.FromArgb(100, Color.Orange),
-            Color.FromArgb(100, Color.Purple)
+        public static Pen[] NodeRequire { get; private set; } = new Pen[]{
+            new(Color.FromArgb(100, Color.Cyan), 2),
+            new(Color.FromArgb(100, Color.Yellow), 2),
+            new(Color.FromArgb(100, Color.Green), 2),
+            new(Color.FromArgb(100, Color.Orange), 2),
+            new(Color.FromArgb(100, Color.Purple), 2)
         };
         /// <summary>
         /// 节点绘制委托列表
@@ -448,7 +448,7 @@ namespace FocusTree.UI.Graph
             Lattice.Drawing += LineDrawerCatalog[ID] = () => DrawLines((Bitmap)image, NodeRequire[penIndex], start.LatticedPoint, end.LatticedPoint);
 
         }
-        public static void DrawLines(Bitmap image, Color color, Point startLoc, Point endLoc)
+        public static void DrawLines(Bitmap image, Pen pen, Point startLoc, Point endLoc)
         {
             var widthDiff = endLoc.X - startLoc.X;
             var heightDiff = startLoc.Y - endLoc.Y;
@@ -463,7 +463,7 @@ namespace FocusTree.UI.Graph
             cell.LatticedTop -= halfHeight;
             var y2 = cell.RealTop + paddingHeight / 2;
             var x = cell.NodeRealLeft + nodeWidth / 2;
-            DrawLine(image, x, (y1, y2), color);
+            DrawLine(image, x, (y1, y2), pen);
             //
             // 横线
             //
@@ -471,7 +471,7 @@ namespace FocusTree.UI.Graph
             {
                 cell.LatticedLeft += widthDiff;
                 var x2 = cell.NodeRealLeft + nodeWidth / 2;
-                DrawLine(image, (x, x2), y2, color);
+                DrawLine(image, (x, x2), y2, pen);
             }
             //
             // 竖线2
@@ -481,80 +481,74 @@ namespace FocusTree.UI.Graph
             cell.LatticedTop -= leaveHeight;
             y2 = cell.RealTop;
             x = cell.NodeRealLeft + nodeWidth / 2;
-            DrawLine(image, x, (y1, y2), color);
+            DrawLine(image, x, (y1, y2), pen);
         }
-        private static void DrawLine(Bitmap image, int x, (int, int) y, Color color)
+        private static void DrawLine(Bitmap image, int x, (int, int) y, Pen pen)
         {
             Rectangle lineRect = new(x - PenWidth / 2, Math.Min(y.Item1, y.Item2), PenWidth, Math.Abs(y.Item1 - y.Item2));
             if (!Lattice.RectWithin(lineRect, out var rect)) { return; }
+            if (!ShowBackGroung)
+            {
+                if (Lattice.LineWithin(x, y, pen.Width, out var line))
+                {
+                    var g = Graphics.FromImage(image);
+                    g.DrawLine(pen, line.Item1, line.Item2);
+                    g.Flush(); g.Dispose();
+                }
+                return;
+            }
             PointBitmap pImage = new(image);
             pImage.LockBits();
             PointBitmap pInverseCacher = new(BkInverseCacher);
             pInverseCacher.LockBits();
-            if (ShowBackGroung)
+            for (int j = 0; j < rect.Height; j++)
             {
-                for (int j = 0; j < rect.Height; j++)
-                {
-                    var left = rect.Left;
-                    var top = rect.Top + j;
-                    var pixel = pInverseCacher.GetPixel(left, top);
-                    pImage.SetPixel(left, top, pixel);
-                }
-                for (int j = 0; j < rect.Height; j++)
-                {
-                    var right = rect.Right;
-                    var top = rect.Top + j;
-                    var pixel = pInverseCacher.GetPixel(right, top);
-                    pImage.SetPixel(right, top, pixel);
-                }
+                var left = rect.Left;
+                var top = rect.Top + j;
+                var pixel = pInverseCacher.GetPixel(left, top);
+                pImage.SetPixel(left, top, pixel);
             }
-            else
+            for (int j = 0; j < rect.Height; j++)
             {
-                for (int i = 0; i < rect.Height; i++)
-                {
-                    for(int j = 0; j < rect.Height; j++)
-                    {
-                        pImage.SetPixel(rect.Left + i, rect.Top + j, color);
-                    }
-                }
+                var right = rect.Right;
+                var top = rect.Top + j;
+                var pixel = pInverseCacher.GetPixel(right, top);
+                pImage.SetPixel(right, top, pixel);
             }
             pInverseCacher.UnlockBits();
             pImage.UnlockBits();
         }
-        private static void DrawLine(Bitmap image, (int, int) x, int y, Color color)
+        private static void DrawLine(Bitmap image, (int, int) x, int y, Pen pen)
         {
             Rectangle lineRect = new(Math.Min(x.Item1, x.Item2), y - PenWidth / 2, Math.Abs(x.Item1 - x.Item2) + 2, PenWidth);
             if (!Lattice.RectWithin(lineRect, out var rect)) { return; }
+            if (!ShowBackGroung)
+            {
+                if (Lattice.LineWithin(x, y, pen.Width, out var line))
+                {
+                    var g = Graphics.FromImage(image);
+                    g.DrawLine(pen, line.Item1, line.Item2);
+                    g.Flush(); g.Dispose();
+                }
+                return;
+            }
             PointBitmap pImage = new(image);
             pImage.LockBits();
             PointBitmap pInverseCacher = new(BkInverseCacher);
             pInverseCacher.LockBits();
-            if (ShowBackGroung)
+            for (int i = 0; i < rect.Width; i++)
             {
-                for (int i = 0; i < rect.Width; i++)
-                {
-                    var left = rect.Left + i;
-                    var top = rect.Top;
-                    var pixel = pInverseCacher.GetPixel(left, top);
-                    pImage.SetPixel(left, top, pixel);
-                }
-                for (int i = 0; i < rect.Width; i++)
-                {
-                    var left = rect.Left + i;
-                    var bottom = rect.Bottom;
-                    var pixel = pInverseCacher.GetPixel(left, bottom);
-                    pImage.SetPixel(left, bottom, pixel);
-                }
+                var left = rect.Left + i;
+                var top = rect.Top;
+                var pixel = pInverseCacher.GetPixel(left, top);
+                pImage.SetPixel(left, top, pixel);
             }
-            else
+            for (int i = 0; i < rect.Width; i++)
             {
-                for (int i = 0; i < rect.Height; i++)
-                {
-                    for (int j = 0; j < rect.Height; j++)
-                    {
-                        pImage.SetPixel(rect.Left + i, rect.Top + j, color);
-                    }
-                }
+                var left = rect.Left + i;
+                var bottom = rect.Bottom;
+                var pixel = pInverseCacher.GetPixel(left, bottom);
+                pImage.SetPixel(left, bottom, pixel);
             }
             pInverseCacher.UnlockBits();
             pImage.UnlockBits();
