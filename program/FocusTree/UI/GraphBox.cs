@@ -102,10 +102,6 @@ namespace FocusTree.UI
         /// 信息展示条已显示
         /// </summary>
         bool InfoBrandShown = false;
-        /// <summary>
-        /// 是否显示背景图片
-        /// </summary>
-        bool ShowBackGroung = false;
 
         #endregion
 
@@ -115,14 +111,6 @@ namespace FocusTree.UI
         /// 核心 GDI（Image绘制Graph专用，因为调用时会先 Clear Image）
         /// </summary>
         public readonly Graphics gCore;
-        /// <summary>
-        /// 背景图片
-        /// </summary>
-        public Image BackImage;
-        /// <summary>
-        /// 背景图片在当前 Client Rect 范围中的缓存
-        /// </summary>
-        Image BackImageCacher;
         /// <summary>
         /// 上一次的绘制区域
         /// </summary>
@@ -159,11 +147,7 @@ namespace FocusTree.UI
             Image = new Bitmap(workArea.Width, workArea.Height);
             gCore = Graphics.FromImage(Image);
 
-            if (File.Exists("Background.jpg"))
-            {
-                BackImage = Image.FromFile("Background.jpg");
-                ShowBackGroung = true;
-            }
+            
 
             LatticeCell.Width = 30;
             LatticeCell.Height = 30;
@@ -198,9 +182,9 @@ namespace FocusTree.UI
             if (rects == null || rects.Count == 0) { return; }
             foreach(var rect in rects)
             {
-                if (ShowBackGroung)
+                if (GraphDrawer.ShowBackGroung)
                 {
-                    gCore.DrawImage(BackImageCacher, rect, rect, GraphicsUnit.Pixel);
+                    gCore.DrawImage(GraphDrawer.GetBackImageCacher(Size), rect, rect, GraphicsUnit.Pixel);
                 }
                 else
                 {
@@ -225,7 +209,7 @@ namespace FocusTree.UI
                     foreach (var requireId in requires)
                     {
                         var require = Graph.GetFocus(requireId);
-                        GraphDrawer.UploadRequireLine(GraphDrawer.NodeRequire[color], focus, require);
+                        GraphDrawer.UploadRequireLine(color, focus, require);
                     }
                     color++;
                 }
@@ -317,39 +301,13 @@ namespace FocusTree.UI
             {
                 return;
             }
-            if (ShowBackGroung) { SetBackImageCacher(); }
+            if (GraphDrawer.ShowBackGroung) { GraphDrawer.SetBackImageCacher(Size); }
             Lattice.SetBounds(ClientRectangle);
             DrawBackground(ClientRectangle);
             SetLastDrawArea();
             Lattice.Draw(gCore);
             Invalidate();
             InfoBrandShown = false;
-        }
-        /// <summary>
-        /// 根据当前 Client Rect 大小设置背景图片缓存
-        /// </summary>
-        private void SetBackImageCacher()
-        {
-            var bkWidth = Width;
-            var bkHeight = Height;
-            float sourceRatio = (float)BackImage.Width / (float)BackImage.Height;
-            float clientRatio = (float)Width / (float)Height;
-            if (sourceRatio < clientRatio)
-            {
-                bkWidth = Width;
-                bkHeight = (int)(Width / sourceRatio);
-            }
-            else if (sourceRatio > clientRatio)
-            {
-                bkHeight = Height;
-                bkWidth = (int)(Height * sourceRatio);
-            }
-            if (BackImageCacher != null && bkWidth == BackImageCacher.Width && bkHeight == BackImageCacher.Height) { return; }
-            BackImageCacher?.Dispose();
-            BackImageCacher = new Bitmap(bkWidth, bkHeight);
-            var g = Graphics.FromImage(BackImageCacher);
-            g.DrawImage(BackImage, 0, 0, bkWidth, bkHeight);
-            g.Flush(); g.Dispose();
         }
 
         //---- OnMouseDown ----//

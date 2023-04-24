@@ -61,7 +61,7 @@ class Test
                 foreach (var requireId in requires)
                 {
                     var require = Graph.GetFocus(requireId);
-                    GraphDrawer.UploadRequireLine(GraphDrawer.NodeRequire[color], focus, require);
+                    GraphDrawer.UploadRequireLine(color, focus, require);
                 }
                 color++;
             }
