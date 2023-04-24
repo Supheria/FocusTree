@@ -94,6 +94,14 @@ namespace FocusTree.UI.Graph
         /// 是否绘制背景栅格
         /// </summary>
         public static bool DrawBackLattice = false;
+        /// <summary>
+        /// 上一次绘图时的栅格原点横坐标
+        /// </summary>
+        public static int LastOriginLeft;
+        /// <summary>
+        /// 上一次绘图时的栅格原点纵坐标
+        /// </summary>
+        public static int LastOriginTop;
 
         #endregion
 
@@ -147,6 +155,8 @@ namespace FocusTree.UI.Graph
                 //g.DrawLine(GuidePen, new(DrawRect.Left, OriginTop), new(DrawRect.Right, OriginTop));
             }
             //g.Flush();
+            LastOriginLeft = OriginLeft;
+            LastOriginTop = OriginTop;
         }
         /// <summary>
         /// 清空绘制委托
