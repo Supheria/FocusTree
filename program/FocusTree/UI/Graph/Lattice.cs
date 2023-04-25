@@ -94,22 +94,18 @@ namespace FocusTree.UI.Graph
         /// 是否绘制背景栅格
         /// </summary>
         public static bool DrawBackLattice = false;
-        /// <summary>
-        /// 上一次绘图时的栅格原点横坐标
-        /// </summary>
-        public static int LastOriginLeft;
-        /// <summary>
-        /// 上一次绘图时的栅格原点纵坐标
-        /// </summary>
-        public static int LastOriginTop;
-        /// <summary>
-        /// 上一次绘图时的格元宽
-        /// </summary>
-        public static int LastCellWidth;
-        /// <summary>
-        /// 上一次绘图时的格元高
-        /// </summary>
-        public static int LastCellHeight;
+
+        #endregion
+
+        #region ==== 上一次绘图标志 ===
+
+        public static int LastCellWidth = LatticeCell.Width;
+        public static int LastCellHeight = LatticeCell.Height;
+        public static int LastOriginLeft = OriginLeft;
+        public static int LastOriginTop = OriginTop;
+        public static Rectangle LastDrawRect = DrawRect;
+        public static int LastDeviDiffInDrawRectWidth = DeviDiffInDrawRectWidth;
+        public static int LastDeviDiffInDrawRectHeight = DeviDiffInDrawRectHeight;
 
         #endregion
 
@@ -166,10 +162,13 @@ namespace FocusTree.UI.Graph
                 g.DrawLine(GuidePen, new(DrawRect.Left, OriginTop), new(DrawRect.Right, OriginTop));
                 g.Flush(); g.Dispose();
             }
-            LastOriginLeft = OriginLeft;
-            LastOriginTop = OriginTop;
             LastCellWidth = LatticeCell.Width;
             LastCellHeight = LatticeCell.Height;
+            LastOriginLeft = OriginLeft;
+            LastOriginTop = OriginTop;
+            LastDrawRect = DrawRect;
+            LastDeviDiffInDrawRectWidth = DeviDiffInDrawRectWidth;
+            LastDeviDiffInDrawRectHeight = DeviDiffInDrawRectHeight;
         }
         /// <summary>
         /// 清空绘制委托
@@ -292,33 +291,58 @@ namespace FocusTree.UI.Graph
             var right = rect.Right;
             var top = rect.Top;
             var bottom = rect.Bottom;
-            var width = rect.Width;
-            var height = rect.Height;
+            //var width = rect.Width;
+            //var height = rect.Height;
             if (left < DrawRect.Left)
             {
                 if (right <= DrawRect.Left) { return false; }
-                width -= DrawRect.Left - left;
+                //width -= DrawRect.Left - left;
                 left = DrawRect.Left;
             }
             if (right > DrawRect.Right)
             {
-                if (left >=  DrawRect.Right) { return false; }
-                width -= right - DrawRect.Right;
+                if (left >= DrawRect.Right) { return false; }
+                //width -= right - DrawRect.Right;
+                right = DrawRect.Right;
             }
             if (top < DrawRect.Top)
             {
-                if (bottom <=  DrawRect.Top) { return false; }
-                height -= DrawRect.Top - top;
+                if (bottom <= DrawRect.Top) { return false; }
+                //height -= DrawRect.Top - top;
                 top = DrawRect.Top;
             }
             if (bottom > DrawRect.Bottom)
             {
-                if (top >=  DrawRect.Bottom) { return false; }
-                height -= bottom - DrawRect.Bottom;
+                if (top >= DrawRect.Bottom) { return false; }
+                //height -= bottom - DrawRect.Bottom;
+                bottom = DrawRect.Bottom;
             }
-            saveRect = new(left, top, width, height);
+            saveRect = new(left, top, right - left, bottom - top);
             //if (saveRect.Height <= 0 || saveRect.Width <= 0) 
             //{ return false; }
+            return true;
+
+        }
+        public static bool RectWithin(Rectangle rect)
+        {
+            var right = rect.Right;
+            var bottom = rect.Bottom;
+            if (rect.Left < DrawRect.Left)
+            {
+                if (right <= DrawRect.Left) { return false; }
+            }
+            if (right > DrawRect.Right)
+            {
+                if (rect.Left >= DrawRect.Right) { return false; }
+            }
+            if (rect.Top < DrawRect.Top)
+            {
+                if (bottom <= DrawRect.Top) { return false; }
+            }
+            if (bottom > DrawRect.Bottom)
+            {
+                if (rect.Top >= DrawRect.Bottom) { return false; }
+            }
             return true;
         }
         /// <summary>
