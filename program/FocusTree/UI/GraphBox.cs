@@ -208,12 +208,11 @@ namespace FocusTree.UI
                     foreach (var requireId in requires)
                     {
                         var require = Graph.GetFocus(requireId);
-                        GraphDrawer.UploadRequireLine(Image, color, focus, require);
+                        GraphDrawer.UploadRequireLine(color, focus, require);
                     }
                     color++;
                 }
-                var brush = id == SelectedNode ? GraphDrawer.NodeBG_Selected : GraphDrawer.NodeBG_Normal;
-                GraphDrawer.UploadNodeMap(Image, focus);
+                GraphDrawer.UploadNodeMap(focus);
             }
         }
         public void DrawNodeMapInfo()
@@ -304,7 +303,7 @@ namespace FocusTree.UI
             Lattice.SetBounds(ClientRectangle);
             RedrawBackground(ClientRectangle);
             SetLastDrawArea();
-            Lattice.Draw(gCore);
+            Lattice.Draw(Image);
             Invalidate();
         }
 
@@ -451,7 +450,7 @@ namespace FocusTree.UI
                 DragMouseFlagPoint = newPoint;
                 RedrawBackground(LastDrawArea);
                 SetLastDrawArea();
-                Lattice.Draw(gCore);
+                Lattice.Draw(Image);
                 //DrawNodeMapInfo();
             }
         }
@@ -497,12 +496,12 @@ namespace FocusTree.UI
             if (Lattice.RectWithin(CellCursorOn.InnerPartRealRects[part], out var saveRect))
             {
                 var rect = saveRect;
-                LastCellDrawer = () => gCore.FillRectangle(brush, rect);
+                LastCellDrawer = (Image) => gCore.FillRectangle(brush, rect);
             }
             Lattice.Drawing += LastCellDrawer;
             RedrawBackground(LastDrawArea);
             SetLastDrawArea();
-            Lattice.Draw(gCore);
+            Lattice.Draw(Image);
             //Parent.Text = $"W {LatticeCell.Width},H {LatticeCell.Height}, o: {Lattice.OriginLeft}, {Lattice.OriginTop}, cursor: {cursor}, cellPart: {cellPart}, lastCell{new Point(LastCell.LatticedLeft, LastCell.LatticedTop)}";
             Parent.Text = $"cell left: {CellCursorOn.LatticedLeft}, cell top: {CellCursorOn.LatticedTop}, last part: {LastCellPart}, part: {part}";
         }
@@ -539,7 +538,7 @@ namespace FocusTree.UI
                     Lattice.Drawing += cache;
                     RedrawBackground(LastDrawArea);
                     SetLastDrawArea();
-                    Lattice.Draw(gCore);
+                    Lattice.Draw(Image);
                 }
             }
         }
@@ -561,7 +560,7 @@ namespace FocusTree.UI
 
             RedrawBackground(LastDrawArea);
             SetLastDrawArea();
-            Lattice.Draw(gCore);
+            Lattice.Draw(Image);
             //DrawNodeMapInfo();
             Invalidate();
             Parent.UpdateText("打开节点选项");
@@ -659,7 +658,7 @@ namespace FocusTree.UI
             Lattice.SetBounds(ClientRectangle);
             RedrawBackground(LastDrawArea);
             SetLastDrawArea();
-            Lattice.Draw(gCore);
+            Lattice.Draw(Image);
         }
         /// <summary>
         /// 缩放居中至节点
@@ -685,7 +684,7 @@ namespace FocusTree.UI
             Lattice.SetBounds(ClientRectangle);
             RedrawBackground(LastDrawArea);
             SetLastDrawArea();
-            Lattice.Draw(gCore);
+            Lattice.Draw(Image);
             Cursor.Position = Parent.PointToScreen(new Point(
                 Bounds.X + Bounds.Width / 2,
                 Bounds.Y + Bounds.Height / 2
@@ -747,7 +746,7 @@ namespace FocusTree.UI
             UploadNodeMap();
             RedrawBackground(LastDrawArea);
             SetLastDrawArea();
-            Lattice.Draw(gCore);
+            Lattice.Draw(Image);
             Invalidate();
         }
         /// <summary>
@@ -759,7 +758,7 @@ namespace FocusTree.UI
             UploadNodeMap();
             RedrawBackground(LastDrawArea);
             SetLastDrawArea();
-            Lattice.Draw(gCore);
+            Lattice.Draw(Image);
             Invalidate();
         }
 
@@ -797,7 +796,7 @@ namespace FocusTree.UI
             UploadNodeMap();
             RedrawBackground(LastDrawArea);
             SetLastDrawArea();
-            Lattice.Draw(gCore);
+            Lattice.Draw(Image);
             Invalidate();
         }
         /// <summary>

@@ -167,7 +167,7 @@ namespace FocusTree.UI.Graph
         /// <summary>
         /// 将节点绘制上载到栅格绘图委托（要更新栅格放置区域，应该先更新再调用此方法，因为使用了裁剪超出绘图区域的绘图方法）
         /// </summary>
-        public static void UploadNodeMap(Image image, FocusData focus)
+        public static void UploadNodeMap(FocusData focus)
         {
             var id = focus.ID;
             LatticeCell cell = new(focus);
@@ -175,7 +175,7 @@ namespace FocusTree.UI.Graph
             {
                 Lattice.Drawing -= drawer;
             }
-            Lattice.Drawing += NodeDrawerCatalog[id] = () => DrawNode((Bitmap)image, focus);
+            Lattice.Drawing += NodeDrawerCatalog[id] = (image) => DrawNode(image, focus);
         }
         public static void DrawNode(Bitmap image, FocusData focus)
         {
@@ -438,14 +438,14 @@ namespace FocusTree.UI.Graph
         /// <param name="pen"></param>
         /// <param name="startLoc"></param>
         /// <param name="endLoc"></param>
-        public static void UploadRequireLine(Image image, int penIndex, FocusData start, FocusData end)
+        public static void UploadRequireLine(int penIndex, FocusData start, FocusData end)
         {
             (int, int) ID = (start.ID, end.ID);
             if (LineDrawerCatalog.TryGetValue(ID, out var drawer))
             {
                 Lattice.Drawing -= drawer;
             }
-            Lattice.Drawing += LineDrawerCatalog[ID] = () => DrawLines((Bitmap)image, NodeRequire[penIndex], start.LatticedPoint, end.LatticedPoint);
+            Lattice.Drawing += LineDrawerCatalog[ID] = (image) => DrawLines(image, NodeRequire[penIndex], start.LatticedPoint, end.LatticedPoint);
 
         }
         public static void DrawLines(Bitmap image, Pen pen, Point startLoc, Point endLoc)

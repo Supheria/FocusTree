@@ -8,7 +8,7 @@ namespace FocusTree.UI.Graph
     /// 绘制栅格时，绘制非循环节点的委托类型
     /// </summary>
     /// <param name="g">传入栅格的 GDI</param>
-    public delegate void CellDrawer();
+    public delegate void CellDrawer(Bitmap image);
     /// <summary>
     /// 栅格
     /// </summary>
@@ -141,14 +141,15 @@ namespace FocusTree.UI.Graph
         /// 绘制无限制栅格，并调用绘制格元的委托
         /// </summary>
         /// <param name="g"></param>
-        public static void Draw(Graphics g)
+        public static void Draw(Image image)
         {
-            Drawing?.Invoke();
+            Drawing?.Invoke((Bitmap)image);
 
             test.InfoText = $"{DrawRect}" + Drawing?.GetInvocationList().Length;
 
             if (DrawBackLattice)
             {
+                var g = Graphics.FromImage(image);
                 for (int i = 0; i < ColNumber; i++)
                 {
                     for (int j = 0; j < RowNumber; j++)
@@ -156,13 +157,15 @@ namespace FocusTree.UI.Graph
                         DrawLoopCell(g, i, j);
                     }
                 }
+                g.Flush(); g.Dispose();
             }
             if (DrawGuideLine)
             {
+                var g = Graphics.FromImage(image);
                 g.DrawLine(GuidePen, new(OriginLeft, DrawRect.Top), new(OriginLeft, DrawRect.Bottom));
                 g.DrawLine(GuidePen, new(DrawRect.Left, OriginTop), new(DrawRect.Right, OriginTop));
+                g.Flush(); g.Dispose();
             }
-            g.Flush();
             LastOriginLeft = OriginLeft;
             LastOriginTop = OriginTop;
             LastCellWidth = LatticeCell.Width;
