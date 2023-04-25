@@ -312,13 +312,13 @@ namespace FocusTree.UI.Graph
             var Right = DrawRect.Right;
             if (x1 < x2)
             {
-                if (x1 > Right || x2 < Left) { return false; }
+                if (x1 >= Right || x2 <= Left) { return false; }
                 if (x1 < Left) { x1 = Left; }
                 if (x2 > Right) { x2 = Right; }
             }
             else if (x2 < x1)
             {
-                if (x2 > Right || x1 < Left) { return false; }
+                if (x2 >= Right || x1 <= Left) { return false; }
                 if (x2 < Left) { x2 = Left; }
                 if (x1 > Right) { x1 = Right; }
             }
@@ -343,13 +343,13 @@ namespace FocusTree.UI.Graph
             var Bottom = DrawRect.Bottom;
             if (y1 < y2)
             {
-                if (y1 > Bottom || y2 < Top) { return false; }
+                if (y1 >= Bottom || y2 <= Top) { return false; }
                 if (y1 < Top) { y1 = Top; }
                 if (y2 > Bottom) { y2 = Bottom; }
             }
             else if (y2 < y1)
             {
-                if (y2 > Bottom || y1 < Top) { return false; }
+                if (y2 >= Bottom || y1 <= Top) { return false; }
                 if (y2 < Top) { y2 = Top; }
                 if (y1 > Bottom) { y1 = Bottom; }
             }

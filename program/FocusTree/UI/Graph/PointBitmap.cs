@@ -18,6 +18,43 @@ namespace FocusTree.UI.Graph
         {
             this.source = source;
         }
+        /// <summary>
+        /// 锁定给定矩形区域内的内存
+        /// </summary>
+        /// <param name="rect"></param>
+        /// <exception cref="ArgumentException"></exception>
+        public void LockBits(Rectangle rect)
+        {
+            // Get width and height of bitmap
+            //Width = rect.Width;
+            //Height = source.Height;
+
+            // get total locked pixels count
+            int PixelCount = rect.Width * rect.Height;
+
+            // Create rectangle to lock
+            //Rectangle rect = new Rectangle(0, 0, Width, Height);
+
+            // get source bitmap pixel format size
+            Depth = Image.GetPixelFormatSize(source.PixelFormat);
+
+            // Check if bpp (Bits Per Pixel) is 8, 24, or 32
+            if (Depth != 8 && Depth != 24 && Depth != 32)
+            {
+                throw new ArgumentException("Only 8, 24 and 32 bpp images are supported.");
+            }
+            // Lock bitmap and return bitmap data
+            bitmapData = source.LockBits(rect, ImageLockMode.ReadWrite,
+                                         source.PixelFormat);
+
+            //得到首地址
+            unsafe
+            {
+                Iptr = bitmapData.Scan0;
+                //二维图像循环
+
+            }
+        }
 
         public void LockBits()
         {
@@ -131,6 +168,35 @@ namespace FocusTree.UI.Graph
                     ptr[0] = c.B;
                 }
             }
+        }
+        public static void FillRectWithSource(Bitmap toFill, Bitmap source, Rectangle fillRect)
+        {
+            PointBitmap target = new(toFill);
+            PointBitmap src = new(source);
+            target.LockBits(fillRect);
+            src.LockBits(fillRect);
+            for (int i = 0; i < fillRect.Width; i++)
+            {
+                for (int j = 0; j < fillRect.Height; j++) 
+                { 
+                    target.SetPixel(i, j, src.GetPixel(i, j));
+                }
+            }
+            target.UnlockBits();
+            src.UnlockBits();
+        }
+        public static void FillRectWithColor(Bitmap toFill, Color color, Rectangle fillRect)
+        {
+            PointBitmap target = new(toFill);
+            target.LockBits(fillRect);
+            for (int i = 0; i < fillRect.Width; i++)
+            {
+                for (int j = 0; j < fillRect.Height; j++)
+                {
+                    target.SetPixel(i, j, color);
+                }
+            }
+            target.UnlockBits();
         }
     }
 

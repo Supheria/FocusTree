@@ -1,9 +1,6 @@
 #define PointBmp
 using FocusTree.Data.Focus;
 using FocusTree.UI.test;
-using System.Drawing.Imaging;
-using System.Drawing;
-using System.Runtime.InteropServices;
 
 namespace FocusTree.UI.Graph
 {
@@ -280,36 +277,32 @@ namespace FocusTree.UI.Graph
             PointBitmap pImage = new(image);
             if (!ShowBackground)
             {
-                pImage.LockBits();
+                pImage.LockBits(nodeRect);
                 for (int i = 0; i < nodeRect.Width; i++)
                 {
                     for (int j = 0; j < nodeRect.Height; j++)
                     {
-                        var x = nodeRect.Left + i;
-                        var y = nodeRect.Top + j;
                         if (i >= nodeRect.Width - NodeBorderWidth || j >= nodeRect.Height - NodeBorderWidth)
                         {
-                            pImage.SetPixel(x, y, NodeBGShadow);
+                            pImage.SetPixel(i, j, NodeBGShadow);
                         }
-                        else { pImage.SetPixel(x, y, NodeBG_Normal); }
+                        else { pImage.SetPixel(i, j, NodeBG_Normal); }
                     }
                 }
                 pImage.UnlockBits();
                 return;
             }
 
-            pImage.LockBits();
+            pImage.LockBits(nodeRect);
             PointBitmap pInverseCacher = new(BkInverseCacher);
-            pInverseCacher.LockBits();
+            pInverseCacher.LockBits(nodeRect);
             // left
             for (int i = 0; i < NodeBorderWidth; i++)
             {
                 for (int j = 0; j < nodeRect.Height; j++)
                 {
-                    var x = nodeRect.Left + i;
-                    var y = nodeRect.Top + j;
-                    var pixel = pInverseCacher.GetPixel(x, y);
-                    pImage.SetPixel(x, y, pixel);
+                    var pixel = pInverseCacher.GetPixel(i, j);
+                    pImage.SetPixel(i, j, pixel);
                 }
             }
             // right
@@ -318,10 +311,8 @@ namespace FocusTree.UI.Graph
                 if (i < 0) { break; }
                 for (int j = 0; j < nodeRect.Height; j++)
                 {
-                    var x = nodeRect.Left + i;
-                    var y = nodeRect.Top + j;
-                    var pixel = pInverseCacher.GetPixel(x, y);
-                    pImage.SetPixel(x, y, pixel);
+                    var pixel = pInverseCacher.GetPixel(i, j);
+                    pImage.SetPixel(i, j, pixel);
                 }
             }
             // top
@@ -329,10 +320,8 @@ namespace FocusTree.UI.Graph
             {
                 for (int j = 0; j < NodeBorderWidth; j++)
                 {
-                    var x = nodeRect.Left + i;
-                    var y = nodeRect.Top + j;
-                    var pixel = pInverseCacher.GetPixel(x, y);
-                    pImage.SetPixel(x, y, pixel);
+                    var pixel = pInverseCacher.GetPixel(i, j);
+                    pImage.SetPixel(i, j, pixel);
                 }
             }
             // bottom
@@ -340,11 +329,9 @@ namespace FocusTree.UI.Graph
             {
                 for (int j = nodeRect.Height - NodeBorderWidth; j < nodeRect.Height; j++)
                 {
-                    if (j <= 0) { break; }
-                    var x = nodeRect.Left + i;
-                    var y = nodeRect.Top + j;
-                    var pixel = pInverseCacher.GetPixel(x, y);
-                    pImage.SetPixel(x, y, pixel);
+                    //if (j <= 0) { break; }
+                    var pixel = pInverseCacher.GetPixel(i, j);
+                    pImage.SetPixel(i, j, pixel);
                 }
             }
             pInverseCacher.UnlockBits();
@@ -363,25 +350,24 @@ namespace FocusTree.UI.Graph
             if (ShowBackground)
             {
                 PointBitmap pImage = new(image);
-                pImage.LockBits();
+                pImage.LockBits(nodeRect);
                 for (int i = 0; i < nodeRect.Width; i++)
                 {
                     for (int j = 0; j < nodeRect.Height; j++)
                     {
-                        var bkPixel = pImage.GetPixel(nodeRect.Left + i, nodeRect.Top + j);
+                        var bkPixel = pImage.GetPixel(i, j);
                         if (bkPixel.R < 123 && bkPixel.G < 123 && bkPixel.B < 123)
                         {
                             black++;
                         }
                         else { white++; }
-                        pImage.SetPixel(nodeRect.Left + i, nodeRect.Top + j, Color.White);
+                        pImage.SetPixel(i, j, Color.White);
                     }
                 }
                 pImage.UnlockBits();
             }
             var fontHeight = name.Length / 3;
-            if (fontHeight == 1 && name.Length % 3 != 0) { fontHeight++; }
-            if (fontHeight == 0) { fontHeight++; }
+            if (name.Length % 3 != 0) { fontHeight++; }
             var fontWidth = name.Length / fontHeight;
             if (name.Length % 3 != 0) { fontWidth++; }
             var fontSizeH = 0.7f * nodeRect.Height / fontHeight;
@@ -418,58 +404,54 @@ namespace FocusTree.UI.Graph
             PointBitmap pImage = new(image);
             if (!ShowBackground)
             {
-                pImage.LockBits();
+                pImage.LockBits(rect);
                 for (int i = 0; i < rect.Width; i++)
                 {
                     for (int j = 0; j < rect.Height; j++)
                     {
-                        var x = rect.Left + i;
-                        var y = rect.Top + j;
-                        var pixel = pImage.GetPixel(x, y);
+                        var pixel = pImage.GetPixel(i, j);
                         if (pixel.R != 255 || pixel.G != 255 || pixel.B != 255)
                         {
-                            pImage.SetPixel(x, y, NodeFG);
+                            pImage.SetPixel(i, j, NodeFG);
                             continue;
                         }
                         if (i >= rect.Width - NodeBorderWidth || j >= rect.Height - NodeBorderWidth)
                         {
-                            pImage.SetPixel(x, y, NodeBGShadow);
+                            pImage.SetPixel(i, j, NodeBGShadow);
                         }
-                        else { pImage.SetPixel(x, y, NodeBG_Normal); }
+                        else { pImage.SetPixel(i, j, NodeBG_Normal); }
                     }
                 }
                 pImage.UnlockBits();
                 return;
             }
-            pImage.LockBits();
+            pImage.LockBits(rect);
             PointBitmap pCacher = new(BkCacher);
-            pCacher.LockBits();
+            pCacher.LockBits(rect);
             PointBitmap pInverseCacher = new(BkInverseCacher);
-            pInverseCacher.LockBits();
+            pInverseCacher.LockBits(rect);
             for (int i = 0; i < rect.Width; i++)
             {
                 for (int j = 0; j < rect.Height; j++)
                 {
-                    var x = rect.Left + i;
-                    var y = rect.Top + j;
-                    var pixel = pImage.GetPixel(x, y);
-                    var bkPixel = pCacher.GetPixel(x, y);
+                    var pixel = pImage.GetPixel(i, j);
+                    var bkPixel = pCacher.GetPixel(i, j);
                     if (pixel.R == 255 && pixel.G == 255 && pixel.B == 255)
                     {
                         if (i <= NodeBorderWidth || i >= rect.Width - NodeBorderWidth || j <= NodeBorderWidth || j >= rect.Height - NodeBorderWidth)
                         {
-                            bkPixel = pInverseCacher.GetPixel(x, y);
+                            bkPixel = pInverseCacher.GetPixel(i, j);
                         }
-                        pImage.SetPixel(x, y, bkPixel);
+                        pImage.SetPixel(i, j, bkPixel);
                         continue;
                     }
                     if (black < white)
                     {
-                        pImage.SetPixel(x, y, NodeFG_BkDark);
+                        pImage.SetPixel(i, j, NodeFG_BkDark);
                     }
                     else
                     {
-                        pImage.SetPixel(x, y, NodeFG_BkLight);
+                        pImage.SetPixel(i, j, NodeFG_BkLight);
                     }
                 }
             }
@@ -546,7 +528,7 @@ namespace FocusTree.UI.Graph
             var y = cell.RealTop + paddingHeight;
             cell.LatticedTop -= halfHeightDiff;
             var y2 = cell.RealTop + paddingHeight / 2;
-            //if (x >= drLeft && x <= drRight)
+            if (x >= drLeft && x <= drRight)
             {
                 if (Lattice.LineWithin(x, (y, y2), NodeBorderWidth, out var line))
                 {
@@ -565,7 +547,7 @@ namespace FocusTree.UI.Graph
             // 横线
             //
             var cellY = startLoc.Y - halfHeightDiff;
-            //if (Math.Abs(widthDiff) > 0 && y2 >= drTop && y2 <= drBottom)
+            if (Math.Abs(widthDiff) > 0 && y2 >= drTop && y2 <= drBottom)
             {
                 cell.LatticedLeft += widthDiff;
                 var x2 = cell.NodeRealLeft + nodeWidth / 2;
@@ -584,7 +566,7 @@ namespace FocusTree.UI.Graph
             // 竖线2
             //
             x = cell.NodeRealLeft + nodeWidth / 2;
-            //if (x >= drLeft && x <= drRight)
+            if (x >= drLeft && x <= drRight)
             {
                 y = y2;
                 var leaveHeight = heightDiff - halfHeightDiff - 1;
@@ -616,15 +598,6 @@ namespace FocusTree.UI.Graph
         {
             if (!ShowBackground)
             {
-                //(Point, Point) line;
-                //if (p1.X == p2.X) 
-                //{ 
-                //    if (!Lattice.LineWithin(p1.X, (p1.Y, p2.Y), pen.Width, out line)) { return; }
-                //}
-                //else 
-                //{
-                //    if (!Lattice.LineWithin((p1.X, p2.X), p1.Y, pen.Width, out line)) { return; } 
-                //}
                 var g = Graphics.FromImage(image);
                 g.DrawLine(pen, p1, p2);
                 g.Flush(); g.Dispose();
@@ -640,40 +613,34 @@ namespace FocusTree.UI.Graph
             {
                 lineRect = new(Math.Min(p1.X, p2.X) - halfBorder, Math.Min(p1.Y, p2.Y), Math.Abs(p1.X - p2.X) + NodeBorderWidth, Math.Abs(p1.Y - p2.Y));
             }
-            //if (!Lattice.RectWithin(lineRect, out var rect)) { return; }
             PointBitmap pImage = new(image);
-            pImage.LockBits();
+            pImage.LockBits(lineRect);
             PointBitmap pInverseCacher = new(BkInverseCacher);
-            pInverseCacher.LockBits();
+            pInverseCacher.LockBits(lineRect);
             if (horizon)
             {
                 // top
                 for (int i = 0; i < lineRect.Width; i++)
                 {
-                    var left = lineRect.Left + i;
-                    var top = lineRect.Top;
-                    var pixel = pInverseCacher.GetPixel(left, top);
-                    pImage.SetPixel(left, top, pixel);
+                    var pixel = pInverseCacher.GetPixel(i, 0);
+                    pImage.SetPixel(i, 0, pixel);
                 }
                 // bottom
-                var bottom = lineRect.Bottom;
-                if (lineRect.Top < bottom)
+                if (lineRect.Top < lineRect.Bottom)
                 {
                     for (int i = 0; i < lineRect.Width; i++)
                     {
-                        var left = lineRect.Left + i;
-                        var pixel = pInverseCacher.GetPixel(left, bottom);
-                        pImage.SetPixel(left, bottom, pixel);
+                        var j = lineRect.Height;
+                        var pixel = pInverseCacher.GetPixel(i, j);
+                        pImage.SetPixel(i, j, pixel);
                     }
                 }
             }
             // left
             for (int j = 0; j < lineRect.Height; j++)
             {
-                var left = lineRect.Left;
-                var top = lineRect.Top + j;
-                var pixel = pInverseCacher.GetPixel(left, top);
-                pImage.SetPixel(left, top, pixel);
+                var pixel = pInverseCacher.GetPixel(0, j);
+                pImage.SetPixel(0, j, pixel);
             }
             // right
             var right = lineRect.Right;
@@ -681,9 +648,9 @@ namespace FocusTree.UI.Graph
             {
                 for (int j = 0; j < lineRect.Height; j++)
                 {
-                    var top = lineRect.Top + j;
-                    var pixel = pInverseCacher.GetPixel(right, top);
-                    pImage.SetPixel(right, top, pixel);
+                    var i = lineRect.Width;
+                    var pixel = pInverseCacher.GetPixel(i, j);
+                    pImage.SetPixel(i, j, pixel);
                 }
             }
             pInverseCacher.UnlockBits();
@@ -711,78 +678,15 @@ namespace FocusTree.UI.Graph
                     LatticeCell cell = new(point.X, point.Y);
                     if (Lattice.RectWithin(cell.RealRect, out var rect))
                     {
-                        int width = rect.Width, height = rect.Height;//图片的宽度和高度, 在内存中以读写模式锁定Bitmap
-                        BitmapData bitmapData = ((Bitmap)image).LockBits(
-                            new Rectangle(rect.Left , rect.Top, width, height),
-                            ImageLockMode.ReadWrite,
-                            PixelFormat.Format24bppRgb);
-                        //图片像素点数组的长度，由于一个像素点占了3个字节，所以要乘上3
-                        int size = width * height * 3;
-                        //缓冲区数组
-                        byte[] srcArray = new byte[size];
-                        //获取第一个像素的地址
-                        IntPtr ptr = bitmapData.Scan0;
-                        //把像素值复制到缓冲区
-                        Marshal.Copy(ptr, srcArray, 0, size);
-                        int p;
-
-                        BitmapData bitCacher = (BkCacher).LockBits(
-                            new Rectangle(rect.Left , rect.Top, width, height),
-                            ImageLockMode.ReadWrite,
-                            PixelFormat.Format24bppRgb);
-                        //图片像素点数组的长度，由于一个像素点占了3个字节，所以要乘上3
-                        //int size = width * height * 3;
-                        //缓冲区数组
-                        byte[] bkArray = new byte[size];
-                        //获取第一个像素的地址
-                        IntPtr bkPtr = bitCacher.Scan0;
-                        //把像素值复制到缓冲区
-                        Marshal.Copy(bkPtr, bkArray, 0, size);
-
-                        for (int i = 0; i < width; i++)
-                        {
-                            for (int j = 0; j < height; j++)
-                            {
-                                //定位像素点位置
-                                p = j * width * 3 + i * 3;
-                                //计算灰度值
-                                byte color = (byte)((bkArray[p] + bkArray[p + 1] + bkArray[p + 2]) / 3);
-                                srcArray[p] = srcArray[p + 1] = srcArray[p + 2] = color;
-                            }
-                        }
-                        //从缓冲区复制回BitmapData
-                        Marshal.Copy(srcArray, 0, ptr, size);
-                        //从内存中解锁
-                        ((Bitmap)image).UnlockBits(bitmapData);
-                        BkCacher.UnlockBits(bitCacher);
+                        //g.DrawImage(BkCacher, rect, rect, GraphicsUnit.Pixel);
+                        ImageDrawer drawer = new((Bitmap)image, BkCacher, rect);
+                        Thread th1 = new(new ThreadStart(drawer.DrawRect1));
+                        Thread th2 = new(new ThreadStart(drawer.DrawRect2));
+                        th1.Start();
+                        th2.Start();
                     }
+                    LastDrawnCells.Remove(point);
                 }
-                
-                //PointBitmap pImage = new((Bitmap)image);
-                //pImage.LockBits();
-                //PointBitmap pCacher = new(BkCacher);
-                //pCacher.LockBits();
-                //foreach (var point in LastDrawnCells)
-                //{
-                //    LatticeCell cell = new(point.X, point.Y);
-                //    if (Lattice.RectWithin(cell.RealRect, out var rect))
-                //    {
-                //        //g.DrawImage(BkCacher, rect, rect, GraphicsUnit.Pixel);
-                //        for (int i = 0; i < rect.Width; i++)
-                //        {
-                //            for (int j = 0; j < rect.Height; j++)
-                //            {
-                //                var x = rect.Left + i;
-                //                var y = rect.Top + j;
-                //                var pixel = pCacher.GetPixel(x, y);
-                //                pImage.SetPixel(x, y, pixel);
-                //            }
-                //        }
-                //    }
-                //    LastDrawnCells.Remove(point);
-                //}
-                //pCacher.UnlockBits();
-                //pImage.UnlockBits();
             }
             g.Flush(); g.Dispose();
         }
