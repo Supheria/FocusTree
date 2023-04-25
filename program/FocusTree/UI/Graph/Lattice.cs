@@ -97,18 +97,6 @@ namespace FocusTree.UI.Graph
 
         #endregion
 
-        #region ==== 上一次绘图标志 ===
-
-        public static int LastCellWidth = LatticeCell.Width;
-        public static int LastCellHeight = LatticeCell.Height;
-        public static int LastOriginLeft = OriginLeft;
-        public static int LastOriginTop = OriginTop;
-        public static Rectangle LastDrawRect = DrawRect;
-        public static int LastDeviDiffInDrawRectWidth = DeviDiffInDrawRectWidth;
-        public static int LastDeviDiffInDrawRectHeight = DeviDiffInDrawRectHeight;
-
-        #endregion
-
         #region ==== 绘制栅格 ====
 
         static TestInfo test = new();
@@ -153,22 +141,11 @@ namespace FocusTree.UI.Graph
                         DrawLoopCell(g, i, j);
                     }
                 }
-                g.Flush(); g.Dispose();
-            }
-            if (DrawGuideLine)
-            {
-                var g = Graphics.FromImage(image);
+                // guide line
                 g.DrawLine(GuidePen, new(OriginLeft, DrawRect.Top), new(OriginLeft, DrawRect.Bottom));
                 g.DrawLine(GuidePen, new(DrawRect.Left, OriginTop), new(DrawRect.Right, OriginTop));
                 g.Flush(); g.Dispose();
             }
-            LastCellWidth = LatticeCell.Width;
-            LastCellHeight = LatticeCell.Height;
-            LastOriginLeft = OriginLeft;
-            LastOriginTop = OriginTop;
-            LastDrawRect = DrawRect;
-            LastDeviDiffInDrawRectWidth = DeviDiffInDrawRectWidth;
-            LastDeviDiffInDrawRectHeight = DeviDiffInDrawRectHeight;
         }
         /// <summary>
         /// 清空绘制委托
@@ -291,35 +268,27 @@ namespace FocusTree.UI.Graph
             var right = rect.Right;
             var top = rect.Top;
             var bottom = rect.Bottom;
-            //var width = rect.Width;
-            //var height = rect.Height;
             if (left < DrawRect.Left)
             {
                 if (right <= DrawRect.Left) { return false; }
-                //width -= DrawRect.Left - left;
                 left = DrawRect.Left;
             }
             if (right > DrawRect.Right)
             {
                 if (left >= DrawRect.Right) { return false; }
-                //width -= right - DrawRect.Right;
                 right = DrawRect.Right;
             }
             if (top < DrawRect.Top)
             {
                 if (bottom <= DrawRect.Top) { return false; }
-                //height -= DrawRect.Top - top;
                 top = DrawRect.Top;
             }
             if (bottom > DrawRect.Bottom)
             {
                 if (top >= DrawRect.Bottom) { return false; }
-                //height -= bottom - DrawRect.Bottom;
                 bottom = DrawRect.Bottom;
             }
-            saveRect = new(left, top, right - left, bottom - top);
-            //if (saveRect.Height <= 0 || saveRect.Width <= 0) 
-            //{ return false; }
+            saveRect = new(left, top, right - left + 1, bottom - top + 1);
             return true;
 
         }

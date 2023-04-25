@@ -105,7 +105,7 @@ namespace FocusTree.UI.Graph
         #region ==== 构造函数 ====
 
         /// <summary>
-        /// 默认构造函数：(0, 0)
+        /// 默认构造函数
         /// </summary>
         public LatticeCell()
         {
