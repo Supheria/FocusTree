@@ -267,10 +267,10 @@ namespace FocusTree.UI.Graph
         /// <param name="g"></param>
         private static void DrawBlankNode(Bitmap image, Rectangle nodeRect)
         {
-            //PointBitmap pImage = new(image);
+            PointBitmap pImage = new(image);
             if (!ShowBackground)
             {
-                //pImage.LockBits();
+                pImage.LockBits();
                 for (int i = 0; i < nodeRect.Width; i++)
                 {
                     for (int j = 0; j < nodeRect.Height; j++)
@@ -279,18 +279,19 @@ namespace FocusTree.UI.Graph
                         var y = nodeRect.Top + j;
                         if (i >= nodeRect.Width - NodeBorderWidth || j >= nodeRect.Height - NodeBorderWidth)
                         {
-                            image.SetPixel(x, y, NodeBGShadow);
+                            pImage.SetPixel(x, y, NodeBGShadow);
                         }
-                        else { image.SetPixel(x, y, NodeBG_Normal); }
+                        else { pImage.SetPixel(x, y, NodeBG_Normal); }
                     }
                 }
-                //pImage.UnlockBits();
+                pImage.UnlockBits();
                 return;
             }
 
-            //pImage.LockBits();
+            pImage.LockBits();
             PointBitmap pInverseCacher = new(BkInverseCacher);
             pInverseCacher.LockBits();
+            // top
             for (int i = 0; i < NodeBorderWidth; i++)
             {
                 for (int j = 0; j < nodeRect.Height; j++)
@@ -298,19 +299,22 @@ namespace FocusTree.UI.Graph
                     var x = nodeRect.Left + i;
                     var y = nodeRect.Top + j;
                     var pixel = pInverseCacher.GetPixel(x, y);
-                    image.SetPixel(x, y, pixel);
+                    pImage.SetPixel(x, y, pixel);
                 }
             }
+            // bottom
             for (int i = nodeRect.Width - NodeBorderWidth; i < nodeRect.Width; i++)
             {
+                if (i < 0) { break; }
                 for (int j = 0; j < nodeRect.Height; j++)
                 {
                     var x = nodeRect.Left + i;
                     var y = nodeRect.Top + j;
                     var pixel = pInverseCacher.GetPixel(x, y);
-                    image.SetPixel(x, y, pixel);
+                    pImage.SetPixel(x, y, pixel);
                 }
             }
+            // left
             for (int i = NodeBorderWidth; i < nodeRect.Width - NodeBorderWidth; i++)
             {
                 for (int j = 0; j < NodeBorderWidth; j++)
@@ -318,21 +322,23 @@ namespace FocusTree.UI.Graph
                     var x = nodeRect.Left + i;
                     var y = nodeRect.Top + j;
                     var pixel = pInverseCacher.GetPixel(x, y);
-                    image.SetPixel(x, y, pixel);
+                    pImage.SetPixel(x, y, pixel);
                 }
             }
+            // right
             for (int i = NodeBorderWidth; i < nodeRect.Width - NodeBorderWidth; i++)
             {
                 for (int j = nodeRect.Height - NodeBorderWidth; j < nodeRect.Height; j++)
                 {
+                    if (j <= 0) { break; }
                     var x = nodeRect.Left + i;
                     var y = nodeRect.Top + j;
                     var pixel = pInverseCacher.GetPixel(x, y);
-                    image.SetPixel(x, y, pixel);
+                    pImage.SetPixel(x, y, pixel);
                 }
             }
             pInverseCacher.UnlockBits();
-            //pImage.UnlockBits();
+            pImage.UnlockBits();
         }
         /// <summary>
         /// 绘制有文字节点 - 确定区域内的像素分布（为选择字的颜色），并用黑、白纯色区分出文字和底纹的区别，好为下一步扣出字形
