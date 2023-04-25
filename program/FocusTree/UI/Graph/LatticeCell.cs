@@ -77,11 +77,11 @@ namespace FocusTree.UI.Graph
         /// <summary>
         /// 格元真实左边界
         /// </summary>
-        public int RealLeft { get => Width * LatticedLeft + Lattice.CellOffsetLeft; }
+        public int RealLeft { get => Width * LatticedLeft + Lattice.OriginLeft; }
         /// <summary>
         /// 格元真实上边界
         /// </summary>
-        public int RealTop { get => Height * LatticedTop + Lattice.CellOffsetTop; }
+        public int RealTop { get => Height * LatticedTop + Lattice.OriginTop; }
         /// <summary>
         /// 格元真实坐标矩形
         /// </summary>

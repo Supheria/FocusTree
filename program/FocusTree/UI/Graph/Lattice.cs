@@ -37,14 +37,6 @@ namespace FocusTree.UI.Graph
         /// </summary>
         public static Rectangle DrawRect { get; private set; }
         /// <summary>
-        /// 栅格绘图区域与放置区域的宽的差值的一半
-        /// </summary>
-        public static int DeviDiffInDrawRectWidth;
-        /// <summary>
-        /// 栅格绘图区域与放置区域的高的差值的一半
-        /// </summary>
-        public static int DeviDiffInDrawRectHeight;
-        /// <summary>
         /// 栅格坐标系原点 x 坐标
         /// </summary>
         public static int OriginLeft;
@@ -52,14 +44,6 @@ namespace FocusTree.UI.Graph
         /// 栅格坐标系原点 y 坐标
         /// </summary>
         public static int OriginTop;
-        /// <summary>
-        /// 格元横坐标偏移量，对栅格坐标系原点相对于 DrawRect 的左上角的偏移量，在格元大小内实施相似偏移量
-        /// </summary>
-        public static int CellOffsetLeft { get => OriginLeft - DrawRect.X + DeviDiffInDrawRectWidth; }
-        /// <summary>
-        /// 格元纵坐标偏移量，对栅格坐标系原点相对于 DrawRect 的左上角的偏移量，在格元大小内实施相似偏移量
-        /// </summary>
-        public static int CellOffsetTop { get => OriginTop - DrawRect.Y + DeviDiffInDrawRectHeight; }
 
         #endregion
 
@@ -76,7 +60,7 @@ namespace FocusTree.UI.Graph
         /// <summary>
         /// 坐标辅助线绘制用笔
         /// </summary>
-        public static Pen GuidePen = new Pen(Color.FromArgb(200, Color.Red), 0.5f);
+        public static Pen GuidePen = new Pen(Color.FromArgb(200, Color.Red), 1.75f);
         /// <summary>
         /// 需要单独绘制的格元委托列表
         /// </summary>
@@ -86,10 +70,6 @@ namespace FocusTree.UI.Graph
 
         #region ==== 指示器 ====
 
-        /// <summary>
-        /// 是否绘制坐标辅助线
-        /// </summary>
-        public static bool DrawGuideLine = true;
         /// <summary>
         /// 是否绘制背景栅格
         /// </summary>
@@ -112,11 +92,11 @@ namespace FocusTree.UI.Graph
             RowWidth = ColNumber * LatticeCell.Width;
             RowNumber = bounds.Height / LatticeCell.Height;
             ColHeight = RowNumber * LatticeCell.Height;
-            DeviDiffInDrawRectWidth = (int)((float)(bounds.Width - RowWidth) * 0.5f);
-            DeviDiffInDrawRectHeight = (int)((float)(bounds.Height - ColHeight) * 0.5f);
+            var deviDiffWidth = (int)((float)(bounds.Width - RowWidth) * 0.5f);
+            var deviDiffHeight = (int)((float)(bounds.Height - ColHeight) * 0.5f);
             DrawRect = new Rectangle(
-                bounds.X + DeviDiffInDrawRectWidth,
-                bounds.Y + DeviDiffInDrawRectHeight,
+                bounds.X + deviDiffWidth,
+                bounds.Y + deviDiffHeight,
                 RowWidth,
                 ColHeight
                 );
@@ -174,8 +154,8 @@ namespace FocusTree.UI.Graph
         /// <param name="drawAppend">是否补绘超出栅格绘图区域的部分</param>
         private static void DrawLoopCell(Graphics g, int col, int row)
         {
-            var cellLeft = col * LatticeCell.Width + (OriginLeft - DrawRect.X) % LatticeCell.Width + DeviDiffInDrawRectWidth;
-            var cellTop = row * LatticeCell.Height + (OriginTop - DrawRect.Y) % LatticeCell.Height + DeviDiffInDrawRectHeight;
+            var cellLeft = col * LatticeCell.Width + (OriginLeft) % LatticeCell.Width;
+            var cellTop = row * LatticeCell.Height + (OriginTop) % LatticeCell.Height;
             DrawLoopCellLine(g, CellPen, new(cellLeft, cellTop), new(LatticeCell.Width, LatticeCell.Height));
 
             var nodeLeft = cellLeft + LatticeCell.NodePaddingWidth;

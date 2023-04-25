@@ -1,6 +1,9 @@
 #define PointBmp
 using FocusTree.Data.Focus;
 using FocusTree.UI.test;
+using System.Drawing.Imaging;
+using System.Drawing;
+using System.Runtime.InteropServices;
 
 namespace FocusTree.UI.Graph
 {
@@ -81,8 +84,15 @@ namespace FocusTree.UI.Graph
 
         #endregion
 
-        #region ==== 背景图片 ====
+        #region ==== 背景 ====
 
+        /// <summary>
+        /// 无图片背景
+        /// </summary>
+        public static Color BlankBackground = Color.White;
+        /// <summary>
+        /// 背景图片文件路径
+        /// </summary>
         public static string BackImagePath = "Background.jpg";
         /// <summary>
         /// 背景图片
@@ -689,7 +699,7 @@ namespace FocusTree.UI.Graph
                     LatticeCell cell = new(point.X, point.Y);
                     if (Lattice.RectWithin(cell.RealRect, out var rect))
                     {
-                        g.FillRectangle(new SolidBrush(Color.White), rect);
+                        g.FillRectangle(new SolidBrush(BlankBackground), rect);
                     }
                     LastDrawnCells.Remove(point);
                 }
@@ -701,11 +711,112 @@ namespace FocusTree.UI.Graph
                     LatticeCell cell = new(point.X, point.Y);
                     if (Lattice.RectWithin(cell.RealRect, out var rect))
                     {
-                        g.DrawImage(BkCacher, rect, rect, GraphicsUnit.Pixel);
+                        int width = rect.Width, height = rect.Height;//图片的宽度和高度, 在内存中以读写模式锁定Bitmap
+                        BitmapData bitmapData = ((Bitmap)image).LockBits(
+                            new Rectangle(rect.Left , rect.Top, width, height),
+                            ImageLockMode.ReadWrite,
+                            PixelFormat.Format24bppRgb);
+                        //图片像素点数组的长度，由于一个像素点占了3个字节，所以要乘上3
+                        int size = width * height * 3;
+                        //缓冲区数组
+                        byte[] srcArray = new byte[size];
+                        //获取第一个像素的地址
+                        IntPtr ptr = bitmapData.Scan0;
+                        //把像素值复制到缓冲区
+                        Marshal.Copy(ptr, srcArray, 0, size);
+                        int p;
+
+                        BitmapData bitCacher = (BkCacher).LockBits(
+                            new Rectangle(rect.Left , rect.Top, width, height),
+                            ImageLockMode.ReadWrite,
+                            PixelFormat.Format24bppRgb);
+                        //图片像素点数组的长度，由于一个像素点占了3个字节，所以要乘上3
+                        //int size = width * height * 3;
+                        //缓冲区数组
+                        byte[] bkArray = new byte[size];
+                        //获取第一个像素的地址
+                        IntPtr bkPtr = bitCacher.Scan0;
+                        //把像素值复制到缓冲区
+                        Marshal.Copy(bkPtr, bkArray, 0, size);
+
+                        for (int i = 0; i < width; i++)
+                        {
+                            for (int j = 0; j < height; j++)
+                            {
+                                //定位像素点位置
+                                p = j * width * 3 + i * 3;
+                                //计算灰度值
+                                byte color = (byte)((bkArray[p] + bkArray[p + 1] + bkArray[p + 2]) / 3);
+                                srcArray[p] = srcArray[p + 1] = srcArray[p + 2] = color;
+                            }
+                        }
+                        //从缓冲区复制回BitmapData
+                        Marshal.Copy(srcArray, 0, ptr, size);
+                        //从内存中解锁
+                        ((Bitmap)image).UnlockBits(bitmapData);
+                        BkCacher.UnlockBits(bitCacher);
                     }
-                    LastDrawnCells.Remove(point);
                 }
+                
+                //PointBitmap pImage = new((Bitmap)image);
+                //pImage.LockBits();
+                //PointBitmap pCacher = new(BkCacher);
+                //pCacher.LockBits();
+                //foreach (var point in LastDrawnCells)
+                //{
+                //    LatticeCell cell = new(point.X, point.Y);
+                //    if (Lattice.RectWithin(cell.RealRect, out var rect))
+                //    {
+                //        //g.DrawImage(BkCacher, rect, rect, GraphicsUnit.Pixel);
+                //        for (int i = 0; i < rect.Width; i++)
+                //        {
+                //            for (int j = 0; j < rect.Height; j++)
+                //            {
+                //                var x = rect.Left + i;
+                //                var y = rect.Top + j;
+                //                var pixel = pCacher.GetPixel(x, y);
+                //                pImage.SetPixel(x, y, pixel);
+                //            }
+                //        }
+                //    }
+                //    LastDrawnCells.Remove(point);
+                //}
+                //pCacher.UnlockBits();
+                //pImage.UnlockBits();
             }
+            g.Flush(); g.Dispose();
+        }
+        /// <summary>
+        /// 将背景图片缓存设置为给定区域大小并填满区域，或填满白色到给定区域
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="rect"></param>
+        public static void DrawFillBackImage(Image image, Rectangle rect)
+        {
+            Graphics g = Graphics.FromImage(image);
+            if (!ShowBackground)
+            {
+                g.Clear(BlankBackground);
+                return;
+            }
+            GetBackImageCacher(rect.Size);
+            g.DrawImage(BkCacher, rect, rect, GraphicsUnit.Pixel);
+            g.Flush(); g.Dispose();
+        }
+        /// <summary>
+        /// 根据给定的矩形截取背景图片缓存并填充到 Image，或填充白色到给定矩形
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="rect"></param>
+        public static void DrawRectWithBackImage(Image image, Rectangle rect)
+        {
+            Graphics g = Graphics.FromImage(image);
+            if (!ShowBackground)
+            {
+                g.FillRectangle(new SolidBrush(BlankBackground), rect);
+                return;
+            }
+            g.DrawImage(BkCacher, rect, rect, GraphicsUnit.Pixel);
             g.Flush(); g.Dispose();
         }
     }
