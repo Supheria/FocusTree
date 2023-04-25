@@ -37,14 +37,6 @@ namespace FocusTree.UI.Graph
         /// </summary>
         public static Rectangle DrawRect { get; private set; }
         /// <summary>
-        /// 栅格绘图区域与放置区域的宽的差值的一半
-        /// </summary>
-        public static int DeviDiffInDrawRectWidth;
-        /// <summary>
-        /// 栅格绘图区域与放置区域的高的差值的一半
-        /// </summary>
-        public static int DeviDiffInDrawRectHeight;
-        /// <summary>
         /// 栅格坐标系原点 x 坐标
         /// </summary>
         public static int OriginLeft;
@@ -52,14 +44,6 @@ namespace FocusTree.UI.Graph
         /// 栅格坐标系原点 y 坐标
         /// </summary>
         public static int OriginTop;
-        /// <summary>
-        /// 格元横坐标偏移量，对栅格坐标系原点相对于 DrawRect 的左上角的偏移量，在格元大小内实施相似偏移量
-        /// </summary>
-        public static int CellOffsetLeft { get => OriginLeft - DrawRect.X + DeviDiffInDrawRectWidth; }
-        /// <summary>
-        /// 格元纵坐标偏移量，对栅格坐标系原点相对于 DrawRect 的左上角的偏移量，在格元大小内实施相似偏移量
-        /// </summary>
-        public static int CellOffsetTop { get => OriginTop - DrawRect.Y + DeviDiffInDrawRectHeight; }
 
         #endregion
 
@@ -76,7 +60,7 @@ namespace FocusTree.UI.Graph
         /// <summary>
         /// 坐标辅助线绘制用笔
         /// </summary>
-        public static Pen GuidePen = new Pen(Color.FromArgb(200, Color.Red), 0.5f);
+        public static Pen GuidePen = new Pen(Color.FromArgb(200, Color.Red), 1.75f);
         /// <summary>
         /// 需要单独绘制的格元委托列表
         /// </summary>
@@ -87,29 +71,9 @@ namespace FocusTree.UI.Graph
         #region ==== 指示器 ====
 
         /// <summary>
-        /// 是否绘制坐标辅助线
-        /// </summary>
-        public static bool DrawGuideLine = true;
-        /// <summary>
         /// 是否绘制背景栅格
         /// </summary>
         public static bool DrawBackLattice = false;
-        /// <summary>
-        /// 上一次绘图时的栅格原点横坐标
-        /// </summary>
-        public static int LastOriginLeft;
-        /// <summary>
-        /// 上一次绘图时的栅格原点纵坐标
-        /// </summary>
-        public static int LastOriginTop;
-        /// <summary>
-        /// 上一次绘图时的格元宽
-        /// </summary>
-        public static int LastCellWidth;
-        /// <summary>
-        /// 上一次绘图时的格元高
-        /// </summary>
-        public static int LastCellHeight;
 
         #endregion
 
@@ -128,11 +92,11 @@ namespace FocusTree.UI.Graph
             RowWidth = ColNumber * LatticeCell.Width;
             RowNumber = bounds.Height / LatticeCell.Height;
             ColHeight = RowNumber * LatticeCell.Height;
-            DeviDiffInDrawRectWidth = (int)((float)(bounds.Width - RowWidth) * 0.5f);
-            DeviDiffInDrawRectHeight = (int)((float)(bounds.Height - ColHeight) * 0.5f);
+            var deviDiffWidth = (int)((float)(bounds.Width - RowWidth) * 0.5f);
+            var deviDiffHeight = (int)((float)(bounds.Height - ColHeight) * 0.5f);
             DrawRect = new Rectangle(
-                bounds.X + DeviDiffInDrawRectWidth,
-                bounds.Y + DeviDiffInDrawRectHeight,
+                bounds.X + deviDiffWidth,
+                bounds.Y + deviDiffHeight,
                 RowWidth,
                 ColHeight
                 );
@@ -157,26 +121,23 @@ namespace FocusTree.UI.Graph
                         DrawLoopCell(g, i, j);
                     }
                 }
-                g.Flush(); g.Dispose();
-            }
-            if (DrawGuideLine)
-            {
-                var g = Graphics.FromImage(image);
+                // guide line
                 g.DrawLine(GuidePen, new(OriginLeft, DrawRect.Top), new(OriginLeft, DrawRect.Bottom));
                 g.DrawLine(GuidePen, new(DrawRect.Left, OriginTop), new(DrawRect.Right, OriginTop));
                 g.Flush(); g.Dispose();
             }
-            LastOriginLeft = OriginLeft;
-            LastOriginTop = OriginTop;
-            LastCellWidth = LatticeCell.Width;
-            LastCellHeight = LatticeCell.Height;
         }
         /// <summary>
         /// 清空绘制委托
         /// </summary>
         public static void DrawingClear()
         {
-            Drawing = null;
+            if (Drawing == null) { return; }
+            var delArray = Drawing.GetInvocationList();
+            foreach (var del in delArray)
+            {
+                Drawing -= del as CellDrawer;
+            }
         }
 
         #endregion
@@ -193,8 +154,8 @@ namespace FocusTree.UI.Graph
         /// <param name="drawAppend">是否补绘超出栅格绘图区域的部分</param>
         private static void DrawLoopCell(Graphics g, int col, int row)
         {
-            var cellLeft = col * LatticeCell.Width + (OriginLeft - DrawRect.X) % LatticeCell.Width + DeviDiffInDrawRectWidth;
-            var cellTop = row * LatticeCell.Height + (OriginTop - DrawRect.Y) % LatticeCell.Height + DeviDiffInDrawRectHeight;
+            var cellLeft = col * LatticeCell.Width + (OriginLeft) % LatticeCell.Width;
+            var cellTop = row * LatticeCell.Height + (OriginTop) % LatticeCell.Height;
             DrawLoopCellLine(g, CellPen, new(cellLeft, cellTop), new(LatticeCell.Width, LatticeCell.Height));
 
             var nodeLeft = cellLeft + LatticeCell.NodePaddingWidth;
@@ -284,24 +245,53 @@ namespace FocusTree.UI.Graph
         {
             saveRect = Rectangle.Empty;
             var left = rect.Left;
+            var right = rect.Right;
             var top = rect.Top;
-            var width = rect.Width;
-            var height = rect.Height;
+            var bottom = rect.Bottom;
             if (left < DrawRect.Left)
             {
-                width -= DrawRect.Left - left;
+                if (right <= DrawRect.Left) { return false; }
                 left = DrawRect.Left;
+            }
+            if (right > DrawRect.Right)
+            {
+                if (left >= DrawRect.Right) { return false; }
+                right = DrawRect.Right;
             }
             if (top < DrawRect.Top)
             {
-                height -= DrawRect.Top - top;
+                if (bottom <= DrawRect.Top) { return false; }
                 top = DrawRect.Top;
             }
-            saveRect = new(left, top,
-                left + width > DrawRect.Right ? DrawRect.Right - left : width,
-                top + height > DrawRect.Bottom ? DrawRect.Bottom - top : height
-                );
-            if (saveRect.Height <= 0 || saveRect.Width <= 0) { return false; }
+            if (bottom > DrawRect.Bottom)
+            {
+                if (top >= DrawRect.Bottom) { return false; }
+                bottom = DrawRect.Bottom;
+            }
+            saveRect = new(left, top, right - left + 1, bottom - top + 1);
+            return true;
+
+        }
+        public static bool RectWithin(Rectangle rect)
+        {
+            var right = rect.Right;
+            var bottom = rect.Bottom;
+            if (rect.Left < DrawRect.Left)
+            {
+                if (right <= DrawRect.Left) { return false; }
+            }
+            if (right > DrawRect.Right)
+            {
+                if (rect.Left >= DrawRect.Right) { return false; }
+            }
+            if (rect.Top < DrawRect.Top)
+            {
+                if (bottom <= DrawRect.Top) { return false; }
+            }
+            if (bottom > DrawRect.Bottom)
+            {
+                if (rect.Top >= DrawRect.Bottom) { return false; }
+            }
             return true;
         }
         /// <summary>
@@ -322,13 +312,13 @@ namespace FocusTree.UI.Graph
             var Right = DrawRect.Right;
             if (x1 < x2)
             {
-                if (x1 > Right || x2 < Left) { return false; }
+                if (x1 >= Right || x2 <= Left) { return false; }
                 if (x1 < Left) { x1 = Left; }
                 if (x2 > Right) { x2 = Right; }
             }
             else if (x2 < x1)
             {
-                if (x2 > Right || x1 < Left) { return false; }
+                if (x2 >= Right || x1 <= Left) { return false; }
                 if (x2 < Left) { x2 = Left; }
                 if (x1 > Right) { x1 = Right; }
             }
@@ -353,13 +343,13 @@ namespace FocusTree.UI.Graph
             var Bottom = DrawRect.Bottom;
             if (y1 < y2)
             {
-                if (y1 > Bottom || y2 < Top) { return false; }
+                if (y1 >= Bottom || y2 <= Top) { return false; }
                 if (y1 < Top) { y1 = Top; }
                 if (y2 > Bottom) { y2 = Bottom; }
             }
             else if (y2 < y1)
             {
-                if (y2 > Bottom || y1 < Top) { return false; }
+                if (y2 >= Bottom || y1 <= Top) { return false; }
                 if (y2 < Top) { y2 = Top; }
                 if (y1 > Bottom) { y1 = Bottom; }
             }

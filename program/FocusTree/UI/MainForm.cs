@@ -9,13 +9,20 @@ namespace FocusTree.UI
     public partial class MainForm : Form
     {
         readonly GraphBox Display;
+        FormWindowState LastState;
+        /// <summary>
+        /// 当触发 SizeChanged 事件时，强制调用 ResizeGraphBox
+        /// </summary>
+        public bool ForceResize = true;
         public MainForm()
         {
             Display = new GraphBox(this);
             InitializeComponent();
             UpdateText();
 
-            SizeChanged += MainForm_ResizeEnd;
+            ResizeEnd += MainForm_ResizeEnd;
+            SizeChanged += MainForm_SizeChanged;
+            Shown += MainForm_Shown;
 
             foreach (var name in Display.ToolDialogs.Keys)
             {
@@ -27,7 +34,7 @@ namespace FocusTree.UI
                 this.MainForm_Menu_window.DropDownItems.Add(item);
             }
 #if DEBUG
-            Display.LoadGraph("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\program\\FILES\\神佑村落.xml");
+            Display.LoadGraph("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\program\\FILES\\隐居村落_测试连线用.xml");
 
             //WindowState = FormWindowState.Minimized;
             //Display.SaveAsNew("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\国策\\国策测试\\test.xml");
@@ -40,12 +47,35 @@ namespace FocusTree.UI
 
         }
 
+        private void MainForm_Shown(object sender, EventArgs e)
+        {
+            ForceResize = false;
+        }
+
+        private void MainForm_SizeChanged(object sender, EventArgs e)
+        {
+            if (ForceResize || 
+                (LastState == FormWindowState.Maximized && WindowState == FormWindowState.Normal) || 
+                WindowState == FormWindowState.Maximized || 
+                WindowState == FormWindowState.Minimized)
+            {
+                ResizeGraphBox();
+            }
+        }
+
         private void MainForm_ResizeEnd(object sender, EventArgs e)
         {
-            Display.Left = ClientRectangle.Left;
-            Display.Top = ClientRectangle.Top + MainForm_Menu.Height;
-            Display.Width = ClientRectangle.Width;
-            Display.Height = ClientRectangle.Height - MainForm_Menu.Height - MainForm_StatusStrip.Height;
+            ResizeGraphBox();
+        }
+        private void ResizeGraphBox()
+        {
+            Display.Bounds = new(
+                ClientRectangle.Left,
+                ClientRectangle.Top + MainForm_Menu.Height,
+                ClientRectangle.Width,
+                ClientRectangle.Height - MainForm_Menu.Height - MainForm_StatusStrip.Height
+                );
+            LastState = WindowState;
         }
 
         #region ==== File ====
