@@ -168,7 +168,7 @@ namespace FocusTree.UI
             }
             if (Graph != null)
             {
-                GraphDrawer.RedrawLastDrawnCells(Image);
+                GraphDrawer.RedrawDrawnCells(Image);
             }
             if (DrawnInfoBrand)
             {

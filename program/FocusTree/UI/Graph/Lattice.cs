@@ -79,7 +79,6 @@ namespace FocusTree.UI.Graph
 
         #region ==== 绘制栅格 ====
 
-        static TestInfo test = new();
         /// <summary>
         /// 设置栅格放置区域（自动重置列行数）
         /// </summary>
@@ -87,7 +86,6 @@ namespace FocusTree.UI.Graph
         /// <param name="bounds">放置区域</param>
         public static void SetBounds(Rectangle bounds)
         {
-            test.Show();
             ColNumber = bounds.Width / LatticeCell.Width;
             RowWidth = ColNumber * LatticeCell.Width;
             RowNumber = bounds.Height / LatticeCell.Height;
@@ -108,8 +106,6 @@ namespace FocusTree.UI.Graph
         public static void Draw(Image image)
         {
             Drawing?.Invoke((Bitmap)image);
-
-            test.InfoText = $"{DrawRect}" + Drawing?.GetInvocationList().Length;
 
             if (DrawBackLattice)
             {

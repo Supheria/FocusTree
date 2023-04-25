@@ -512,8 +512,6 @@ namespace FocusTree.UI.Graph
             var widthDiff = endLoc.X - startLoc.X;
             var heightDiff = startLoc.Y - endLoc.Y;
             LatticeCell cell = new(startLoc.X, startLoc.Y);
-            LatticeCell endCell = new(endLoc.X, endLoc.Y);
-            if (!Lattice.RectWithin(cell.NodeRealRect) && !Lattice.RectWithin(endCell.NodeRealRect)) { return; }
             var paddingHeight = LatticeCell.NodePaddingHeight;
             var nodeWidth = LatticeCell.NodeWidth;
             var drLeft = Lattice.DrawRect.Left;
@@ -528,8 +526,13 @@ namespace FocusTree.UI.Graph
             var y = cell.RealTop + paddingHeight;
             cell.LatticedTop -= halfHeightDiff;
             var y2 = cell.RealTop + paddingHeight / 2;
-            if (x >= drLeft && x <= drRight)
+            //if (x >= drLeft && x <= drRight)
             {
+                for (int i = 0; i <= halfHeightDiff; i++)
+                {
+                    LatticeCell drawnCell = new(startLoc.X, startLoc.Y - i);
+                    if (Lattice.RectWithin(drawnCell.RealRect)) { LastDrawnCells.Add(drawnCell.LatticedPoint); }
+                }
                 if (Lattice.LineWithin(x, (y, y2), NodeBorderWidth, out var line))
                 {
                     DrawLine(image, line.Item1, line.Item2, pen, false);
@@ -537,17 +540,13 @@ namespace FocusTree.UI.Graph
                 ///
                 /// no test yet
                 /// 
-                for (int i = 0; i <= halfHeightDiff; i++)
-                {
-                    LatticeCell drawnCell = new(startLoc.X, startLoc.Y - i);
-                    if (Lattice.RectWithin(drawnCell.RealRect)) { LastDrawnCells.Add(drawnCell.LatticedPoint); }
-                }
+                
             }
             //
             // 横线
             //
             var cellY = startLoc.Y - halfHeightDiff;
-            if (Math.Abs(widthDiff) > 0 && y2 >= drTop && y2 <= drBottom)
+            //if (Math.Abs(widthDiff) > 0 && y2 >= drTop && y2 <= drBottom)
             {
                 cell.LatticedLeft += widthDiff;
                 var x2 = cell.NodeRealLeft + nodeWidth / 2;
@@ -566,7 +565,7 @@ namespace FocusTree.UI.Graph
             // 竖线2
             //
             x = cell.NodeRealLeft + nodeWidth / 2;
-            if (x >= drLeft && x <= drRight)
+            //if (x >= drLeft && x <= drRight)
             {
                 y = y2;
                 var leaveHeight = heightDiff - halfHeightDiff - 1;
@@ -656,7 +655,11 @@ namespace FocusTree.UI.Graph
             pInverseCacher.UnlockBits();
             pImage.UnlockBits();
         }
-        public static void RedrawLastDrawnCells(Image image)
+        /// <summary>
+        /// 重绘已绘制的格元
+        /// </summary>
+        /// <param name="image"></param>
+        public static void RedrawDrawnCells(Image image)
         {
             Graphics g = Graphics.FromImage(image);
             if (!ShowBackground)
@@ -678,6 +681,7 @@ namespace FocusTree.UI.Graph
                     LatticeCell cell = new(point.X, point.Y);
                     if (Lattice.RectWithin(cell.RealRect, out var rect))
                     {
+                        //PointBitmap.FillRectWithSource((Bitmap)image, BkCacher, rect);
                         g.DrawImage(BkCacher, rect, rect, GraphicsUnit.Pixel);
                     }
                     LastDrawnCells.Remove(point);
