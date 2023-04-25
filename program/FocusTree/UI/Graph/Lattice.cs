@@ -176,7 +176,12 @@ namespace FocusTree.UI.Graph
         /// </summary>
         public static void DrawingClear()
         {
-            Drawing = null;
+            if (Drawing == null) { return; }
+            var delArray = Drawing.GetInvocationList();
+            foreach (var del in delArray)
+            {
+                Drawing -= del as CellDrawer;
+            }
         }
 
         #endregion

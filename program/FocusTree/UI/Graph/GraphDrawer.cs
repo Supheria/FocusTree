@@ -1,4 +1,4 @@
-﻿#define PointBmp
+#define PointBmp
 using FocusTree.Data.Focus;
 using FocusTree.UI.test;
 
@@ -9,6 +9,8 @@ namespace FocusTree.UI.Graph
     /// </summary>
     public static class GraphDrawer
     {
+        #region ==== 字体 ====
+
         /// <summary>
         /// 节点字体
         /// </summary>
@@ -25,15 +27,34 @@ namespace FocusTree.UI.Graph
             Alignment = StringAlignment.Center,
             LineAlignment = StringAlignment.Center
         };
+
+        #endregion
+
+        #region ==== 画笔 ====
+
+        /// <summary>
+        /// 节点边框宽度
+        /// </summary>
+        public static int NodeBorderWidth = 2;
         /// <summary>
         /// 节点文字颜色
         /// </summary>
         public static Color NodeFG { get; private set; } = Color.FromArgb(175, Color.DarkBlue);
         /// <summary>
+        /// 节点文字颜色 - 背景图片 - 重色
+        /// </summary>
+        public static Color NodeFG_BkDark { get; private set; } = Color.FromArgb(175, Color.Black);
+        /// <summary>
+        /// 节点文字颜色 - 背景图片 - 浅色
+        /// </summary>
+        public static Color NodeFG_BkLight { get; private set; } = Color.FromArgb(175, Color.AliceBlue);
+        /// <summary>
         /// 默认节点背景颜色
         /// </summary>
-        public static SolidBrush NodeBG_Normal { get; private set; } = new(Color.FromArgb(100, Color.Cyan));
-        public static Color NodeBG { get; private set; } = Color.FromArgb(100, Color.Cyan);
+        public static Color NodeBG_Normal { get; private set; } = Color.FromArgb(100, Color.Cyan);
+        /// <summary>
+        /// 节点背景颜色阴影
+        /// </summary>
         public static Color NodeBGShadow { get; private set; } = Color.FromArgb(100, Color.DarkBlue);
         /// <summary>
         /// 冲突节点的背景颜色
@@ -47,12 +68,26 @@ namespace FocusTree.UI.Graph
         /// 选中节点背景颜色
         /// </summary>
         public static SolidBrush NodeBG_Selecting { get; private set; } = new(Color.FromArgb(80, Color.BlueViolet));
-        public static int NodeBorderWidth = 2;
-        public static int PenWidth = 2;
+        /// <summary>
+        /// 节点连接线条（每个依赖组使用单独的颜色）
+        /// </summary>
+        public static Pen[] NodeRequire { get; private set; } = new Pen[]{
+            new(Color.FromArgb(100, Color.Cyan), 2),
+            new(Color.FromArgb(100, Color.Yellow), 2),
+            new(Color.FromArgb(100, Color.Green), 2),
+            new(Color.FromArgb(100, Color.Orange), 2),
+            new(Color.FromArgb(100, Color.Purple), 2)
+        };
+
+        #endregion
+
+        #region ==== 背景图片 ====
+
+        public static string BackImagePath = "Background.jpg";
         /// <summary>
         /// 背景图片
         /// </summary>
-        public static readonly Bitmap BackImage;
+        public static Bitmap BackImage { get; private set; }
         /// <summary>
         /// 反色背景图片
         /// </summary>
@@ -68,35 +103,42 @@ namespace FocusTree.UI.Graph
         /// <summary>
         /// 是否显示背景图片
         /// </summary>
-        public static readonly bool ShowBackGroung = false;
-        /// <summary>
-        /// 节点连接线条（每个依赖组使用单独的颜色）
-        /// </summary>
-        public static Pen[] NodeRequire { get; private set; } = new Pen[]{
-            new(Color.FromArgb(100, Color.Cyan), 2),
-            new(Color.FromArgb(100, Color.Yellow), 2),
-            new(Color.FromArgb(100, Color.Green), 2),
-            new(Color.FromArgb(100, Color.Orange), 2),
-            new(Color.FromArgb(100, Color.Purple), 2)
-        };
+        public static bool ShowBackground { get; private set; } = false;
+
+        #endregion
+
+        #region ==== 绘制委托列表 ====
+
         /// <summary>
         /// 节点绘制委托列表
         /// </summary>
         public static Dictionary<int, CellDrawer> NodeDrawerCatalog { get; private set; } = new();
+        /// <summary>
+        /// 关系线绘制委托列表
+        /// </summary>
         static Dictionary<(int, int), CellDrawer> LineDrawerCatalog = new();
-        public static HashSet<Point> LastDrawnCells = new();
+
+        #endregion
+
+        #region ==== 加载背景图片 ====
+
+        static GraphDrawer()
+        {
+            LoadBackImage();
+        }
         /// <summary>
         /// 加载背景图片并反色
         /// </summary>
-        static GraphDrawer()
+        public static void LoadBackImage()
         {
-            if (!File.Exists("Background.jpg")) { return; }
-            BackImage = (Bitmap)Image.FromFile("Background.jpg");
-            ShowBackGroung = true;
+            if (!File.Exists(BackImagePath)) { return; }
+            BackImage = (Bitmap)Image.FromFile(BackImagePath);
+            ShowBackground = true;
 
-            if (File.Exists("Background_Inverse.jpg"))
+            var inversePath = Path.Combine(Path.GetDirectoryName(BackImagePath), Path.GetFileNameWithoutExtension(BackImagePath) + "_Inverse.jpg");
+            if (File.Exists(inversePath))
             {
-                BackImageInverse = (Bitmap)Image.FromFile("Background_Inverse.jpg");
+                BackImageInverse = (Bitmap)Image.FromFile(inversePath);
                 return;
             }
             var width = BackImage.Width;
@@ -117,7 +159,17 @@ namespace FocusTree.UI.Graph
             }
             pInverse.UnlockBits();
             pImage.UnlockBits();
-            BackImageInverse.Save("Background_Inverse.jpg");
+            BackImageInverse.Save(inversePath);
+        }
+        /// <summary>
+        /// 获取背景图片在给定尺寸下的缓存，如果为null或尺寸不同则获取后返回
+        /// </summary>
+        /// <param name="size"></param>
+        /// <returns></returns>
+        public static Image GetBackImageCacher(Size size)
+        {
+            if (BkCacher == null || size != BkCacher.Size) { SetBackImageCacher(size); }
+            return BkCacher;
         }
         /// <summary>
         /// 根据给定尺寸设置背景图片缓存
@@ -140,34 +192,31 @@ namespace FocusTree.UI.Graph
                 bkHeight = Height;
                 bkWidth = (int)(Height * sourceRatio);
             }
-            if (BkCacher != null && bkWidth == BkCacher.Width && bkHeight == BkCacher.Height) { return; }
-            BkCacher?.Dispose();
-            BkInverseCacher?.Dispose();
+            if (BkCacher == null || new Size(bkWidth, bkHeight) != BkCacher.Size)
+            {
+                BkCacher?.Dispose();
+                BkInverseCacher?.Dispose();
 
-            BkCacher = new Bitmap(bkWidth, bkHeight);
-            var g = Graphics.FromImage(BkCacher);
-            g.DrawImage(BackImage, 0, 0, bkWidth, bkHeight);
-            g.Flush();
+                BkCacher = new Bitmap(bkWidth, bkHeight);
+                var g = Graphics.FromImage(BkCacher);
+                g.DrawImage(BackImage, 0, 0, bkWidth, bkHeight);
+                g.Flush();
 
-            BkInverseCacher = new Bitmap(bkWidth, bkHeight);
-            g = Graphics.FromImage(BkInverseCacher);
-            g.DrawImage(BackImageInverse, 0, 0, bkWidth, bkHeight);
-            g.Flush(); g.Dispose();
+                BkInverseCacher = new Bitmap(bkWidth, bkHeight);
+                g = Graphics.FromImage(BkInverseCacher);
+                g.DrawImage(BackImageInverse, 0, 0, bkWidth, bkHeight);
+                g.Flush(); g.Dispose();
+            }
         }
+
+        #endregion
+
+        #region ==== 上载绘制委托 ====
+
         /// <summary>
-        /// 获取背景图片在给定尺寸下的缓存，如果为null或尺寸不同则获取后返回
+        /// 将节点绘制上载到栅格绘图委托
         /// </summary>
-        /// <param name="size"></param>
-        /// <returns></returns>
-        public static Image GetBackImageCacher(Size size)
-        {
-            if (BkCacher == null || size != BkCacher.Size) { SetBackImageCacher(size); }
-            return BkCacher;
-        }
-        /// <summary>
-        /// 将节点绘制上载到栅格绘图委托（要更新栅格放置区域，应该先更新再调用此方法，因为使用了裁剪超出绘图区域的绘图方法）
-        /// </summary>
-        public static void UploadNodeMap(FocusData focus)
+        public static void UploadDrawerNode(FocusData focus)
         {
             var id = focus.ID;
             LatticeCell cell = new(focus);
@@ -177,6 +226,25 @@ namespace FocusTree.UI.Graph
             }
             Lattice.Drawing += NodeDrawerCatalog[id] = (image) => DrawNode(image, focus);
         }
+        /// <summary>
+        /// 将节点关系线绘制到栅格绘图委托
+        /// </summary>
+        /// <param name="penIndex">笔颜色</param>
+        /// <param name="start">起始国策</param>
+        /// <param name="end">结束国策</param>
+        public static void UploadDrawerRequireLine(int penIndex, FocusData start, FocusData end)
+        {
+            (int, int) ID = (start.ID, end.ID);
+            if (LineDrawerCatalog.TryGetValue(ID, out var drawer))
+            {
+                Lattice.Drawing -= drawer;
+            }
+            Lattice.Drawing += LineDrawerCatalog[ID] = (image) => DrawRequireLine(image, NodeRequire[penIndex], start.LatticedPoint, end.LatticedPoint);
+
+        }
+
+        #endregion
+
         public static void DrawNode(Bitmap image, FocusData focus)
         {
             LatticeCell cell = new(focus);
@@ -188,7 +256,6 @@ namespace FocusTree.UI.Graph
                 DrawBlankNode(image, nodeRect);
             }
             else { DrawStringNode(image, nodeRect, focus.Name); }
-            LastDrawnCells.Add(cell.LatticedPoint);
         }
         /// <summary>
         /// 绘制无文字节点
@@ -199,7 +266,7 @@ namespace FocusTree.UI.Graph
         private static void DrawBlankNode(Bitmap image, Rectangle nodeRect)
         {
             PointBitmap pImage = new(image);
-            if (!ShowBackGroung)
+            if (!ShowBackground)
             {
                 pImage.LockBits();
                 for (int i = 0; i < nodeRect.Width; i++)
@@ -212,7 +279,7 @@ namespace FocusTree.UI.Graph
                         {
                             pImage.SetPixel(x, y, NodeBGShadow);
                         }
-                        else { pImage.SetPixel(x, y, NodeBG); }
+                        else { pImage.SetPixel(x, y, NodeBG_Normal); }
                     }
                 }
                 pImage.UnlockBits();
@@ -275,7 +342,7 @@ namespace FocusTree.UI.Graph
         {
             int black = 0;
             int white = 0;
-            if (ShowBackGroung)
+            if (ShowBackground)
             {
                 PointBitmap pImage = new(image);
                 pImage.LockBits();
@@ -296,8 +363,9 @@ namespace FocusTree.UI.Graph
             }
             var fontHeight = name.Length / 3;
             if (fontHeight == 1 && name.Length % 3 != 0) { fontHeight++; }
-            else if (fontHeight == 0) { fontHeight++; }
+            if (fontHeight == 0) { fontHeight++; }
             var fontWidth = name.Length / fontHeight;
+            if (name.Length % 3 != 0) { fontWidth++; }
             var fontSizeH = 0.7f * nodeRect.Height / fontHeight;
             var fontSizeW = 0.7f * nodeRect.Width / fontWidth;
             var fontSize = Math.Min(fontSizeH, fontSizeW);
@@ -308,7 +376,7 @@ namespace FocusTree.UI.Graph
                 sName = string.Empty;
                 for (int i = 0; i < fontHeight; i++)
                 {
-                    sName += $"{name.Substring(i * fontWidth, fontWidth)}\n";
+                    sName += $"{name.Substring(i * fontWidth, fontWidth > name.Length - i * fontWidth ? name.Length - i * fontWidth : fontWidth)}\n";
                 }
                 sName = sName[..^1];
             }
@@ -330,7 +398,7 @@ namespace FocusTree.UI.Graph
         private static void DrawStringNode(Bitmap image, Rectangle rect, int white, int black)
         {
             PointBitmap pImage = new(image);
-            if (!ShowBackGroung)
+            if (!ShowBackground)
             {
                 pImage.LockBits();
                 for (int i = 0; i < rect.Width; i++)
@@ -349,7 +417,7 @@ namespace FocusTree.UI.Graph
                         {
                             pImage.SetPixel(x, y, NodeBGShadow);
                         }
-                        else { pImage.SetPixel(x, y, NodeBG); }
+                        else { pImage.SetPixel(x, y, NodeBG_Normal); }
                     }
                 }
                 pImage.UnlockBits();
@@ -379,11 +447,11 @@ namespace FocusTree.UI.Graph
                     }
                     if (black < white)
                     {
-                        pImage.SetPixel(x, y, Color.FromArgb(255, Color.DarkBlue));
+                        pImage.SetPixel(x, y, NodeFG_BkDark);
                     }
                     else
                     {
-                        pImage.SetPixel(x, y, Color.FromArgb(255, Color.AliceBlue));
+                        pImage.SetPixel(x, y, NodeFG_BkLight);
                     }
                 }
             }
@@ -397,7 +465,7 @@ namespace FocusTree.UI.Graph
         /// <param name="g"></param>
         /// <param name="id"></param>
         /// <param name="brush"></param>
-        public static void DrawNode(Graphics g, FocusData focus, SolidBrush brush)
+        public static void DrawNode(Graphics g, FocusData focus, Color color)
         {
             LatticeCell cell = new(focus);
             var rect = cell.InnerPartRealRects[LatticeCell.Parts.Node];
@@ -405,7 +473,7 @@ namespace FocusTree.UI.Graph
             rect = saveRect;
             Rectangle shadowRect = new(rect.Left + NodeBorderWidth, rect.Top + NodeBorderWidth, rect.Width, rect.Height);
             g.FillRectangle(new SolidBrush(Color.White), shadowRect);
-            g.FillRectangle(brush, rect);
+            g.FillRectangle(new SolidBrush(color), rect);
             var testRect = cell.RealRect;
             if (testRect.Width < LatticeCell.SizeMax.Width / 2 || testRect.Height < LatticeCell.SizeMax.Height / 2) { return; }
 
@@ -433,22 +501,13 @@ namespace FocusTree.UI.Graph
             g.Flush();
         }
         /// <summary>
-        /// 将节点关系线绘制到栅格绘图委托
+        /// 绘制关系线 - 寻找线的起点和终点
         /// </summary>
+        /// <param name="image"></param>
         /// <param name="pen"></param>
         /// <param name="startLoc"></param>
         /// <param name="endLoc"></param>
-        public static void UploadRequireLine(int penIndex, FocusData start, FocusData end)
-        {
-            (int, int) ID = (start.ID, end.ID);
-            if (LineDrawerCatalog.TryGetValue(ID, out var drawer))
-            {
-                Lattice.Drawing -= drawer;
-            }
-            Lattice.Drawing += LineDrawerCatalog[ID] = (image) => DrawLines(image, NodeRequire[penIndex], start.LatticedPoint, end.LatticedPoint);
-
-        }
-        public static void DrawLines(Bitmap image, Pen pen, Point startLoc, Point endLoc)
+        public static void DrawRequireLine(Bitmap image, Pen pen, Point startLoc, Point endLoc)
         {
             var widthDiff = endLoc.X - startLoc.X;
             var heightDiff = startLoc.Y - endLoc.Y;
@@ -483,11 +542,18 @@ namespace FocusTree.UI.Graph
             x = cell.NodeRealLeft + nodeWidth / 2;
             DrawLine(image, x, (y1, y2), pen);
         }
+        /// <summary>
+        /// 绘制竖线
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="pen"></param>
         private static void DrawLine(Bitmap image, int x, (int, int) y, Pen pen)
         {
-            Rectangle lineRect = new(x - PenWidth / 2, Math.Min(y.Item1, y.Item2), PenWidth, Math.Abs(y.Item1 - y.Item2));
+            Rectangle lineRect = new(x - NodeBorderWidth / 2, Math.Min(y.Item1, y.Item2), NodeBorderWidth, Math.Abs(y.Item1 - y.Item2));
             if (!Lattice.RectWithin(lineRect, out var rect)) { return; }
-            if (!ShowBackGroung)
+            if (!ShowBackground)
             {
                 if (Lattice.LineWithin(x, y, pen.Width, out var line))
                 {
@@ -518,11 +584,18 @@ namespace FocusTree.UI.Graph
             pInverseCacher.UnlockBits();
             pImage.UnlockBits();
         }
+        /// <summary>
+        /// 绘制横线
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="pen"></param>
         private static void DrawLine(Bitmap image, (int, int) x, int y, Pen pen)
         {
-            Rectangle lineRect = new(Math.Min(x.Item1, x.Item2), y - PenWidth / 2, Math.Abs(x.Item1 - x.Item2) + 2, PenWidth);
+            Rectangle lineRect = new(Math.Min(x.Item1, x.Item2), y - NodeBorderWidth / 2, Math.Abs(x.Item1 - x.Item2) + 2, NodeBorderWidth);
             if (!Lattice.RectWithin(lineRect, out var rect)) { return; }
-            if (!ShowBackGroung)
+            if (!ShowBackground)
             {
                 if (Lattice.LineWithin(x, y, pen.Width, out var line))
                 {

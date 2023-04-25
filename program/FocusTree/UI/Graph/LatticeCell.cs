@@ -17,7 +17,7 @@ namespace FocusTree.UI.Graph
             get => width;
             set => width = value < SizeMin.Width ? SizeMin.Width : value > SizeMax.Width ? SizeMax.Width : value;
         }
-        static int width;
+        static int width = 30;
         /// <summary>
         /// 格元高（限制最小值和最大值）
         /// </summary>
@@ -26,7 +26,7 @@ namespace FocusTree.UI.Graph
             get => height;
             set => height = value < SizeMin.Height ? SizeMin.Height : value > SizeMax.Height ? SizeMax.Height : value;
         }
-        static int height;
+        static int height = 30;
         /// <summary>
         /// 最小尺寸
         /// </summary>
@@ -59,7 +59,7 @@ namespace FocusTree.UI.Graph
             get => new(npf.X < 0.3f ? 0.3f : npf.X > 0.7f ? 0.7f : npf.X, npf.Y < 0.3f ? 0.3f : npf.Y > 0.7f ? 0.7f : npf.Y);
             set => npf = new(value.X < 0.3f ? 0.3f : value.X > 0.7f ? 0.7f : value.X, value.Y < 0.3f ? 0.3f : value.Y > 0.7f ? 0.7f : value.Y);
         }
-        public static PointF npf;
+        static PointF npf = new(0.3f, 0.5f);
 
         #endregion
 
@@ -113,14 +113,17 @@ namespace FocusTree.UI.Graph
             LatticedTop = 0;
         }
         /// <summary>
-        /// 使用坐标位置创建，将坐标自动转换为栅格化坐标
+        /// 使用真实坐标创建，将坐标转换为栅格化坐标
         /// </summary>
         /// <param name="cursor"></param>
         public LatticeCell(Point point)
         {
-            point = PointToLatticedPoint(point);
-            LatticedLeft = point.X;
-            LatticedTop = point.Y;
+            var widthDiff = point.X - Lattice.OriginLeft;
+            var heightDiff = point.Y - Lattice.OriginTop;
+            LatticedLeft = widthDiff / Width;
+            LatticedTop = heightDiff / Height;
+            if (widthDiff < 0) { LatticedLeft--; }
+            if (heightDiff < 0) { LatticedTop--; }
         }
         /// <summary>
         /// 使用已有的栅格化坐标创建
@@ -221,21 +224,5 @@ namespace FocusTree.UI.Graph
         }
 
         #endregion
-
-        /// <summary>
-        /// 将坐标转换为栅格化坐标
-        /// </summary>
-        /// <param name="point"></param>
-        /// <returns></returns>
-        public static Point PointToLatticedPoint(Point point)
-        {
-            var widthDiff = point.X - Lattice.OriginLeft;
-            var heightDiff = point.Y - Lattice.OriginTop;
-            var latticedLeft = widthDiff / Width;
-            var latticedTop = heightDiff / Height;
-            if (widthDiff < 0) { latticedLeft--; }
-            if (heightDiff < 0) { latticedTop--; }
-            return new(latticedLeft, latticedTop);
-        }
     }
 }
