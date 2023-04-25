@@ -172,11 +172,12 @@ namespace FocusTree.UI
         /// </summary>
         public void RedrawBackground()
         {
-            foreach (var rect in LastDrawArea)
-            {
-                DrawBackground(rect);
-            }
-            SetLastDrawArea();
+            //foreach (var rect in LastDrawArea)
+            //{
+            //    DrawBackground(rect);
+            //}
+            //SetLastDrawArea();
+            GraphDrawer.RedrawLastDrawnCells(Image);
         }
         /// <summary>
         /// 设置上一次非背景绘图区域

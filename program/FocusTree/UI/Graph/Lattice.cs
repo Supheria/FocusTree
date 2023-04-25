@@ -289,24 +289,36 @@ namespace FocusTree.UI.Graph
         {
             saveRect = Rectangle.Empty;
             var left = rect.Left;
+            var right = rect.Right;
             var top = rect.Top;
+            var bottom = rect.Bottom;
             var width = rect.Width;
             var height = rect.Height;
             if (left < DrawRect.Left)
             {
+                if (right <= DrawRect.Left) { return false; }
                 width -= DrawRect.Left - left;
                 left = DrawRect.Left;
             }
+            if (right > DrawRect.Right)
+            {
+                if (left >=  DrawRect.Right) { return false; }
+                width -= right - DrawRect.Right;
+            }
             if (top < DrawRect.Top)
             {
+                if (bottom <=  DrawRect.Top) { return false; }
                 height -= DrawRect.Top - top;
                 top = DrawRect.Top;
             }
-            saveRect = new(left, top,
-                left + width > DrawRect.Right ? DrawRect.Right - left : width,
-                top + height > DrawRect.Bottom ? DrawRect.Bottom - top : height
-                );
-            if (saveRect.Height <= 0 || saveRect.Width <= 0) { return false; }
+            if (bottom > DrawRect.Bottom)
+            {
+                if (top >=  DrawRect.Bottom) { return false; }
+                height -= bottom - DrawRect.Bottom;
+            }
+            saveRect = new(left, top, width, height);
+            //if (saveRect.Height <= 0 || saveRect.Width <= 0) 
+            //{ return false; }
             return true;
         }
         /// <summary>
