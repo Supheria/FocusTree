@@ -436,23 +436,23 @@ namespace FocusTree.UI.Graph
                 {
                     var pixel = pImage.GetPixel(i, j);
                     var bkPixel = pCacher.GetPixel(i, j);
-                    if (pixel.R == 255 && pixel.G == 255 && pixel.B == 255)
+                    if (pixel.R != 255 || pixel.G != 255 || pixel.B != 255)
                     {
-                        if (i <= NodeBorderWidth || i >= rect.Width - NodeBorderWidth || j <= NodeBorderWidth || j >= rect.Height - NodeBorderWidth)
+                        if (black < white)
                         {
-                            bkPixel = pInverseCacher.GetPixel(i, j);
+                            pImage.SetPixel(i, j, NodeFG_BkDark);
                         }
-                        pImage.SetPixel(i, j, bkPixel);
+                        else
+                        {
+                            pImage.SetPixel(i, j, NodeFG_BkLight);
+                        }
                         continue;
                     }
-                    if (black < white)
+                    if (i <= NodeBorderWidth || i >= rect.Width - NodeBorderWidth || j <= NodeBorderWidth || j >= rect.Height - NodeBorderWidth)
                     {
-                        pImage.SetPixel(i, j, NodeFG_BkDark);
+                        bkPixel = pInverseCacher.GetPixel(i, j);
                     }
-                    else
-                    {
-                        pImage.SetPixel(i, j, NodeFG_BkLight);
-                    }
+                    pImage.SetPixel(i, j, bkPixel);
                 }
             }
             pInverseCacher.UnlockBits();
@@ -580,7 +580,7 @@ namespace FocusTree.UI.Graph
                 /// no test yet
                 ///
                 var cellX = startLoc.X + widthDiff;
-                for (int i = 0; i < leaveHeight; i++)
+                for (int i = 0; i <= leaveHeight; i++)
                 {
                     LatticeCell drawnCell = new(cellX, cellY - i);
                     if (Lattice.RectWithin(drawnCell.RealRect)) { LastDrawnCells.Add(drawnCell.LatticedPoint); }
@@ -678,12 +678,7 @@ namespace FocusTree.UI.Graph
                     LatticeCell cell = new(point.X, point.Y);
                     if (Lattice.RectWithin(cell.RealRect, out var rect))
                     {
-                        //g.DrawImage(BkCacher, rect, rect, GraphicsUnit.Pixel);
-                        ImageDrawer drawer = new((Bitmap)image, BkCacher, rect);
-                        Thread th1 = new(new ThreadStart(drawer.DrawRect1));
-                        Thread th2 = new(new ThreadStart(drawer.DrawRect2));
-                        th1.Start();
-                        th2.Start();
+                        g.DrawImage(BkCacher, rect, rect, GraphicsUnit.Pixel);
                     }
                     LastDrawnCells.Remove(point);
                 }

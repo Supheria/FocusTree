@@ -118,7 +118,7 @@ namespace FocusTree.UI
         /// <summary>
         /// 鼠标移动灵敏度（值越大越迟顿）
         /// </summary>
-        static int MouseMoveSensibility = 15;
+        static int MouseMoveSensibility = 20;
         /// <summary>
         /// 拖动事件使用的鼠标参照坐标
         /// </summary>
