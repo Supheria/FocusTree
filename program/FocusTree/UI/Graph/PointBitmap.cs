@@ -44,13 +44,8 @@ namespace FocusTree.UI.Graph
                 throw new ArgumentException("Only 8, 24 and 32 bpp images are supported.");
             }
             // Lock bitmap and return bitmap data
-            try
-            {
-
-                bitmapData = source.LockBits(rect, ImageLockMode.ReadWrite,
+            bitmapData = source.LockBits(rect, ImageLockMode.ReadWrite,
                                              source.PixelFormat);
-            }
-            catch { return; }
             //得到首地址
             unsafe
             {
@@ -117,36 +112,31 @@ namespace FocusTree.UI.Graph
         {
             unsafe
             {
-                try
+                byte* ptr = (byte*)Iptr;
+                ptr = ptr + bitmapData.Stride * y;
+                ptr += Depth * x / 8;
+                Color c = Color.Empty;
+                if (Depth == 32)
                 {
-                    byte* ptr = (byte*)Iptr;
-                    ptr = ptr + bitmapData.Stride * y;
-                    ptr += Depth * x / 8;
-                    Color c = Color.Empty;
-                    if (Depth == 32)
-                    {
-                        int a = ptr[3];
-                        int r = ptr[2];
-                        int g = ptr[1];
-                        int b = ptr[0];
-                        c = Color.FromArgb(a, r, g, b);
-                    }
-                    else if (Depth == 24)
-                    {
-                        int r = ptr[2];
-                        int g = ptr[1];
-                        int b = ptr[0];
-                        c = Color.FromArgb(r, g, b);
-                    }
-                    else if (Depth == 8)
-                    {
-                        int r = ptr[0];
-                        c = Color.FromArgb(r, r, r);
-                    }
-                    return c;
+                    int a = ptr[3];
+                    int r = ptr[2];
+                    int g = ptr[1];
+                    int b = ptr[0];
+                    c = Color.FromArgb(a, r, g, b);
                 }
-                catch 
-                { return Color.Empty; }
+                else if (Depth == 24)
+                {
+                    int r = ptr[2];
+                    int g = ptr[1];
+                    int b = ptr[0];
+                    c = Color.FromArgb(r, g, b);
+                }
+                else if (Depth == 8)
+                {
+                    int r = ptr[0];
+                    c = Color.FromArgb(r, r, r);
+                }
+                return c;
             }
         }
 

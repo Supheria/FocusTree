@@ -297,7 +297,6 @@ namespace FocusTree.UI.Graph
                 pImage.UnlockBits();
                 return;
             }
-
             pImage.LockBits();
             PointBitmap pInverseCacher = new(BkInverseCacher);
             pInverseCacher.LockBits();
@@ -525,6 +524,7 @@ namespace FocusTree.UI.Graph
         /// <param name="pen"></param>
         /// <param name="startLoc"></param>
         /// <param name="endLoc"></param>
+        [Obsolete("这玩意可能还有bug，不过把所有节点都加入列表里了应该就可以避免，但这样做就很感觉不靠谱")]
         public static void DrawRequireLine(Bitmap image, Pen pen, Point startLoc, Point endLoc)
         {
             var widthDiff = endLoc.X - startLoc.X;
@@ -544,7 +544,7 @@ namespace FocusTree.UI.Graph
             var y = cell.RealTop + paddingHeight;
             cell.LatticedTop -= halfHeightDiff;
             var y2 = cell.RealTop + paddingHeight / 2;
-            //if (x >= drLeft && x <= drRight)
+            if (x >= drLeft && x <= drRight)
             {
                 if (Lattice.LineWithin(x, (y, y2), NodeBorderWidth, out var line))
                 {
@@ -563,7 +563,7 @@ namespace FocusTree.UI.Graph
             // 横线
             //
             var cellY = startLoc.Y - halfHeightDiff;
-            //if (Math.Abs(widthDiff) > 0 && y2 >= drTop && y2 <= drBottom)
+            if (Math.Abs(widthDiff) > 0)
             {
                 cell.LatticedLeft += widthDiff;
                 var x2 = cell.NodeRealLeft + nodeWidth / 2;
@@ -582,7 +582,7 @@ namespace FocusTree.UI.Graph
             // 竖线2
             //
             x = cell.NodeRealLeft + nodeWidth / 2;
-            //if (x >= drLeft && x <= drRight)
+            if (x >= drLeft && x <= drRight)
             {
                 y = y2;
                 var leaveHeight = heightDiff - halfHeightDiff - 1;
@@ -596,7 +596,7 @@ namespace FocusTree.UI.Graph
                 /// no test yet
                 ///
                 var cellX = startLoc.X + widthDiff;
-                for (int i = 0; i < leaveHeight; i++)
+                for (int i = 0; i <= leaveHeight; i++)
                 {
                     LatticeCell drawnCell = new(cellX, cellY - i);
                     if (Lattice.RectWithin(drawnCell.RealRect)) { LastDrawnCells.Add(drawnCell.LatticedPoint); }
@@ -614,15 +614,6 @@ namespace FocusTree.UI.Graph
         {
             if (!ShowBackground)
             {
-                //(Point, Point) line;
-                //if (p1.X == p2.X) 
-                //{ 
-                //    if (!Lattice.LineWithin(p1.X, (p1.Y, p2.Y), pen.Width, out line)) { return; }
-                //}
-                //else 
-                //{
-                //    if (!Lattice.LineWithin((p1.X, p2.X), p1.Y, pen.Width, out line)) { return; } 
-                //}
                 var g = Graphics.FromImage(image);
                 g.DrawLine(pen, p1, p2);
                 g.Flush(); g.Dispose();
@@ -638,7 +629,6 @@ namespace FocusTree.UI.Graph
             {
                 lineRect = new(Math.Min(p1.X, p2.X) - halfBorder, Math.Min(p1.Y, p2.Y), Math.Abs(p1.X - p2.X) + NodeBorderWidth, Math.Abs(p1.Y - p2.Y));
             }
-            //if (!Lattice.RectWithin(lineRect, out var rect)) { return; }
             PointBitmap pImage = new(image);
             pImage.LockBits();
             PointBitmap pInverseCacher = new(BkInverseCacher);
@@ -687,7 +677,11 @@ namespace FocusTree.UI.Graph
             pInverseCacher.UnlockBits();
             pImage.UnlockBits();
         }
-        public static void RedrawLastDrawnCells(Image image)
+        /// <summary>
+        /// 重绘绘制过的格元
+        /// </summary>
+        /// <param name="image"></param>
+        public static void RedrawDrawnCells(Image image)
         {
             Graphics g = Graphics.FromImage(image);
             if (!ShowBackground)
@@ -704,83 +698,15 @@ namespace FocusTree.UI.Graph
             }
             else
             {
-                //foreach (var point in LastDrawnCells)
-                //{
-                //    LatticeCell cell = new(point.X, point.Y);
-                //    if (Lattice.RectWithin(cell.RealRect, out var rect))
-                //    {
-                //        int width = rect.Width, height = rect.Height;//图片的宽度和高度, 在内存中以读写模式锁定Bitmap
-                //        BitmapData bitmapData = ((Bitmap)image).LockBits(
-                //            new Rectangle(rect.Left, rect.Top, width, height),
-                //            ImageLockMode.ReadWrite,
-                //            PixelFormat.Format24bppRgb);
-                //        //图片像素点数组的长度，由于一个像素点占了3个字节，所以要乘上3
-                //        int size = width * height * 3;
-                //        //缓冲区数组
-                //        byte[] srcArray = new byte[size];
-                //        //获取第一个像素的地址
-                //        IntPtr ptr = bitmapData.Scan0;
-                //        //把像素值复制到缓冲区
-                //        Marshal.Copy(ptr, srcArray, 0, size);
-                //        int p;
-
-                //        BitmapData bitCacher = (BkCacher).LockBits(
-                //            new Rectangle(rect.Left, rect.Top, width, height),
-                //            ImageLockMode.ReadWrite,
-                //            PixelFormat.Format24bppRgb);
-                //        //图片像素点数组的长度，由于一个像素点占了3个字节，所以要乘上3
-                //        //int size = width * height * 3;
-                //        //缓冲区数组
-                //        byte[] bkArray = new byte[size];
-                //        //获取第一个像素的地址
-                //        IntPtr bkPtr = bitCacher.Scan0;
-                //        //把像素值复制到缓冲区
-                //        Marshal.Copy(bkPtr, bkArray, 0, size);
-
-                //        for (int i = 0; i < width; i++)
-                //        {
-                //            for (int j = 0; j < height; j++)
-                //            {
-                //                //定位像素点位置
-                //                p = j * width * 3 + i * 3;
-                //                //计算灰度值
-                //                byte color = (byte)((bkArray[p] + bkArray[p + 1] + bkArray[p + 2]) / 3);
-                //                srcArray[p] = srcArray[p + 1] = srcArray[p + 2] = color;
-                //            }
-                //        }
-                //        //从缓冲区复制回BitmapData
-                //        Marshal.Copy(srcArray, 0, ptr, size);
-                //        //从内存中解锁
-                //        ((Bitmap)image).UnlockBits(bitmapData);
-                //        BkCacher.UnlockBits(bitCacher);
-                //    }
-                //}
-
-                //PointBitmap pImage = new((Bitmap)image);
-                //pImage.LockBits();
-                //PointBitmap pCacher = new(BkCacher);
-                //pCacher.LockBits();
                 foreach (var point in LastDrawnCells)
                 {
                     LatticeCell cell = new(point.X, point.Y);
                     if (Lattice.RectWithin(cell.RealRect, out var rect))
                     {
                         g.DrawImage(BkCacher, rect, rect, GraphicsUnit.Pixel);
-                        //for (int i = 0; i < rect.Width; i++)
-                        //{
-                        //    for (int j = 0; j < rect.Height; j++)
-                        //    {
-                        //        var x = rect.Left + i;
-                        //        var y = rect.Top + j;
-                        //        var pixel = pCacher.GetPixel(x, y);
-                        //        pImage.SetPixel(x, y, pixel);
-                        //    }
-                        //}
                     }
                     LastDrawnCells.Remove(point);
                 }
-                //pCacher.UnlockBits();
-                //pImage.UnlockBits();
             }
             g.Flush(); g.Dispose();
         }
