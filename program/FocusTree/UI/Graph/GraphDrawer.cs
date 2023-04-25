@@ -522,60 +522,95 @@ namespace FocusTree.UI.Graph
             LatticeCell cell = new(startLoc.X, startLoc.Y);
             LatticeCell endCell = new(endLoc.X, endLoc.Y);
             if (!Lattice.RectWithin(cell.NodeRealRect) && !Lattice.RectWithin(endCell.NodeRealRect)) { return; }
+            var halfHeightDiff = heightDiff / 2;
             var paddingHeight = LatticeCell.NodePaddingHeight;
             var nodeWidth = LatticeCell.NodeWidth;
+            var drLeft = Lattice.DrawRect.Left;
+            var drTop = Lattice.DrawRect.Top;
+            var drRight = Lattice.DrawRect.Right;
+            var drBottom = Lattice.DrawRect.Bottom;
+
             //if (Lattice.RectWithin(cell.RealRect, out var r)) { LastDrawnCells.Add(startLoc); }
             //
             // 竖线1
             //
-            var x = cell.NodeRealLeft + nodeWidth / 2;
-            var y1 = cell.RealTop + paddingHeight;
-            var halfHeightDiff = heightDiff / 2;
-            cell.LatticedTop -= halfHeightDiff;
-            var y2 = cell.RealTop + paddingHeight / 2;
-            DrawLine(image, new(x, y1), new(x, y2), pen, false);
-            ///
-            /// no test yet
-            /// 
-            for (int i = 1; i < halfHeightDiff; i++)
+            var x = cell.RealLeft + nodeWidth / 2;
+            if (x > drLeft && x < drRight)
             {
-                LatticeCell drawnCell = new(startLoc.X, startLoc.Y - i);
-                if (Lattice.RectWithin(drawnCell.RealRect)) { LastDrawnCells.Add(drawnCell.LatticedPoint); }
+                int y1, y2;
+                y1 = y2 = cell.RealTop + paddingHeight;
+                for (int i = 0; i < halfHeightDiff; i++)
+                {
+                    cell.LatticedTop--;
+                    if (!Lattice.RectWithin(cell.RealRect)) { break; }
+                    LastDrawnCells.Add(cell.LatticedPoint);
+                    y2 = cell.RealTop + paddingHeight / 2;
+                }
+                if (y1 != y2 && Lattice.LineWithin(x, (y1, y2), NodeBorderWidth, out var line))
+                {
+                    DrawLine(image, line.Item1, line.Item2, pen, false);
+                }
             }
+            /////
+            ///// no test yet
+            ///// 
+            //for (int i = 1; i < halfHeightDiff; i++)
+            //{
+            //    LatticeCell drawnCell = new(startLoc.X, startLoc.Y - i);
+            //    if (Lattice.RectWithin(drawnCell.RealRect)) { LastDrawnCells.Add(drawnCell.LatticedPoint); }
+            //}
             //
             // 横线
             //
             var cellY = startLoc.Y - halfHeightDiff;
-            if (Math.Abs(widthDiff) > 0)
+            var y = cell.RealTop - halfHeightDiff + paddingHeight / 2;
+            if (Math.Abs(widthDiff) > 0 && y > drTop && y < drBottom)
             {
-                cell.LatticedLeft += widthDiff;
-                var x2 = cell.NodeRealLeft + nodeWidth / 2;
-                DrawLine(image, new(x, y2), new(x2, y2), pen, true);
-                ///
+                var x2 = x;
                 for (int i = 1; i <= Math.Abs(widthDiff); i++)
                 {
-                    LatticeCell drawnCell = new(startLoc.X + (widthDiff < 0 ? -i : i), cellY);
-                    if (Lattice.RectWithin(drawnCell.RealRect)) { LastDrawnCells.Add(drawnCell.LatticedPoint); }
+                    cell.LatticedLeft += widthDiff < 0 ? -1 : 1;
+                    if (!Lattice.RectWithin(cell.RealRect)) { break; }
+                    LastDrawnCells.Add(cell.LatticedPoint);
+                    //LatticeCell drawnCell = new(startLoc.X + (widthDiff < 0 ? -i : i), cellY);
+                    x2 = cell.NodeRealLeft + nodeWidth / 2;
                 }
+                if (x2 != x && Lattice.LineWithin((x, x2), y, NodeBorderWidth, out var line))
+                {
+                    DrawLine(image, line.Item1, line.Item2, pen, true);
+                }
+                ///
             }
             //
             // 竖线2
             //
-            y1 = y2;
-            var leaveHeight = heightDiff - halfHeightDiff - 1;
-            cell.LatticedTop -= leaveHeight;
-            y2 = cell.RealTop;
-            x = cell.NodeRealLeft + nodeWidth / 2;
-            DrawLine(image, new(x, y1), new(x, y2), pen, false);
-            ///
-            /// no test yet
-            ///
-            var cellX = startLoc.X + widthDiff;
-            for (int i = 0; i < leaveHeight; i++)
+            x += widthDiff;
+            if (x > drLeft && x < drRight)
             {
-                LatticeCell drawnCell = new(cellX, cellY - i);
-                if (Lattice.RectWithin(drawnCell.RealRect)) { LastDrawnCells.Add(drawnCell.LatticedPoint); }
+                var leaveHeight = heightDiff - halfHeightDiff - 1;
+                var y2 = cell.RealTop;
+                for (int i = 0; i < leaveHeight; i++)
+                {
+                    cell.LatticedTop--;
+                    if (Lattice.RectWithin(cell.RealRect)) { break; }
+                    LastDrawnCells.Add(cell.LatticedPoint);
+                    y2 = cell.RealTop;
+                }
+                if (y2 != y && Lattice.LineWithin(x, (y, y2), NodeBorderWidth, out var line))
+                {
+                    DrawLine(image, new(x, y), new(x, y2), pen, false);
+                }
             }
+            
+            /////
+            ///// no test yet
+            /////
+            //var cellX = startLoc.X + widthDiff;
+            //for (int i = 0; i < leaveHeight; i++)
+            //{
+            //    LatticeCell drawnCell = new(cellX, cellY - i);
+            //    if (Lattice.RectWithin(drawnCell.RealRect)) { LastDrawnCells.Add(drawnCell.LatticedPoint); }
+            //}
         }
         /// <summary>
         /// 绘制竖线
@@ -588,7 +623,7 @@ namespace FocusTree.UI.Graph
         {
             if (!ShowBackground)
             {
-                (Point, Point) line = new();
+                (Point, Point) line;
                 if (p1.X == p2.X) 
                 { 
                     if (!Lattice.LineWithin(p1.X, (p1.Y, p2.Y), pen.Width, out line)) { return; }
@@ -612,7 +647,7 @@ namespace FocusTree.UI.Graph
             {
                 lineRect = new(Math.Min(p1.X, p2.X) - halfBorder, Math.Min(p1.Y, p2.Y), Math.Abs(p1.X - p2.X) + NodeBorderWidth, Math.Abs(p1.Y - p2.Y));
             }
-            if (!Lattice.RectWithin(lineRect, out var rect)) { return; }
+            //if (!Lattice.RectWithin(lineRect, out var rect)) { return; }
             PointBitmap pImage = new(image);
             pImage.LockBits();
             PointBitmap pInverseCacher = new(BkInverseCacher);
@@ -620,40 +655,40 @@ namespace FocusTree.UI.Graph
             if (horizon)
             {
                 // top
-                for (int i = 0; i < rect.Width; i++)
+                for (int i = 0; i < lineRect.Width; i++)
                 {
-                    var left = rect.Left + i;
-                    var top = rect.Top;
+                    var left = lineRect.Left + i;
+                    var top = lineRect.Top;
                     var pixel = pInverseCacher.GetPixel(left, top);
                     pImage.SetPixel(left, top, pixel);
                 }
                 // bottom
-                var bottom = rect.Bottom;
-                if (rect.Top < bottom)
+                var bottom = lineRect.Bottom;
+                if (lineRect.Top < bottom)
                 {
-                    for (int i = 0; i < rect.Width; i++)
+                    for (int i = 0; i < lineRect.Width; i++)
                     {
-                        var left = rect.Left + i;
+                        var left = lineRect.Left + i;
                         var pixel = pInverseCacher.GetPixel(left, bottom);
                         pImage.SetPixel(left, bottom, pixel);
                     }
                 }
             }
             // left
-            for (int j = 0; j < rect.Height; j++)
+            for (int j = 0; j < lineRect.Height; j++)
             {
-                var left = rect.Left;
-                var top = rect.Top + j;
+                var left = lineRect.Left;
+                var top = lineRect.Top + j;
                 var pixel = pInverseCacher.GetPixel(left, top);
                 pImage.SetPixel(left, top, pixel);
             }
             // right
-            var right = rect.Right;
-            if (rect.Left < right)
+            var right = lineRect.Right;
+            if (lineRect.Left < right)
             {
-                for (int j = 0; j < rect.Height; j++)
+                for (int j = 0; j < lineRect.Height; j++)
                 {
-                    var top = rect.Top + j;
+                    var top = lineRect.Top + j;
                     var pixel = pInverseCacher.GetPixel(right, top);
                     pImage.SetPixel(right, top, pixel);
                 }
@@ -661,48 +696,6 @@ namespace FocusTree.UI.Graph
             pInverseCacher.UnlockBits();
             pImage.UnlockBits();
         }
-        ///// <summary>
-        ///// 绘制横线
-        ///// </summary>
-        ///// <param name="image"></param>
-        ///// <param name="x"></param>
-        ///// <param name="y"></param>
-        ///// <param name="pen"></param>
-        //private static void DrawLine(Bitmap image, (int, int) x, int y, Pen pen)
-        //{
-        //    if (!ShowBackground)
-        //    {
-        //        if (Lattice.LineWithin(x, y, pen.Width, out var line))
-        //        {
-        //            var g = Graphics.FromImage(image);
-        //            g.DrawLine(pen, line.Item1, line.Item2);
-        //            g.Flush(); g.Dispose();
-        //        }
-        //        return;
-        //    }
-        //    Rectangle lineRect = new(Math.Min(x.Item1, x.Item2), y - NodeBorderWidth / 2, Math.Abs(x.Item1 - x.Item2) + 2, NodeBorderWidth);
-        //    if (!Lattice.RectWithin(lineRect, out var rect)) { return; }
-        //    PointBitmap pImage = new(image);
-        //    pImage.LockBits();
-        //    PointBitmap pInverseCacher = new(BkInverseCacher);
-        //    pInverseCacher.LockBits();
-        //    for (int i = 0; i < rect.Width; i++)
-        //    {
-        //        var left = rect.Left + i;
-        //        var top = rect.Top;
-        //        var pixel = pInverseCacher.GetPixel(left, top);
-        //        pImage.SetPixel(left, top, pixel);
-        //    }
-        //    for (int i = 0; i < rect.Width; i++)
-        //    {
-        //        var left = rect.Left + i;
-        //        var bottom = rect.Bottom;
-        //        var pixel = pInverseCacher.GetPixel(left, bottom);
-        //        pImage.SetPixel(left, bottom, pixel);
-        //    }
-        //    pInverseCacher.UnlockBits();
-        //    pImage.UnlockBits();
-        //}
         public static void RedrawLastDrawnCells(Image image)
         {
             Graphics g = Graphics.FromImage(image);
