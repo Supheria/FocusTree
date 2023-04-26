@@ -244,113 +244,29 @@ namespace FocusTree.UI.Graph
             var right = rect.Right;
             var top = rect.Top;
             var bottom = rect.Bottom;
-            if (left < DrawRect.Left)
+            if (left <= DrawRect.Left)
             {
                 if (right <= DrawRect.Left) { return false; }
-                left = DrawRect.Left;
+                left = DrawRect.Left + 1;
             }
-            if (right > DrawRect.Right)
+            if (right >= DrawRect.Right)
             {
                 if (left >= DrawRect.Right) { return false; }
-                right = DrawRect.Right;
+                right = DrawRect.Right - 1;
             }
-            if (top < DrawRect.Top)
+            if (top <= DrawRect.Top)
             {
                 if (bottom <= DrawRect.Top) { return false; }
-                top = DrawRect.Top;
+                top = DrawRect.Top + 1;
             }
-            if (bottom > DrawRect.Bottom)
+            if (bottom >= DrawRect.Bottom)
             {
                 if (top >= DrawRect.Bottom) { return false; }
-                bottom = DrawRect.Bottom;
+                bottom = DrawRect.Bottom - 1;
             }
-            saveRect = new(left, top, right - left + 1, bottom - top + 1);
+            saveRect = new(left, top, right - left, bottom - top);
             return true;
 
-        }
-        public static bool RectWithin(Rectangle rect)
-        {
-            var right = rect.Right;
-            var bottom = rect.Bottom;
-            if (rect.Left < DrawRect.Left)
-            {
-                if (right <= DrawRect.Left) { return false; }
-            }
-            if (right > DrawRect.Right)
-            {
-                if (rect.Left >= DrawRect.Right) { return false; }
-            }
-            if (rect.Top < DrawRect.Top)
-            {
-                if (bottom <= DrawRect.Top) { return false; }
-            }
-            if (bottom > DrawRect.Bottom)
-            {
-                if (rect.Top >= DrawRect.Bottom) { return false; }
-            }
-            return true;
-        }
-        /// <summary>
-        /// 获取一个在栅格绘图区域内的水平线
-        /// </summary>
-        /// <param name="x">端点的横坐标数对</param>
-        /// <param name="y">端点的纵坐标</param>
-        /// <param name="saveLine">在绘图区域内可能被裁剪过的线段的两个端点坐标的数对</param>
-        /// <returns>如果线有部分在绘图区域内，返回true；否则返回false</returns>
-        public static bool LineWithin((int, int) x, int y, float penWidth, out (Point, Point) saveLine)
-        {
-            saveLine = new();
-            if (y - penWidth < DrawRect.Top || y + penWidth > DrawRect.Bottom) { return false; }
-            var x1 = x.Item1;
-            var x2 = x.Item2;
-            if (x1 == x2) { return false; }
-            var Left = DrawRect.Left;
-            var Right = DrawRect.Right;
-            if (x1 < x2)
-            {
-                if (x1 >= Right || x2 <= Left) { return false; }
-                if (x1 < Left) { x1 = Left; }
-                if (x2 > Right) { x2 = Right; }
-            }
-            else if (x2 < x1)
-            {
-                if (x2 >= Right || x1 <= Left) { return false; }
-                if (x2 < Left) { x2 = Left; }
-                if (x1 > Right) { x1 = Right; }
-            }
-            saveLine = (new(x1, y), new(x2, y));
-            return true;
-        }
-        /// <summary>
-        /// 获取一个在栅格绘图区域内的垂直线
-        /// </summary>
-        /// <param name="x">端点的横坐标</param>
-        /// <param name="y">端点的纵坐标数对</param>
-        /// <param name="saveLine">在绘图区域内可能被裁剪过的线段的两个端点坐标的数对</param>
-        /// <returns>如果线有部分在绘图区域内，返回true；否则返回false</returns>
-        public static bool LineWithin(int x, (int, int) y, float penWidth, out (Point, Point) saveLine)
-        {
-            saveLine = new();
-            if (x - penWidth < DrawRect.Left || x + penWidth > DrawRect.Right) { return false; }
-            var y1 = y.Item1;
-            var y2 = y.Item2;
-            if (y1 == y2) { return false; }
-            var Top = DrawRect.Top;
-            var Bottom = DrawRect.Bottom;
-            if (y1 < y2)
-            {
-                if (y1 >= Bottom || y2 <= Top) { return false; }
-                if (y1 < Top) { y1 = Top; }
-                if (y2 > Bottom) { y2 = Bottom; }
-            }
-            else if (y2 < y1)
-            {
-                if (y2 >= Bottom || y1 <= Top) { return false; }
-                if (y2 < Top) { y2 = Top; }
-                if (y1 > Bottom) { y1 = Bottom; }
-            }
-            saveLine = (new(x, y1), new(x, y2));
-            return true;
         }
 
         #endregion

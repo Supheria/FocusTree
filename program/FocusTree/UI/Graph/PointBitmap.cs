@@ -139,37 +139,6 @@ namespace FocusTree.UI.Graph
                 return c;
             }
         }
-        public Color GetInversePixel(int x, int y)
-        {
-            unsafe
-            {
-                byte* ptr = (byte*)Iptr;
-                ptr = ptr + bitmapData.Stride * y;
-                ptr += Depth * x / 8;
-                Color c = Color.Empty;
-                if (Depth == 32)
-                {
-                    int a = ptr[3];
-                    int r = ptr[2];
-                    int g = ptr[1];
-                    int b = ptr[0];
-                    c = Color.FromArgb(a, 255 - r, 255 - g, 255 - b);
-                }
-                else if (Depth == 24)
-                {
-                    int r = ptr[2];
-                    int g = ptr[1];
-                    int b = ptr[0];
-                    c = Color.FromArgb(r, g, b);
-                }
-                else if (Depth == 8)
-                {
-                    int r = ptr[0];
-                    c = Color.FromArgb(r, r, r);
-                }
-                return c;
-            }
-        }
 
         public void SetPixel(int x, int y, Color c)
         {
