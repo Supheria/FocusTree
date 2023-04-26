@@ -17,7 +17,7 @@ internal static class Program
     static void Main()
     {
 #if MAIN
-        testInfo.Show();
+        //testInfo.Show();
         Application.Run(new MainForm());
 #else
         Test.FMapTest();

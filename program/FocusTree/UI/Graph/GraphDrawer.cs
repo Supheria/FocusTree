@@ -4,6 +4,7 @@ using FocusTree.UI.test;
 using System.Drawing.Imaging;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using FocusTree.Properties;
 
 namespace FocusTree.UI.Graph
 {
@@ -42,7 +43,7 @@ namespace FocusTree.UI.Graph
         /// <summary>
         /// 节点连接线宽度
         /// </summary>
-        public static int NodeLineWidth = 3;
+        public static int NodeLineWidth = 2;
         /// <summary>
         /// 节点文字颜色 - 深色
         /// </summary>
@@ -68,6 +69,24 @@ namespace FocusTree.UI.Graph
         /// 背景图片在给定尺寸下的缓存
         /// </summary>
         static Bitmap BackImageCache;
+        public static Size BackImageSize 
+        { 
+            get
+            {
+                if (File.Exists(BackImagePath))
+                {
+                    return Image.FromFile(BackImagePath).Size;
+                }
+                else
+                {
+                    return Resources.background.Size;
+                }
+            }
+        }
+        /// <summary>
+        /// 是否显示背景图片
+        /// </summary>
+        public static bool ShowBackImage = true;
 
         #endregion
 
@@ -109,7 +128,7 @@ namespace FocusTree.UI.Graph
         {
             var Width = size.Width;
             var Height = size.Height;
-            if (!File.Exists(BackImagePath))
+            if (!ShowBackImage) 
             {
                 BackImageCache?.Dispose();
                 BackImageCache = new Bitmap(Width, Height);
@@ -125,7 +144,15 @@ namespace FocusTree.UI.Graph
                 pCache.UnlockBits();
                 return;
             }
-            var sourceImage = (Bitmap)Image.FromFile(BackImagePath);
+            Image sourceImage;
+            if (File.Exists(BackImagePath))
+            {
+                sourceImage = Image.FromFile(BackImagePath);
+            }
+            else
+            {
+                sourceImage = Resources.background;
+            }
             var bkWidth = Width;
             var bkHeight = Height;
             float sourceRatio = (float)sourceImage.Width / (float)sourceImage.Height;

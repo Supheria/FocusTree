@@ -2,6 +2,8 @@
 using FocusTree.Data.Focus;
 using FocusTree.IO;
 using FocusTree.IO.FileManege;
+using FocusTree.Properties;
+using FocusTree.UI.Graph;
 using System.IO.Compression;
 
 namespace FocusTree.UI
@@ -50,14 +52,17 @@ namespace FocusTree.UI
         private void MainForm_Shown(object sender, EventArgs e)
         {
             ResizeGraphBox();
+            var size = GraphDrawer.BackImageSize;
+            Width = size.Width + Width - Display.Width;
+            Height = size.Height + Height - Display.Height;
             ForceResize = false;
         }
 
         private void MainForm_SizeChanged(object sender, EventArgs e)
         {
-            if (ForceResize || 
-                (LastState == FormWindowState.Maximized && WindowState == FormWindowState.Normal) || 
-                WindowState == FormWindowState.Maximized || 
+            if (ForceResize ||
+                (LastState == FormWindowState.Maximized && WindowState == FormWindowState.Normal) ||
+                WindowState == FormWindowState.Maximized ||
                 WindowState == FormWindowState.Minimized)
             {
                 ResizeGraphBox();
@@ -413,5 +418,22 @@ namespace FocusTree.UI
         }
 
         #endregion
+
+        private void MainForm_Menu_setting_backImage_show_Click(object sender, EventArgs e)
+        {
+            if (GraphDrawer.ShowBackImage == true)
+            {
+                MainForm_Menu_setting_backImage_show.CheckState = CheckState.Unchecked;
+                GraphDrawer.ShowBackImage = false;
+            }
+            else
+            {
+                MainForm_Menu_setting_backImage_show.CheckState = CheckState.Checked;
+                GraphDrawer.ShowBackImage = true;
+            }
+            GraphDrawer.DrawNewBackground(Display.Image);
+            Lattice.Draw(Display.Image);
+            Display.Invalidate();
+        }
     }
 }
