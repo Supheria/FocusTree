@@ -122,6 +122,8 @@ namespace FocusTree.UI.Graph
                 g.DrawLine(GuidePen, new(DrawRect.Left, OriginTop), new(DrawRect.Right, OriginTop));
                 g.Flush(); g.Dispose();
             }
+            if (Drawing == null) { return; }
+            var delArray = Drawing.GetInvocationList();
         }
         /// <summary>
         /// 清空绘制委托
@@ -247,22 +249,22 @@ namespace FocusTree.UI.Graph
             if (left <= DrawRect.Left)
             {
                 if (right <= DrawRect.Left) { return false; }
-                left = DrawRect.Left + 1;
+                left = DrawRect.Left;
             }
             if (right >= DrawRect.Right)
             {
                 if (left >= DrawRect.Right) { return false; }
-                right = DrawRect.Right - 1;
+                right = DrawRect.Right;
             }
             if (top <= DrawRect.Top)
             {
                 if (bottom <= DrawRect.Top) { return false; }
-                top = DrawRect.Top + 1;
+                top = DrawRect.Top;
             }
             if (bottom >= DrawRect.Bottom)
             {
                 if (top >= DrawRect.Bottom) { return false; }
-                bottom = DrawRect.Bottom - 1;
+                bottom = DrawRect.Bottom;
             }
             saveRect = new(left, top, right - left, bottom - top);
             return true;
