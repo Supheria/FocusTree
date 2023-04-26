@@ -685,14 +685,14 @@ namespace FocusTree.UI
         /// </summary>
         public void OpenNewGraph() 
         {
-            CloseAllNodeToolDialogs();
-            Graph?.ClearCache();
-            Graph = new();
-            Graph.NewHistory();
-            FilePath = string.Empty;
-            UploadNodeMap();
-            RescaleToPanorama();
-            Invalidate();
+            //CloseAllNodeToolDialogs();
+            //Graph?.ClearCache();
+            //Graph = new();
+            //Graph.NewHistory();
+            //FilePath = string.Empty;
+            //UploadNodeMap();
+            //RescaleToPanorama();
+            //Invalidate();
         }
         /// <summary>
         /// 撤销

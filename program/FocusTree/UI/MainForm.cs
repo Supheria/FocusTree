@@ -23,7 +23,7 @@ namespace FocusTree.UI
             ResizeEnd += MainForm_ResizeEnd;
             SizeChanged += MainForm_SizeChanged;
             Shown += MainForm_Shown;
-            Display.Invalidated += Display_Invalidated;
+            //Display.Invalidated += Display_Invalidated;
 
             foreach (var name in Display.ToolDialogs.Keys)
             {
