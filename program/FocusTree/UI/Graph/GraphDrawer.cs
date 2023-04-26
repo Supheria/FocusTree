@@ -71,7 +71,7 @@ namespace FocusTree.UI.Graph
 
         #endregion
 
-        #region ==== 绘制委托列表 ====
+        #region ==== 节点绘制委托列表 ====
 
         /// <summary>
         /// 节点绘制委托列表
@@ -83,14 +83,24 @@ namespace FocusTree.UI.Graph
         #region ==== 加载背景 ====
 
         /// <summary>
-        /// 获取背景图片在给定尺寸下的缓存，如果为null或尺寸不同则获取后返回
+        /// 新键背景缓存，并重绘背景
         /// </summary>
-        /// <param name="size"></param>
-        /// <returns></returns>
-        private static Image GetBackImageCacher(Size size)
+        /// <param name="image"></param>
+        /// <param name="rect"></param>
+        public static void DrawNewBackground(Image image)
         {
-            if (BackImageCache == null || size != BackImageCache.Size) { SetBackImageCacher(size); }
-            return BackImageCache;
+            SetBackImageCacher(image.Size);
+            RedrawBackground(image);
+        }
+        /// <summary>
+        /// 重绘背景（首次重绘应该使用 DrawNewBackground）
+        /// </summary>
+        /// <param name="image"></param>
+        public static void RedrawBackground(Image image)
+        {
+            Graphics g = Graphics.FromImage(image);
+            g.DrawImage(BackImageCache, 0, 0);
+            g.Flush(); g.Dispose();
         }
         /// <summary>
         /// 根据给定尺寸设置背景图片缓存
@@ -515,39 +525,5 @@ namespace FocusTree.UI.Graph
         }
 
         #endregion
-
-        /// <summary>
-        /// 重绘绘制过的格元
-        /// </summary>
-        /// <param name="image"></param>
-        public static void RedrawDrawnCells(Image image)
-        {
-            Graphics g = Graphics.FromImage(image);
-            g.DrawImage(BackImageCache, 0, 0);
-            g.Flush(); g.Dispose();
-        }
-        /// <summary>
-        /// 用背景图片缓存填满 image 
-        /// </summary>
-        /// <param name="image"></param>
-        /// <param name="rect"></param>
-        public static void DrawFillBackImage(Image image, Rectangle rect)
-        {
-            Graphics g = Graphics.FromImage(image);
-            GetBackImageCacher(rect.Size);
-            g.DrawImage(BackImageCache, rect, rect, GraphicsUnit.Pixel);
-            g.Flush(); g.Dispose();
-        }
-        /// <summary>
-        /// 根据给定的矩形截取背景图片缓存并填充到 Image，或填充白色到给定矩形
-        /// </summary>
-        /// <param name="image"></param>
-        /// <param name="rect"></param>
-        public static void DrawRectWithBackImage(Image image, Rectangle rect)
-        {
-            Graphics g = Graphics.FromImage(image);
-            g.DrawImage(BackImageCache, rect, rect, GraphicsUnit.Pixel);
-            g.Flush(); g.Dispose();
-        }
     }
 }
