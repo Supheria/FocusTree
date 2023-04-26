@@ -112,6 +112,7 @@ namespace FocusTree.UI.Graph
         /// </summary>
         static Dictionary<(int, int), CellDrawer> LineDrawerCatalog = new();
         public static HashSet<Point> LastDrawnCells = new();
+        static ImageDrawer RedrawCache = new();
 
         #endregion
 
@@ -224,7 +225,7 @@ namespace FocusTree.UI.Graph
                 DrawBlankNode(image, nodeRect);
             }
             else { DrawStringNode(image, nodeRect, focus.Name); }
-            LastDrawnCells.Add(cell.LatticedPoint);
+            //LastDrawnCells.Add(cell.LatticedPoint);
         }
         /// <summary>
         /// 绘制无文字节点
@@ -234,10 +235,10 @@ namespace FocusTree.UI.Graph
         /// <param name="g"></param>
         private static void DrawBlankNode(Bitmap image, Rectangle nodeRect)
         {
-            PointBitmap pImage = new(image);
-            pImage.LockBits();
-            PointBitmap pCache = new(BackImageCache);
-            pCache.LockBits();
+            //PointBitmap pImage = new(image);
+            //pImage.LockBits();
+            //PointBitmap pCache = new(BackImageCache);
+            //pCache.LockBits();
             // left
             for (int i = 0; i < NodeBorderWidth; i++)
             {
@@ -245,8 +246,13 @@ namespace FocusTree.UI.Graph
                 {
                     var x = nodeRect.Left + i;
                     var y = nodeRect.Top + j;
-                    var pixel = pCache.GetInversePixel(x, y);
-                    pImage.SetPixel(x, y, pixel);
+                    var pixel = BackImageCache.GetPixel(x, y);
+                    RedrawCache.SetPixel(x, y, pixel);
+                    var A = pixel.A;
+                    var R = pixel.R;
+                    var G = pixel.G;
+                    var B = pixel.B;
+                    image.SetPixel(x, y, Color.FromArgb(A, 255 - R, 255 - G, 255 - B));
                 }
             }
             // right
@@ -257,8 +263,13 @@ namespace FocusTree.UI.Graph
                 {
                     var x = nodeRect.Left + i;
                     var y = nodeRect.Top + j;
-                    var pixel = pCache.GetInversePixel(x, y);
-                    pImage.SetPixel(x, y, pixel);
+                    var pixel = BackImageCache.GetPixel(x, y);
+                    RedrawCache.SetPixel(x, y, pixel);
+                    var A = pixel.A;
+                    var R = pixel.R;
+                    var G = pixel.G;
+                    var B = pixel.B;
+                    image.SetPixel(x, y, Color.FromArgb(A, 255 - R, 255 - G, 255 - B));
                 }
             }
             // top
@@ -268,8 +279,13 @@ namespace FocusTree.UI.Graph
                 {
                     var x = nodeRect.Left + i;
                     var y = nodeRect.Top + j;
-                    var pixel = pCache.GetInversePixel(x, y);
-                    pImage.SetPixel(x, y, pixel);
+                    var pixel = BackImageCache.GetPixel(x, y);
+                    RedrawCache.SetPixel(x, y, pixel);
+                    var A = pixel.A;
+                    var R = pixel.R;
+                    var G = pixel.G;
+                    var B = pixel.B;
+                    image.SetPixel(x, y, Color.FromArgb(A, 255 - R, 255 - G, 255 - B));
                 }
             }
             // bottom
@@ -280,12 +296,17 @@ namespace FocusTree.UI.Graph
                     if (j <= 0) { break; }
                     var x = nodeRect.Left + i;
                     var y = nodeRect.Top + j;
-                    var pixel = pCache.GetInversePixel(x, y);
-                    pImage.SetPixel(x, y, pixel);
+                    var pixel = BackImageCache.GetPixel(x, y);
+                    RedrawCache.SetPixel(x, y, pixel);
+                    var A = pixel.A;
+                    var R = pixel.R;
+                    var G = pixel.G;
+                    var B = pixel.B;
+                    image.SetPixel(x, y, Color.FromArgb(A, 255 - R, 255 - G, 255 - B));
                 }
             }
-            pCache.UnlockBits();
-            pImage.UnlockBits();
+            //pCache.UnlockBits();
+            //pImage.UnlockBits();
         }
         /// <summary>
         /// 绘制有文字节点 - 确定区域内的像素分布（为选择字的颜色），并用黑、白纯色区分出文字和底纹的区别，好为下一步扣出字形
@@ -310,6 +331,7 @@ namespace FocusTree.UI.Graph
                         black++;
                     }
                     else { white++; }
+                    // set rect to white blank
                     pImage.SetPixel(nodeRect.Left + i, nodeRect.Top + j, Color.White);
                 }
             }
@@ -351,80 +373,44 @@ namespace FocusTree.UI.Graph
         /// <param name="black"></param>
         private static void DrawStringNode(Bitmap image, Rectangle rect, int white, int black)
         {
-            PointBitmap pImage = new(image);
-            pImage.LockBits();
-            PointBitmap pCache = new(BackImageCache);
-            pCache.LockBits();
+            //PointBitmap pImage = new(image);
+            //pImage.LockBits();
+            //PointBitmap pCache = new(BackImageCache);
+            //pCache.LockBits();
             for (int i = 0; i < rect.Width; i++)
             {
                 for (int j = 0; j < rect.Height; j++)
                 {
                     var x = rect.Left + i;
                     var y = rect.Top + j;
-                    var pixel = pImage.GetPixel(x, y);
-                    var bkPixel = pCache.GetPixel(x, y);
+                    var bkPixel = BackImageCache.GetPixel(x, y);
+                    RedrawCache.SetPixel(x, y, bkPixel);
+                    var A = bkPixel.A;
+                    var R = bkPixel.R;
+                    var G = bkPixel.G;
+                    var B = bkPixel.B;
+                    var pixel = image.GetPixel(x, y);
                     if (pixel.R == 255 && pixel.G == 255 && pixel.B == 255)
                     {
                         if (i <= NodeBorderWidth || i >= rect.Width - NodeBorderWidth || j <= NodeBorderWidth || j >= rect.Height - NodeBorderWidth)
                         {
-                            bkPixel = pCache.GetInversePixel(x, y);
+                            image.SetPixel(x, y, Color.FromArgb(A, 255 - R, 255 - G, 255 - B));
                         }
-                        pImage.SetPixel(x, y, bkPixel);
+                        else { image.SetPixel(x, y, bkPixel); }
                         continue;
                     }
                     if (black < white)
-                    {
-                        pImage.SetPixel(x, y, NodeFG_BkDark);
+                    {   
+                        image.SetPixel(x, y, NodeFG_BkDark);
                     }
                     else
                     {
-                        pImage.SetPixel(x, y, NodeFG_BkLight);
+                        image.SetPixel(x, y, NodeFG_BkLight);
                     }
                 }
             }
-            pCache.UnlockBits();
-            pImage.UnlockBits();
-        }
-        /// <summary>
-        /// 绘制节点 - 旧的
-        /// </summary>
-        /// <param name="g"></param>
-        /// <param name="id"></param>
-        /// <param name="brush"></param>
-        public static void DrawNode(Graphics g, FocusData focus, Color color)
-        {
-            LatticeCell cell = new(focus);
-            var rect = cell.InnerPartRealRects[LatticeCell.Parts.Node];
-            if (!Lattice.RectWithin(rect, out var saveRect)) { return; }
-            rect = saveRect;
-            Rectangle shadowRect = new(rect.Left + NodeBorderWidth, rect.Top + NodeBorderWidth, rect.Width, rect.Height);
-            g.FillRectangle(new SolidBrush(Color.White), shadowRect);
-            g.FillRectangle(new SolidBrush(color), rect);
-            var testRect = cell.RealRect;
-            if (testRect.Width < LatticeCell.SizeMax.Width / 2 || testRect.Height < LatticeCell.SizeMax.Height / 2) { return; }
-
-            var name = focus.Name;
-            var fontHeight = name.Length / 3;
-            if (fontHeight == 1 && name.Length % 3 != 0) { fontHeight++; }
-            else if (fontHeight == 0) { fontHeight++; }
-            var fontWidth = name.Length / fontHeight;
-            var fontSizeH = 0.7f * rect.Height / fontHeight;
-            var fontSizeW = 0.7f * rect.Width / fontWidth;
-            var fontSize = Math.Min(fontSizeH, fontSizeW);
-            if (fontSize <= 0) { return; }
-            string sName = name;
-            if (fontHeight > 1)
-            {
-                sName = string.Empty;
-                for (int i = 0; i < fontHeight; i++)
-                {
-                    sName += $"{name.Substring(i * fontWidth, fontWidth)}\n";
-                }
-                sName = sName[..^1];
-            }
-            var font = new Font(NodeFont, fontSize, FontStyle.Bold, GraphicsUnit.Pixel);
-            g.DrawString(sName, font, new SolidBrush(NodeFG), rect, NodeFontFormat);
-            g.Flush();
+            //pCache.UnlockBits();
+            //pImage.UnlockBits();
         }
         /// <summary>
         /// 绘制关系线 - 寻找线的起点和终点
@@ -462,11 +448,11 @@ namespace FocusTree.UI.Graph
                 ///
                 /// no test yet
                 /// 
-                for (int i = 0; i <= halfHeightDiff; i++)
-                {
-                    LatticeCell drawnCell = new(startLoc.X, startLoc.Y - i);
-                    if (Lattice.RectWithin(drawnCell.RealRect)) { LastDrawnCells.Add(drawnCell.LatticedPoint); }
-                }
+                //for (int i = 0; i <= halfHeightDiff; i++)
+                //{
+                //    LatticeCell drawnCell = new(startLoc.X, startLoc.Y - i);
+                //    if (Lattice.RectWithin(drawnCell.RealRect)) { LastDrawnCells.Add(drawnCell.LatticedPoint); }
+                //}
             }
             //
             // 横线
@@ -481,11 +467,11 @@ namespace FocusTree.UI.Graph
                     DrawLine(image, line.Item1, line.Item2, pen, true);
                 }
                 ///
-                for (int i = 0; i <= Math.Abs(widthDiff); i++)
-                {
-                    LatticeCell drawnCell = new(startLoc.X + (widthDiff < 0 ? -i : i), cellY);
-                    if (Lattice.RectWithin(drawnCell.RealRect)) { LastDrawnCells.Add(drawnCell.LatticedPoint); }
-                }
+                //for (int i = 0; i <= Math.Abs(widthDiff); i++)
+                //{
+                //    LatticeCell drawnCell = new(startLoc.X + (widthDiff < 0 ? -i : i), cellY);
+                //    if (Lattice.RectWithin(drawnCell.RealRect)) { LastDrawnCells.Add(drawnCell.LatticedPoint); }
+                //}
             }
             //
             // 竖线2
@@ -504,12 +490,12 @@ namespace FocusTree.UI.Graph
                 ///
                 /// no test yet
                 ///
-                var cellX = startLoc.X + widthDiff;
-                for (int i = 0; i <= leaveHeight; i++)
-                {
-                    LatticeCell drawnCell = new(cellX, cellY - i);
-                    if (Lattice.RectWithin(drawnCell.RealRect)) { LastDrawnCells.Add(drawnCell.LatticedPoint); }
-                }
+                //var cellX = startLoc.X + widthDiff;
+                //for (int i = 0; i <= leaveHeight; i++)
+                //{
+                //    LatticeCell drawnCell = new(cellX, cellY - i);
+                //    if (Lattice.RectWithin(drawnCell.RealRect)) { LastDrawnCells.Add(drawnCell.LatticedPoint); }
+                //}
             }
         }
         /// <summary>
@@ -531,10 +517,10 @@ namespace FocusTree.UI.Graph
             {
                 lineRect = new(Math.Min(p1.X, p2.X) - halfBorder, Math.Min(p1.Y, p2.Y), Math.Abs(p1.X - p2.X) + NodeBorderWidth, Math.Abs(p1.Y - p2.Y));
             }
-            PointBitmap pImage = new(image);
-            pImage.LockBits();
-            PointBitmap pCache = new(BackImageCache);
-            pCache.LockBits();
+            //PointBitmap pImage = new(image);
+            //pImage.LockBits();
+            //PointBitmap pCache = new(BackImageCache);
+            //pCache.LockBits();
             if (horizon)
             {
                 // top
@@ -542,8 +528,13 @@ namespace FocusTree.UI.Graph
                 {
                     var left = lineRect.Left + i;
                     var top = lineRect.Top;
-                    var pixel = pCache.GetInversePixel(left, top);
-                    pImage.SetPixel(left, top, pixel);
+                    var pixel = BackImageCache.GetPixel(left, top); 
+                    RedrawCache.SetPixel(left, top, pixel);
+                    var A = pixel.A;
+                    var R = pixel.R;
+                    var G = pixel.G;
+                    var B = pixel.B;
+                    image.SetPixel(left, top, pixel);
                 }
                 // bottom
                 var bottom = lineRect.Bottom;
@@ -552,8 +543,13 @@ namespace FocusTree.UI.Graph
                     for (int i = 0; i < lineRect.Width; i++)
                     {
                         var left = lineRect.Left + i;
-                        var pixel = pCache.GetInversePixel(left, bottom);
-                        pImage.SetPixel(left, bottom, pixel);
+                        var pixel = BackImageCache.GetPixel(left, bottom);
+                        RedrawCache.SetPixel(left, bottom, pixel);
+                        var A = pixel.A;
+                        var R = pixel.R;
+                        var G = pixel.G;
+                        var B = pixel.B;
+                        image.SetPixel(left, bottom, pixel);
                     }
                 }
             }
@@ -562,8 +558,13 @@ namespace FocusTree.UI.Graph
             {
                 var left = lineRect.Left;
                 var top = lineRect.Top + j;
-                var pixel = pCache.GetInversePixel(left, top);
-                pImage.SetPixel(left, top, pixel);
+                var pixel = BackImageCache.GetPixel(left, top);
+                RedrawCache.SetPixel(left, top, pixel);
+                var A = pixel.A;
+                var R = pixel.R;
+                var G = pixel.G;
+                var B = pixel.B;
+                image.SetPixel(left, top, pixel);
             }
             // right
             var right = lineRect.Right;
@@ -572,29 +573,40 @@ namespace FocusTree.UI.Graph
                 for (int j = 0; j < lineRect.Height; j++)
                 {
                     var top = lineRect.Top + j;
-                    var pixel = pCache.GetInversePixel(right, top);
-                    pImage.SetPixel(right, top, pixel);
+                    var pixel = BackImageCache.GetPixel(right, top);
+                    RedrawCache.SetPixel(right, top, pixel);
+                    var A = pixel.A;
+                    var R = pixel.R;
+                    var G = pixel.G;
+                    var B = pixel.B;
+                    image.SetPixel(right, top, pixel);
                 }
             }
-            pCache.UnlockBits();
-            pImage.UnlockBits();
+            //pCache.UnlockBits();
+            //pImage.UnlockBits();
         }
         /// <summary>
         /// 重绘绘制过的格元
         /// </summary>
         /// <param name="image"></param>
-        public static void RedrawDrawnCells(Image image)
+        public static void RedrawDrawnCells(Image image, Rectangle rect)
         {
             Graphics g = Graphics.FromImage(image);
-            foreach (var point in LastDrawnCells)
+            //foreach (var point in LastDrawnCells)
+            //{
+            //    LatticeCell cell = new(point.X, point.Y);
+            //    if (Lattice.RectWithin(cell.RealRect, out var rect))
+            //    {
+            //        g.DrawImage(BackImageCache, rect, rect, GraphicsUnit.Pixel);
+            //    }
+            //    LastDrawnCells.Remove(point);
+            //}
+            //while (!RedrawCache.Finished())
             {
-                LatticeCell cell = new(point.X, point.Y);
-                if (Lattice.RectWithin(cell.RealRect, out var rect))
-                {
-                    g.DrawImage(BackImageCache, rect, rect, GraphicsUnit.Pixel);
-                }
-                LastDrawnCells.Remove(point);
+                
             }
+            //return RedrawCache.GetBitmap();
+            g.DrawImage(RedrawCache.GetBitmap(), rect, rect, GraphicsUnit.Pixel);
             g.Flush(); g.Dispose();
         }
         /// <summary>
@@ -605,7 +617,8 @@ namespace FocusTree.UI.Graph
         public static void DrawFillBackImage(Image image, Rectangle rect)
         {
             Graphics g = Graphics.FromImage(image);
-            GetBackImageCacher(rect.Size);
+            GetBackImageCacher(rect.Size); 
+            SetRedrawCache(rect.Width, rect.Height);
             g.DrawImage(BackImageCache, rect, rect, GraphicsUnit.Pixel);
             g.Flush(); g.Dispose();
         }
@@ -619,6 +632,11 @@ namespace FocusTree.UI.Graph
             Graphics g = Graphics.FromImage(image);
             g.DrawImage(BackImageCache, rect, rect, GraphicsUnit.Pixel);
             g.Flush(); g.Dispose();
+        }
+        public static void SetRedrawCache(int width, int height)
+        {
+            RedrawCache.Dispose();
+            RedrawCache = new(width, height);
         }
     }
 }
