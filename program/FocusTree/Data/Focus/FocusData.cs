@@ -12,7 +12,7 @@
         /// <summary>
         /// 节点ID
         /// </summary>
-        public int ID = 0;
+        public int ID = 1;
         /// <summary>
         /// 国策名称
         /// </summary>

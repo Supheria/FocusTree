@@ -4,6 +4,7 @@ using FocusTree.UI.test;
 using System.Drawing.Imaging;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using System.Windows.Forms.VisualStyles;
 
 namespace FocusTree.UI.Graph
 {
@@ -520,7 +521,7 @@ namespace FocusTree.UI.Graph
         /// 重绘绘制过的格元
         /// </summary>
         /// <param name="image"></param>
-        public static void RedrawDrawnCells(Image image)
+        public static void RedrawDrawnCells(Image image, Rectangle rect)
         {
             Graphics g = Graphics.FromImage(image);
             g.DrawImage(BackImageCache, 0, 0);

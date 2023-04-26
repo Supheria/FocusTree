@@ -17,7 +17,7 @@ namespace FocusTree.UI
         /// <summary>
         /// 元数据（数据存储结构）
         /// </summary>
-        public FocusGraph Graph { get; private set; }
+        public FocusGraph Graph { get; private set; } = new();
         /// <summary>
         /// 文件路径
         /// </summary>
@@ -151,6 +151,17 @@ namespace FocusTree.UI
 
         #region ==== 绘图 ====
 
+        public Rectangle? GetGraphRealRect()
+        {
+            var gRect = Graph.GetGraphMetaRect();
+            gRect = new(
+                gRect.Left * LatticeCell.Width + Lattice.OriginLeft,
+                gRect.Top * LatticeCell.Height + Lattice.OriginTop,
+                gRect.Width * LatticeCell.Width + GraphDrawer.NodeBorderWidth,
+                gRect.Height * LatticeCell.Height + GraphDrawer.NodeBorderWidth
+                );
+            return gRect;
+        }
         /// <summary>
         /// 重绘背景
         /// </summary>
@@ -161,15 +172,18 @@ namespace FocusTree.UI
                 GraphDrawer.DrawFillBackImage(Image, ClientRectangle);
                 return;
             }
-            if (Graph != null)
-            {
-                GraphDrawer.RedrawDrawnCells(Image);
-            }
+            GraphDrawer.RedrawDrawnCells(Image, ClientRectangle);
             if (DrawnInfoBrand)
             {
                 GraphDrawer.DrawRectWithBackImage(Image, InfoBrandRect);
                 DrawnInfoBrand = false;
             }
+        }
+        private void DrawLattice()
+        {
+            var gRect = GetGraphRealRect();
+            GraphDrawer.SetRedrawBuffer(gRect, Left, Top);
+            Lattice.Draw(Image);
         }
         /// <summary>
         /// 将节点绘制上载到栅格绘图委托（初始化节点列表时仅需上载第一次，除非节点列表或节点关系或节点位置信息发生变更才重新上载）
@@ -240,7 +254,7 @@ namespace FocusTree.UI
             Image = new Bitmap(ClientRectangle.Width, ClientRectangle.Height);
             GraphDrawer.DrawFillBackImage(Image, ClientRectangle);
             Lattice.SetBounds(LatticeBound);
-            Lattice.Draw(Image);
+            //DrawLattice();
             Invalidate();
         }
 
