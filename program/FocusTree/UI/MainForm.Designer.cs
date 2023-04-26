@@ -57,6 +57,7 @@ namespace FocusTree.UI
             MainForm_Menu_node_add = new ToolStripMenuItem();
             MainForm_Menu_graph = new ToolStripMenuItem();
             MainForm_Menu_graph_reorderIds = new ToolStripMenuItem();
+            MainForm_Menu_graph_setNodePointAuto = new ToolStripMenuItem();
             toolStripSeparator2 = new ToolStripSeparator();
             MainForm_Menu_graph_saveas = new ToolStripMenuItem();
             MainForm_Menu_loc = new ToolStripMenuItem();
@@ -66,7 +67,6 @@ namespace FocusTree.UI
             MainForm_Menu_batch = new ToolStripMenuItem();
             MainForm_Menu_batch_reorderIds = new ToolStripMenuItem();
             MainForm_Menu_batch_saveasImage = new ToolStripMenuItem();
-            MainForm_Menu_graph_setNodePointAuto = new ToolStripMenuItem();
             MainForm_StatusStrip.SuspendLayout();
             MainForm_Menu.SuspendLayout();
             SuspendLayout();
@@ -75,29 +75,28 @@ namespace FocusTree.UI
             // 
             MainForm_StatusStrip.ImageScalingSize = new Size(24, 24);
             MainForm_StatusStrip.Items.AddRange(new ToolStripItem[] { MainForm_StatusStrip_status, MainForm_ProgressBar, MainForm_StatusStrip_filename });
-            MainForm_StatusStrip.Location = new Point(0, 761);
+            MainForm_StatusStrip.Location = new Point(0, 537);
             MainForm_StatusStrip.Name = "MainForm_StatusStrip";
-            MainForm_StatusStrip.Padding = new Padding(2, 0, 22, 0);
-            MainForm_StatusStrip.Size = new Size(1232, 31);
+            MainForm_StatusStrip.Size = new Size(784, 24);
             MainForm_StatusStrip.TabIndex = 0;
             MainForm_StatusStrip.Text = "statusStrip1";
             // 
             // MainForm_StatusStrip_status
             // 
             MainForm_StatusStrip_status.Name = "MainForm_StatusStrip_status";
-            MainForm_StatusStrip_status.Size = new Size(46, 24);
+            MainForm_StatusStrip_status.Size = new Size(32, 19);
             MainForm_StatusStrip_status.Text = "状态";
             // 
             // MainForm_ProgressBar
             // 
             MainForm_ProgressBar.Name = "MainForm_ProgressBar";
-            MainForm_ProgressBar.Size = new Size(157, 23);
+            MainForm_ProgressBar.Size = new Size(100, 18);
             MainForm_ProgressBar.Step = 1;
             // 
             // MainForm_StatusStrip_filename
             // 
             MainForm_StatusStrip_filename.Name = "MainForm_StatusStrip_filename";
-            MainForm_StatusStrip_filename.Size = new Size(46, 24);
+            MainForm_StatusStrip_filename.Size = new Size(32, 19);
             MainForm_StatusStrip_filename.Text = "文件";
             // 
             // MainForm_Openfile
@@ -120,8 +119,7 @@ namespace FocusTree.UI
             MainForm_Menu.Items.AddRange(new ToolStripItem[] { MainForm_Menu_file, MainForm_Menu_edit, MainForm_Menu_node, MainForm_Menu_graph, MainForm_Menu_loc, MainForm_Menu_window, MainForm_Menu_batch });
             MainForm_Menu.Location = new Point(0, 0);
             MainForm_Menu.Name = "MainForm_Menu";
-            MainForm_Menu.Padding = new Padding(9, 3, 0, 3);
-            MainForm_Menu.Size = new Size(1232, 34);
+            MainForm_Menu.Size = new Size(784, 25);
             MainForm_Menu.TabIndex = 1;
             MainForm_Menu.Text = "menuStrip1";
             // 
@@ -129,46 +127,47 @@ namespace FocusTree.UI
             // 
             MainForm_Menu_file.DropDownItems.AddRange(new ToolStripItem[] { MainForm_Menu_file_new, MainForm_Menu_file_open, MainForm_Menu_file_save, MainForm_Menu_file_saveas, toolStripSeparator1, MainForm_Menu_file_backup });
             MainForm_Menu_file.Name = "MainForm_Menu_file";
-            MainForm_Menu_file.Size = new Size(62, 28);
+            MainForm_Menu_file.Size = new Size(44, 21);
             MainForm_Menu_file.Text = "文件";
             // 
             // MainForm_Menu_file_new
             // 
             MainForm_Menu_file_new.Name = "MainForm_Menu_file_new";
-            MainForm_Menu_file_new.Size = new Size(164, 34);
+            MainForm_Menu_file_new.Size = new Size(180, 22);
             MainForm_Menu_file_new.Text = "新建";
+            MainForm_Menu_file_new.Click += MainForm_Menu_file_new_Click;
             // 
             // MainForm_Menu_file_open
             // 
             MainForm_Menu_file_open.Name = "MainForm_Menu_file_open";
-            MainForm_Menu_file_open.Size = new Size(164, 34);
+            MainForm_Menu_file_open.Size = new Size(180, 22);
             MainForm_Menu_file_open.Text = "打开";
             MainForm_Menu_file_open.Click += MainForm_Menu_file_open_Click;
             // 
             // MainForm_Menu_file_save
             // 
             MainForm_Menu_file_save.Name = "MainForm_Menu_file_save";
-            MainForm_Menu_file_save.Size = new Size(164, 34);
+            MainForm_Menu_file_save.Size = new Size(180, 22);
             MainForm_Menu_file_save.Text = "保存";
             MainForm_Menu_file_save.Click += MainForm_Menu_file_save_Click;
             // 
             // MainForm_Menu_file_saveas
             // 
             MainForm_Menu_file_saveas.Name = "MainForm_Menu_file_saveas";
-            MainForm_Menu_file_saveas.Size = new Size(164, 34);
+            MainForm_Menu_file_saveas.Size = new Size(180, 22);
             MainForm_Menu_file_saveas.Text = "另存为";
             MainForm_Menu_file_saveas.Click += MainForm_Menu_file_saveas_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(161, 6);
+            toolStripSeparator1.Size = new Size(177, 6);
             // 
             // MainForm_Menu_file_backup
             // 
             MainForm_Menu_file_backup.DropDownItems.AddRange(new ToolStripItem[] { MainForm_Menu_file_backup_open, MainForm_Menu_file_backup_delete, MainForm_Menu_file_backup_seperator, MainForm_Menu_file_backup_clear, MainForm_Menu_file_backup_unpack });
             MainForm_Menu_file_backup.Name = "MainForm_Menu_file_backup";
-            MainForm_Menu_file_backup.Size = new Size(164, 34);
+            MainForm_Menu_file_backup.Size = new Size(180, 22);
             MainForm_Menu_file_backup.Text = "备份";
             MainForm_Menu_file_backup.DropDownOpening += MainForm_Menu_file_backup_DropDownOpening;
             MainForm_Menu_file_backup.DropDownOpened += MainForm_Menu_file_backup_DropDownOpened;
@@ -176,32 +175,32 @@ namespace FocusTree.UI
             // MainForm_Menu_file_backup_open
             // 
             MainForm_Menu_file_backup_open.Name = "MainForm_Menu_file_backup_open";
-            MainForm_Menu_file_backup_open.Size = new Size(200, 34);
+            MainForm_Menu_file_backup_open.Size = new Size(136, 22);
             MainForm_Menu_file_backup_open.Text = "打开";
             // 
             // MainForm_Menu_file_backup_delete
             // 
             MainForm_Menu_file_backup_delete.Name = "MainForm_Menu_file_backup_delete";
-            MainForm_Menu_file_backup_delete.Size = new Size(200, 34);
+            MainForm_Menu_file_backup_delete.Size = new Size(136, 22);
             MainForm_Menu_file_backup_delete.Text = "删除";
             MainForm_Menu_file_backup_delete.Click += MainForm_Menu_file_backup_delete_Click;
             // 
             // MainForm_Menu_file_backup_seperator
             // 
             MainForm_Menu_file_backup_seperator.Name = "MainForm_Menu_file_backup_seperator";
-            MainForm_Menu_file_backup_seperator.Size = new Size(197, 6);
+            MainForm_Menu_file_backup_seperator.Size = new Size(133, 6);
             // 
             // MainForm_Menu_file_backup_clear
             // 
             MainForm_Menu_file_backup_clear.Name = "MainForm_Menu_file_backup_clear";
-            MainForm_Menu_file_backup_clear.Size = new Size(200, 34);
+            MainForm_Menu_file_backup_clear.Size = new Size(136, 22);
             MainForm_Menu_file_backup_clear.Text = "打包并清空";
             MainForm_Menu_file_backup_clear.Click += MainForm_Menu_file_backup_clear_Click;
             // 
             // MainForm_Menu_file_backup_unpack
             // 
             MainForm_Menu_file_backup_unpack.Name = "MainForm_Menu_file_backup_unpack";
-            MainForm_Menu_file_backup_unpack.Size = new Size(200, 34);
+            MainForm_Menu_file_backup_unpack.Size = new Size(136, 22);
             MainForm_Menu_file_backup_unpack.Text = "解包";
             MainForm_Menu_file_backup_unpack.Click += MainForm_Menu_file_backup_unpack_Click;
             // 
@@ -209,7 +208,7 @@ namespace FocusTree.UI
             // 
             MainForm_Menu_edit.DropDownItems.AddRange(new ToolStripItem[] { MainForm_Menu_edit_undo, MainForm_Menu_edit_redo });
             MainForm_Menu_edit.Name = "MainForm_Menu_edit";
-            MainForm_Menu_edit.Size = new Size(62, 28);
+            MainForm_Menu_edit.Size = new Size(44, 21);
             MainForm_Menu_edit.Text = "编辑";
             MainForm_Menu_edit.DropDownClosed += MainForm_Menu_edit_status_check;
             MainForm_Menu_edit.DropDownOpening += MainForm_Menu_edit_status_check;
@@ -219,7 +218,7 @@ namespace FocusTree.UI
             // 
             MainForm_Menu_edit_undo.Enabled = false;
             MainForm_Menu_edit_undo.Name = "MainForm_Menu_edit_undo";
-            MainForm_Menu_edit_undo.Size = new Size(146, 34);
+            MainForm_Menu_edit_undo.Size = new Size(100, 22);
             MainForm_Menu_edit_undo.Text = "撤回";
             MainForm_Menu_edit_undo.Click += MainForm_Menu_edit_undo_Click;
             // 
@@ -227,7 +226,7 @@ namespace FocusTree.UI
             // 
             MainForm_Menu_edit_redo.Enabled = false;
             MainForm_Menu_edit_redo.Name = "MainForm_Menu_edit_redo";
-            MainForm_Menu_edit_redo.Size = new Size(146, 34);
+            MainForm_Menu_edit_redo.Size = new Size(100, 22);
             MainForm_Menu_edit_redo.Text = "重做";
             MainForm_Menu_edit_redo.Click += MainForm_Menu_edit_redo_Click;
             // 
@@ -235,38 +234,45 @@ namespace FocusTree.UI
             // 
             MainForm_Menu_node.DropDownItems.AddRange(new ToolStripItem[] { MainForm_Menu_node_add });
             MainForm_Menu_node.Name = "MainForm_Menu_node";
-            MainForm_Menu_node.Size = new Size(62, 28);
+            MainForm_Menu_node.Size = new Size(44, 21);
             MainForm_Menu_node.Text = "节点";
             // 
             // MainForm_Menu_node_add
             // 
             MainForm_Menu_node_add.Name = "MainForm_Menu_node_add";
-            MainForm_Menu_node_add.Size = new Size(200, 34);
+            MainForm_Menu_node_add.Size = new Size(136, 22);
             MainForm_Menu_node_add.Text = "添加新节点";
             // 
             // MainForm_Menu_graph
             // 
             MainForm_Menu_graph.DropDownItems.AddRange(new ToolStripItem[] { MainForm_Menu_graph_reorderIds, MainForm_Menu_graph_setNodePointAuto, toolStripSeparator2, MainForm_Menu_graph_saveas });
             MainForm_Menu_graph.Name = "MainForm_Menu_graph";
-            MainForm_Menu_graph.Size = new Size(62, 28);
+            MainForm_Menu_graph.Size = new Size(44, 21);
             MainForm_Menu_graph.Text = "图像";
             // 
             // MainForm_Menu_graph_reorderIds
             // 
             MainForm_Menu_graph_reorderIds.Name = "MainForm_Menu_graph_reorderIds";
-            MainForm_Menu_graph_reorderIds.Size = new Size(270, 34);
+            MainForm_Menu_graph_reorderIds.Size = new Size(135, 22);
             MainForm_Menu_graph_reorderIds.Text = "重排节点id";
             MainForm_Menu_graph_reorderIds.Click += MainForm_Menu_graph_reorderIds_Click;
+            // 
+            // MainForm_Menu_graph_setNodePointAuto
+            // 
+            MainForm_Menu_graph_setNodePointAuto.Name = "MainForm_Menu_graph_setNodePointAuto";
+            MainForm_Menu_graph_setNodePointAuto.Size = new Size(135, 22);
+            MainForm_Menu_graph_setNodePointAuto.Text = "自动排版";
+            MainForm_Menu_graph_setNodePointAuto.Click += MainForm_Menu_graph_setNodePointAuto_Click;
             // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new Size(267, 6);
+            toolStripSeparator2.Size = new Size(132, 6);
             // 
             // MainForm_Menu_graph_saveas
             // 
             MainForm_Menu_graph_saveas.Name = "MainForm_Menu_graph_saveas";
-            MainForm_Menu_graph_saveas.Size = new Size(270, 34);
+            MainForm_Menu_graph_saveas.Size = new Size(135, 22);
             MainForm_Menu_graph_saveas.Text = "生成图片";
             MainForm_Menu_graph_saveas.Click += MainForm_Menu_graph_saveas_Click;
             // 
@@ -274,66 +280,58 @@ namespace FocusTree.UI
             // 
             MainForm_Menu_loc.DropDownItems.AddRange(new ToolStripItem[] { MainForm_Menu_loc_camreset, MainForm_Menu_loc_camfocus });
             MainForm_Menu_loc.Name = "MainForm_Menu_loc";
-            MainForm_Menu_loc.Size = new Size(62, 28);
+            MainForm_Menu_loc.Size = new Size(44, 21);
             MainForm_Menu_loc.Text = "位置";
             // 
             // MainForm_Menu_loc_camreset
             // 
             MainForm_Menu_loc_camreset.Name = "MainForm_Menu_loc_camreset";
-            MainForm_Menu_loc_camreset.Size = new Size(146, 34);
+            MainForm_Menu_loc_camreset.Size = new Size(100, 22);
             MainForm_Menu_loc_camreset.Text = "全景";
             MainForm_Menu_loc_camreset.Click += MainForm_Menu_loc_panorama_Click;
             // 
             // MainForm_Menu_loc_camfocus
             // 
             MainForm_Menu_loc_camfocus.Name = "MainForm_Menu_loc_camfocus";
-            MainForm_Menu_loc_camfocus.Size = new Size(146, 34);
+            MainForm_Menu_loc_camfocus.Size = new Size(100, 22);
             MainForm_Menu_loc_camfocus.Text = "聚焦";
             MainForm_Menu_loc_camfocus.Click += MainForm_Menu_loc_focus_Click;
             // 
             // MainForm_Menu_window
             // 
             MainForm_Menu_window.Name = "MainForm_Menu_window";
-            MainForm_Menu_window.Size = new Size(62, 28);
+            MainForm_Menu_window.Size = new Size(44, 21);
             MainForm_Menu_window.Text = "窗口";
             // 
             // MainForm_Menu_batch
             // 
             MainForm_Menu_batch.DropDownItems.AddRange(new ToolStripItem[] { MainForm_Menu_batch_reorderIds, MainForm_Menu_batch_saveasImage });
             MainForm_Menu_batch.Name = "MainForm_Menu_batch";
-            MainForm_Menu_batch.Size = new Size(62, 28);
+            MainForm_Menu_batch.Size = new Size(44, 21);
             MainForm_Menu_batch.Text = "批量";
             // 
             // MainForm_Menu_batch_reorderIds
             // 
             MainForm_Menu_batch_reorderIds.Name = "MainForm_Menu_batch_reorderIds";
-            MainForm_Menu_batch_reorderIds.Size = new Size(201, 34);
+            MainForm_Menu_batch_reorderIds.Size = new Size(137, 22);
             MainForm_Menu_batch_reorderIds.Text = "重排节点ID";
             MainForm_Menu_batch_reorderIds.Click += MainForm_Menu_batch_reorderIds_Click;
             // 
             // MainForm_Menu_batch_saveasImage
             // 
             MainForm_Menu_batch_saveasImage.Name = "MainForm_Menu_batch_saveasImage";
-            MainForm_Menu_batch_saveasImage.Size = new Size(201, 34);
+            MainForm_Menu_batch_saveasImage.Size = new Size(137, 22);
             MainForm_Menu_batch_saveasImage.Text = "生成图片";
             MainForm_Menu_batch_saveasImage.Click += MainForm_Menu_batch_saveasImage_Click;
             // 
-            // MainForm_Menu_graph_setNodePointAuto
-            // 
-            MainForm_Menu_graph_setNodePointAuto.Name = "MainForm_Menu_graph_setNodePointAuto";
-            MainForm_Menu_graph_setNodePointAuto.Size = new Size(270, 34);
-            MainForm_Menu_graph_setNodePointAuto.Text = "自动排版";
-            MainForm_Menu_graph_setNodePointAuto.Click += MainForm_Menu_graph_setNodePointAuto_Click;
-            // 
             // MainForm
             // 
-            AutoScaleDimensions = new SizeF(11F, 24F);
+            AutoScaleDimensions = new SizeF(7F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1232, 792);
+            ClientSize = new Size(784, 561);
             Controls.Add(MainForm_StatusStrip);
             Controls.Add(MainForm_Menu);
             MainMenuStrip = MainForm_Menu;
-            Margin = new Padding(5, 4, 5, 4);
             Name = "MainForm";
             Text = "MainForm";
             FormClosing += MainForm_FormClosing;

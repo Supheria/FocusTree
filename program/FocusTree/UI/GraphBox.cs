@@ -17,7 +17,7 @@ namespace FocusTree.UI
         /// <summary>
         /// 元数据（数据存储结构）
         /// </summary>
-        public FocusGraph Graph { get; private set; } = new();
+        public FocusGraph Graph { get; private set; }
         /// <summary>
         /// 文件路径
         /// </summary>
@@ -115,7 +115,7 @@ namespace FocusTree.UI
         /// <summary>
         /// 鼠标移动灵敏度（值越大越迟顿）
         /// </summary>
-        static int MouseMoveSensibility = 1;
+        static int MouseMoveSensibility = 20;
         /// <summary>
         /// 拖动事件使用的鼠标参照坐标
         /// </summary>
@@ -178,12 +178,6 @@ namespace FocusTree.UI
                 GraphDrawer.DrawRectWithBackImage(Image, InfoBrandRect);
                 DrawnInfoBrand = false;
             }
-        }
-        private void DrawLattice()
-        {
-            var gRect = GetGraphRealRect();
-            GraphDrawer.SetRedrawBuffer(gRect, Left, Top);
-            Lattice.Draw(Image);
         }
         /// <summary>
         /// 将节点绘制上载到栅格绘图委托（初始化节点列表时仅需上载第一次，除非节点列表或节点关系或节点位置信息发生变更才重新上载）
@@ -397,8 +391,8 @@ namespace FocusTree.UI
             if (Math.Abs(diffInWidth) > MouseMoveSensibility || Math.Abs(diffInHeight) > MouseMoveSensibility)
             {
                 RedrawBackground();
-                Lattice.OriginLeft += (newPoint.X - DragMouseFlagPoint.X) / MouseMoveSensibility /** LatticeCell.Width*/;
-                Lattice.OriginTop += (newPoint.Y - DragMouseFlagPoint.Y) / MouseMoveSensibility /** LatticeCell.Height*/;
+                Lattice.OriginLeft += (newPoint.X - DragMouseFlagPoint.X) / MouseMoveSensibility * LatticeCell.Width;
+                Lattice.OriginTop += (newPoint.Y - DragMouseFlagPoint.Y) / MouseMoveSensibility * LatticeCell.Height;
                 DragMouseFlagPoint = newPoint;
                 Lattice.Draw(Image);;
                 DrawNodeMapInfo();
@@ -648,6 +642,7 @@ namespace FocusTree.UI
         /// </summary>
         public void SaveGraph()
         {
+            if (FilePath == string.Empty) { Parent.SaveAsNew(); }
             if (Graph == null || ReadOnly || !Graph.IsEdit()) { return; }
             FileBackup.Backup<FocusGraph>(FilePath);
             Graph.SaveToXml(FilePath);
@@ -674,13 +669,27 @@ namespace FocusTree.UI
         public void LoadGraph(string path)
         {
             CloseAllNodeToolDialogs();
-            ReadOnly = Graph == null ? false : Graph.IsBackupFile(path);
+            ReadOnly = Graph != null && Graph.IsBackupFile(path);
             if (!ReadOnly) { FilePath = path; }
             Graph?.ClearCache();
             Graph = XmlIO.LoadFromXml<FocusGraph>(path);
             FileBackup.Backup<FocusGraph>(FilePath);
             Graph.NewHistory();
             SelectedNode = null;
+            UploadNodeMap();
+            RescaleToPanorama();
+            Invalidate();
+        }
+        /// <summary>
+        /// 新建
+        /// </summary>
+        public void OpenNewGraph() 
+        {
+            CloseAllNodeToolDialogs();
+            Graph?.ClearCache();
+            Graph = new();
+            Graph.NewHistory();
+            FilePath = string.Empty;
             UploadNodeMap();
             RescaleToPanorama();
             Invalidate();

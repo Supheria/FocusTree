@@ -23,6 +23,7 @@ namespace FocusTree.UI
             ResizeEnd += MainForm_ResizeEnd;
             SizeChanged += MainForm_SizeChanged;
             Shown += MainForm_Shown;
+            Display.Invalidated += Display_Invalidated;
 
             foreach (var name in Display.ToolDialogs.Keys)
             {
@@ -47,17 +48,24 @@ namespace FocusTree.UI
 
         }
 
+        private void Display_Invalidated(object sender, InvalidateEventArgs e)
+        {
+            UpdateText();
+        }
+
         private void MainForm_Shown(object sender, EventArgs e)
         {
-            ResizeGraphBox();
+            //ResizeGraphBox();
             ForceResize = false;
+            //Display.OpenNewGraph();
+            UpdateText();
         }
 
         private void MainForm_SizeChanged(object sender, EventArgs e)
         {
-            if (ForceResize || 
-                (LastState == FormWindowState.Maximized && WindowState == FormWindowState.Normal) || 
-                WindowState == FormWindowState.Maximized || 
+            if (ForceResize ||
+                (LastState == FormWindowState.Maximized && WindowState == FormWindowState.Normal) ||
+                WindowState == FormWindowState.Maximized ||
                 WindowState == FormWindowState.Minimized)
             {
                 ResizeGraphBox();
@@ -80,7 +88,17 @@ namespace FocusTree.UI
         }
 
         #region ==== File ====
-
+        private void MainForm_Menu_file_new_Click(object sender, EventArgs e)
+        {
+            if (Display.GraphEdited == true)
+            {
+                if (MessageBox.Show("要放弃当前的更改吗？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No)
+                {
+                    return;
+                }
+            }
+            Display.OpenNewGraph();
+        }
         private void MainForm_Menu_file_open_Click(object sender, EventArgs e)
         {
             if (Display.GraphEdited == true)
@@ -105,6 +123,16 @@ namespace FocusTree.UI
             UpdateText();
         }
         private void MainForm_Menu_file_saveas_Click(object sender, EventArgs e)
+        {
+            MainForm_Savefile.InitialDirectory = Path.GetDirectoryName(Display.FilePath);
+            MainForm_Savefile.FileName = Path.GetFileNameWithoutExtension(Display.FilePath) + "_new.xml";
+            if (MainForm_Savefile.ShowDialog() == DialogResult.OK)
+            {
+                Display.SaveAsNew(MainForm_Savefile.FileName);
+            }
+            UpdateText();
+        }
+        public void SaveAsNew()
         {
             MainForm_Savefile.InitialDirectory = Path.GetDirectoryName(Display.FilePath);
             MainForm_Savefile.FileName = Path.GetFileNameWithoutExtension(Display.FilePath) + "_new.xml";
