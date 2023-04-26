@@ -6,6 +6,7 @@ using FocusTree.UI.Controls;
 using FocusTree.UI.Graph;
 using FocusTree.UI.NodeToolDialogs;
 using FocusTree.UI.test;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace FocusTree.UI
 {
@@ -106,11 +107,7 @@ namespace FocusTree.UI
         /// <summary>
         /// Image 专用 GDI
         /// </summary>
-        public readonly Graphics gCore;
-        /// <summary>
-        /// 上一次非背景绘图区域
-        /// </summary>
-        List<Rectangle> LastDrawArea = new();
+        //public readonly Graphics gCore;
         /// <summary>
         /// 信息展示条区域
         /// </summary>
@@ -123,7 +120,7 @@ namespace FocusTree.UI
         /// 拖动事件使用的鼠标参照坐标
         /// </summary>
         Point DragMouseFlagPoint = new(0, 0);
-        Rectangle LatticeBound { get=> new(Left, Top, Width, Height - InfoBrandRect.Height); }
+        Rectangle LatticeBound { get=> new(Left, Top, Width, InfoBrandRect.Top - Top - 30); }
 
         #endregion
 
@@ -138,10 +135,6 @@ namespace FocusTree.UI
             NodeInfo = new NodeInfoDialog(this);
             //SizeMode = PictureBoxSizeMode.Zoom;
             //DoubleBuffered = true;
-            BackColor = Color.White;
-            var workArea = Screen.GetWorkingArea(this);
-            Image = new Bitmap(workArea.Width, workArea.Height);
-            gCore = Graphics.FromImage(Image);
 
             SizeChanged += OnSizeChanged;
             MouseDown += OnMouseDown;
@@ -241,6 +234,8 @@ namespace FocusTree.UI
             {
                 return;
             }
+            Image?.Dispose();
+            Image = new Bitmap(ClientRectangle.Width, ClientRectangle.Height);
             GraphDrawer.DrawFillBackImage(Image, ClientRectangle);
             Lattice.SetBounds(LatticeBound);
             Lattice.Draw(Image);
@@ -337,7 +332,7 @@ namespace FocusTree.UI
             if (SelectedNode != null)
             {
                 var focus = Graph.GetFocus(SelectedNode.Value);
-                GraphDrawer.DrawNode(gCore, focus, GraphDrawer.NodeBG_Normal);
+                GraphDrawer.DrawNode((Bitmap)Image, focus);
                 SelectedNode = null;
             }
             if (!ReadOnly || MessageBox.Show("[202303052340]是否恢复备份？", "提示", MessageBoxButtons.YesNo) == DialogResult.No) { return; }
@@ -435,7 +430,12 @@ namespace FocusTree.UI
             if (Lattice.RectWithin(CellCursorOn.InnerPartRealRects[part], out var saveRect))
             {
                 var rect = saveRect;
-                LastCellDrawer = (Image) => gCore.FillRectangle(brush, rect);
+                LastCellDrawer = (Image) =>
+                {
+                    var g = Graphics.FromImage(Image);
+                    g.FillRectangle(brush, rect);
+                    g.Flush(); g.Dispose();
+                };
             }
             Lattice.Drawing += LastCellDrawer;
             RedrawBackground();
@@ -577,7 +577,7 @@ namespace FocusTree.UI
             if (Lattice.DrawRect.Height < (gRect.Height) * LatticeCell.SizeMin.Height)
             {
                 LatticeCell.Height = LatticeCell.SizeMin.Height;
-                Parent.Height = (gRect.Height + 1) * LatticeCell.SizeMin.Height + Parent.Height - Height + InfoBrandRect.Height;
+                Parent.Height = (gRect.Height + 1) * LatticeCell.SizeMin.Height + Parent.Height - Height + InfoBrandRect.Height + 30/*30 is blank between Lattice's DrawRect.Bottom and InfoBrandRect.Top*/;
             }
             Parent.ForceResize = false;
             RedrawBackground();
