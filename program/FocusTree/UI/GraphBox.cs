@@ -17,7 +17,7 @@ namespace FocusTree.UI
         /// <summary>
         /// 元数据（数据存储结构）
         /// </summary>
-        public FocusGraph Graph { get; private set; }
+        public FocusGraph Graph { get; private set; } = new();
         /// <summary>
         /// 文件路径
         /// </summary>
@@ -149,7 +149,7 @@ namespace FocusTree.UI
 
         #region ==== 绘图 ====
 
-        public Rectangle GetGraphRealRect()
+        public Rectangle? GetGraphRealRect()
         {
             var gRect = Graph.GetGraphMetaRect();
             gRect = new(
@@ -158,7 +158,6 @@ namespace FocusTree.UI
                 gRect.Width * LatticeCell.Width + GraphDrawer.NodeBorderWidth,
                 gRect.Height * LatticeCell.Height + GraphDrawer.NodeBorderWidth
                 );
-            Lattice.RectWithin(gRect, out gRect);
             return gRect;
         }
         /// <summary>
@@ -171,10 +170,7 @@ namespace FocusTree.UI
                 GraphDrawer.DrawFillBackImage(Image, ClientRectangle);
                 return;
             }
-            if (Graph != null)
-            {
-                GraphDrawer.RedrawDrawnCells(Image, ClientRectangle);
-            }
+            GraphDrawer.RedrawDrawnCells(Image, ClientRectangle);
             if (DrawnInfoBrand)
             {
                 GraphDrawer.DrawRectWithBackImage(Image, InfoBrandRect);
@@ -183,11 +179,8 @@ namespace FocusTree.UI
         }
         private void DrawLattice()
         {
-            if (Graph != null)
-            {
-                var gRect = GetGraphRealRect();
-                GraphDrawer.SetRedrawCache(Width, Height);
-            }
+            var gRect = GetGraphRealRect();
+            GraphDrawer.SetRedrawBuffer(gRect, Left, Top);
             Lattice.Draw(Image);
         }
         /// <summary>
@@ -259,7 +252,7 @@ namespace FocusTree.UI
             Image = new Bitmap(ClientRectangle.Width, ClientRectangle.Height);
             GraphDrawer.DrawFillBackImage(Image, ClientRectangle);
             Lattice.SetBounds(LatticeBound);
-            Lattice.Draw(Image);
+            //DrawLattice();
             Invalidate();
         }
 

@@ -4,6 +4,7 @@ using FocusTree.UI.test;
 using System.Drawing.Imaging;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using System.Windows.Forms.VisualStyles;
 
 namespace FocusTree.UI.Graph
 {
@@ -112,7 +113,9 @@ namespace FocusTree.UI.Graph
         /// </summary>
         static Dictionary<(int, int), CellDrawer> LineDrawerCatalog = new();
         public static HashSet<Point> LastDrawnCells = new();
-        static ImageDrawer RedrawCache = new();
+        static Bitmap RedrawBuffer;
+        static int BufferOffsetLeft = 0;
+        static int BufferOffsetTop = 0;
 
         #endregion
 
@@ -133,17 +136,17 @@ namespace FocusTree.UI.Graph
         /// </summary>
         public static void SetBackImageCacher(Size size)
         {
+            var Width = size.Width;
+            var Height = size.Height;
             if (!File.Exists(BackImagePath))
             {
                 BackImageCache?.Dispose();
-                var width = size.Width;
-                var height = size.Height;
-                BackImageCache = new Bitmap(width, height);
+                BackImageCache = new Bitmap(Width, Height);
                 PointBitmap pCache = new(BackImageCache);
                 pCache.LockBits();
-                for (int i = 0; i < width; i++)
+                for (int i = 0; i < Width; i++)
                 {
-                    for (int j = 0; j < height; j++)
+                    for (int j = 0; j < Height; j++)
                     {
                         pCache.SetPixel(i, j, BlankBackground);
                     }
@@ -152,8 +155,6 @@ namespace FocusTree.UI.Graph
                 return;
             }
             var sourceImage = (Bitmap)Image.FromFile(BackImagePath);
-            var Width = size.Width;
-            var Height = size.Height;
             var bkWidth = Width;
             var bkHeight = Height;
             float sourceRatio = (float)sourceImage.Width / (float)sourceImage.Height;
@@ -247,7 +248,7 @@ namespace FocusTree.UI.Graph
                     var x = nodeRect.Left + i;
                     var y = nodeRect.Top + j;
                     var pixel = BackImageCache.GetPixel(x, y);
-                    RedrawCache.SetPixel(x, y, pixel);
+                    RedrawBuffer.SetPixel(x - BufferOffsetLeft, y - BufferOffsetTop, pixel);
                     var A = pixel.A;
                     var R = pixel.R;
                     var G = pixel.G;
@@ -264,7 +265,7 @@ namespace FocusTree.UI.Graph
                     var x = nodeRect.Left + i;
                     var y = nodeRect.Top + j;
                     var pixel = BackImageCache.GetPixel(x, y);
-                    RedrawCache.SetPixel(x, y, pixel);
+                    RedrawBuffer.SetPixel(x - BufferOffsetLeft, y - BufferOffsetTop, pixel);
                     var A = pixel.A;
                     var R = pixel.R;
                     var G = pixel.G;
@@ -280,7 +281,7 @@ namespace FocusTree.UI.Graph
                     var x = nodeRect.Left + i;
                     var y = nodeRect.Top + j;
                     var pixel = BackImageCache.GetPixel(x, y);
-                    RedrawCache.SetPixel(x, y, pixel);
+                    RedrawBuffer.SetPixel(x - BufferOffsetLeft, y - BufferOffsetTop, pixel);
                     var A = pixel.A;
                     var R = pixel.R;
                     var G = pixel.G;
@@ -297,7 +298,7 @@ namespace FocusTree.UI.Graph
                     var x = nodeRect.Left + i;
                     var y = nodeRect.Top + j;
                     var pixel = BackImageCache.GetPixel(x, y);
-                    RedrawCache.SetPixel(x, y, pixel);
+                    RedrawBuffer.SetPixel(x - BufferOffsetLeft, y - BufferOffsetTop, pixel);
                     var A = pixel.A;
                     var R = pixel.R;
                     var G = pixel.G;
@@ -384,7 +385,6 @@ namespace FocusTree.UI.Graph
                     var x = rect.Left + i;
                     var y = rect.Top + j;
                     var bkPixel = BackImageCache.GetPixel(x, y);
-                    RedrawCache.SetPixel(x, y, bkPixel);
                     var A = bkPixel.A;
                     var R = bkPixel.R;
                     var G = bkPixel.G;
@@ -392,21 +392,23 @@ namespace FocusTree.UI.Graph
                     var pixel = image.GetPixel(x, y);
                     if (pixel.R == 255 && pixel.G == 255 && pixel.B == 255)
                     {
-                        if (i <= NodeBorderWidth || i >= rect.Width - NodeBorderWidth || j <= NodeBorderWidth || j >= rect.Height - NodeBorderWidth)
+                        RedrawBuffer.SetPixel(x - BufferOffsetLeft, y - BufferOffsetTop, bkPixel);
+                        if (black < white)
                         {
-                            image.SetPixel(x, y, Color.FromArgb(A, 255 - R, 255 - G, 255 - B));
+                            image.SetPixel(x, y, NodeFG_BkDark);
                         }
-                        else { image.SetPixel(x, y, bkPixel); }
+                        else
+                        {
+                            image.SetPixel(x, y, NodeFG_BkLight);
+                        }
                         continue;
                     }
-                    if (black < white)
-                    {   
-                        image.SetPixel(x, y, NodeFG_BkDark);
-                    }
-                    else
+                    if (i <= NodeBorderWidth || i >= rect.Width - NodeBorderWidth || j <= NodeBorderWidth || j >= rect.Height - NodeBorderWidth)
                     {
-                        image.SetPixel(x, y, NodeFG_BkLight);
+                        RedrawBuffer.SetPixel(x - BufferOffsetLeft, y - BufferOffsetTop, bkPixel);
+                        image.SetPixel(x, y, Color.FromArgb(A, 255 - R, 255 - G, 255 - B));
                     }
+                    else { image.SetPixel(x, y, bkPixel); }
                 }
             }
             //pCache.UnlockBits();
@@ -529,11 +531,7 @@ namespace FocusTree.UI.Graph
                     var left = lineRect.Left + i;
                     var top = lineRect.Top;
                     var pixel = BackImageCache.GetPixel(left, top); 
-                    RedrawCache.SetPixel(left, top, pixel);
-                    var A = pixel.A;
-                    var R = pixel.R;
-                    var G = pixel.G;
-                    var B = pixel.B;
+                    RedrawBuffer.SetPixel(left - BufferOffsetLeft, top - BufferOffsetTop, pixel);
                     image.SetPixel(left, top, pixel);
                 }
                 // bottom
@@ -544,11 +542,7 @@ namespace FocusTree.UI.Graph
                     {
                         var left = lineRect.Left + i;
                         var pixel = BackImageCache.GetPixel(left, bottom);
-                        RedrawCache.SetPixel(left, bottom, pixel);
-                        var A = pixel.A;
-                        var R = pixel.R;
-                        var G = pixel.G;
-                        var B = pixel.B;
+                        RedrawBuffer.SetPixel(left - BufferOffsetLeft, bottom - BufferOffsetTop, pixel);
                         image.SetPixel(left, bottom, pixel);
                     }
                 }
@@ -559,11 +553,7 @@ namespace FocusTree.UI.Graph
                 var left = lineRect.Left;
                 var top = lineRect.Top + j;
                 var pixel = BackImageCache.GetPixel(left, top);
-                RedrawCache.SetPixel(left, top, pixel);
-                var A = pixel.A;
-                var R = pixel.R;
-                var G = pixel.G;
-                var B = pixel.B;
+                RedrawBuffer.SetPixel(left - BufferOffsetLeft, top - BufferOffsetTop, pixel);
                 image.SetPixel(left, top, pixel);
             }
             // right
@@ -574,11 +564,7 @@ namespace FocusTree.UI.Graph
                 {
                     var top = lineRect.Top + j;
                     var pixel = BackImageCache.GetPixel(right, top);
-                    RedrawCache.SetPixel(right, top, pixel);
-                    var A = pixel.A;
-                    var R = pixel.R;
-                    var G = pixel.G;
-                    var B = pixel.B;
+                    RedrawBuffer.SetPixel(right - BufferOffsetLeft, top - BufferOffsetTop, pixel);
                     image.SetPixel(right, top, pixel);
                 }
             }
@@ -592,21 +578,10 @@ namespace FocusTree.UI.Graph
         public static void RedrawDrawnCells(Image image, Rectangle rect)
         {
             Graphics g = Graphics.FromImage(image);
-            //foreach (var point in LastDrawnCells)
-            //{
-            //    LatticeCell cell = new(point.X, point.Y);
-            //    if (Lattice.RectWithin(cell.RealRect, out var rect))
-            //    {
-            //        g.DrawImage(BackImageCache, rect, rect, GraphicsUnit.Pixel);
-            //    }
-            //    LastDrawnCells.Remove(point);
-            //}
-            //while (!RedrawCache.Finished())
+            if(RedrawBuffer != null)
             {
-                
+                g.DrawImage(RedrawBuffer, rect, rect, GraphicsUnit.Pixel);
             }
-            //return RedrawCache.GetBitmap();
-            g.DrawImage(RedrawCache.GetBitmap(), rect, rect, GraphicsUnit.Pixel);
             g.Flush(); g.Dispose();
         }
         /// <summary>
@@ -617,8 +592,7 @@ namespace FocusTree.UI.Graph
         public static void DrawFillBackImage(Image image, Rectangle rect)
         {
             Graphics g = Graphics.FromImage(image);
-            GetBackImageCacher(rect.Size); 
-            SetRedrawCache(rect.Width, rect.Height);
+            GetBackImageCacher(rect.Size);
             g.DrawImage(BackImageCache, rect, rect, GraphicsUnit.Pixel);
             g.Flush(); g.Dispose();
         }
@@ -633,10 +607,19 @@ namespace FocusTree.UI.Graph
             g.DrawImage(BackImageCache, rect, rect, GraphicsUnit.Pixel);
             g.Flush(); g.Dispose();
         }
-        public static void SetRedrawCache(int width, int height)
+        public static void SetRedrawBuffer(Rectangle? gRect, int Left, int Top)
         {
-            RedrawCache.Dispose();
-            RedrawCache = new(width, height);
+            //if (gRect == null)
+            {
+                BufferOffsetLeft = 0;
+                BufferOffsetTop = 0;
+                RedrawBuffer = new(BackImageCache.Width, BackImageCache.Width);
+            }
+            //var rect = gRect.Value;
+            //BufferOffsetLeft = rect.Left - Left;
+            //BufferOffsetTop = rect.Top - Top;
+            //RedrawBuffer?.Dispose();
+            //RedrawBuffer = new(rect.Width, rect.Height);
         }
     }
 }

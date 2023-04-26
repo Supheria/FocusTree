@@ -402,8 +402,10 @@ namespace FocusTree.Data.Focus
         /// <summary>
         /// 用于序列化
         /// </summary>
-        private FocusGraph()
+        public FocusGraph()
         {
+            FocusCatalog = new() { [1] = new() };
+            Name = "未命名";
         }
         /// <summary>
         /// 序列化预留方法，默认返回 null
