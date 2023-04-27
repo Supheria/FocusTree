@@ -62,8 +62,8 @@ namespace FocusTree.UI.NodeToolDialogs
             }
             LatticeCell cell = new(Display.SelectedNode.Value.LatticedPoint);
             var rect = cell.NodeRealRect;
-            Location = new Point(rect.Left + rect.Width / 2, rect.Top + rect.Height / 2);
-            Display.PointToScreen(Location);
+            var point = new Point(rect.Left + rect.Width / 2, rect.Top + rect.Height / 2);
+            Location = Display.PointToScreen(point);
             base.Show();
         }
     }

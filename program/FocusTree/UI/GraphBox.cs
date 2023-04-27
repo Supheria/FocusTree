@@ -554,17 +554,19 @@ namespace FocusTree.UI
                 LatticeCell.Height = LatticeCell.SizeMax.Height;
             }
             LatticeCell cell = new(focus.LatticedPoint);
-            int NodeCenterX = cell.NodeRealLeft + LatticeCell.NodeWidth / 2;
-            int NodeCenterY = cell.NodeRealTop + LatticeCell.NodeHeight / 2;
+            var halfNodeWidth = LatticeCell.NodeWidth / 2;
+            var halfNodeHeight = LatticeCell.NodeHeight / 2;
+            int NodeCenterX = cell.NodeRealLeft + halfNodeWidth;
+            int NodeCenterY = cell.NodeRealTop + halfNodeHeight;
             int WidthCenterDiff = (drRect.Left + drRect.Width / 2) - NodeCenterX;
             int HeightCenterDiff = (drRect.Top + drRect.Height / 2) - NodeCenterY;
             Lattice.OriginLeft += WidthCenterDiff;
             Lattice.OriginTop += HeightCenterDiff;
             Lattice.SetBounds(LatticeBound);
-            Lattice.Draw(Image);;
-            Cursor.Position = Parent.PointToScreen(new Point(
-                Bounds.X + Bounds.Width / 2,
-                Bounds.Y + Bounds.Height / 2
+            Lattice.Draw(Image);
+            Cursor.Position = PointToScreen(new Point(
+                cell.NodeRealLeft + halfNodeWidth,
+                cell.NodeRealTop + halfNodeHeight
                 ));
         }
 
@@ -622,7 +624,7 @@ namespace FocusTree.UI
             Graph.Undo();
             UploadNodeMap();
             GraphDrawer.RedrawBackground(Image);
-            Lattice.Draw(Image);;
+            Lattice.Draw(Image);
             Invalidate();
         }
         /// <summary>
@@ -633,7 +635,7 @@ namespace FocusTree.UI
             Graph.Redo();
             UploadNodeMap();
             GraphDrawer.RedrawBackground(Image);
-            Lattice.Draw(Image);;
+            Lattice.Draw(Image);
             Invalidate();
         }
 
