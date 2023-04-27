@@ -1,11 +1,12 @@
 ﻿using FocusTree.Data.Focus;
+using System.Drawing;
 
-namespace FocusTree.UI.Graph
+namespace FocusTree.Graph
 {
     /// <summary>
     /// 格元
     /// </summary>
-    struct LatticeCell
+    public struct LatticeCell
     {
         #region ==== 设置宽高和间距 ====
 
@@ -73,7 +74,10 @@ namespace FocusTree.UI.Graph
         /// 格元栅格化上边界
         /// </summary>
         public int LatticedTop { get; set; }
-        public Point LatticedPoint { get => new(LatticedLeft, LatticedTop); }
+        /// <summary>
+        /// 格元栅格化坐标
+        /// </summary>
+        public LatticedPoint LatticedPoint { get => new(LatticedLeft, LatticedTop); }
         /// <summary>
         /// 格元真实左边界
         /// </summary>
@@ -113,36 +117,14 @@ namespace FocusTree.UI.Graph
             LatticedTop = 0;
         }
         /// <summary>
-        /// 使用真实坐标创建，将坐标转换为栅格化坐标
-        /// </summary>
-        /// <param name="cursor"></param>
-        public LatticeCell(Point point)
-        {
-            var widthDiff = point.X - Lattice.OriginLeft;
-            var heightDiff = point.Y - Lattice.OriginTop;
-            LatticedLeft = widthDiff / Width;
-            LatticedTop = heightDiff / Height;
-            if (widthDiff < 0) { LatticedLeft--; }
-            if (heightDiff < 0) { LatticedTop--; }
-        }
-        /// <summary>
         /// 使用已有的栅格化坐标创建
         /// </summary>
         /// <param name="col"></param>
         /// <param name="row"></param>
-        public LatticeCell(int col, int row)
+        public LatticeCell(LatticedPoint point)
         {
-            LatticedLeft = col;
-            LatticedTop = row;
-        }
-        /// <summary>
-        /// 使用国策对象创建
-        /// </summary>
-        /// <param name="focus"></param>
-        public LatticeCell(FocusData focus)
-        {
-            LatticedLeft = focus.LatticedPoint.X;
-            LatticedTop = focus.LatticedPoint.Y;
+            LatticedLeft = point.Col;
+            LatticedTop = point.Row;
         }
 
         #endregion

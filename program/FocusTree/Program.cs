@@ -4,7 +4,7 @@
 using FocusTree.Data.Focus;
 using FocusTree.IO;
 using FocusTree.UI;
-using FocusTree.UI.Graph;
+using FocusTree.Graph;
 using FocusTree.UI.test;
 
 internal static class Program

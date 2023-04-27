@@ -1,6 +1,7 @@
 #define DEBUG
 using FocusTree.IO;
 using FocusTree.IO.FileManege;
+using FocusTree.Graph;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
@@ -288,7 +289,7 @@ namespace FocusTree.Data.Focus
                 {
                     foreach (var nodePoint in xMetaPoints[x])
                     {
-                        Point point = new(nodePoint.Value.X - blank, nodePoint.Value.Y);
+                        LatticedPoint point = new(nodePoint.Value.X - blank, nodePoint.Value.Y);
                         var focus = FocusCatalog[nodePoint.Key];
                         focus.LatticedPoint = point;
                         FocusCatalog[nodePoint.Key] = focus;
@@ -368,10 +369,10 @@ namespace FocusTree.Data.Focus
             foreach (var focus in FocusCatalog.Values)
             {
                 var point = focus.LatticedPoint;
-                left = point.X < left ? point.X : left;
-                top = point.Y < top ? point.Y : top;
-                right = point.X > right ? point.X : right;
-                bottom = point.Y > bottom ? point.Y : bottom;
+                left = point.Col < left ? point.Col : left;
+                top = point.Row < top ? point.Row : top;
+                right = point.Col > right ? point.Col : right;
+                bottom = point.Row > bottom ? point.Row : bottom;
             }
             return new(left, top, right - left + 1, bottom - top + 1);
         }
@@ -381,7 +382,7 @@ namespace FocusTree.Data.Focus
         /// <param name="latticedPoint"></param>
         /// <param name="id">默认为-1</param>
         /// <returns>如果有则返回true，id为节点id；否则返回false，id为-1</returns>
-        public bool ContainLatticedPoint(Point latticedPoint, out int id)
+        public bool ContainLatticedPoint(LatticedPoint latticedPoint, out int id)
         {
             id = -1;
             foreach (var focus in FocusCatalog.Values)

@@ -3,9 +3,10 @@ using FocusTree.Data.Focus;
 using FocusTree.IO;
 using FocusTree.IO.FileManege;
 using FocusTree.UI.Controls;
-using FocusTree.UI.Graph;
+using FocusTree.Graph;
 using FocusTree.UI.NodeToolDialogs;
 using FocusTree.UI.test;
+using System.Drawing;
 using static System.Formats.Asn1.AsnWriter;
 
 namespace FocusTree.UI
@@ -163,7 +164,7 @@ namespace FocusTree.UI
                     foreach (var requireId in requires)
                     {
                         var require = Graph.GetFocus(requireId);
-                        GraphDrawer.UploadDrawerRequireLine(color, focus, require);
+                        GraphDrawer.UploadDrawerRequireLine(color, focus.LatticedPoint, require.LatticedPoint);
                     }
                     color++;
                 }
@@ -310,7 +311,7 @@ namespace FocusTree.UI
             if (SelectedNode != null)
             {
                 var focus = Graph.GetFocus(SelectedNode.Value);
-                GraphDrawer.DrawNode((Bitmap)Image, focus);
+                Lattice.Drawing -= LastCellDrawer;
                 SelectedNode = null;
             }
             if (!ReadOnly || MessageBox.Show("[202303052340]是否恢复备份？", "提示", MessageBoxButtons.YesNo) == DialogResult.No) { return; }
@@ -324,16 +325,6 @@ namespace FocusTree.UI
         }
 
         //---- OnMouseMove ----//
-
-        /// <summary>
-        /// 光标所处的节点
-        /// </summary>
-        LatticeCell CellCursorOn = new();
-        /// <summary>
-        /// 上次光标所处的节点部分
-        /// </summary>
-        LatticeCell.Parts LastCellPart = new();
-        CellDrawer LastCellDrawer;
 
         private void OnMouseMove(object sender, MouseEventArgs args)
         {
@@ -366,20 +357,32 @@ namespace FocusTree.UI
                 DrawNodeMapInfo();
             }
         }
+        /// <summary>
+        /// 光标所处的节点
+        /// </summary>
+        LatticedPoint CellCursorOn = new();
+        /// <summary>
+        /// 上次光标所处的节点部分
+        /// </summary>
+        LatticeCell.Parts LastCellPart = new();
+        CellDrawer LastCellDrawer;
+
         CellDrawer cache;
         private void DragNode(Point newPoint)
         {
             NodeInfoTip.Hide(this);
             Lattice.DrawBackLattice = true;
-            var part = CellCursorOn.GetInnerPartPointOn(newPoint);
-            if (Graph.ContainLatticedPoint(CellCursorOn.LatticedPoint, out var id))
+            LatticeCell cell = new(CellCursorOn);
+            var part = cell.GetInnerPartPointOn(newPoint);
+            var id = PointInAnyNode(newPoint);
+            if (id != null)
             {
-                Lattice.Drawing -= GraphDrawer.NodeDrawerCatalog[id];
-                cache = GraphDrawer.NodeDrawerCatalog[id];
+                Lattice.Drawing -= GraphDrawer.NodeDrawerCatalog[id.Value];
+                cache = GraphDrawer.NodeDrawerCatalog[id.Value];
             }
             if (part == LatticeCell.Parts.Leave)
             {
-                if (id != -1 && Lattice.RectWithin(CellCursorOn.InnerPartRealRects[LatticeCell.Parts.Node], out var sv))
+                if (id != null && Lattice.RectWithin(cell.InnerPartRealRects[LatticeCell.Parts.Node], out var sv))
                 {
                     var rect = sv;
                     Lattice.Drawing += cache;
@@ -390,32 +393,31 @@ namespace FocusTree.UI
             }
             if (part == LastCellPart) { return; }
             LastCellPart = part;
-            SolidBrush brush = new SolidBrush(Color.FromArgb(100, Color.Gray));
+            Color brushColor = Color.FromArgb(100, Color.Gray);
             if (part == LatticeCell.Parts.Node)
             {
-                brush = new SolidBrush(Color.FromArgb(150, Color.Orange));
+                brushColor = Color.FromArgb(150, Color.Orange);
             }
-            else if (id != -1 && Lattice.RectWithin(CellCursorOn.InnerPartRealRects[LatticeCell.Parts.Node], out var sv))
+            else if (id != null && Lattice.RectWithin(cell.InnerPartRealRects[LatticeCell.Parts.Node], out var sv))
             {
                 var rect = sv;
                 Lattice.Drawing += cache;
             }
             Lattice.Drawing -= LastCellDrawer;
-            if (Lattice.RectWithin(CellCursorOn.InnerPartRealRects[part], out var saveRect))
+            if (id != null)
             {
-                var rect = saveRect;
-                LastCellDrawer = (Image) =>
-                {
-                    var g = Graphics.FromImage(Image);
-                    g.FillRectangle(brush, rect);
-                    g.Flush(); g.Dispose();
-                };
+                LastCellDrawer = (image) => GraphDrawer.DrawFocusNode(image, Graph.GetFocus(id.Value), brushColor);
             }
+            else
+            {
+                LastCellDrawer = (image) => GraphDrawer.DrawNode(image, CellCursorOn, part, brushColor);
+            }
+            
             Lattice.Drawing += LastCellDrawer;
             GraphDrawer.RedrawBackground(Image);
             Lattice.Draw(Image);;
             Parent.Text = $"W {LatticeCell.Width},H {LatticeCell.Height}, o: {Lattice.OriginLeft}, {Lattice.OriginTop}, cursor: {newPoint}, cellPart: {LastCellPart}";
-            Parent.Text = $"cell left: {CellCursorOn.LatticedLeft}, cell top: {CellCursorOn.LatticedTop}, last part: {LastCellPart}, part: {part}";
+            //Parent.Text = $"cell left: {CellCursorOn.LatticedLeft}, cell top: {CellCursorOn.LatticedTop}, last part: {LastCellPart}, part: {part}";
         }
 
         private void ShowNodeInfoTip(Point location)
@@ -503,7 +505,7 @@ namespace FocusTree.UI
         private int? PointInAnyNode(Point point)
         {
             if (Graph == null) { return null; }
-            LatticeCell cell = new(point);
+            LatticeCell cell = new(new(point));
             if (!Graph.ContainLatticedPoint(cell.LatticedPoint, out var id)) { return null; }
             var part = cell.GetInnerPartPointOn(point);
             if (part != LatticeCell.Parts.Node) { return null; }
@@ -586,7 +588,7 @@ namespace FocusTree.UI
                 LatticeCell.Width = LatticeCell.SizeMax.Width;
                 LatticeCell.Height = LatticeCell.SizeMax.Height;
             }
-            LatticeCell cell = new(Graph.GetFocus(id));
+            LatticeCell cell = new(Graph.GetFocus(id).LatticedPoint);
             int NodeCenterX = cell.NodeRealLeft + LatticeCell.NodeWidth / 2;
             int NodeCenterY = cell.NodeRealTop + LatticeCell.NodeHeight / 2;
             int WidthCenterDiff = (drRect.Left + drRect.Width / 2) - NodeCenterX;
@@ -721,7 +723,7 @@ namespace FocusTree.UI
         /// <returns></returns>
         public Point GetSelectedNodeCenterOnScreen()
         {
-            LatticeCell cell = new(Graph.GetFocus(SelectedNode.Value));
+            LatticeCell cell = new(Graph.GetFocus(SelectedNode.Value).LatticedPoint);
             var rect = cell.NodeRealRect;
             var point = new Point(rect.Left + rect.Width / 2, rect.Top + rect.Height / 2);
             return PointToScreen(point);

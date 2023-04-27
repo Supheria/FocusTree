@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using FocusTree.Properties;
 
-namespace FocusTree.UI.Graph
+namespace FocusTree.Graph
 {
     /// <summary>
     /// 国策树绘图工具
@@ -191,8 +191,8 @@ namespace FocusTree.UI.Graph
         /// </summary>
         public static void UploadDrawerNode(FocusData focus)
         {
-            LatticeCell cell = new(focus);
-            Lattice.Drawing += NodeDrawerCatalog[focus.ID] = (image) => DrawNode(image, focus);
+            LatticeCell cell = new(focus.LatticedPoint);
+            Lattice.Drawing += NodeDrawerCatalog[focus.ID] = (image) => DrawFocusNode(image, focus);
         }
         /// <summary>
         /// 将节点关系线绘制到栅格绘图委托
@@ -200,18 +200,23 @@ namespace FocusTree.UI.Graph
         /// <param name="penIndex">笔颜色</param>
         /// <param name="start">起始国策</param>
         /// <param name="end">结束国策</param>
-        public static void UploadDrawerRequireLine(int penIndex, FocusData start, FocusData end)
+        public static void UploadDrawerRequireLine(int penIndex, LatticedPoint start, LatticedPoint end)
         {
-            Lattice.Drawing += (image) => DrawRequireLine(image, start.LatticedPoint, end.LatticedPoint);
+            Lattice.Drawing += (image) => DrawRequireLine(image, start, end);
         }
 
         #endregion
 
-        #region ==== 绘制节点 ====
+        #region ==== 绘制国策节点 ====
 
-        public static void DrawNode(Bitmap image, FocusData focus)
+        /// <summary>
+        /// 绘制无填充色的国策节点（上载绘制委托默认）
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="focus"></param>
+        private static void DrawFocusNode(Bitmap image, FocusData focus)
         {
-            LatticeCell cell = new(focus);
+            LatticeCell cell = new(focus.LatticedPoint);
             var nodeRect = cell.InnerPartRealRects[LatticeCell.Parts.Node];
             if (!Lattice.RectWithin(nodeRect, out nodeRect)) { return; }
             var cellRect = cell.RealRect;
@@ -221,10 +226,51 @@ namespace FocusTree.UI.Graph
             }
             else { DrawStringNode(image, nodeRect, focus.Name); }
         }
+        /// <summary>
+        /// 绘制有颜色填充国策节点
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="focus"></param>
+        /// <param name="fillColor"></param>
+        public static void DrawFocusNode(Image image, FocusData focus, Color fillColor)
+        {
+            DrawFocusNode((Bitmap)image, focus, fillColor);
+        }
+        /// <summary>
+        /// 绘制有颜色填充国策节点
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="focus"></param>
+        /// <param name="fillColor"></param>
+        private static void DrawFocusNode(Bitmap image, FocusData focus, Color fillColor)
+        {
+            LatticeCell cell = new(focus.LatticedPoint);
+            var nodeRect = cell.InnerPartRealRects[LatticeCell.Parts.Node];
+            if (!Lattice.RectWithin(nodeRect, out nodeRect)) { return; }
+            var cellRect = cell.RealRect;
+            if (cellRect.Width < LatticeCell.SizeMax.Width / 2 || cellRect.Height < LatticeCell.SizeMax.Height / 2)
+            {
+                DrawBlankNode(image, nodeRect, fillColor);
+            }
+            else { DrawStringNode(image, nodeRect, focus.Name, fillColor); }
+        }
 
         #endregion
 
-        #region ==== 节点绘制方法 ====
+        #region ==== 绘制非国策节点 ====
+
+        public static void DrawNode(Bitmap image, LatticedPoint point, LatticeCell.Parts cellPart, Color fillColor)
+        {
+            LatticeCell cell = new(point);
+            if (!Lattice.RectWithin(cell.InnerPartRealRects[cellPart], out var rect)) { return; }
+            var g = Graphics.FromImage(image);
+            g.FillRectangle(new SolidBrush(fillColor), rect);
+            g.Flush(); g.Dispose();
+        }
+
+        #endregion
+
+        #region ==== 国策节点绘制方法 ====
 
         /// <summary>
         /// 绘制无文字节点
@@ -277,7 +323,7 @@ namespace FocusTree.UI.Graph
             {
                 for (int j = nodeRect.Height - NodeBorderWidth; j < nodeRect.Height; j++)
                 {
-                    if (j <= 0) { break; }
+                    //if (j <= 0) { break; }
                     var x = nodeRect.Left + i;
                     var y = nodeRect.Top + j;
                     var pixel = pCache.GetPixel(x, y);
@@ -287,13 +333,163 @@ namespace FocusTree.UI.Graph
             pCache.UnlockBits();
             pImage.UnlockBits();
         }
+        private static void DrawBlankNode(Bitmap image, Rectangle nodeRect, Color fillColor)
+        {
+            PointBitmap pImage = new(image);
+            pImage.LockBits();
+            PointBitmap pCache = new(BackImageCache);
+            pCache.LockBits();
+            for (int i = 0; i < nodeRect.Width; i++)
+            {
+                for (int j = 0; j < nodeRect.Height; j++)
+                {
+                    var x = nodeRect.Left + i;
+                    var y = nodeRect.Top + j;
+                    var bkPixel = pCache.GetPixel(x, y);
+                    if (i <= NodeBorderWidth || i >= nodeRect.Width - NodeBorderWidth || j <= NodeBorderWidth || j >= nodeRect.Height - NodeBorderWidth)
+                    {
+                        pImage.SetPixel(x, y, GetInverseColor(bkPixel));
+                    }
+                    else { pImage.SetPixel(x, y, fillColor); }
+                }
+            }
+            pCache.UnlockBits();
+            pImage.UnlockBits();
+        }
         /// <summary>
-        /// 绘制有文字节点 - 确定区域内的像素分布（为选择字的颜色），并用黑、白纯色区分出文字和底纹的区别，好为下一步扣出字形
+        /// 根据字黑底白绘制文字部分和底纹部分
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="rect"></param>
+        /// <param name="white"></param>
+        /// <param name="black"></param>
+        private static void DrawStringNode(Bitmap image, Rectangle nodeRect, string name)
+        {
+            var whiteMore = GetNodeNamePattern(image, nodeRect, name);
+            PointBitmap pImage = new(image);
+            pImage.LockBits();
+            PointBitmap pCache = new(BackImageCache);
+            pCache.LockBits();
+            if (whiteMore)
+            {
+                for (int i = 0; i < nodeRect.Width; i++)
+                {
+                    for (int j = 0; j < nodeRect.Height; j++)
+                    {
+                        var x = nodeRect.Left + i;
+                        var y = nodeRect.Top + j;
+                        var bkPixel = pCache.GetPixel(x, y);
+                        var pixel = pImage.GetPixel(x, y);
+                        if (pixel.R != 255/* || pixel.G != 255 || pixel.B != 255*/)
+                        {
+                            pImage.SetPixel(x, y, NodeFGDark);
+                            continue;
+                        }
+                        if (i <= NodeBorderWidth || i >= nodeRect.Width - NodeBorderWidth || j <= NodeBorderWidth || j >= nodeRect.Height - NodeBorderWidth)
+                        {
+                            pImage.SetPixel(x, y, GetInverseColor(bkPixel));
+                        }
+                        else { pImage.SetPixel(x, y, bkPixel); }
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < nodeRect.Width; i++)
+                {
+                    for (int j = 0; j < nodeRect.Height; j++)
+                    {
+                        var x = nodeRect.Left + i;
+                        var y = nodeRect.Top + j;
+                        var bkPixel = pCache.GetPixel(x, y);
+                        var pixel = pImage.GetPixel(x, y);
+                        if (pixel.R != 255/* || pixel.G != 255 || pixel.B != 255*/)
+                        {
+                            pImage.SetPixel(x, y, NodeFGBright);
+                            continue;
+                        }
+                        if (i <= NodeBorderWidth || i >= nodeRect.Width - NodeBorderWidth || j <= NodeBorderWidth || j >= nodeRect.Height - NodeBorderWidth)
+                        {
+                            pImage.SetPixel(x, y, GetInverseColor(bkPixel));
+                        }
+                        else { pImage.SetPixel(x, y, bkPixel); }
+                    }
+                }
+            }
+            pCache.UnlockBits();
+            pImage.UnlockBits();
+        }
+        /// <summary>
+        /// 根据字黑底白绘制文字部分，根据给定颜色绘制底纹
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="rect"></param>
+        /// <param name="white"></param>
+        /// <param name="black"></param>
+        /// <param name="fillColor"></param>
+        private static void DrawStringNode(Bitmap image, Rectangle nodeRect, string name, Color fillColor)
+        {
+            var whiteMore = GetNodeNamePattern(image, nodeRect, name);
+            PointBitmap pImage = new(image);
+            pImage.LockBits();
+            PointBitmap pCache = new(BackImageCache);
+            pCache.LockBits();
+            if (whiteMore)
+            {
+                for (int i = 0; i < nodeRect.Width; i++)
+                {
+                    for (int j = 0; j < nodeRect.Height; j++)
+                    {
+                        var x = nodeRect.Left + i;
+                        var y = nodeRect.Top + j;
+                        var bkPixel = pCache.GetPixel(x, y);
+                        var pixel = pImage.GetPixel(x, y);
+                        if (pixel.R != 255/* || pixel.G != 255 || pixel.B != 255*/)
+                        {
+                            pImage.SetPixel(x, y, NodeFGDark);
+                            continue;
+                        }
+                        if (i <= NodeBorderWidth || i >= nodeRect.Width - NodeBorderWidth || j <= NodeBorderWidth || j >= nodeRect.Height - NodeBorderWidth)
+                        {
+                            pImage.SetPixel(x, y, GetInverseColor(bkPixel));
+                        }
+                        else { pImage.SetPixel(x, y, fillColor); }
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < nodeRect.Width; i++)
+                {
+                    for (int j = 0; j < nodeRect.Height; j++)
+                    {
+                        var x = nodeRect.Left + i;
+                        var y = nodeRect.Top + j;
+                        var bkPixel = pCache.GetPixel(x, y);
+                        var pixel = pImage.GetPixel(x, y);
+                        if (pixel.R != 255/* || pixel.G != 255 || pixel.B != 255*/)
+                        {
+                            pImage.SetPixel(x, y, NodeFGBright);
+                            continue;
+                        }
+                        if (i <= NodeBorderWidth || i >= nodeRect.Width - NodeBorderWidth || j <= NodeBorderWidth || j >= nodeRect.Height - NodeBorderWidth)
+                        {
+                            pImage.SetPixel(x, y, GetInverseColor(bkPixel));
+                        }
+                        else { pImage.SetPixel(x, y, fillColor); }
+                    }
+                }
+            }
+            pCache.UnlockBits();
+            pImage.UnlockBits();
+        }
+        /// <summary>
+        /// 确定区域内的像素亮度分布，并用黑、白纯色区分出文字和底纹的区别
         /// </summary>
         /// <param name="image"></param>
         /// <param name="nodeRect"></param>
         /// <param name="name"></param>
-        private static void DrawStringNode(Bitmap image, Rectangle nodeRect, string name)
+        private static bool GetNodeNamePattern(Bitmap image, Rectangle nodeRect, string name)
         {
             int black = 0;
             int white = 0;
@@ -343,50 +539,7 @@ namespace FocusTree.UI.Graph
             g.DrawString(sName, font, new SolidBrush(Color.Black), nodeRect, NodeFontFormat);
             g.Flush(); g.Dispose();
 
-            DrawStringNode(image, nodeRect, white, black);
-        }
-        /// <summary>
-        /// 根据字黑底白绘制文字部分和底纹部分
-        /// </summary>
-        /// <param name="image"></param>
-        /// <param name="rect"></param>
-        /// <param name="white"></param>
-        /// <param name="black"></param>
-        private static void DrawStringNode(Bitmap image, Rectangle rect, int white, int black)
-        {
-            PointBitmap pImage = new(image);
-            pImage.LockBits();
-            PointBitmap pCache = new(BackImageCache);
-            pCache.LockBits();
-            for (int i = 0; i < rect.Width; i++)
-            {
-                for (int j = 0; j < rect.Height; j++)
-                {
-                    var x = rect.Left + i;
-                    var y = rect.Top + j;
-                    var bkPixel = pCache.GetPixel(x, y);
-                    var pixel = pImage.GetPixel(x, y);
-                    if (pixel.R != 255/* || pixel.G != 255 || pixel.B != 255*/)
-                    {
-                        if (black <= white)
-                        {
-                            pImage.SetPixel(x, y, NodeFGDark);
-                        }
-                        else
-                        {
-                            pImage.SetPixel(x, y, NodeFGBright);
-                        }
-                        continue;
-                    }
-                    if (i <= NodeBorderWidth || i >= rect.Width - NodeBorderWidth || j <= NodeBorderWidth || j >= rect.Height - NodeBorderWidth)
-                    {
-                        pImage.SetPixel(x, y, GetInverseColor(bkPixel));
-                    }
-                    else { pImage.SetPixel(x, y, bkPixel); }
-                }
-            }
-            pCache.UnlockBits();
-            pImage.UnlockBits();
+            return black <= white;
         }
         /// <summary>
         /// 反色
@@ -412,11 +565,11 @@ namespace FocusTree.UI.Graph
         /// <param name="pen"></param>
         /// <param name="startLoc"></param>
         /// <param name="endLoc"></param>
-        public static void DrawRequireLine(Bitmap image, Point startLoc, Point endLoc)
+        public static void DrawRequireLine(Bitmap image, LatticedPoint startLoc, LatticedPoint endLoc)
         {
-            var widthDiff = endLoc.X - startLoc.X;
-            var heightDiff = startLoc.Y - endLoc.Y;
-            LatticeCell cell = new(startLoc.X, startLoc.Y);
+            var colDiff = endLoc.Col - startLoc.Col;
+            var rowDiff = startLoc.Row - endLoc.Row;
+            LatticeCell cell = new(startLoc);
             var paddingHeight = LatticeCell.NodePaddingHeight;
             var nodeWidth = LatticeCell.NodeWidth;
             var drLeft = Lattice.DrawRect.Left;
@@ -424,10 +577,10 @@ namespace FocusTree.UI.Graph
             //
             // 竖线1
             //
-            var halfHeightDiff = heightDiff / 2;
+            var halfRowDiff = rowDiff / 2;
             var x = cell.NodeRealLeft + nodeWidth / 2;
             var y = cell.RealTop + paddingHeight;
-            cell.LatticedTop -= halfHeightDiff;
+            cell.LatticedTop -= halfRowDiff;
             var y2 = cell.RealTop + paddingHeight / 2;
             if (x >= drLeft && x <= drRight)
             {
@@ -436,9 +589,9 @@ namespace FocusTree.UI.Graph
             //
             // 横线
             //
-            if (Math.Abs(widthDiff) > 0)
+            if (Math.Abs(colDiff) > 0)
             {
-                cell.LatticedLeft += widthDiff;
+                cell.LatticedLeft += colDiff;
                 var x2 = cell.NodeRealLeft + nodeWidth / 2;
                 DrawLine(image, new(x, y2), new(x2, y2), true);
             }
@@ -449,7 +602,7 @@ namespace FocusTree.UI.Graph
             if (x >= drLeft && x <= drRight)
             {
                 y = y2;
-                var leaveHeight = heightDiff - halfHeightDiff - 1;
+                var leaveHeight = rowDiff - halfRowDiff - 1;
                 cell.LatticedTop -= leaveHeight;
                 y2 = cell.RealTop;
                 DrawLine(image, new(x, y), new(x, y2), false);

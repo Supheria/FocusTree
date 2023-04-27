@@ -177,7 +177,7 @@ namespace FocusTree.Data.Focus
             writer.WriteAttributeString("Descript", FData.Descript.ToString());
             writer.WriteAttributeString("Ps.", FData.Ps);
             var point = FData.LatticedPoint;
-            writer.WriteAttributeString("Point", ArrayString.Writer(new string[] { point.X.ToString(), point.Y.ToString() }));
+            writer.WriteAttributeString("Point", ArrayString.Writer(new string[] { point.Col.ToString(), point.Row.ToString() }));
 #if RAW_EFFECTS
             // <RawEffects>
             writer.WriteStartElement("RawEffects");

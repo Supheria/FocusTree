@@ -3,7 +3,7 @@ using FocusTree.Data.Focus;
 using FocusTree.IO;
 using FocusTree.IO.FileManege;
 using FocusTree.Properties;
-using FocusTree.UI.Graph;
+using FocusTree.Graph;
 using System.IO.Compression;
 
 namespace FocusTree.UI

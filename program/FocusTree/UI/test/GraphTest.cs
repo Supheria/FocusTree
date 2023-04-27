@@ -1,4 +1,4 @@
-﻿using FocusTree.UI.Graph;
+﻿using FocusTree.Graph;
 
 namespace FocusTree.UI
 {

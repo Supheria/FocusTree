@@ -3,6 +3,9 @@ using System.Numerics;
 
 namespace FocusTree.IO
 {
+    /// <summary>
+    /// 输出带国策信息的图片
+    /// </summary>
     public class NodeMapDrawer : Form
     {
         private ProgressBar Progress;
@@ -111,8 +114,8 @@ namespace FocusTree.IO
         {
             var point = Graph.GetFocus(id).LatticedPoint;
             return new(
-                    point.X * ScalingUnit.X + Border,
-                    point.Y * ScalingUnit.Y + Border,
+                    point.Col * ScalingUnit.X + Border,
+                    point.Row * ScalingUnit.Y + Border,
                     NodeSize.Width,
                     NodeSize.Height
                     );

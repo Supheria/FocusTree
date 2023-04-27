@@ -2,7 +2,7 @@
 
 using FocusTree.UI.test;
 
-namespace FocusTree.UI.Graph
+namespace FocusTree.Graph
 {
     /// <summary>
     /// 绘制栅格时，绘制非循环节点的委托类型
