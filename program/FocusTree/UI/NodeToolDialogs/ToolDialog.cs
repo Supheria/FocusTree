@@ -17,7 +17,7 @@ namespace FocusTree.UI.NodeToolDialogs
             SizeChanged += NodeToolDialog_SizeChanged;
             FormClosing += NodeToolDialog_FormClosing;
         }
-        public virtual new void Close() { }
+        public virtual new void Close() { Hide(); }
 
         private void NodeToolDialog_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -48,7 +48,6 @@ namespace FocusTree.UI.NodeToolDialogs
 
         private void NodeToolDialog_SizeChanged(object sender, EventArgs e)
         {
-            ControlResize.SetTag(this);
             DrawClient();
         }
 

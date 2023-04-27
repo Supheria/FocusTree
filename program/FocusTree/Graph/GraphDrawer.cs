@@ -402,59 +402,31 @@ namespace FocusTree.Graph
         /// <param name="black"></param>
         private static void DrawStringNode(Bitmap image, Rectangle nodeRect, string name)
         {
-            var whiteMore = GetNodeNamePattern(image, nodeRect, name);
+            Color stringColor = GetNodeNamePattern(image, nodeRect, name) ? NodeFGDark : NodeFGBright;
             PointBitmap pImage = new(image);
             pImage.LockBits();
             PointBitmap pCache = new(BackImageCache);
             pCache.LockBits();
-            if (whiteMore)
+            for (int i = 0; i < nodeRect.Width; i++)
             {
-                for (int i = 0; i < nodeRect.Width; i++)
+                for (int j = 0; j < nodeRect.Height; j++)
                 {
-                    for (int j = 0; j < nodeRect.Height; j++)
+                    var x = nodeRect.Left + i;
+                    var y = nodeRect.Top + j;
+                    var bkPixel = pCache.GetPixel(x, y);
+                    var pixel = pImage.GetPixel(x, y);
+                    // string part
+                    if (pixel.R != 255/* || pixel.G != 255 || pixel.B != 255*/)
                     {
-                        var x = nodeRect.Left + i;
-                        var y = nodeRect.Top + j;
-                        var bkPixel = pCache.GetPixel(x, y);
-                        var pixel = pImage.GetPixel(x, y);
-                        // string part
-                        if (pixel.R != 255/* || pixel.G != 255 || pixel.B != 255*/)
-                        {
-                            pImage.SetPixel(x, y, NodeFGDark);
-                            continue;
-                        }
-                        // shading part
-                        if (i <= NodeBorderWidth || i >= nodeRect.Width - NodeBorderWidth || j <= NodeBorderWidth || j >= nodeRect.Height - NodeBorderWidth)
-                        {
-                            pImage.SetPixel(x, y, GetInverseColor(bkPixel));
-                        }
-                        else { pImage.SetPixel(x, y, bkPixel); }
+                        pImage.SetPixel(x, y, stringColor);
+                        continue;
                     }
-                }
-            }
-            else
-            {
-                for (int i = 0; i < nodeRect.Width; i++)
-                {
-                    for (int j = 0; j < nodeRect.Height; j++)
+                    // shading part
+                    if (i <= NodeBorderWidth || i >= nodeRect.Width - NodeBorderWidth || j <= NodeBorderWidth || j >= nodeRect.Height - NodeBorderWidth)
                     {
-                        var x = nodeRect.Left + i;
-                        var y = nodeRect.Top + j;
-                        var bkPixel = pCache.GetPixel(x, y);
-                        var pixel = pImage.GetPixel(x, y);
-                        // string part
-                        if (pixel.R != 255/* || pixel.G != 255 || pixel.B != 255*/)
-                        {
-                            pImage.SetPixel(x, y, NodeFGBright);
-                            continue;
-                        }
-                        // shading part
-                        if (i <= NodeBorderWidth || i >= nodeRect.Width - NodeBorderWidth || j <= NodeBorderWidth || j >= nodeRect.Height - NodeBorderWidth)
-                        {
-                            pImage.SetPixel(x, y, GetInverseColor(bkPixel));
-                        }
-                        else { pImage.SetPixel(x, y, bkPixel); }
+                        pImage.SetPixel(x, y, GetInverseColor(bkPixel));
                     }
+                    else { pImage.SetPixel(x, y, bkPixel); }
                 }
             }
             pCache.UnlockBits();
@@ -470,59 +442,31 @@ namespace FocusTree.Graph
         /// <param name="fillColor"></param>
         private static void DrawStringNode(Bitmap image, Rectangle nodeRect, string name, Color fillColor)
         {
-            var whiteMore = GetNodeNamePattern(image, nodeRect, name);
+            Color stringColor = GetNodeNamePattern(image, nodeRect, name) ? NodeFGDark : NodeFGBright;
             PointBitmap pImage = new(image);
             pImage.LockBits();
             PointBitmap pCache = new(BackImageCache);
             pCache.LockBits();
-            if (whiteMore)
+            for (int i = 0; i < nodeRect.Width; i++)
             {
-                for (int i = 0; i < nodeRect.Width; i++)
+                for (int j = 0; j < nodeRect.Height; j++)
                 {
-                    for (int j = 0; j < nodeRect.Height; j++)
+                    var x = nodeRect.Left + i;
+                    var y = nodeRect.Top + j;
+                    var bkPixel = pCache.GetPixel(x, y);
+                    var pixel = pImage.GetPixel(x, y);
+                    // string part
+                    if (pixel.R != 255/* || pixel.G != 255 || pixel.B != 255*/)
                     {
-                        var x = nodeRect.Left + i;
-                        var y = nodeRect.Top + j;
-                        var bkPixel = pCache.GetPixel(x, y);
-                        var pixel = pImage.GetPixel(x, y);
-                        // string part
-                        if (pixel.R != 255/* || pixel.G != 255 || pixel.B != 255*/)
-                        {
-                            pImage.SetPixel(x, y, NodeFGDark);
-                            continue;
-                        }
-                        // shading part
-                        if (i <= NodeBorderWidth || i >= nodeRect.Width - NodeBorderWidth || j <= NodeBorderWidth || j >= nodeRect.Height - NodeBorderWidth)
-                        {
-                            pImage.SetPixel(x, y, GetInverseColor(bkPixel));
-                        }
-                        else { pImage.SetPixel(x, y, GetMixedColor(bkPixel, fillColor)); }
+                        pImage.SetPixel(x, y, stringColor);
+                        continue;
                     }
-                }
-            }
-            else
-            {
-                for (int i = 0; i < nodeRect.Width; i++)
-                {
-                    for (int j = 0; j < nodeRect.Height; j++)
+                    // shading part
+                    if (i <= NodeBorderWidth || i >= nodeRect.Width - NodeBorderWidth || j <= NodeBorderWidth || j >= nodeRect.Height - NodeBorderWidth)
                     {
-                        var x = nodeRect.Left + i;
-                        var y = nodeRect.Top + j;
-                        var bkPixel = pCache.GetPixel(x, y);
-                        var pixel = pImage.GetPixel(x, y);
-                        // string part
-                        if (pixel.R != 255/* || pixel.G != 255 || pixel.B != 255*/)
-                        {
-                            pImage.SetPixel(x, y, NodeFGBright);
-                            continue;
-                        }
-                        // shading part
-                        if (i <= NodeBorderWidth || i >= nodeRect.Width - NodeBorderWidth || j <= NodeBorderWidth || j >= nodeRect.Height - NodeBorderWidth)
-                        {
-                            pImage.SetPixel(x, y, GetInverseColor(bkPixel));
-                        }
-                        else { pImage.SetPixel(x, y, GetMixedColor(bkPixel, fillColor)); }
+                        pImage.SetPixel(x, y, GetInverseColor(bkPixel));
                     }
+                    else { pImage.SetPixel(x, y, GetMixedColor(bkPixel, fillColor)); }
                 }
             }
             pCache.UnlockBits();

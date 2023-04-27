@@ -143,10 +143,6 @@ namespace FocusTree.UI.NodeToolDialogs
                 DoFontScale = true;
             }
         }
-        public override void Close()
-        {
-            Hide();
-        }
         protected override void DrawClient()
         {
             if (WindowState == FormWindowState.Minimized)
