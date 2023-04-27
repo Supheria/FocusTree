@@ -55,6 +55,21 @@ namespace FocusTree.Graph
 
         #endregion
 
+        #region ==== 格元 ====
+
+        /// <summary>
+        /// 格元各个部分填充色
+        /// </summary>
+        public static Dictionary<LatticeCell.Parts, Color> CellPartsBG = new()
+        {
+            [LatticeCell.Parts.Node] = Color.FromArgb(255, Color.Orange),
+            [LatticeCell.Parts.Left] = Color.FromArgb(255, Color.Gray),
+            [LatticeCell.Parts.Top] = Color.FromArgb(255, Color.Gray),
+            [LatticeCell.Parts.LeftTop] = Color.FromArgb(255, Color.Gray)
+        };
+
+        #endregion
+
         #region ==== 背景 ====
 
         /// <summary>
@@ -69,6 +84,9 @@ namespace FocusTree.Graph
         /// 背景图片在给定尺寸下的缓存
         /// </summary>
         static Bitmap BackImageCache;
+        /// <summary>
+        /// 获取源背景图片尺寸
+        /// </summary>
         public static Size BackImageSize 
         { 
             get
@@ -77,10 +95,7 @@ namespace FocusTree.Graph
                 {
                     return Image.FromFile(BackImagePath).Size;
                 }
-                else
-                {
-                    return Resources.background.Size;
-                }
+                else { return Resources.background.Size; }
             }
         }
         /// <summary>
@@ -217,7 +232,7 @@ namespace FocusTree.Graph
         private static void DrawFocusNode(Bitmap image, FocusData focus)
         {
             LatticeCell cell = new(focus.LatticedPoint);
-            var nodeRect = cell.InnerPartRealRects[LatticeCell.Parts.Node];
+            var nodeRect = cell.CellPartsRealRect[LatticeCell.Parts.Node];
             if (!Lattice.RectWithin(nodeRect, out nodeRect)) { return; }
             var cellRect = cell.RealRect;
             if (cellRect.Width < LatticeCell.SizeMax.Width / 2 || cellRect.Height < LatticeCell.SizeMax.Height / 2)
@@ -227,14 +242,14 @@ namespace FocusTree.Graph
             else { DrawStringNode(image, nodeRect, focus.Name); }
         }
         /// <summary>
-        /// 绘制有颜色填充国策节点
+        /// 绘制有填充色的国策节点
         /// </summary>
         /// <param name="image"></param>
         /// <param name="focus"></param>
         /// <param name="fillColor"></param>
-        public static void DrawFocusNode(Image image, FocusData focus, Color fillColor)
+        public static void DrawFocusNode(Image image, FocusData focus)
         {
-            DrawFocusNode((Bitmap)image, focus, fillColor);
+            DrawFocusNode((Bitmap)image, focus, CellPartsBG[LatticeCell.Parts.Node]);
         }
         /// <summary>
         /// 绘制有颜色填充国策节点
@@ -245,7 +260,7 @@ namespace FocusTree.Graph
         private static void DrawFocusNode(Bitmap image, FocusData focus, Color fillColor)
         {
             LatticeCell cell = new(focus.LatticedPoint);
-            var nodeRect = cell.InnerPartRealRects[LatticeCell.Parts.Node];
+            var nodeRect = cell.CellPartsRealRect[LatticeCell.Parts.Node];
             if (!Lattice.RectWithin(nodeRect, out nodeRect)) { return; }
             var cellRect = cell.RealRect;
             if (cellRect.Width < LatticeCell.SizeMax.Width / 2 || cellRect.Height < LatticeCell.SizeMax.Height / 2)
@@ -257,15 +272,37 @@ namespace FocusTree.Graph
 
         #endregion
 
-        #region ==== 绘制非国策节点 ====
+        #region ==== 绘制格元部分 ====
 
-        public static void DrawNode(Bitmap image, LatticedPoint point, LatticeCell.Parts cellPart, Color fillColor)
+        /// <summary>
+        /// 绘制指定的格元部分（ LatticeCell.Parts.Leave 不绘制）
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="point"></param>
+        /// <param name="cellPart"></param>
+        /// <param name="fillColor"></param>
+        public static void DrawCellPart(Bitmap image, LatticedPoint point, LatticeCell.Parts cellPart)
         {
+            if(cellPart == LatticeCell.Parts.Leave) { return; }
             LatticeCell cell = new(point);
-            if (!Lattice.RectWithin(cell.InnerPartRealRects[cellPart], out var rect)) { return; }
-            var g = Graphics.FromImage(image);
-            g.FillRectangle(new SolidBrush(fillColor), rect);
-            g.Flush(); g.Dispose();
+            if (!Lattice.RectWithin(cell.CellPartsRealRect[cellPart], out var rect)) { return; }
+            if (!CellPartsBG.TryGetValue(cellPart, out var fillColor)) { return; }
+            PointBitmap pImage = new(image);
+            pImage.LockBits();
+            PointBitmap pCache = new(BackImageCache);
+            pCache.LockBits();
+            for (int i = 0; i < rect.Width; i++)
+            {
+                for (int j = 0; j < rect.Height; j++)
+                {
+                    var x = rect.Left + i;
+                    var y = rect.Top + j;
+                    var bkPixel = pCache.GetPixel(x, y);
+                    pImage.SetPixel(x, y, GetMixedColor(bkPixel, fillColor));
+                }
+            }
+            pCache.UnlockBits();
+            pImage.UnlockBits();
         }
 
         #endregion
@@ -350,14 +387,14 @@ namespace FocusTree.Graph
                     {
                         pImage.SetPixel(x, y, GetInverseColor(bkPixel));
                     }
-                    else { pImage.SetPixel(x, y, fillColor); }
+                    else { pImage.SetPixel(x, y, GetMixedColor(bkPixel, fillColor)); }
                 }
             }
             pCache.UnlockBits();
             pImage.UnlockBits();
         }
         /// <summary>
-        /// 根据字黑底白绘制文字部分和底纹部分
+        /// 绘制有文字节点，无填充色
         /// </summary>
         /// <param name="image"></param>
         /// <param name="rect"></param>
@@ -380,11 +417,13 @@ namespace FocusTree.Graph
                         var y = nodeRect.Top + j;
                         var bkPixel = pCache.GetPixel(x, y);
                         var pixel = pImage.GetPixel(x, y);
+                        // string part
                         if (pixel.R != 255/* || pixel.G != 255 || pixel.B != 255*/)
                         {
                             pImage.SetPixel(x, y, NodeFGDark);
                             continue;
                         }
+                        // shading part
                         if (i <= NodeBorderWidth || i >= nodeRect.Width - NodeBorderWidth || j <= NodeBorderWidth || j >= nodeRect.Height - NodeBorderWidth)
                         {
                             pImage.SetPixel(x, y, GetInverseColor(bkPixel));
@@ -403,11 +442,13 @@ namespace FocusTree.Graph
                         var y = nodeRect.Top + j;
                         var bkPixel = pCache.GetPixel(x, y);
                         var pixel = pImage.GetPixel(x, y);
+                        // string part
                         if (pixel.R != 255/* || pixel.G != 255 || pixel.B != 255*/)
                         {
                             pImage.SetPixel(x, y, NodeFGBright);
                             continue;
                         }
+                        // shading part
                         if (i <= NodeBorderWidth || i >= nodeRect.Width - NodeBorderWidth || j <= NodeBorderWidth || j >= nodeRect.Height - NodeBorderWidth)
                         {
                             pImage.SetPixel(x, y, GetInverseColor(bkPixel));
@@ -420,7 +461,7 @@ namespace FocusTree.Graph
             pImage.UnlockBits();
         }
         /// <summary>
-        /// 根据字黑底白绘制文字部分，根据给定颜色绘制底纹
+        /// 绘制无文字节点，有填充色
         /// </summary>
         /// <param name="image"></param>
         /// <param name="rect"></param>
@@ -444,16 +485,18 @@ namespace FocusTree.Graph
                         var y = nodeRect.Top + j;
                         var bkPixel = pCache.GetPixel(x, y);
                         var pixel = pImage.GetPixel(x, y);
+                        // string part
                         if (pixel.R != 255/* || pixel.G != 255 || pixel.B != 255*/)
                         {
                             pImage.SetPixel(x, y, NodeFGDark);
                             continue;
                         }
+                        // shading part
                         if (i <= NodeBorderWidth || i >= nodeRect.Width - NodeBorderWidth || j <= NodeBorderWidth || j >= nodeRect.Height - NodeBorderWidth)
                         {
                             pImage.SetPixel(x, y, GetInverseColor(bkPixel));
                         }
-                        else { pImage.SetPixel(x, y, fillColor); }
+                        else { pImage.SetPixel(x, y, GetMixedColor(bkPixel, fillColor)); }
                     }
                 }
             }
@@ -467,16 +510,18 @@ namespace FocusTree.Graph
                         var y = nodeRect.Top + j;
                         var bkPixel = pCache.GetPixel(x, y);
                         var pixel = pImage.GetPixel(x, y);
+                        // string part
                         if (pixel.R != 255/* || pixel.G != 255 || pixel.B != 255*/)
                         {
                             pImage.SetPixel(x, y, NodeFGBright);
                             continue;
                         }
+                        // shading part
                         if (i <= NodeBorderWidth || i >= nodeRect.Width - NodeBorderWidth || j <= NodeBorderWidth || j >= nodeRect.Height - NodeBorderWidth)
                         {
                             pImage.SetPixel(x, y, GetInverseColor(bkPixel));
                         }
-                        else { pImage.SetPixel(x, y, fillColor); }
+                        else { pImage.SetPixel(x, y, GetMixedColor(bkPixel, fillColor)); }
                     }
                 }
             }
@@ -552,6 +597,20 @@ namespace FocusTree.Graph
             var G = 255 - color.G;
             var B = 255 - color.B;
             return Color.FromArgb(color.A, R, G, B);
+        }
+        /// <summary>
+        /// 混合二色
+        /// </summary>
+        /// <param name="color1"></param>
+        /// <param name="color2"></param>
+        /// <returns></returns>
+        private static Color GetMixedColor(Color color1, Color color2)
+        {
+            var A = (color1.A + color2.A) / 2;
+            var R = (color1.R + color2.R) / 2;
+            var G = (color1.G + color2.G) / 2;
+            var B = (color1.B + color2.B) / 2;
+            return Color.FromArgb(A, R, G, B);
         }
 
         #endregion

@@ -122,8 +122,10 @@ namespace FocusTree.Graph
                 g.DrawLine(GuidePen, new(DrawRect.Left, OriginTop), new(DrawRect.Right, OriginTop));
                 g.Flush(); g.Dispose();
             }
-            if (Drawing == null) { return; }
-            var delArray = Drawing.GetInvocationList();
+            //if (Drawing == null) { return; }
+            //var delArray = Drawing.GetInvocationList();
+            //Program.testInfo.Show();
+            //Program.testInfo.InfoText = $"{delArray.Length}";
         }
         /// <summary>
         /// 清空绘制委托

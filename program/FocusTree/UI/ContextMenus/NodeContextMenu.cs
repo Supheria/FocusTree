@@ -87,8 +87,12 @@
         }
         public new void Show(Point location)
         {
-            var data = Display.GetSelectedNodeData();
-            var info = data == null ? "" : $"{data.Value.Name}, {data.Value.Duration}日\n{data.Value.Descript}";
+            string info = string.Empty;
+            if (Display.SelectedNode != null)
+            {
+                var focus = Display.SelectedNode.Value;
+                info = $"{focus.Name}, {focus.Duration}日\n{focus.Descript}";
+            }
             Display.DrawInfo(info);
             base.Show(location);
         }

@@ -132,7 +132,7 @@ namespace FocusTree.Graph
         #region ==== 格元区域 ====
 
         /// <summary>
-        /// 格元的内部区域
+        /// 格元的部分
         /// </summary>
         public enum Parts
         {
@@ -158,26 +158,9 @@ namespace FocusTree.Graph
             Node
         }
         /// <summary>
-        /// 上一次接触的区域
+        /// 格元各个部分的真实坐标矩形
         /// </summary>
-        public Rectangle LastTouchRect = new();
-        /// <summary>
-        /// 节点左侧区域填充颜色
-        /// </summary>
-        public Color InnerPartColor_Left = Color.FromArgb(100, Color.Gray);
-        /// <summary>
-        /// 节点上方区域填充颜色
-        /// </summary>
-        public Color InnerPartColor_Top = Color.FromArgb(100, Color.Gray);
-        /// <summary>
-        /// 节点左上方区域填充颜色
-        /// </summary>
-        public Color InnerPartColor_LeftTop = Color.FromArgb(100, Color.Gray);
-        /// <summary>
-        /// 节点区域填充颜色
-        /// </summary>
-        public Color InnerPartColor_Node = Color.FromArgb(150, Color.Orange);
-        public Dictionary<Parts, Rectangle> InnerPartRealRects
+        public Dictionary<Parts, Rectangle> CellPartsRealRect
         {
             get => new()
             {
@@ -192,9 +175,9 @@ namespace FocusTree.Graph
         /// </summary>
         /// <param name="point">坐标</param>
         /// <returns></returns>
-        public Parts GetInnerPartPointOn(Point point)
+        public Parts GetPartPointOn(Point point)
         {
-            foreach (var pair in InnerPartRealRects)
+            foreach (var pair in CellPartsRealRect)
             {
                 var rect = pair.Value;
                 if (rect.Contains(point))

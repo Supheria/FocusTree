@@ -32,12 +32,11 @@ namespace FocusTree.UI.NodeToolDialogs
 
         private void InfoDialog_VisibleChanged(object sender, EventArgs e)
         {
-            var data = Display.GetSelectedNodeData();
-            if (data == null)
+            if (Display.SelectedNode == null)
             {
                 return;
             }
-            var focus = data.Value;
+            var focus = Display.SelectedNode.Value;
             Text = $"id: {focus.ID}";
             FocusName.Text = focus.Name;
             Duration.Text = $"{focus.Duration}";

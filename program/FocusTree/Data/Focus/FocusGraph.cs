@@ -382,14 +382,14 @@ namespace FocusTree.Data.Focus
         /// <param name="latticedPoint"></param>
         /// <param name="id">默认为-1</param>
         /// <returns>如果有则返回true，id为节点id；否则返回false，id为-1</returns>
-        public bool ContainLatticedPoint(LatticedPoint latticedPoint, out int id)
+        public bool ContainLatticedPoint(LatticedPoint latticedPoint, out FocusData? focus)
         {
-            id = -1;
-            foreach (var focus in FocusCatalog.Values)
+            focus = null;
+            foreach (var f in FocusCatalog.Values)
             {
-                if (latticedPoint == focus.LatticedPoint)
+                if (latticedPoint == f.LatticedPoint)
                 {
-                    id = focus.ID;
+                    focus = f;
                     return true;
                 }
             }

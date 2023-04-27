@@ -1,4 +1,7 @@
-﻿namespace FocusTree.UI.NodeToolDialogs
+﻿using FocusTree.Graph;
+using static System.ComponentModel.Design.ObjectSelectorEditor;
+
+namespace FocusTree.UI.NodeToolDialogs
 {
     public partial class ToolDialog : Form
     {
@@ -58,8 +61,10 @@
                 MessageBox.Show("没有选中的节点。");
                 return;
             }
-            var pos = Display.GetSelectedNodeCenterOnScreen();
-            Location = pos;
+            LatticeCell cell = new(Display.SelectedNode.Value.LatticedPoint);
+            var rect = cell.NodeRealRect;
+            Location = new Point(rect.Left + rect.Width / 2, rect.Top + rect.Height / 2);
+            Display.PointToScreen(Location);
             base.Show();
         }
     }
