@@ -246,11 +246,7 @@ namespace FocusTree.UI.Graph
                     var x = nodeRect.Left + i;
                     var y = nodeRect.Top + j;
                     var pixel = pCache.GetPixel(x, y);
-                    var A = pixel.A;
-                    var R = pixel.R;
-                    var G = pixel.G;
-                    var B = pixel.B;
-                    pImage.SetPixel(x, y, Color.FromArgb(A, 255 - R, 255 - G, 255 - B));
+                    pImage.SetPixel(x, y, GetInverseColor(pixel));
                 }
             }
             // right
@@ -262,11 +258,7 @@ namespace FocusTree.UI.Graph
                     var x = nodeRect.Left + i;
                     var y = nodeRect.Top + j;
                     var pixel = pCache.GetPixel(x, y);
-                    var A = pixel.A;
-                    var R = pixel.R;
-                    var G = pixel.G;
-                    var B = pixel.B;
-                    pImage.SetPixel(x, y, Color.FromArgb(A, 255 - R, 255 - G, 255 - B));
+                    pImage.SetPixel(x, y, GetInverseColor(pixel));
                 }
             }
             // top
@@ -277,11 +269,7 @@ namespace FocusTree.UI.Graph
                     var x = nodeRect.Left + i;
                     var y = nodeRect.Top + j;
                     var pixel = pCache.GetPixel(x, y);
-                    var A = pixel.A;
-                    var R = pixel.R;
-                    var G = pixel.G;
-                    var B = pixel.B;
-                    pImage.SetPixel(x, y, Color.FromArgb(A, 255 - R, 255 - G, 255 - B));
+                    pImage.SetPixel(x, y, GetInverseColor(pixel));
                 }
             }
             // bottom
@@ -293,11 +281,7 @@ namespace FocusTree.UI.Graph
                     var x = nodeRect.Left + i;
                     var y = nodeRect.Top + j;
                     var pixel = pCache.GetPixel(x, y);
-                    var A = pixel.A;
-                    var R = pixel.R;
-                    var G = pixel.G;
-                    var B = pixel.B;
-                    pImage.SetPixel(x, y, Color.FromArgb(A, 255 - R, 255 - G, 255 - B));
+                    pImage.SetPixel(x, y, GetInverseColor(pixel));
                 }
             }
             pCache.UnlockBits();
@@ -320,14 +304,16 @@ namespace FocusTree.UI.Graph
             {
                 for (int j = 0; j < nodeRect.Height; j++)
                 {
-                    var bkPixel = pImage.GetPixel(nodeRect.Left + i, nodeRect.Top + j);
-                    if (bkPixel.R < 123 && bkPixel.G < 123 && bkPixel.B < 123)
+                    var x = nodeRect.Left + i;
+                    var y = nodeRect.Top + j;
+                    var pixel = pImage.GetPixel(x, y);
+                    if (pixel.GetBrightness() < 0.5f)
                     {
                         black++;
                     }
                     else { white++; }
                     // set rect to white blank
-                    pImage.SetPixel(nodeRect.Left + i, nodeRect.Top + j, Color.White);
+                    pImage.SetPixel(x, y, Color.White);
                 }
             }
             pImage.UnlockBits();
@@ -382,7 +368,7 @@ namespace FocusTree.UI.Graph
                     var pixel = pImage.GetPixel(x, y);
                     if (pixel.R != 255/* || pixel.G != 255 || pixel.B != 255*/)
                     {
-                        if (black < white)
+                        if (black <= white)
                         {
                             pImage.SetPixel(x, y, NodeFGDark);
                         }
@@ -394,17 +380,25 @@ namespace FocusTree.UI.Graph
                     }
                     if (i <= NodeBorderWidth || i >= rect.Width - NodeBorderWidth || j <= NodeBorderWidth || j >= rect.Height - NodeBorderWidth)
                     {
-                        var A = pixel.A;
-                        var R = pixel.R;
-                        var G = pixel.G;
-                        var B = pixel.B;
-                        pImage.SetPixel(x, y, Color.FromArgb(A, 255 - R, 255 - G, 255 - B));
+                        pImage.SetPixel(x, y, GetInverseColor(bkPixel));
                     }
                     else { pImage.SetPixel(x, y, bkPixel); }
                 }
             }
             pCache.UnlockBits();
             pImage.UnlockBits();
+        }
+        /// <summary>
+        /// 反色
+        /// </summary>
+        /// <param name="color"></param>
+        /// <returns></returns>
+        private static Color GetInverseColor(Color color)
+        {
+            var R = 255 - color.R;
+            var G = 255 - color.G;
+            var B = 255 - color.B;
+            return Color.FromArgb(color.A, R, G, B);
         }
 
         #endregion
