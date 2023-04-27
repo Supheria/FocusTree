@@ -302,7 +302,7 @@ namespace FocusTree.UI
             if (SelectedNode != null)
             {
                 //var focus = SelectedNode.Value;
-                Lattice.Drawing -= LastCellDrawer;
+                Lattice.SubDrawer(DrawerLayers._2, LastCellDrawer);
                 SelectedNode = null;
             }
             if (!ReadOnly || MessageBox.Show("[202303052340]是否恢复备份？", "提示", MessageBoxButtons.YesNo) == DialogResult.No) { return; }
@@ -348,16 +348,17 @@ namespace FocusTree.UI
             }
         }
         /// <summary>
-        /// 光标所处的节点
-        /// </summary>
-        //LatticedPoint LatticedPointCursorOn = new();
-        /// <summary>
         /// 上次光标所处的节点部分
         /// </summary>
         LatticeCell.Parts LastCellPart = LatticeCell.Parts.Leave;
+        /// <summary>
+        /// 上次使用的绘制委托
+        /// </summary>
         CellDrawer LastCellDrawer;
-
-        CellDrawer cache;
+        /// <summary>
+        /// 1层级绘制委托备份暂存
+        /// </summary>
+        CellDrawer DrawerCache_1;
         private void DragNode(Point newPoint)
         {
             NodeInfoTip.Hide(this);
@@ -366,18 +367,20 @@ namespace FocusTree.UI
             var cellPart = cell.GetPartPointOn(newPoint);
             if (cellPart == LastCellPart) { return; }
             LastCellPart = cellPart;
-            Lattice.Drawing -= LastCellDrawer;
+            Lattice.SubDrawer(DrawerLayers._2, LastCellDrawer);
             if (PointInAnyFocusNode(newPoint, out var focus))
             {
-                cache = GraphDrawer.NodeDrawerCatalog[focus.Value.ID];
-                Lattice.Drawing -= cache;
-                Lattice.Drawing += LastCellDrawer = (image) => GraphDrawer.DrawFocusNode(image, focus.Value);
+                DrawerCache_1 = GraphDrawer.NodeDrawerCatalog[focus.Value.ID];
+                Lattice.SubDrawer(DrawerLayers._1, DrawerCache_1);
+                LastCellDrawer = (image) => GraphDrawer.DrawFocusNode(image, focus.Value);
+                Lattice.AddDrawer(DrawerLayers._2, LastCellDrawer);
             }
             else
             {
-                Lattice.Drawing += LastCellDrawer = (image) => GraphDrawer.DrawCellPart(image, cell.LatticedPoint, cellPart);
-                Lattice.Drawing += cache;
-                cache = null;
+                Lattice.AddDrawer(DrawerLayers._1, DrawerCache_1);
+                DrawerCache_1 = null;
+                LastCellDrawer = (image) => GraphDrawer.DrawCellPart(image, cell.LatticedPoint, cellPart);
+                Lattice.AddDrawer(DrawerLayers._2, LastCellDrawer);
             }
             GraphDrawer.RedrawBackground(Image);
             Lattice.Draw(Image);
@@ -411,9 +414,9 @@ namespace FocusTree.UI
                     DragNode_Flag = false;
                     LastCellPart = LatticeCell.Parts.Leave;
                     Lattice.DrawBackLattice = false;
-                    Lattice.Drawing -= LastCellDrawer;
-                    Lattice.Drawing -= cache;
-                    Lattice.Drawing += cache;
+                    Lattice.SubDrawer(DrawerLayers._2, LastCellDrawer);
+                    Lattice.SubDrawer(DrawerLayers._1, DrawerCache_1);
+                    Lattice.AddDrawer(DrawerLayers._1, DrawerCache_1);
                     Lattice.Draw(Image);;
                 }
             }

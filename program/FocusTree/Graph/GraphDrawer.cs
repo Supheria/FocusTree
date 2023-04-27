@@ -207,7 +207,8 @@ namespace FocusTree.Graph
         public static void UploadDrawerNode(FocusData focus)
         {
             LatticeCell cell = new(focus.LatticedPoint);
-            Lattice.Drawing += NodeDrawerCatalog[focus.ID] = (image) => DrawFocusNode(image, focus);
+            var drawer = NodeDrawerCatalog[focus.ID] = (image) => DrawFocusNode(image, focus);
+            Lattice.AddDrawer(DrawerLayers._1, drawer);
         }
         /// <summary>
         /// 将节点关系线绘制到栅格绘图委托
@@ -217,7 +218,8 @@ namespace FocusTree.Graph
         /// <param name="end">结束国策</param>
         public static void UploadDrawerRequireLine(int penIndex, LatticedPoint start, LatticedPoint end)
         {
-            Lattice.Drawing += (image) => DrawRequireLine(image, start, end);
+            CellDrawer drawer = (image) => DrawRequireLine(image, start, end);
+            Lattice.AddDrawer(DrawerLayers._3, drawer);
         }
 
         #endregion

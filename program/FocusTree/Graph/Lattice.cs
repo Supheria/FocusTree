@@ -10,6 +10,15 @@ namespace FocusTree.Graph
     /// <param name="g">传入栅格的 GDI</param>
     public delegate void CellDrawer(Bitmap image);
     /// <summary>
+    /// 绘制委托所在的层级（值越小越早绘制）
+    /// </summary>
+    public enum DrawerLayers
+    {
+        _1 = 0,
+        _2,
+        _3
+    }
+    /// <summary>
     /// 栅格
     /// </summary>
     static class Lattice
@@ -62,9 +71,27 @@ namespace FocusTree.Graph
         /// </summary>
         public static Pen GuidePen = new Pen(Color.FromArgb(200, Color.Red), 1.75f);
         /// <summary>
-        /// 需要单独绘制的格元委托列表
+        /// 绘制委托列表（三层顺序绘制）
         /// </summary>
-        public static event CellDrawer Drawing;
+        static CellDrawer[] Drawing = new CellDrawer[3];
+        /// <summary>
+        /// 添加委托
+        /// </summary>
+        /// <param name="layer"></param>
+        /// <param name="drawer"></param>
+        public static void AddDrawer(DrawerLayers layer, CellDrawer drawer)
+        {
+            Drawing[(int)layer] += drawer;
+        }
+        /// <summary>
+        /// 删减委托
+        /// </summary>
+        /// <param name="layer"></param>
+        /// <param name="drawer"></param>
+        public static void SubDrawer(DrawerLayers layer, CellDrawer drawer)
+        {
+            Drawing[(int)layer] -= drawer;
+        }
 
         #endregion
 
@@ -105,8 +132,12 @@ namespace FocusTree.Graph
         /// <param name="g"></param>
         public static void Draw(Image image)
         {
-            Drawing?.Invoke((Bitmap)image);
-
+            CellDrawer total = null;
+            foreach (var drawer in Drawing)
+            {
+                drawer?.Invoke((Bitmap)image);
+                total += drawer;
+            }
             if (DrawBackLattice)
             {
                 var g = Graphics.FromImage(image);
@@ -122,22 +153,17 @@ namespace FocusTree.Graph
                 g.DrawLine(GuidePen, new(DrawRect.Left, OriginTop), new(DrawRect.Right, OriginTop));
                 g.Flush(); g.Dispose();
             }
-            //if (Drawing == null) { return; }
-            //var delArray = Drawing.GetInvocationList();
-            //Program.testInfo.Show();
-            //Program.testInfo.InfoText = $"{delArray.Length}";
+            if (total == null) { return; }
+            var delArray = total.GetInvocationList();
+            Program.testInfo.Show();
+            Program.testInfo.InfoText = $"{delArray.Length}";
         }
         /// <summary>
         /// 清空绘制委托
         /// </summary>
         public static void DrawingClear()
         {
-            if (Drawing == null) { return; }
-            var delArray = Drawing.GetInvocationList();
-            foreach (var del in delArray)
-            {
-                Drawing -= del as CellDrawer;
-            }
+            Drawing = new CellDrawer[3];
         }
 
         #endregion
