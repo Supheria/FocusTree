@@ -20,6 +20,7 @@ namespace FocusTree.Data.Focus
         /// 以 ID 作为 Key 的所有节点
         /// </summary>
         Dictionary<int, FocusData> FocusCatalog;
+        //Dictionary<LatticedPoint, FocusData> FocusCatalog;
         /// <summary>
         /// 名称
         /// </summary>
@@ -40,11 +41,11 @@ namespace FocusTree.Data.Focus
         /// </summary>
         public int BranchesCount { get => GetBranches(GetRootNodes(), true, true).Count; }
         /// <summary>
-        /// 节点id列表
+        /// 国策列表
         /// </summary>
-        public List<int> IdList { get { return FocusCatalog.Keys.ToList(); } }
+        public List<FocusData> FocusList { get { return FocusCatalog.Values.ToList(); } }
         /// <summary>
-        /// 获取节点
+        /// 通过id获取国策（不应该滥用，仅用在 require id 获取国策时）
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -390,6 +391,17 @@ namespace FocusTree.Data.Focus
                 if (latticedPoint == f.LatticedPoint)
                 {
                     focus = f;
+                    return true;
+                }
+            }
+            return false;
+        }
+        public bool ContainLatticedPoint(LatticedPoint latticedPoint)
+        {
+            foreach (var f in FocusCatalog.Values)
+            {
+                if (latticedPoint == f.LatticedPoint)
+                {
                     return true;
                 }
             }

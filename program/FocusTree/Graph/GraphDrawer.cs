@@ -105,15 +105,6 @@ namespace FocusTree.Graph
 
         #endregion
 
-        #region ==== 节点绘制委托列表 ====
-
-        /// <summary>
-        /// 节点绘制委托列表
-        /// </summary>
-        public static Dictionary<int, CellDrawer> NodeDrawerCatalog { get; private set; } = new();
-
-        #endregion
-
         #region ==== 加载背景 ====
 
         /// <summary>
@@ -199,33 +190,22 @@ namespace FocusTree.Graph
 
         #endregion
 
-        #region ==== 上载绘制委托 ====
-
-        /// <summary>
-        /// 将节点绘制上载到栅格绘图委托
-        /// </summary>
-        public static void UploadDrawerNode(FocusData focus)
-        {
-            LatticeCell cell = new(focus.LatticedPoint);
-            var drawer = NodeDrawerCatalog[focus.ID] = (image) => DrawFocusNode(image, focus);
-            Lattice.AddDrawer(DrawerLayers._1, drawer);
-        }
-        /// <summary>
-        /// 将节点关系线绘制到栅格绘图委托
-        /// </summary>
-        /// <param name="penIndex">笔颜色</param>
-        /// <param name="start">起始国策</param>
-        /// <param name="end">结束国策</param>
-        public static void UploadDrawerRequireLine(int penIndex, LatticedPoint start, LatticedPoint end)
-        {
-            CellDrawer drawer = (image) => DrawRequireLine(image, start, end);
-            Lattice.AddDrawer(DrawerLayers._3, drawer);
-        }
-
-        #endregion
-
         #region ==== 绘制国策节点 ====
 
+        /// <summary>
+        /// 绘制国策节点
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="focus"></param>
+        /// <param name="fillColor">是否填充节点颜色</param>
+        public static void DrawFocusNode(Image image, FocusData focus, bool fillColor)
+        {
+            if (fillColor)
+            {
+                DrawFocusNode((Bitmap)image, focus, CellPartsBG[LatticeCell.Parts.Node]);
+            }
+            else { DrawFocusNode((Bitmap)image, focus); }
+        }
         /// <summary>
         /// 绘制无填充色的国策节点（上载绘制委托默认）
         /// </summary>
@@ -242,16 +222,6 @@ namespace FocusTree.Graph
                 DrawBlankNode(image, nodeRect);
             }
             else { DrawStringNode(image, nodeRect, focus.Name); }
-        }
-        /// <summary>
-        /// 绘制有填充色的国策节点
-        /// </summary>
-        /// <param name="image"></param>
-        /// <param name="focus"></param>
-        /// <param name="fillColor"></param>
-        public static void DrawFocusNode(Image image, FocusData focus)
-        {
-            DrawFocusNode((Bitmap)image, focus, CellPartsBG[LatticeCell.Parts.Node]);
         }
         /// <summary>
         /// 绘制有颜色填充国策节点
@@ -576,41 +546,62 @@ namespace FocusTree.Graph
             var rowDiff = startLoc.Row - endLoc.Row;
             LatticeCell cell = new(startLoc);
             var paddingHeight = LatticeCell.NodePaddingHeight;
+            var halfPaddingHeight = paddingHeight / 2;
             var nodeWidth = LatticeCell.NodeWidth;
             var drLeft = Lattice.DrawRect.Left;
             var drRight = Lattice.DrawRect.Right;
             //
             // 竖线1
             //
-            var halfRowDiff = rowDiff / 2;
-            var x = cell.NodeRealLeft + nodeWidth / 2;
-            var y = cell.RealTop + paddingHeight;
-            cell.LatticedTop -= halfRowDiff;
-            var y2 = cell.RealTop + paddingHeight / 2;
-            if (x >= drLeft && x <= drRight)
+            if (rowDiff > 0)
             {
-                DrawLine(image, new(x, y), new(x, y2), false);
+                var halfRowDiff = rowDiff - 1 /*/ 2*/;
+                var x = cell.NodeRealLeft + nodeWidth / 2;
+                var y = cell.RealTop + paddingHeight;
+                cell.LatticedTop -= halfRowDiff;
+                var y2 = cell.RealTop + halfPaddingHeight;
+                if (x >= drLeft && x <= drRight)
+                {
+                    DrawLine(image, new(x, y), new(x, y2), false);
+                }
+                //
+                // 横线
+                //
+                if (Math.Abs(colDiff) > 0)
+                {
+                    cell.LatticedLeft += colDiff;
+                    var x2 = cell.NodeRealLeft + nodeWidth / 2;
+                    DrawLine(image, new(x, y2), new(x2, y2), true);
+                }
+                //
+                // 竖线2
+                //
+                x = cell.NodeRealLeft + nodeWidth / 2;
+                if (x >= drLeft && x <= drRight)
+                {
+                    y = y2;
+                    var leaveHeight = /*rowDiff - halfRowDiff - 1*/0;
+                    cell.LatticedTop -= leaveHeight;
+                    y2 = cell.RealTop;
+                    DrawLine(image, new(x, y), new(x, y2), false);
+                }
             }
-            //
-            // 横线
-            //
-            if (Math.Abs(colDiff) > 0)
+            else
             {
-                cell.LatticedLeft += colDiff;
-                var x2 = cell.NodeRealLeft + nodeWidth / 2;
-                DrawLine(image, new(x, y2), new(x2, y2), true);
-            }
-            //
-            // 竖线2
-            //
-            x = cell.NodeRealLeft + nodeWidth / 2;
-            if (x >= drLeft && x <= drRight)
-            {
-                y = y2;
-                var leaveHeight = rowDiff - halfRowDiff - 1;
-                cell.LatticedTop -= leaveHeight;
-                y2 = cell.RealTop;
-                DrawLine(image, new(x, y), new(x, y2), false);
+                //
+                // 竖线1
+                //
+                var x = cell.NodeRealLeft + nodeWidth / 2;
+                var y = cell.RealTop + paddingHeight;
+                var y2 = y - halfPaddingHeight;
+                if (x >= drLeft && x <= drRight)
+                {
+                    DrawLine(image, new(x, y), new(x, y2), false);
+                }
+                if (Math.Abs(colDiff) > 0)
+                {
+                    var halfColDiff = colDiff < 0 ? colDiff / 2 + 1 : colDiff / 2;
+                }
             }
         }
 

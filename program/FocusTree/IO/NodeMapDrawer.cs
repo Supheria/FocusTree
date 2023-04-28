@@ -70,18 +70,18 @@ namespace FocusTree.IO
             g.Clear(Color.White);
 
             Drawer = new(Graph.NodesCount + 1);
-            foreach (var id in Graph.IdList)
+            foreach (var focus in Graph.FocusList)
             {
-                DrawNodeLinks(g, Graph, id);
+                DrawNodeLinks(g, Graph, focus);
             }
-            foreach (var id in Graph.IdList)
+            foreach (var focus in Graph.FocusList)
             {
-                var drawingRect = NodeDrawingRect(Graph, id);
+                var drawingRect = NodeDrawingRect(focus);
                 g.FillRectangle(
                     new SolidBrush(Color.FromArgb(60, Color.DimGray)),
                     drawingRect
                     );
-                DrawNodeInfo(g, drawingRect, Graph.GetFocus(id));
+                DrawNodeInfo(g, drawingRect, focus);
                 Drawer.StepNext();
                 Drawer.Text = $"{Graph.Name}.jpg: {(int)(Drawer.Percent)}%";
             }
@@ -110,9 +110,9 @@ namespace FocusTree.IO
                 );
             return new Bitmap(size.Width, size.Height);
         }
-        private static RectangleF NodeDrawingRect(FocusGraph Graph, int id)
+        private static RectangleF NodeDrawingRect(FocusData focus)
         {
-            var point = Graph.GetFocus(id).LatticedPoint;
+            var point = focus.LatticedPoint;
             return new(
                     point.Col * ScalingUnit.X + Border,
                     point.Row * ScalingUnit.Y + Border,
@@ -124,10 +124,10 @@ namespace FocusTree.IO
         #endregion
 
         #region ==== 绘图 ====
-        private static void DrawNodeLinks(Graphics g, FocusGraph Graph, int id)
+        private static void DrawNodeLinks(Graphics g, FocusGraph Graph, FocusData focus)
         {
-            var drawingRect = NodeDrawingRect(Graph, id);
-            var requires = Graph.GetFocus(id).Requires;
+            var drawingRect = NodeDrawingRect(focus);
+            var requires = focus.Requires;
             // 对于根节点，requires 为 null
             if (requires == null)
             {
@@ -137,7 +137,7 @@ namespace FocusTree.IO
             {
                 foreach (var require in requireGroup)
                 {
-                    var todrawingRect = NodeDrawingRect(Graph, require);
+                    var todrawingRect = NodeDrawingRect(Graph.GetFocus(require));
 
                     var startLoc = new Point((int)(drawingRect.X + drawingRect.Width / 2), (int)(drawingRect.Y + drawingRect.Height / 2)); // x -> 中间, y -> 下方
                     var endLoc = new Point((int)(todrawingRect.X + todrawingRect.Width / 2), (int)(todrawingRect.Y + todrawingRect.Height / 2)); // x -> 中间, y -> 上方

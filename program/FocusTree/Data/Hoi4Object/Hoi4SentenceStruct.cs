@@ -1,18 +1,20 @@
-﻿namespace FocusTree.Data.Hoi4Object
+﻿using static FocusTree.Data.Hoi4Object.PublicSign;
+
+namespace FocusTree.Data.Hoi4Object
 {
     /// <summary>
     /// 句子属性
     /// </summary>
-    public struct SentenceAttribute
+    public struct Hoi4SentenceStruct
     {
         /// <summary>
         /// 执行动作
         /// </summary>
-        public string Motion;
+        public Motions Motion;
         /// <summary>
         /// 值类型
         /// </summary>
-        public string ValueType;
+        public Types ValueType;
         /// <summary>
         /// 执行值
         /// </summary>
@@ -20,18 +22,18 @@
         /// <summary>
         /// 触发者类型
         /// </summary>
-        public string TriggerType;
+        public Types TriggerType;
         /// <summary>
         /// 动作触发者
         /// </summary>
-        public string Trigger;
-        public SentenceAttribute(string motion, string valueType, string value, string triggerType, string trigger)
+        public string[] Triggers;
+        public Hoi4SentenceStruct()
         {
-            Motion = motion;
-            ValueType = valueType;
-            Value = value;
-            TriggerType = triggerType;
-            Trigger = trigger;
+            Motion = Motions.None;
+            ValueType = Types.None;
+            Value = string.Empty;
+            TriggerType = Types.None;
+            Triggers = new string[0];
         }
     }
 }

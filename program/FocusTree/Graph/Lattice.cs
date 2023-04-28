@@ -5,20 +5,6 @@ using FocusTree.UI.test;
 namespace FocusTree.Graph
 {
     /// <summary>
-    /// 绘制栅格时，绘制非循环节点的委托类型
-    /// </summary>
-    /// <param name="g">传入栅格的 GDI</param>
-    public delegate void CellDrawer(Bitmap image);
-    /// <summary>
-    /// 绘制委托所在的层级（值越小越早绘制）
-    /// </summary>
-    public enum DrawerLayers
-    {
-        _1 = 0,
-        _2,
-        _3
-    }
-    /// <summary>
     /// 栅格
     /// </summary>
     static class Lattice
@@ -61,7 +47,7 @@ namespace FocusTree.Graph
         /// <summary>
         /// 格元边界绘制用笔
         /// </summary>
-        public static Pen CellPen = new(Color.AliceBlue, 1.5f);
+        public static Pen CellPen = new(Color.FromArgb(200, Color.AliceBlue), 1.5f);
         /// <summary>
         /// 节点边界绘制用笔
         /// </summary>
@@ -71,27 +57,9 @@ namespace FocusTree.Graph
         /// </summary>
         public static Pen GuidePen = new Pen(Color.FromArgb(200, Color.Red), 1.75f);
         /// <summary>
-        /// 绘制委托列表（三层顺序绘制）
+        /// 绘制委托列表（三层绘制）
         /// </summary>
-        static CellDrawer[] Drawing = new CellDrawer[3];
-        /// <summary>
-        /// 添加委托
-        /// </summary>
-        /// <param name="layer"></param>
-        /// <param name="drawer"></param>
-        public static void AddDrawer(DrawerLayers layer, CellDrawer drawer)
-        {
-            Drawing[(int)layer] += drawer;
-        }
-        /// <summary>
-        /// 删减委托
-        /// </summary>
-        /// <param name="layer"></param>
-        /// <param name="drawer"></param>
-        public static void SubDrawer(DrawerLayers layer, CellDrawer drawer)
-        {
-            Drawing[(int)layer] -= drawer;
-        }
+        public static DrawLayers Drawing = new(3);
 
         #endregion
 
@@ -132,12 +100,7 @@ namespace FocusTree.Graph
         /// <param name="g"></param>
         public static void Draw(Image image)
         {
-            CellDrawer total = null;
-            foreach (var drawer in Drawing)
-            {
-                drawer?.Invoke((Bitmap)image);
-                total += drawer;
-            }
+            Drawing.Invoke((Bitmap)image);
             if (DrawBackLattice)
             {
                 var g = Graphics.FromImage(image);
@@ -153,17 +116,9 @@ namespace FocusTree.Graph
                 g.DrawLine(GuidePen, new(DrawRect.Left, OriginTop), new(DrawRect.Right, OriginTop));
                 g.Flush(); g.Dispose();
             }
-            if (total == null) { return; }
-            var delArray = total.GetInvocationList();
             Program.testInfo.Show();
-            Program.testInfo.InfoText = $"{delArray.Length}";
-        }
-        /// <summary>
-        /// 清空绘制委托
-        /// </summary>
-        public static void DrawingClear()
-        {
-            Drawing = new CellDrawer[3];
+            Program.testInfo.InfoText = $"{Drawing.MethodNumber()}\n" +
+                $"1. {Drawing.MethodNumber(0)}, 2. {Drawing.MethodNumber(1)}, 3. {Drawing.MethodNumber(2)}";
         }
 
         #endregion

@@ -24,9 +24,9 @@ namespace FocusTree.Data.Focus
         public List<string> Effects
         {
             get { return effects.Select(x => x.ToString()).ToList(); }
-            set { value.ForEach(x => effects.Add(Sentence.FromString(x))); }
+            set { value.ForEach(x => effects.Add(Hoi4Sentence.FromString(x))); }
         }
-        public List<Sentence> effects = new();
+        public List<Hoi4Sentence> effects = new();
 
 
         #endregion
@@ -82,21 +82,22 @@ namespace FocusTree.Data.Focus
                     ReadRawEffects(reader, ref FData.RawEffects);
                 }
             }
-
+#if FORMAT_TEST
             FormatRawEffects(FData.RawEffects, FData.ID);
+#endif
         }
         [Obsolete("临时使用，作为转换语句格式的过渡")]
         private void FormatRawEffects(List<string> rawEffects, int id)
         {
             foreach (var raw in rawEffects)
             {
-                //Program.testInfo.total++;
+                Program.testInfo.total++;
                 if (!FormatRawEffectSentence.Formatter(raw, out var formattedList))
                 {
 #if RAW_EFFECTS
-                    //Program.testInfo.erro++;
-                    //Program.testInfo.good = Program.testInfo.total - Program.testInfo.erro;
-                    //Program.testInfo.InfoText += $"{id}. {raw}\n";
+                    Program.testInfo.erro++;
+                    Program.testInfo.good = Program.testInfo.total - Program.testInfo.erro;
+                    Program.testInfo.InfoText += $"{id}. {raw}\n";
 #endif
                     continue;
                 }
@@ -120,7 +121,7 @@ namespace FocusTree.Data.Focus
                 if (reader.Name == "Effects" && reader.NodeType == XmlNodeType.EndElement) { return; }
                 if (reader.Name == "Sentence")
                 {
-                    Sentence sentence = new();
+                    Hoi4Sentence sentence = new();
                     sentence.ReadXml(reader);
                     effects.Add(sentence);
                 }
@@ -189,9 +190,10 @@ namespace FocusTree.Data.Focus
             writer.WriteEndElement();
 #endif
 #if FORMAT_TEST
+            FormatRawEffects(FData.RawEffects, FData.ID);
             // <Effects>
             writer.WriteStartElement("Effects");
-            foreach (var sentence in Data.Effects)
+            foreach (var sentence in effects)
             {
                 sentence.WriteXml(writer);
             }
@@ -216,6 +218,6 @@ namespace FocusTree.Data.Focus
             writer.WriteEndElement();
         }
 
-        #endregion
+#endregion
     }
 }

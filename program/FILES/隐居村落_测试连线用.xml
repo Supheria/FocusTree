@@ -2,13 +2,13 @@
 <FocusGraph>
   <State Name="隐居村落">
     <Nodes>
-      <Node ID="1" Name="入梦" Star="False" Duration="30" Descript="三鼓，得一异梦……" Ps.="" Point="9, 0">
+      <Node ID="1" Name="入梦" Star="False" Duration="30" Descript="三鼓，得一异梦……" Ps.="" Point="10, 0">
         <RawEffects>
           <Effect>触发事件“骑着青牛的老者？”。</Effect>
         </RawEffects>
         <Requires />
       </Node>
-      <Node ID="2" Name="天书" Star="False" Duration="30" Descript="得天书，当代天宣化，普救世人" Ps.="" Point="9, 1">
+      <Node ID="2" Name="天书" Star="False" Duration="30" Descript="得天书，当代天宣化，普救世人" Ps.="" Point="8, 1">
         <RawEffects>
           <Effect>政治点数：+200</Effect>
         </RawEffects>
@@ -16,7 +16,7 @@
           <Require>1</Require>
         </Requires>
       </Node>
-      <Node ID="3" Name="废贤" Star="False" Duration="30" Descript="不尚贤，使民不争" Ps.="" Point="9, 2">
+      <Node ID="3" Name="废贤" Star="False" Duration="30" Descript="不尚贤，使民不争" Ps.="" Point="8, 2">
         <RawEffects>
           <Effect>战争支持度：-10%</Effect>
           <Effect>稳定度：+20%</Effect>
@@ -25,7 +25,7 @@
           <Require>2</Require>
         </Requires>
       </Node>
-      <Node ID="4" Name="均贱" Star="False" Duration="30" Descript="不贵难得之货，使民不为盗" Ps.="" Point="9, 3">
+      <Node ID="4" Name="均贱" Star="False" Duration="30" Descript="不贵难得之货，使民不为盗" Ps.="" Point="8, 3">
         <RawEffects>
           <Effect>将平均灵力值固定为50%</Effect>
           <Effect>稳定度：+30%</Effect>
@@ -34,7 +34,7 @@
           <Require>3</Require>
         </Requires>
       </Node>
-      <Node ID="5" Name="隐欲" Star="False" Duration="30" Descript="不见其欲，使民心不乱" Ps.="" Point="9, 4">
+      <Node ID="5" Name="隐欲" Star="False" Duration="30" Descript="不见其欲，使民心不乱" Ps.="" Point="8, 4">
         <RawEffects>
           <Effect>将世界观固定为唯心世界观</Effect>
           <Effect>稳定度：+50%</Effect>
@@ -43,7 +43,7 @@
           <Require>4</Require>
         </Requires>
       </Node>
-      <Node ID="6" Name="不仁" Star="False" Duration="30" Descript="天地不仁，以万物为刍狗；圣人不仁，以天地为刍狗" Ps.="" Point="9, 5">
+      <Node ID="6" Name="不仁" Star="False" Duration="30" Descript="天地不仁，以万物为刍狗；圣人不仁，以天地为刍狗" Ps.="" Point="8, 5">
         <RawEffects>
           <Effect>稳定度：-50%</Effect>
           <Effect>获得天地不仁，其效果为（科研速度：+10%）</Effect>
@@ -52,7 +52,7 @@
           <Require>5</Require>
         </Requires>
       </Node>
-      <Node ID="7" Name="饱腹" Star="False" Duration="30" Descript="圣人为腹不为目，故去彼取此" Ps.="" Point="9, 6">
+      <Node ID="7" Name="饱腹" Star="False" Duration="30" Descript="圣人为腹不为目，故去彼取此" Ps.="" Point="8, 6">
         <RawEffects>
           <Effect>人口：+1000</Effect>
           <Effect>向保守社会发展一级，以保守社会5取代保守社会4，效果变化（稳定度：+6% 科研速度：-3% 加密：+0.5 可出口资源：-5% 意识形态变化抵制力度：+10%）</Effect>
@@ -61,7 +61,7 @@
           <Require>6</Require>
         </Requires>
       </Node>
-      <Node ID="8" Name="修身养性" Star="False" Duration="60" Descript="知常容，容乃公，公乃全，全乃天，天乃道，道乃久，没身不殆" Ps.="" Point="9, 7">
+      <Node ID="8" Name="修身养性" Star="False" Duration="60" Descript="知常容，容乃公，公乃全，全乃天，天乃道，道乃久，没身不殆" Ps.="" Point="8, 7">
         <RawEffects>
           <Effect>获得修身养性，其效果为（生活消费品工厂：-6%）</Effect>
         </RawEffects>
@@ -69,7 +69,7 @@
           <Require>7</Require>
         </Requires>
       </Node>
-      <Node ID="9" Name="功遂身退" Star="False" Duration="60" Descript="悠兮其贵言，功成身遂，百姓皆谓我自然" Ps.="" Point="9, 8">
+      <Node ID="9" Name="功遂身退" Star="False" Duration="60" Descript="悠兮其贵言，功成身遂，百姓皆谓我自然" Ps.="" Point="8, 8">
         <RawEffects>
           <Effect>圣人追加效果：每日唯心度变化：-0.04%</Effect>
         </RawEffects>
@@ -77,7 +77,7 @@
           <Require>8</Require>
         </Requires>
       </Node>
-      <Node ID="10" Name="无不为" Star="False" Duration="30" Descript="道常无为，而无不为" Ps.="" Point="9, 9">
+      <Node ID="10" Name="无不为" Star="False" Duration="30" Descript="道常无为，而无不为" Ps.="" Point="8, 9">
         <RawEffects>
           <Effect>稳定度：-50%</Effect>
           <Effect>获得1个科研槽</Effect>
@@ -86,7 +86,7 @@
           <Require>9</Require>
         </Requires>
       </Node>
-      <Node ID="11" Name="无为而治" Star="False" Duration="60" Descript="多言数穷，不如守中" Ps.="（注：守矢神社选择无为而治后的民族精神要和隐居村落相同）" Point="9, 10">
+      <Node ID="11" Name="无为而治" Star="False" Duration="60" Descript="多言数穷，不如守中" Ps.="（注：守矢神社选择无为而治后的民族精神要和隐居村落相同）" Point="8, 10">
         <RawEffects>
           <Effect>获得无为而治，其效果为（每周人口：+1，每月人口：+15%）</Effect>
         </RawEffects>
@@ -94,7 +94,7 @@
           <Require>10</Require>
         </Requires>
       </Node>
-      <Node ID="12" Name="万民自化" Star="False" Duration="60" Descript="圣人之言曰：“我无为，而民自化；我好静，而民自正；我无事，而民自富；我无欲，而民自朴。”" Ps.="" Point="9, 11">
+      <Node ID="12" Name="万民自化" Star="False" Duration="60" Descript="圣人之言曰：“我无为，而民自化；我好静，而民自正；我无事，而民自富；我无欲，而民自朴。”" Ps.="" Point="8, 11">
         <RawEffects>
           <Effect>获得万民自化，其效果为（每周稳定度：+0.1%，每周战争支持度：-0.1%，战争支持度：+100%）</Effect>
         </RawEffects>
@@ -293,7 +293,7 @@
           <Require>34</Require>
         </Requires>
       </Node>
-      <Node ID="36" Name="兵者不详" Star="True" Duration="30" Descript="夫唯兵者，不详之器，物或恶之……" Ps.="（注：要求神灵庙意识形态为孤立）" Point="11, 12">
+      <Node ID="36" Name="兵者不详" Star="True" Duration="30" Descript="夫唯兵者，不详之器，物或恶之……" Ps.="（注：要求神灵庙意识形态为孤立）" Point="9, 12">
         <RawEffects>
           <Effect>获得不详之器，其效果为（部队组织度：+20%，部队组织度恢复：-5%）</Effect>
           <Effect>向鹰派发展一级，以鸽派2取代鸽派3，效果变化（生活消费品：+2% 战争支持度：+5% 改善关系持续花费：+10% 地区最大工业值：-10% 贸易协定修正：-20% 正当化战争目标所需时间：-10% 敌国对我国正当化目标所需时间：-20% 边界开放法则切换花费：+10% 灵力使用法案切换花费：+10%）</Effect>
@@ -302,7 +302,7 @@
           <Require>12</Require>
         </Requires>
       </Node>
-      <Node ID="37" Name="函谷关" Star="False" Duration="0" Descript="西出函谷，或言老子入夷狄为浮屠？" Ps.="（注：随事件的发展自动完成）" Point="11, 13">
+      <Node ID="37" Name="函谷关" Star="False" Duration="0" Descript="西出函谷，或言老子入夷狄为浮屠？" Ps.="（注：随事件的发展自动完成）" Point="9, 13">
         <RawEffects>
           <Effect>这项国策目前没有实际影响。但随着世界局势的变化可能会发生改变。</Effect>
         </RawEffects>
@@ -310,7 +310,7 @@
           <Require>36</Require>
         </Requires>
       </Node>
-      <Node ID="38" Name="再西出" Star="False" Duration="30" Descript="老子化胡，于是佛道兴矣" Ps.="" Point="11, 14">
+      <Node ID="38" Name="再西出" Star="False" Duration="30" Descript="老子化胡，于是佛道兴矣" Ps.="" Point="9, 14">
         <RawEffects>
           <Effect>圣人追加效果：新规倾向：+0.01，部队攻击：+15%</Effect>
           <Effect>获得再西出，其效果为（（天狗共和国）我国对其进攻修正：+20%，（天狗帝国）我国对其进攻修正：+20%，（守矢神社）我国对其进攻修正：+20%，（河童共和国）我国对其进攻修正：+20%，（河童长老会）我国对其进攻修正：+20%，（山童自治区）我国对其进攻修正：+20%）</Effect>
@@ -322,15 +322,16 @@
           <Require>37</Require>
         </Requires>
       </Node>
-      <Node ID="39" Name="谷神不死" Star="False" Duration="30" Descript="谷神不死，是谓玄牝。玄牝之们，是谓天地根。绵绵若存，用之不勤" Ps.="" Point="11, 15">
+      <Node ID="39" Name="谷神不死" Star="False" Duration="30" Descript="谷神不死，是谓玄牝。玄牝之们，是谓天地根。绵绵若存，用之不勤" Ps.="" Point="14, 15">
         <RawEffects>
           <Effect>玄武川之泉（增加5个建筑位，增加5个军用工厂）</Effect>
         </RawEffects>
         <Requires>
           <Require>38</Require>
+          <Require>1</Require>
         </Requires>
       </Node>
-      <Node ID="40" Name="坐进此道" Star="False" Duration="30" Descript="虽有拱壁以先驷马，不如坐进此道" Ps.="" Point="11, 16">
+      <Node ID="40" Name="坐进此道" Star="False" Duration="30" Descript="虽有拱壁以先驷马，不如坐进此道" Ps.="" Point="14, 16">
         <RawEffects>
           <Effect>获得允许创建阵营，创建阵营：道盟</Effect>
           <Effect>神灵庙加入阵营</Effect>
@@ -342,7 +343,7 @@
           <Require>39</Require>
         </Requires>
       </Node>
-      <Node ID="41" Name="用人配天" Star="False" Duration="30" Descript="是谓用人，是谓配天，古之极也" Ps.="" Point="11, 17">
+      <Node ID="41" Name="用人配天" Star="False" Duration="30" Descript="是谓用人，是谓配天，古之极也" Ps.="" Point="14, 17">
         <RawEffects>
           <Effect>获得发现幻想乡的矛盾点，其效果为（步兵部队攻击：+4%，步兵部队防御：+4%）</Effect>
         </RawEffects>
@@ -350,7 +351,7 @@
           <Require>40</Require>
         </Requires>
       </Node>
-      <Node ID="42" Name="无兵无敌" Star="False" Duration="30" Descript="是谓行无行，攘无臂，执无兵，乃无敌矣" Ps.="" Point="11, 18">
+      <Node ID="42" Name="无兵无敌" Star="False" Duration="30" Descript="是谓行无行，攘无臂，执无兵，乃无敌矣" Ps.="" Point="14, 18">
         <RawEffects>
           <Effect>发现幻想乡的矛盾点追加效果：步兵部队攻击：+4%，步兵部队防御：+4%</Effect>
         </RawEffects>
@@ -358,7 +359,7 @@
           <Require>41</Require>
         </Requires>
       </Node>
-      <Node ID="43" Name="如临大敌" Star="False" Duration="30" Descript="祸莫大于轻敌，轻敌几丧吾宝。故抗兵相若……" Ps.="" Point="11, 19">
+      <Node ID="43" Name="如临大敌" Star="False" Duration="30" Descript="祸莫大于轻敌，轻敌几丧吾宝。故抗兵相若……" Ps.="" Point="14, 19">
         <RawEffects>
           <Effect>发现幻想乡的矛盾点追加效果：步兵部队攻击：+4%，步兵部队防御：+4%，将会出现6个编制为神灵庙护卫编制的部队</Effect>
           <Effect>移除修身养性，其效果为（生活消费品：-6%）</Effect>
@@ -367,7 +368,7 @@
           <Require>42</Require>
         </Requires>
       </Node>
-      <Node ID="44" Name="慎终如始" Star="False" Duration="30" Descript="民之从事，常于几成而败之。慎终如始，则无败事" Ps.="" Point="11, 20">
+      <Node ID="44" Name="慎终如始" Star="False" Duration="30" Descript="民之从事，常于几成而败之。慎终如始，则无败事" Ps.="" Point="14, 20">
         <RawEffects>
           <Effect>获得为期365天的“无败事”，其效果为（工厂产出：+50%，生产效率增长：+50%）</Effect>
         </RawEffects>
@@ -375,7 +376,7 @@
           <Require>43</Require>
         </Requires>
       </Node>
-      <Node ID="45" Name="兵强则灭" Star="False" Duration="30" Descript="****，****。****，****" Ps.="" Point="11, 21">
+      <Node ID="45" Name="兵强则灭" Star="False" Duration="30" Descript="****，****。****，****" Ps.="" Point="14, 21">
         <RawEffects>
           <Effect>获得对守矢神社的吞并战争目标</Effect>
           <Effect>获得对天狗共和国的吞并战争目标</Effect>
@@ -385,7 +386,7 @@
           <Require>44</Require>
         </Requires>
       </Node>
-      <Node ID="46" Name="行路不避" Star="False" Duration="30" Descript="盖闻善摄生者，路行不避兕虎" Ps.="" Point="11, 22">
+      <Node ID="46" Name="行路不避" Star="False" Duration="30" Descript="盖闻善摄生者，路行不避兕虎" Ps.="" Point="14, 22">
         <RawEffects>
           <Effect>圣人追加效果：部队防御：+15%</Effect>
         </RawEffects>
@@ -393,7 +394,7 @@
           <Require>45</Require>
         </Requires>
       </Node>
-      <Node ID="47" Name="无死地" Star="False" Duration="30" Descript="兕无所投其角，虎无所用其爪，兵无所容其刃。夫何故？以其无死地焉" Ps.="" Point="11, 23">
+      <Node ID="47" Name="无死地" Star="False" Duration="30" Descript="兕无所投其角，虎无所用其爪，兵无所容其刃。夫何故？以其无死地焉" Ps.="" Point="14, 23">
         <RawEffects>
           <Effect>圣人追加效果：部队组织度恢复：+10%</Effect>
         </RawEffects>
@@ -401,7 +402,7 @@
           <Require>46</Require>
         </Requires>
       </Node>
-      <Node ID="48" Name="物形器成" Star="False" Duration="30" Descript="道生之，德畜之，物形之，器成之" Ps.="" Point="11, 24">
+      <Node ID="48" Name="物形器成" Star="False" Duration="30" Descript="道生之，德畜之，物形之，器成之" Ps.="" Point="14, 24">
         <RawEffects>
           <Effect>3x60%研究加成：基础武器。</Effect>
         </RawEffects>
@@ -409,7 +410,7 @@
           <Require>47</Require>
         </Requires>
       </Node>
-      <Node ID="49" Name="见明守强" Star="False" Duration="30" Descript="见小曰明，**曰强" Ps.="" Point="11, 25">
+      <Node ID="49" Name="见明守强" Star="False" Duration="30" Descript="见小曰明，**曰强" Ps.="" Point="14, 25">
         <RawEffects>
           <Effect>圣人追加效果：部队增援率：+5%</Effect>
         </RawEffects>
@@ -417,7 +418,7 @@
           <Require>48</Require>
         </Requires>
       </Node>
-      <Node ID="50" Name="不道早己" Star="False" Duration="30" Descript="……谓之不道，不道早已" Ps.="" Point="11, 26">
+      <Node ID="50" Name="不道早己" Star="False" Duration="30" Descript="……谓之不道，不道早已" Ps.="" Point="14, 26">
         <RawEffects>
           <Effect>触发事件“百姓的口腹之欲？”。</Effect>
         </RawEffects>
@@ -425,7 +426,7 @@
           <Require>49</Require>
         </Requires>
       </Node>
-      <Node ID="51" Name="民恒畏死" Star="False" Duration="30" Descript="民恒畏死……吾将得而杀之，夫孰敢矣？" Ps.="" Point="11, 27">
+      <Node ID="51" Name="民恒畏死" Star="False" Duration="30" Descript="民恒畏死……吾将得而杀之，夫孰敢矣？" Ps.="" Point="14, 27">
         <RawEffects>
           <Effect>稳定度：-10%</Effect>
           <Effect>移除无为而治，其效果为（每周人口：+1，每月人口：+15%）</Effect>
@@ -435,7 +436,7 @@
           <Require>50</Require>
         </Requires>
       </Node>
-      <Node ID="52" Name="民恒畏威" Star="False" Duration="30" Descript="民不畏威，则大威至……" Ps.="" Point="11, 28">
+      <Node ID="52" Name="民恒畏威" Star="False" Duration="30" Descript="民不畏威，则大威至……" Ps.="" Point="14, 28">
         <RawEffects>
           <Effect>稳定度：-20%</Effect>
           <Effect>移除万民自化，其效果为（每周稳定度：+0.1%，每周战争支持度：-0.1%，战争支持度：+100%）</Effect>
@@ -445,7 +446,7 @@
           <Require>51</Require>
         </Requires>
       </Node>
-      <Node ID="53" Name="民恒无知" Star="False" Duration="30" Descript="夫唯无知，是以不我知。知我者希，则我贵矣……" Ps.="" Point="11, 29">
+      <Node ID="53" Name="民恒无知" Star="False" Duration="30" Descript="夫唯无知，是以不我知。知我者希，则我贵矣……" Ps.="" Point="14, 29">
         <RawEffects>
           <Effect>稳定度：-30%</Effect>
           <Effect>移除天地不仁，其效果为（科研速度：+10%）</Effect>
@@ -455,7 +456,7 @@
           <Require>52</Require>
         </Requires>
       </Node>
-      <Node ID="54" Name="除无道" Star="False" Duration="30" Descript="服文……厌饮食，财货有余，是为盗贼夸。非道也哉" Ps.="" Point="11, 30">
+      <Node ID="54" Name="除无道" Star="False" Duration="30" Descript="服文……厌饮食，财货有余，是为盗贼夸。非道也哉" Ps.="" Point="14, 30">
         <RawEffects>
           <Effect>居民生活区（移除1个民用工厂，增加1个军用工厂）</Effect>
           <Effect>山中鸡场（移除1个民用工厂，增加1个军用工厂）</Effect>
@@ -465,7 +466,7 @@
           <Require>53</Require>
         </Requires>
       </Node>
-      <Node ID="55" Name="天怒人怨" Star="False" Duration="0" Descript="兵强则灭，木强则折。强大处下，柔弱处上" Ps.="（注1：随事件的发展自动完成）（注2：要守矢神社和天狗共和国不存在之后才会触发）（注3：以下debuff随国力发展自动添加）" Point="11, 31">
+      <Node ID="55" Name="天怒人怨" Star="False" Duration="0" Descript="兵强则灭，木强则折。强大处下，柔弱处上" Ps.="（注1：随事件的发展自动完成）（注2：要守矢神社和天狗共和国不存在之后才会触发）（注3：以下debuff随国力发展自动添加）" Point="14, 31">
         <RawEffects>
           <Effect>获得五弊三缺</Effect>
         </RawEffects>
@@ -473,7 +474,7 @@
           <Require>54</Require>
         </Requires>
       </Node>
-      <Node ID="56" Name="鳏" Star="False" Duration="60" Descript="老而无妻曰鳏" Ps.="" Point="8, 32">
+      <Node ID="56" Name="鳏" Star="False" Duration="60" Descript="老而无妻曰鳏" Ps.="" Point="11, 32">
         <RawEffects>
           <Effect>五弊三缺追加效果：适役人口修正：-20%</Effect>
         </RawEffects>
@@ -481,7 +482,7 @@
           <Require>55</Require>
         </Requires>
       </Node>
-      <Node ID="57" Name="寡" Star="False" Duration="60" Descript="老而无夫曰寡" Ps.="" Point="9, 32">
+      <Node ID="57" Name="寡" Star="False" Duration="60" Descript="老而无夫曰寡" Ps.="" Point="12, 32">
         <RawEffects>
           <Effect>五弊三缺追加效果：每月人口：-10%</Effect>
         </RawEffects>
@@ -489,7 +490,7 @@
           <Require>55</Require>
         </Requires>
       </Node>
-      <Node ID="58" Name="孤" Star="False" Duration="60" Descript="幼而无父曰孤" Ps.="" Point="10, 32">
+      <Node ID="58" Name="孤" Star="False" Duration="60" Descript="幼而无父曰孤" Ps.="" Point="13, 32">
         <RawEffects>
           <Effect>五弊三缺追加效果：人力：-1000</Effect>
         </RawEffects>
@@ -497,7 +498,7 @@
           <Require>55</Require>
         </Requires>
       </Node>
-      <Node ID="59" Name="独" Star="False" Duration="60" Descript="老而无子曰独" Ps.="" Point="11, 32">
+      <Node ID="59" Name="独" Star="False" Duration="60" Descript="老而无子曰独" Ps.="" Point="14, 32">
         <RawEffects>
           <Effect>五弊三缺追加效果：适役人口：-1%</Effect>
         </RawEffects>
@@ -505,7 +506,7 @@
           <Require>55</Require>
         </Requires>
       </Node>
-      <Node ID="60" Name="残" Star="False" Duration="60" Descript="假有旧瞎一目为残疾，更瞎一目成笃疾" Ps.="" Point="12, 32">
+      <Node ID="60" Name="残" Star="False" Duration="60" Descript="假有旧瞎一目为残疾，更瞎一目成笃疾" Ps.="" Point="15, 32">
         <RawEffects>
           <Effect>五弊三缺追加效果：训练时间：+20%</Effect>
         </RawEffects>
@@ -513,7 +514,7 @@
           <Require>55</Require>
         </Requires>
       </Node>
-      <Node ID="61" Name="福" Star="False" Duration="60" Descript="无权" Ps.="" Point="13, 32">
+      <Node ID="61" Name="福" Star="False" Duration="60" Descript="无权" Ps.="" Point="16, 32">
         <RawEffects>
           <Effect>五弊三缺追加效果：政治点数：-30%</Effect>
         </RawEffects>
@@ -521,7 +522,7 @@
           <Require>55</Require>
         </Requires>
       </Node>
-      <Node ID="62" Name="禄" Star="False" Duration="60" Descript="缺财" Ps.="" Point="14, 32">
+      <Node ID="62" Name="禄" Star="False" Duration="60" Descript="缺财" Ps.="" Point="17, 32">
         <RawEffects>
           <Effect>五弊三缺追加效果：工厂产出：-30%</Effect>
         </RawEffects>
@@ -529,7 +530,7 @@
           <Require>55</Require>
         </Requires>
       </Node>
-      <Node ID="63" Name="寿" Star="False" Duration="60" Descript="短寿" Ps.="" Point="15, 32">
+      <Node ID="63" Name="寿" Star="False" Duration="60" Descript="短寿" Ps.="" Point="18, 32">
         <RawEffects>
           <Effect>五弊三缺追加效果：建造速度：-30%</Effect>
         </RawEffects>
@@ -537,7 +538,7 @@
           <Require>55</Require>
         </Requires>
       </Node>
-      <Node ID="64" Name="因果循环" Star="False" Duration="100" Descript="和大怨，必有余怨……夫天道无亲，常与善人" Ps.="（注：需要鳏+寡+孤+独+残+福+禄+寿）" Point="15, 33">
+      <Node ID="64" Name="因果循环" Star="False" Duration="100" Descript="和大怨，必有余怨……夫天道无亲，常与善人" Ps.="（注：需要鳏+寡+孤+独+残+福+禄+寿）" Point="18, 33">
         <RawEffects>
           <Effect>触发事件“最后的劝诫”。</Effect>
         </RawEffects>
@@ -545,7 +546,7 @@
           <Require>63</Require>
         </Requires>
       </Node>
-      <Node ID="65" Name="改过自新" Star="False" Duration="30" Descript="其政闷闷，其民淳淳；其政察察，其民缺缺" Ps.="（注：达成要求前不可见，需要完成因果循环国策，需要认同劝谏）" Point="17, 12">
+      <Node ID="65" Name="改过自新" Star="False" Duration="30" Descript="其政闷闷，其民淳淳；其政察察，其民缺缺" Ps.="（注：达成要求前不可见，需要完成因果循环国策，需要认同劝谏）" Point="14, 12">
         <RawEffects>
           <Effect>圣人追加效果：新规倾向：-0.05，部队攻击：-50%</Effect>
           <Effect>移除五弊三缺</Effect>
@@ -555,7 +556,7 @@
           <Require>12</Require>
         </Requires>
       </Node>
-      <Node ID="66" Name="废贤" Star="False" Duration="30" Descript="不尚贤，使民不争" Ps.="" Point="17, 13">
+      <Node ID="66" Name="废贤" Star="False" Duration="30" Descript="不尚贤，使民不争" Ps.="" Point="14, 13">
         <RawEffects>
           <Effect>战争支持度：-10%</Effect>
           <Effect>稳定度：+20%</Effect>
@@ -564,7 +565,7 @@
           <Require>65</Require>
         </Requires>
       </Node>
-      <Node ID="67" Name="均贱" Star="False" Duration="30" Descript="不贵难得之货，使民不为盗" Ps.="" Point="17, 14">
+      <Node ID="67" Name="均贱" Star="False" Duration="30" Descript="不贵难得之货，使民不为盗" Ps.="" Point="14, 14">
         <RawEffects>
           <Effect>将平均灵力值固定为50%</Effect>
           <Effect>稳定度：+30%</Effect>
@@ -573,7 +574,7 @@
           <Require>66</Require>
         </Requires>
       </Node>
-      <Node ID="68" Name="隐欲" Star="False" Duration="30" Descript="不见其欲，使民心不乱" Ps.="" Point="17, 15">
+      <Node ID="68" Name="隐欲" Star="False" Duration="30" Descript="不见其欲，使民心不乱" Ps.="" Point="14, 15">
         <RawEffects>
           <Effect>将世界观固定为唯心世界观</Effect>
           <Effect>稳定度：+50%</Effect>
@@ -582,7 +583,7 @@
           <Require>67</Require>
         </Requires>
       </Node>
-      <Node ID="69" Name="不仁" Star="False" Duration="30" Descript="天地不仁，以万物为刍狗；圣人不仁，以天地为刍狗" Ps.="" Point="17, 16">
+      <Node ID="69" Name="不仁" Star="False" Duration="30" Descript="天地不仁，以万物为刍狗；圣人不仁，以天地为刍狗" Ps.="" Point="14, 16">
         <RawEffects>
           <Effect>稳定度：-50%</Effect>
           <Effect>获得天地不仁，其效果为（科研速度：+10%）</Effect>
@@ -591,7 +592,7 @@
           <Require>68</Require>
         </Requires>
       </Node>
-      <Node ID="70" Name="饱腹" Star="False" Duration="30" Descript="圣人为腹不为目，故去彼取此" Ps.="" Point="17, 17">
+      <Node ID="70" Name="饱腹" Star="False" Duration="30" Descript="圣人为腹不为目，故去彼取此" Ps.="" Point="14, 17">
         <RawEffects>
           <Effect>人口：+1000</Effect>
           <Effect>向保守社会发展一级，以保守社会5取代保守社会4，效果变化（稳定度：+6% 科研速度：-3% 加密：+0.5 可出口资源：-5% 意识形态变化抵制力度：+10%）</Effect>
@@ -600,7 +601,7 @@
           <Require>69</Require>
         </Requires>
       </Node>
-      <Node ID="71" Name="修身养性" Star="False" Duration="60" Descript="知常容，容乃公，公乃全，全乃天，天乃道，道乃久，没身不殆" Ps.="" Point="17, 18">
+      <Node ID="71" Name="修身养性" Star="False" Duration="60" Descript="知常容，容乃公，公乃全，全乃天，天乃道，道乃久，没身不殆" Ps.="" Point="14, 18">
         <RawEffects>
           <Effect>获得修身养性，其效果为（生活消费品工厂：-6%）</Effect>
         </RawEffects>
@@ -608,7 +609,7 @@
           <Require>70</Require>
         </Requires>
       </Node>
-      <Node ID="72" Name="功遂身退" Star="False" Duration="60" Descript="悠兮其贵言，功成身遂，百姓皆谓我自然" Ps.="" Point="17, 19">
+      <Node ID="72" Name="功遂身退" Star="False" Duration="60" Descript="悠兮其贵言，功成身遂，百姓皆谓我自然" Ps.="" Point="14, 19">
         <RawEffects>
           <Effect>圣人追加效果：每日唯心度变化：-0.04%</Effect>
         </RawEffects>
@@ -616,7 +617,7 @@
           <Require>71</Require>
         </Requires>
       </Node>
-      <Node ID="73" Name="无不为" Star="False" Duration="30" Descript="道常无为，而无不为" Ps.="" Point="16, 20">
+      <Node ID="73" Name="无不为" Star="False" Duration="30" Descript="道常无为，而无不为" Ps.="" Point="13, 20">
         <RawEffects>
           <Effect>稳定度：-50%</Effect>
           <Effect>获得1个科研槽</Effect>
@@ -625,7 +626,7 @@
           <Require>72</Require>
         </Requires>
       </Node>
-      <Node ID="74" Name="无为而治" Star="False" Duration="60" Descript="多言数穷，不如守中" Ps.="（注：守矢神社选择无为而治后的民族精神要和隐居村落相同）" Point="16, 21">
+      <Node ID="74" Name="无为而治" Star="False" Duration="60" Descript="多言数穷，不如守中" Ps.="（注：守矢神社选择无为而治后的民族精神要和隐居村落相同）" Point="13, 21">
         <RawEffects>
           <Effect>获得无为而治，其效果为（每周人口：+1，每月人口：+15%）</Effect>
         </RawEffects>
@@ -633,7 +634,7 @@
           <Require>73</Require>
         </Requires>
       </Node>
-      <Node ID="75" Name="万民自化" Star="False" Duration="60" Descript="圣人之言曰：“我无为，而民自化；我好静，而民自正；我无事，而民自富；我无欲，而民自朴。”" Ps.="" Point="18, 20">
+      <Node ID="75" Name="万民自化" Star="False" Duration="60" Descript="圣人之言曰：“我无为，而民自化；我好静，而民自正；我无事，而民自富；我无欲，而民自朴。”" Ps.="" Point="15, 20">
         <RawEffects>
           <Effect>获得万民自化，其效果为（每周稳定度：+0.1%，每周战争支持度：-0.1%，战争支持度：+100%）</Effect>
         </RawEffects>
@@ -641,7 +642,7 @@
           <Require>72</Require>
         </Requires>
       </Node>
-      <Node ID="76" Name="天下共主" Star="True" Duration="30" Descript="道常无名，朴虽小，天下莫能臣也。侯王若能守之，万物将自宾" Ps.="（注：要求守矢神社意识形态为孤立）" Point="17, 21">
+      <Node ID="76" Name="天下共主" Star="True" Duration="30" Descript="道常无名，朴虽小，天下莫能臣也。侯王若能守之，万物将自宾" Ps.="（注：要求守矢神社意识形态为孤立）" Point="14, 21">
         <RawEffects>
           <Effect>（守矢神社）获得战略同盟（对隐居村落关系：+80）</Effect>
           <Effect>（隐居村落）获得战略同盟（对他们的关系改变了：+80）</Effect>
@@ -650,7 +651,7 @@
           <Require>75</Require>
         </Requires>
       </Node>
-      <Node ID="77" Name="邦者下流" Star="False" Duration="60" Descript="大邦者，下流也，天下之牝。天下之交也，牝恒以静胜牡" Ps.="" Point="18, 21">
+      <Node ID="77" Name="邦者下流" Star="False" Duration="60" Descript="大邦者，下流也，天下之牝。天下之交也，牝恒以静胜牡" Ps.="" Point="15, 21">
         <RawEffects>
           <Effect>（守矢神社）获得允许创建防御性阵营，创建阵营：妖怪山自卫联盟。</Effect>
           <Effect>隐居村落加入妖怪山自卫联盟</Effect>
@@ -659,7 +660,7 @@
           <Require>75</Require>
         </Requires>
       </Node>
-      <Node ID="78" Name="事人取信" Star="False" Duration="60" Descript="小邦以下大邦，则取于大邦。故或下以取，或下而取" Ps.="" Point="18, 22">
+      <Node ID="78" Name="事人取信" Star="False" Duration="60" Descript="小邦以下大邦，则取于大邦。故或下以取，或下而取" Ps.="" Point="15, 22">
         <RawEffects>
           <Effect>（河童长老会）河童长老会成为隐居村落的四级附庸（势力范围）</Effect>
           <Effect>获得融合河童，其效果为（下降附庸等级所需政治点：-10%）</Effect>
@@ -668,7 +669,7 @@
           <Require>77</Require>
         </Requires>
       </Node>
-      <Node ID="79" Name="各得所欲" Star="False" Duration="60" Descript="大邦不过欲兼畜人，小邦不过欲人事人。夫二者各得所欲，则大者宜为下" Ps.="" Point="19, 22">
+      <Node ID="79" Name="各得所欲" Star="False" Duration="60" Descript="大邦不过欲兼畜人，小邦不过欲人事人。夫二者各得所欲，则大者宜为下" Ps.="" Point="16, 22">
         <RawEffects>
           <Effect>隐居村落吞并河童长老会</Effect>
           <Effect>（守矢神社）获得万民自化，其效果为（每周稳定度：+0.1%，每周战争支持度：-0.1%，战争支持度：+100%）</Effect>
@@ -677,7 +678,7 @@
           <Require>77</Require>
         </Requires>
       </Node>
-      <Node ID="80" Name="道冲不盈" Star="False" Duration="60" Descript="道冲，而用之或不盈" Ps.="" Point="19, 23">
+      <Node ID="80" Name="道冲不盈" Star="False" Duration="60" Descript="道冲，而用之或不盈" Ps.="" Point="16, 23">
         <RawEffects>
           <Effect>增加5个地图外民用工厂</Effect>
           <Effect>无为而治追加效果：地区最大工业值：+20%</Effect>
@@ -687,7 +688,7 @@
           <Require>79</Require>
         </Requires>
       </Node>
-      <Node ID="81" Name="无以为用" Star="False" Duration="60" Descript="三十辐共一毂，当其无，有车之用。埏埴以为器，当其无，有器之用。凿户牖以为室，当其无，有室之用。故有之以为利，无之以为用}" Ps.="（注：如果道冲不盈守矢神社同意，（守矢神社）无为而治追加效果：建造速度+30%" Point="19, 24">
+      <Node ID="81" Name="无以为用" Star="False" Duration="60" Descript="三十辐共一毂，当其无，有车之用。埏埴以为器，当其无，有器之用。凿户牖以为室，当其无，有室之用。故有之以为利，无之以为用}" Ps.="（注：如果道冲不盈守矢神社同意，（守矢神社）无为而治追加效果：建造速度+30%" Point="16, 24">
         <RawEffects>
           <Effect>所有拥有的地区：增加3个建筑位</Effect>
           <Effect>无为而治追加效果：建造速度：+30%</Effect>
@@ -696,7 +697,7 @@
           <Require>80</Require>
         </Requires>
       </Node>
-      <Node ID="82" Name="不惜牺身" Star="False" Duration="60" Descript="故贵以身为天下，若可寄天下" Ps.="" Point="19, 25">
+      <Node ID="82" Name="不惜牺身" Star="False" Duration="60" Descript="故贵以身为天下，若可寄天下" Ps.="" Point="16, 25">
         <RawEffects>
           <Effect>获得大城镇，其效果为（每月人口：+25%，适役人口修正：5%，稳定度：+10%）</Effect>
         </RawEffects>
@@ -704,7 +705,7 @@
           <Require>81</Require>
         </Requires>
       </Node>
-      <Node ID="83" Name="相托天下" Star="False" Duration="60" Descript="爱以身为天下，若可托天下" Ps.="（注：如果道冲不盈守矢神社同意，（守矢神社）以国家取代宗教组织 效果变化：每日获得的政治点数：+0.1 部队训练时间：+20% 部队组织度：-15% 生活消费品工厂：+6% 稳定度：-20% 战争支持度：-5% 建造速度：+15% 科研速度：+25% 工厂产出：+15% 训练时间：-5%，特工位：+1））" Point="19, 26">
+      <Node ID="83" Name="相托天下" Star="False" Duration="60" Descript="爱以身为天下，若可托天下" Ps.="（注：如果道冲不盈守矢神社同意，（守矢神社）以国家取代宗教组织 效果变化：每日获得的政治点数：+0.1 部队训练时间：+20% 部队组织度：-15% 生活消费品工厂：+6% 稳定度：-20% 战争支持度：-5% 建造速度：+15% 科研速度：+25% 工厂产出：+15% 训练时间：-5%，特工位：+1））" Point="16, 26">
         <RawEffects>
           <Effect>获得国家，其效果为（每日获得的政治点数：+0.1，部队组织度：+10%，每月人口：+30%，适役人口修正：10%，生活消费品工厂：1%，稳定度：+15%，训练时间：-5%，特工位：+1）</Effect>
         </RawEffects>
@@ -712,7 +713,7 @@
           <Require>82</Require>
         </Requires>
       </Node>
-      <Node ID="84" Name="重为轻根" Star="True" Duration="60" Descript="重为轻根……轻则失根" Ps.="" Point="19, 27">
+      <Node ID="84" Name="重为轻根" Star="True" Duration="60" Descript="重为轻根……轻则失根" Ps.="" Point="16, 27">
         <RawEffects>
           <Effect>修身养性追加效果：核心领土防御：-10%，部队防御：+8%</Effect>
         </RawEffects>
@@ -720,7 +721,7 @@
           <Require>83</Require>
         </Requires>
       </Node>
-      <Node ID="85" Name="善行无痕" Star="False" Duration="60" Descript="善行无痕迹，善言无瑕谪" Ps.="" Point="19, 28">
+      <Node ID="85" Name="善行无痕" Star="False" Duration="60" Descript="善行无痕迹，善言无瑕谪" Ps.="" Point="16, 28">
         <RawEffects>
           <Effect>万民自化追加效果：加密：+6</Effect>
         </RawEffects>
@@ -728,7 +729,7 @@
           <Require>84</Require>
         </Requires>
       </Node>
-      <Node ID="86" Name="静为躁君" Star="True" Duration="60" Descript="静为躁君……躁则失君" Ps.="" Point="19, 29">
+      <Node ID="86" Name="静为躁君" Star="True" Duration="60" Descript="静为躁君……躁则失君" Ps.="" Point="16, 29">
         <RawEffects>
           <Effect>修身养性追加效果：核心领土攻击：+20%，部队攻击：-4%</Effect>
         </RawEffects>
@@ -736,13 +737,13 @@
           <Require>85</Require>
         </Requires>
       </Node>
-      <Node ID="87" Name="善计不筹" Star="False" Duration="60" Descript="善计不用筹划" Ps.="" Point="20, 0">
+      <Node ID="87" Name="善计不筹" Star="False" Duration="60" Descript="善计不用筹划" Ps.="" Point="19, 0">
         <RawEffects>
           <Effect>万民自化追加效果：计划速度：+10%</Effect>
         </RawEffects>
         <Requires />
       </Node>
-      <Node ID="88" Name="常善救物" Star="False" Duration="60" Descript="常善救物，故无弃物" Ps.="（注：需要重为轻根，静为躁君其一即可）" Point="20, 1">
+      <Node ID="88" Name="常善救物" Star="False" Duration="60" Descript="常善救物，故无弃物" Ps.="（注：需要重为轻根，静为躁君其一即可）" Point="19, 1">
         <RawEffects>
           <Effect>万民自化追加效果：战略资源获取率：+25%</Effect>
         </RawEffects>
@@ -750,7 +751,7 @@
           <Require>87</Require>
         </Requires>
       </Node>
-      <Node ID="89" Name="常善救人" Star="False" Duration="60" Descript="常善救人，故无弃人" Ps.="" Point="20, 2">
+      <Node ID="89" Name="常善救人" Star="False" Duration="60" Descript="常善救人，故无弃人" Ps.="" Point="19, 2">
         <RawEffects>
           <Effect>万民自化追加效果：所有步兵：伤兵复原：+1%，经验损失：-1.5%</Effect>
         </RawEffects>
@@ -758,7 +759,7 @@
           <Require>88</Require>
         </Requires>
       </Node>
-      <Node ID="90" Name="常贵其师" Star="False" Duration="60" Descript="故善人者，善人之师" Ps.="" Point="20, 3">
+      <Node ID="90" Name="常贵其师" Star="False" Duration="60" Descript="故善人者，善人之师" Ps.="" Point="19, 3">
         <RawEffects>
           <Effect>守矢神社增加：科研共享加成+5%</Effect>
         </RawEffects>
@@ -766,7 +767,7 @@
           <Require>89</Require>
         </Requires>
       </Node>
-      <Node ID="91" Name="善人之资" Star="False" Duration="60" Descript="不善人者，善人之资" Ps.="" Point="20, 4">
+      <Node ID="91" Name="善人之资" Star="False" Duration="60" Descript="不善人者，善人之资" Ps.="" Point="19, 4">
         <RawEffects>
           <Effect>山童镇，山童实验场，水坝控制站，河童大坝，蒸汽村落，南玄武川城，中玄武川镇，三平实验室：隐居村落获得该地区的核心。</Effect>
         </RawEffects>
@@ -774,7 +775,7 @@
           <Require>90</Require>
         </Requires>
       </Node>
-      <Node ID="92" Name="大制不割" Star="False" Duration="60" Descript="圣人用之，则为官长。故大制不割" Ps.="" Point="20, 5">
+      <Node ID="92" Name="大制不割" Star="False" Duration="60" Descript="圣人用之，则为官长。故大制不割" Ps.="" Point="19, 5">
         <RawEffects>
           <Effect>（天狗帝国）（山姥部落）（妖兽仙界）触发事件“有偿帮助”。如果他们同意，则获得保护自己的臣民，其效果为（陆上要塞：建造速度：+25%）</Effect>
           <Effect>获得为期365天的“借花献佛”，其效果为（生活消费品工厂：10%）</Effect>
@@ -783,7 +784,7 @@
           <Require>91</Require>
         </Requires>
       </Node>
-      <Node ID="93" Name="有所不为" Star="False" Duration="60" Descript="将欲取天下而为之，吾见其不得已。天下神器，不可为也" Ps.="" Point="20, 6">
+      <Node ID="93" Name="有所不为" Star="False" Duration="60" Descript="将欲取天下而为之，吾见其不得已。天下神器，不可为也" Ps.="" Point="19, 6">
         <RawEffects>
           <Effect>（后户之国）（隙间世界）通过与隐居村落的互不侵犯条约，政治点数：-500</Effect>
         </RawEffects>
@@ -791,7 +792,7 @@
           <Require>92</Require>
         </Requires>
       </Node>
-      <Node ID="94" Name="张弛有度" Star="False" Duration="60" Descript="将欲歙之，必固张之；将欲弱之，必固强之；将欲废之，必固举之；将欲取之，必固予之" Ps.="" Point="20, 7">
+      <Node ID="94" Name="张弛有度" Star="False" Duration="60" Descript="将欲歙之，必固张之；将欲弱之，必固强之；将欲废之，必固举之；将欲取之，必固予之" Ps.="" Point="19, 7">
         <RawEffects>
           <Effect>获得帝国，其效果为（每日获得的政治点数：+0.35，部队组织度：+10%，每月人口：+30%，适役人口修正：15%，稳定度：+25%，训练时间：-5%，特工位：+1）</Effect>
           <Effect>获得为期365天的“张弛有度”，其效果为（部队组织度：-25%，部队组织度恢复：-15%）</Effect>
@@ -800,7 +801,7 @@
           <Require>93</Require>
         </Requires>
       </Node>
-      <Node ID="95" Name="受国不详" Star="False" Duration="60" Descript="圣人云：“受国之诟，是谓社稷主；受国不详，是谓天下王" Ps.="" Point="20, 8">
+      <Node ID="95" Name="受国不详" Star="False" Duration="60" Descript="圣人云：“受国之诟，是谓社稷主；受国不详，是谓天下王" Ps.="" Point="19, 8">
         <RawEffects>
           <Effect>万民自化追加效果：最大指挥点数提高：-30，每月人口：+100</Effect>
         </RawEffects>
@@ -808,7 +809,7 @@
           <Require>94</Require>
         </Requires>
       </Node>
-      <Node ID="96" Name="天网恢恢" Star="False" Duration="60" Descript="天之道，不争而善胜，不言而善应，不召而自来，坦然而善谋。天网恢恢，疏而不失" Ps.="" Point="20, 9">
+      <Node ID="96" Name="天网恢恢" Star="False" Duration="60" Descript="天之道，不争而善胜，不言而善应，不召而自来，坦然而善谋。天网恢恢，疏而不失" Ps.="" Point="19, 9">
         <RawEffects>
           <Effect>万民自化追加效果：解密：+10，加密：-6</Effect>
         </RawEffects>
@@ -816,7 +817,7 @@
           <Require>95</Require>
         </Requires>
       </Node>
-      <Node ID="97" Name="进道若退" Star="False" Duration="100" Descript="建言有之：明道若昧，进道若退，夷道若纇" Ps.="" Point="20, 10">
+      <Node ID="97" Name="进道若退" Star="False" Duration="100" Descript="建言有之：明道若昧，进道若退，夷道若纇" Ps.="" Point="19, 10">
         <RawEffects>
           <Effect>成为守矢神社的四级附庸（势力范围）</Effect>
           <Effect>开启与守矢神社争夺国家领导权决议</Effect>
@@ -825,7 +826,7 @@
           <Require>96</Require>
         </Requires>
       </Node>
-      <Node ID="98" Name="小国寡民" Star="True" Duration="60" Descript="小国寡民。使有什伯人之器而不用；使民重死而不远；虽有舟舆，无所乘之；虽有甲兵，无所陈之" Ps.="" Point="21, 0">
+      <Node ID="98" Name="小国寡民" Star="True" Duration="60" Descript="小国寡民。使有什伯人之器而不用；使民重死而不远；虽有舟舆，无所乘之；虽有甲兵，无所陈之" Ps.="" Point="20, 0">
         <RawEffects>
           <Effect>将势力规模固定为国家</Effect>
           <Effect>获得国家，其效果为（每日获得的政治点数+0.1，部队组织度+10%，每月人口+30%，适役人口修正：-10%，生活消费品工厂：1%，稳定度+15%，训练时间-5%，特工位+1）</Effect>
@@ -833,7 +834,7 @@
         </RawEffects>
         <Requires />
       </Node>
-      <Node ID="99" Name="为而弗争" Star="False" Duration="60" Descript="天之道，利而不害；人之道，为而弗争" Ps.="" Point="21, 1">
+      <Node ID="99" Name="为而弗争" Star="False" Duration="60" Descript="天之道，利而不害；人之道，为而弗争" Ps.="" Point="20, 1">
         <RawEffects>
           <Effect>所有拥有的地区：添加5个基础设施</Effect>
           <Effect>小国寡民追加效果：核心领土防御：+10%，民用工厂建造速度：+30%，军用工厂建造速度：-10%</Effect>
@@ -842,7 +843,7 @@
           <Require>98</Require>
         </Requires>
       </Node>
-      <Node ID="100" Name="鸡犬相闻" Star="False" Duration="60" Descript="邻国相望，鸡犬之声相闻，民至老死，不相往来" Ps.="" Point="21, 2">
+      <Node ID="100" Name="鸡犬相闻" Star="False" Duration="60" Descript="邻国相望，鸡犬之声相闻，民至老死，不相往来" Ps.="" Point="20, 2">
         <RawEffects>
           <Effect>小国寡民：可出口资源：-100%，贸易协定修正：-100%</Effect>
           <Effect>无为而治追加效果：每周人口：+1，每月人口：+15%</Effect>
@@ -851,7 +852,7 @@
           <Require>99</Require>
         </Requires>
       </Node>
-      <Node ID="101" Name="哀者必胜" Star="False" Duration="60" Descript="抗兵相若，哀者必胜" Ps.="" Point="21, 3">
+      <Node ID="101" Name="哀者必胜" Star="False" Duration="60" Descript="抗兵相若，哀者必胜" Ps.="" Point="20, 3">
         <RawEffects>
           <Effect>小国寡民追加效果：每日获得的政治点数：-0.2，战争支持度：-15%，每周战争支持度：+0.1%，厌战周期上涨：-50%</Effect>
         </RawEffects>
@@ -859,7 +860,7 @@
           <Require>100</Require>
         </Requires>
       </Node>
-      <Node ID="102" Name="圣人出" Star="False" Duration="60" Descript="圣人出，“黄河”清" Ps.="" Point="21, 4">
+      <Node ID="102" Name="圣人出" Star="False" Duration="60" Descript="圣人出，“黄河”清" Ps.="" Point="20, 4">
         <RawEffects>
           <Effect>稳定度：+50%</Effect>
           <Effect>圣人追加效果：每周战争支持度：+0.1%</Effect>
@@ -868,7 +869,7 @@
           <Require>101</Require>
         </Requires>
       </Node>
-      <Node ID="103" Name="若烹小鲜" Star="False" Duration="60" Descript="治大国，若烹小鲜" Ps.="" Point="21, 5">
+      <Node ID="103" Name="若烹小鲜" Star="False" Duration="60" Descript="治大国，若烹小鲜" Ps.="" Point="20, 5">
         <RawEffects>
           <Effect>万民自化追加效果：每日获得的政治点数：+0.1，每周稳定度：+0.1%</Effect>
         </RawEffects>
@@ -876,7 +877,7 @@
           <Require>102</Require>
         </Requires>
       </Node>
-      <Node ID="104" Name="不以兵强" Star="False" Duration="60" Descript="以道佐人主者，不以兵强天下，其事好还" Ps.="" Point="21, 6">
+      <Node ID="104" Name="不以兵强" Star="False" Duration="60" Descript="以道佐人主者，不以兵强天下，其事好还" Ps.="" Point="20, 6">
         <RawEffects>
           <Effect>所有拥有的地区：添加3个民用工厂</Effect>
           <Effect>获得类人体系人力3，其效果为（适役人口：+2.4%，训练时间：-5%）</Effect>
@@ -885,7 +886,7 @@
           <Require>103</Require>
         </Requires>
       </Node>
-      <Node ID="105" Name="必有凶年" Star="False" Duration="60" Descript="师之所处，荆棘生焉；大军之后，必有凶年" Ps.="" Point="21, 7">
+      <Node ID="105" Name="必有凶年" Star="False" Duration="60" Descript="师之所处，荆棘生焉；大军之后，必有凶年" Ps.="" Point="20, 7">
         <RawEffects>
           <Effect>当选中此项时：所有敌国获得为期365天的“必有凶年”，其效果为（生活消费品工厂：+30%，适役人口修正：-80%）</Effect>
         </RawEffects>
@@ -893,7 +894,7 @@
           <Require>104</Require>
         </Requires>
       </Node>
-      <Node ID="106" Name="希言自然" Star="False" Duration="60" Descript="希言自然。故飘风不终朝，骤雨不终日。孰为此者？天地。天地尚不能久，而况于人乎？" Ps.="" Point="21, 8">
+      <Node ID="106" Name="希言自然" Star="False" Duration="60" Descript="希言自然。故飘风不终朝，骤雨不终日。孰为此者？天地。天地尚不能久，而况于人乎？" Ps.="" Point="20, 8">
         <RawEffects>
           <Effect>万民自化追加效果：通用决议花费：-100%，志愿军部队数上限：+50%</Effect>
         </RawEffects>
@@ -901,7 +902,7 @@
           <Require>105</Require>
         </Requires>
       </Node>
-      <Node ID="107" Name="不为天下先" Star="False" Duration="60" Descript="我恒有三宝，持而宝之：一曰慈，二曰俭，三曰不敢为天下先" Ps.="" Point="21, 9">
+      <Node ID="107" Name="不为天下先" Star="False" Duration="60" Descript="我恒有三宝，持而宝之：一曰慈，二曰俭，三曰不敢为天下先" Ps.="" Point="20, 9">
         <RawEffects>
           <Effect>万民自化追加效果：处于阵营加成：+100%</Effect>
         </RawEffects>
@@ -909,7 +910,7 @@
           <Require>106</Require>
         </Requires>
       </Node>
-      <Node ID="108" Name="知己不知" Star="False" Duration="60" Descript="知不知，尚矣；不知知，病也。是以圣人之不病也，以其病病也，是以不病" Ps.="" Point="21, 10">
+      <Node ID="108" Name="知己不知" Star="False" Duration="60" Descript="知不知，尚矣；不知知，病也。是以圣人之不病也，以其病病也，是以不病" Ps.="" Point="20, 10">
         <RawEffects>
           <Effect>获得1个科研槽</Effect>
           <Effect>获得道教的探索精神，其效果为（科研速度：-15%）</Effect>
@@ -918,7 +919,7 @@
           <Require>107</Require>
         </Requires>
       </Node>
-      <Node ID="109" Name="损余补足" Star="True" Duration="100" Descript="天之道，损有余而补不足" Ps.="（注：需要完成国策大盗终止）" Point="21, 11">
+      <Node ID="109" Name="损余补足" Star="True" Duration="100" Descript="天之道，损有余而补不足" Ps.="（注：需要完成国策大盗终止）" Point="20, 11">
         <RawEffects>
           <Effect>移除道教的探索精神</Effect>
           <Effect>移除对势力规模的固定</Effect>
@@ -930,7 +931,7 @@
           <Require>108</Require>
         </Requires>
       </Node>
-      <Node ID="110" Name="种有几" Star="True" Duration="100" Descript="后稷生于巨迹，伊尹生于空桑。厥昭生乎湿，醯鸡生乎酒。羊奚比乎不笋久竹生青宁，青宁生程，程生马，马生人" Ps.="" Point="22, 0">
+      <Node ID="110" Name="种有几" Star="True" Duration="100" Descript="后稷生于巨迹，伊尹生于空桑。厥昭生乎湿，醯鸡生乎酒。羊奚比乎不笋久竹生青宁，青宁生程，程生马，马生人" Ps.="" Point="21, 0">
         <RawEffects>
           <Effect>增加5个地图外军用工厂</Effect>
           <Effect>获得种有几，其效果为（适役人口：+38.2%）</Effect>
@@ -939,7 +940,7 @@
         </RawEffects>
         <Requires />
       </Node>
-      <Node ID="111" Name="“无”" Star="False" Duration="30" Descript="或谓子列子曰：“子奚贵虚？”列子曰：“虚者无贵也。”" Ps.="" Point="22, 1">
+      <Node ID="111" Name="“无”" Star="False" Duration="30" Descript="或谓子列子曰：“子奚贵虚？”列子曰：“虚者无贵也。”" Ps.="" Point="21, 1">
         <RawEffects>
           <Effect>触发事件“《列子》的前后矛盾”。</Effect>
         </RawEffects>
@@ -947,7 +948,7 @@
           <Require>110</Require>
         </Requires>
       </Node>
-      <Node ID="112" Name="何容心哉" Star="False" Duration="30" Descript="杞人忧天，晓之者弗……子列子闻而笑曰：“言天地坏者亦谬，言天地不坏者亦谬。坏与不坏，吾所不能知也……坏与不坏，吾何容心哉”" Ps.="" Point="22, 2">
+      <Node ID="112" Name="何容心哉" Star="False" Duration="30" Descript="杞人忧天，晓之者弗……子列子闻而笑曰：“言天地坏者亦谬，言天地不坏者亦谬。坏与不坏，吾所不能知也……坏与不坏，吾何容心哉”" Ps.="" Point="21, 2">
         <RawEffects>
           <Effect>种有几追加效果：建造速度：+20%，每日唯心度变化：+0.1%</Effect>
         </RawEffects>
@@ -955,7 +956,7 @@
           <Require>111</Require>
         </Requires>
       </Node>
-      <Node ID="113" Name="始得一眄" Star="False" Duration="30" Descript="自吾之事夫子友若人也，三年之后，心不敢念是非，口不敢言利害，始得夫子以眄而已" Ps.="" Point="22, 3">
+      <Node ID="113" Name="始得一眄" Star="False" Duration="30" Descript="自吾之事夫子友若人也，三年之后，心不敢念是非，口不敢言利害，始得夫子以眄而已" Ps.="" Point="21, 3">
         <RawEffects>
           <Effect>获得法师，其效果为（灵力系研究速度：+5%，动员速度：+15%，部队组织度：-2%，适役人口：+8%，稳定度：-5%，步兵部队攻击：+10%，炮兵攻击：+5%，工厂产出：-6%，陆军夜战攻击：-5%，每日人类影响力基础变化：+0.03）</Effect>
         </RawEffects>
@@ -963,7 +964,7 @@
           <Require>112</Require>
         </Requires>
       </Node>
-      <Node ID="114" Name="解言而笑" Star="False" Duration="30" Descript="五年之后，心更念是非，口俞言利害，夫子始一解颜而笑" Ps.="" Point="22, 4">
+      <Node ID="114" Name="解言而笑" Star="False" Duration="30" Descript="五年之后，心更念是非，口俞言利害，夫子始一解颜而笑" Ps.="" Point="21, 4">
         <RawEffects>
           <Effect>获得幽灵/亡灵，其效果为（战略资源获取率：+10%，部队组织度：-5%，适役人口：+0.2%，移动中组织度损失：+5%，部队损耗：-20%，补给损耗：-15%，部队组织度恢复：+10%，步兵部队攻击：-30%，步兵部队防御：-30%，训练时间：-40%，每日人类影响力基础变化：+0.02，征兵法案花费：+50%）</Effect>
         </RawEffects>
@@ -971,7 +972,7 @@
           <Require>113</Require>
         </Requires>
       </Node>
-      <Node ID="115" Name="并席而坐" Star="False" Duration="30" Descript="七年之后，从心之所念，庚无是非；从口之所言，庚无利害，夫子始一引吾并席而坐" Ps.="" Point="22, 5">
+      <Node ID="115" Name="并席而坐" Star="False" Duration="30" Descript="七年之后，从心之所念，庚无是非；从口之所言，庚无利害，夫子始一引吾并席而坐" Ps.="" Point="21, 5">
         <RawEffects>
           <Effect>获得妖兽，其效果为（动员速度：+20%，适役人口：+14%，改善关系持续花费：+25%，每日人类影响力基础变化：+0.04，征兵法案花费：-10%）</Effect>
         </RawEffects>
@@ -979,7 +980,7 @@
           <Require>114</Require>
         </Requires>
       </Node>
-      <Node ID="116" Name="内外进矣" Star="False" Duration="30" Descript="九年之后，横心之所念，横口之所言，亦不知我之是非利害欤，亦不知彼是非利害欤；亦不知夫子之为我师，若人之为我友：内外进矣" Ps.="" Point="22, 6">
+      <Node ID="116" Name="内外进矣" Star="False" Duration="30" Descript="九年之后，横心之所念，横口之所言，亦不知我之是非利害欤，亦不知彼是非利害欤；亦不知夫子之为我师，若人之为我友：内外进矣" Ps.="" Point="21, 6">
         <RawEffects>
           <Effect>获得神明，其效果为（动员速度：+20%，适役人口：+16%，补给消耗：-5%，加密：+2，解密：+2，陆军夜战攻击：-15%，每日人类影响力基础变化：+0.07）</Effect>
         </RawEffects>
@@ -987,7 +988,7 @@
           <Require>115</Require>
         </Requires>
       </Node>
-      <Node ID="117" Name="纯气之守" Star="False" Duration="60" Descript="夫醉者之坠于车也，虽疾不死。骨节与人同，而犯害与人异，其神全也。乘亦弗知也，坠亦弗知也。死生惊惧不入乎其胸，是故遌物而不慑" Ps.="" Point="22, 7">
+      <Node ID="117" Name="纯气之守" Star="False" Duration="60" Descript="夫醉者之坠于车也，虽疾不死。骨节与人同，而犯害与人异，其神全也。乘亦弗知也，坠亦弗知也。死生惊惧不入乎其胸，是故遌物而不慑" Ps.="" Point="21, 7">
         <RawEffects>
           <Effect>种有几追加效果：部队防御：+10%</Effect>
         </RawEffects>
@@ -995,7 +996,7 @@
           <Require>116</Require>
         </Requires>
       </Node>
-      <Node ID="118" Name="地文不誫" Star="False" Duration="60" Descript="壶子曰：“向吾示之以地文，罪乎不誫不止，是殆见吾杜德几也”" Ps.="" Point="22, 8">
+      <Node ID="118" Name="地文不誫" Star="False" Duration="60" Descript="壶子曰：“向吾示之以地文，罪乎不誫不止，是殆见吾杜德几也”" Ps.="" Point="21, 8">
         <RawEffects>
           <Effect>种有几追加效果：适役人口修正：-50%，堑壕速度：+10%，堑壕上限：+10</Effect>
         </RawEffects>
@@ -1003,7 +1004,7 @@
           <Require>117</Require>
         </Requires>
       </Node>
-      <Node ID="119" Name="天壤机发" Star="False" Duration="60" Descript="壶子曰：“向吾示之以天壤，名实不入，而机发于踵，此为杜权”" Ps.="" Point="22, 9">
+      <Node ID="119" Name="天壤机发" Star="False" Duration="60" Descript="壶子曰：“向吾示之以天壤，名实不入，而机发于踵，此为杜权”" Ps.="" Point="21, 9">
         <RawEffects>
           <Effect>种有几追加效果：每月人口增长：+25%</Effect>
         </RawEffects>
@@ -1011,7 +1012,7 @@
           <Require>118</Require>
         </Requires>
       </Node>
-      <Node ID="120" Name="太冲衡气" Star="False" Duration="60" Descript="壶子曰：“向吾示之以太冲莫朕，是殆见吾衡气几也”" Ps.="" Point="22, 10">
+      <Node ID="120" Name="太冲衡气" Star="False" Duration="60" Descript="壶子曰：“向吾示之以太冲莫朕，是殆见吾衡气几也”" Ps.="" Point="21, 10">
         <RawEffects>
           <Effect>种有几追加效果：部队组织度恢复：+20%</Effect>
         </RawEffects>
@@ -1019,7 +1020,7 @@
           <Require>119</Require>
         </Requires>
       </Node>
-      <Node ID="121" Name="虚而猗移" Star="False" Duration="60" Descript="壶子曰：“向吾示之以未始出吾宗。吾与之虚而猗移，不知其谁何，因以为茅糜，因以为波流，故逃也。”" Ps.="" Point="22, 11">
+      <Node ID="121" Name="虚而猗移" Star="False" Duration="60" Descript="壶子曰：“向吾示之以未始出吾宗。吾与之虚而猗移，不知其谁何，因以为茅糜，因以为波流，故逃也。”" Ps.="" Point="21, 11">
         <RawEffects>
           <Effect>种有几追加效果：稳定度：-20%，增援率：+5%</Effect>
         </RawEffects>
@@ -1027,7 +1028,7 @@
           <Require>120</Require>
         </Requires>
       </Node>
-      <Node ID="122" Name="奉余损足" Star="True" Duration="100" Descript="人之道则不然，损不足以奉有余" Ps.="" Point="22, 12">
+      <Node ID="122" Name="奉余损足" Star="True" Duration="100" Descript="人之道则不然，损不足以奉有余" Ps.="" Point="21, 12">
         <RawEffects>
           <Effect>每个国家获得：敌对关系（与隐居村落的关系：-500）</Effect>
           <Effect>获得幻想乡建立者，其效果为（每日获得的政治点数：+0.5，每周人力：+3，生活消费品工厂：-10%，稳定度：+10%，地区最大工业值：+30%，建造速度：+25%，工厂产出：25%，制作战争目标的紧张度限制：+15%，特工位：+2，每日人类影响力额外变化：+0.02，x可以加入阵营，灵力系科研速度：+35%，混合类研究速度：+10%，秘密武器类研究速度：-60%）</Effect>
@@ -1036,7 +1037,7 @@
           <Require>121</Require>
         </Requires>
       </Node>
-      <Node ID="123" Name="庄子三剑" Star="True" Duration="100" Descript="南华老仙，晌午授道" Ps.="（注：需要虚而猗移，知己不知其一即可）" Point="23, 12">
+      <Node ID="123" Name="庄子三剑" Star="True" Duration="100" Descript="南华老仙，晌午授道" Ps.="（注：需要虚而猗移，知己不知其一即可）" Point="22, 12">
         <RawEffects>
           <Effect>触发事件“庄子三剑”。</Effect>
         </RawEffects>

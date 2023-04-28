@@ -50,10 +50,9 @@ class Test
     /// </summary>
     public static void UploadNodeMap(FocusGraph Graph)
     {
-        Lattice.DrawingClear();
-        foreach (var id in Graph.IdList)
+        //Lattice.DrawingClear();
+        foreach (var focus in Graph.FocusList)
         {
-            var focus = Graph.GetFocus(id);
             int color = 0; //不同需求要变色
             foreach (var requires in focus.Requires)
             {
