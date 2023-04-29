@@ -432,6 +432,7 @@ namespace FocusTree.UI
             //
             // 自适应大小
             //
+            Parent.ForceResize = true;
             if (Lattice.DrawRect.Width < (gRect.Width) * LatticeCell.SizeMin.Width)
             {
                 LatticeCell.Width = LatticeCell.SizeMin.Width;
@@ -442,6 +443,7 @@ namespace FocusTree.UI
                 LatticeCell.Height = LatticeCell.SizeMin.Height;
                 Parent.Height = (gRect.Height + 1) * LatticeCell.SizeMin.Height + Parent.Height - Height + InfoBrandRect.Height + 30/*30 is blank between Lattice's DrawRect.Bottom and InfoBrandRect.Top*/;
             }
+            Parent.ForceResize = false;
             Background.Redraw(Image);
             Lattice.SetBounds(LatticeBound);
             //
@@ -466,7 +468,7 @@ namespace FocusTree.UI
         /// <param name="zoom">是否聚焦</param>
         public void CameraLocateSelectedNode(bool zoom)
         {
-            if (SelectedNode == null && GraphBox.IsNull) { return; }
+            if (SelectedNode == null || GraphBox.IsNull) { return; }
             Background.Redraw(Image);
             var drRect = Lattice.DrawRect;
             if (zoom)

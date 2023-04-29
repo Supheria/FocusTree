@@ -10,7 +10,11 @@ namespace FocusTree.UI
     public partial class GraphForm : Form
     {
         readonly GraphDisplayer Display;
-
+        FormWindowState LastState;
+        /// <summary>
+        /// 当触发 SizeChanged 事件时，强制调用 ResizeGraphBox
+        /// </summary>
+        public bool ForceResize = false;
         public GraphForm()
         {
             Display = new GraphDisplayer(this);
@@ -383,12 +387,14 @@ namespace FocusTree.UI
         }
         private void MainForm_Shown(object sender, EventArgs e)
         {
-            SizeChanged += MainForm_SizeChanged;
             Size size = Background.Size;
             Size = new(
                 size.Width + Width - ClientRectangle.Width,
                 size.Height + Height - ClientRectangle.Height
                 );
+            ResizeGraphDisplayer(sender, e);
+            SizeChanged += MainForm_SizeChanged;
+            ResizeEnd += ResizeGraphDisplayer;
 #if DEBUG
             //GraphBox.Load("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\program\\FILES\\神佑村落.xml");
             //Display.ResetDisplay();
@@ -396,7 +402,16 @@ namespace FocusTree.UI
         }
         private void MainForm_SizeChanged(object sender, EventArgs e)
         {
-            if (Math.Min(ClientRectangle.Width, ClientRectangle.Height) <= 0 || WindowState == FormWindowState.Minimized)
+            if (ForceResize ||
+                (LastState == FormWindowState.Maximized && WindowState == FormWindowState.Normal) ||
+                WindowState == FormWindowState.Maximized)
+            {
+                ResizeGraphDisplayer(sender, e);
+            }
+        }
+        private void ResizeGraphDisplayer(object sender, EventArgs e)
+        {
+            if (Math.Min(ClientRectangle.Width, ClientRectangle.Height) <= 0)
             {
                 return;
             }
@@ -412,6 +427,7 @@ namespace FocusTree.UI
             Lattice.SetBounds(Display.LatticeBound);
             Lattice.Draw(Display.Image);
             Invalidate();
+            LastState = WindowState;
         }
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {

@@ -74,7 +74,7 @@
             return layer;
         }
     }
-    public struct LayerDrawer
+    public readonly struct LayerDrawer
     {
         /// <summary>
         /// 层级序号
