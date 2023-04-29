@@ -1,8 +1,4 @@
-﻿using FocusTree.Data;
-using FocusTree.Data.Focus;
-using FocusTree.IO.FileManege;
-
-namespace FocusTree.UI.Controls
+﻿namespace FocusTree.UI.Controls
 {
     class GraphContextMenu : ContextMenuStrip
     {

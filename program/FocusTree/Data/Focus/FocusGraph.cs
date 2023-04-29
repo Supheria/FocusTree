@@ -1,7 +1,7 @@
 #define DEBUG
-using FocusTree.IO;
-using FocusTree.IO.FileManege;
 using FocusTree.Graph;
+using FocusTree.IO;
+using FocusTree.IO.FileManage;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;

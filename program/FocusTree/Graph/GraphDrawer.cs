@@ -1,10 +1,5 @@
 #define PointBmp
 using FocusTree.Data.Focus;
-using FocusTree.UI.test;
-using System.Drawing.Imaging;
-using System.Drawing;
-using System.Runtime.InteropServices;
-using FocusTree.Properties;
 
 namespace FocusTree.Graph
 {
@@ -139,7 +134,7 @@ namespace FocusTree.Graph
         /// <param name="fillColor"></param>
         public static void DrawCellPart(Bitmap image, LatticedPoint point, LatticeCell.Parts cellPart)
         {
-            if(cellPart == LatticeCell.Parts.Leave) { return; }
+            if (cellPart == LatticeCell.Parts.Leave) { return; }
             LatticeCell cell = new(point);
             if (!Lattice.RectWithin(cell.CellPartsRealRect[cellPart], out var rect)) { return; }
             if (!CellPartsBG.TryGetValue(cellPart, out var fillColor)) { return; }

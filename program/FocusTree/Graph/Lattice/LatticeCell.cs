@@ -1,7 +1,4 @@
-﻿using FocusTree.Data.Focus;
-using System.Drawing;
-
-namespace FocusTree.Graph
+﻿namespace FocusTree.Graph
 {
     /// <summary>
     /// 格元

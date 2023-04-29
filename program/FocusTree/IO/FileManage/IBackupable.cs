@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace FocusTree.IO.FileManege
+namespace FocusTree.IO.FileManage
 {
     public interface IBackupable : IFileManageable, IXmlSerializable
     {

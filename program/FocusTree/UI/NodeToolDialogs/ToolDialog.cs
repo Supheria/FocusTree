@@ -1,5 +1,4 @@
 ﻿using FocusTree.Graph;
-using static System.ComponentModel.Design.ObjectSelectorEditor;
 
 namespace FocusTree.UI.NodeToolDialogs
 {

@@ -1,9 +1,8 @@
 #define DEBUG
 using FocusTree.Data.Focus;
-using FocusTree.IO;
-using FocusTree.IO.FileManege;
-using FocusTree.Properties;
 using FocusTree.Graph;
+using FocusTree.IO;
+using FocusTree.IO.FileManage;
 using System.IO.Compression;
 
 namespace FocusTree.UI
@@ -11,7 +10,7 @@ namespace FocusTree.UI
     public partial class GraphForm : Form
     {
         readonly GraphDisplayer Display;
-        
+
         public GraphForm()
         {
             Display = new GraphDisplayer(this);

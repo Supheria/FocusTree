@@ -2,13 +2,7 @@
 using FocusTree.Data.Focus;
 using FocusTree.Graph;
 using FocusTree.IO;
-using FocusTree.IO.FileManege;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using FocusTree.IO.FileManage;
 
 namespace FocusTree.UI
 {
@@ -118,10 +112,10 @@ namespace FocusTree.UI
         /// <param name="filePath"></param>
         public static void SaveToNew(string filePath)
         {
-            if (filePath == FilePath) 
+            if (filePath == FilePath)
             {
                 Save();
-                return; 
+                return;
             }
             ReadOnly = false;
             Graph?.ClearCache();
@@ -147,7 +141,7 @@ namespace FocusTree.UI
         /// 修改元图国策（根据国策数据内的 ID 值索引）
         /// </summary>
         /// <param name="focus"></param>
-        public static void SetFocus(FocusData focus) 
+        public static void SetFocus(FocusData focus)
         {
             if (Graph == null) { return; }
             Graph[focus.ID] = focus;

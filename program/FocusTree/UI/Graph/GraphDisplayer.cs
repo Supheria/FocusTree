@@ -1,15 +1,8 @@
-using FocusTree.Data;
 using FocusTree.Data.Focus;
-using FocusTree.IO;
-using FocusTree.IO.FileManege;
-using FocusTree.UI.Controls;
 using FocusTree.Graph;
+using FocusTree.IO.FileManage;
+using FocusTree.UI.Controls;
 using FocusTree.UI.NodeToolDialogs;
-using FocusTree.UI.test;
-using System.Drawing;
-using static System.Formats.Asn1.AsnWriter;
-using System.Xml.Linq;
-using System.IO;
 
 namespace FocusTree.UI
 {
@@ -87,7 +80,7 @@ namespace FocusTree.UI
         /// <summary>
         /// 格元放置边界
         /// </summary>
-        public Rectangle LatticeBound { get=> new(Left, Top, Width, InfoBrandRect.Top - Top - 30); }
+        public Rectangle LatticeBound { get => new(Left, Top, Width, InfoBrandRect.Top - Top - 30); }
         /// <summary>
         /// 节点绘制委托列表
         /// </summary>
@@ -296,7 +289,7 @@ namespace FocusTree.UI
                 Lattice.OriginLeft += (newPoint.X - DragMouseFlagPoint.X) / MouseMoveSensibility * LatticeCell.Width;
                 Lattice.OriginTop += (newPoint.Y - DragMouseFlagPoint.Y) / MouseMoveSensibility * LatticeCell.Height;
                 DragMouseFlagPoint = newPoint;
-                Lattice.Draw(Image);;
+                Lattice.Draw(Image); ;
                 DrawNodeMapInfo();
             }
         }
@@ -382,7 +375,7 @@ namespace FocusTree.UI
                     }
                     Background.Redraw(Image);
                     UploadNodeMap();
-                    Lattice.Draw(Image);;
+                    Lattice.Draw(Image); ;
                 }
             }
         }
@@ -403,7 +396,7 @@ namespace FocusTree.UI
 
             Lattice.SetBounds(LatticeBound);
 
-            Lattice.Draw(Image);;
+            Lattice.Draw(Image); ;
             //DrawNodeMapInfo();
             Invalidate();
             Parent.UpdateText("打开节点选项");
@@ -464,7 +457,7 @@ namespace FocusTree.UI
             Lattice.OriginLeft = WidthCenterDiff;
             Lattice.OriginTop = HeightCenterDiff;
             Lattice.SetBounds(LatticeBound);
-            Lattice.Draw(Image);;
+            Lattice.Draw(Image); ;
         }
         /// <summary>
         /// 居中或可缩放至选中的国策节点
@@ -501,13 +494,13 @@ namespace FocusTree.UI
         #endregion
 
         #region ==== 读写操作调用 ====
-        
+
         /// <summary>
         /// 重置图像显示
         /// </summary>
         public void ResetDisplay()
         {
-            CloseAllNodeToolDialogs(); 
+            CloseAllNodeToolDialogs();
             SelectedNode = null;
             UploadNodeMap();
             CameraLocatePanorama();

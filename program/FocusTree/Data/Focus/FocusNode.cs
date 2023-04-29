@@ -2,7 +2,6 @@
 #define RAW_EFFECTS
 using FocusTree.Data.Hoi4Object;
 using System.Xml;
-using System.Xml.Linq;
 
 namespace FocusTree.Data.Focus
 {
@@ -218,6 +217,6 @@ namespace FocusTree.Data.Focus
             writer.WriteEndElement();
         }
 
-#endregion
+        #endregion
     }
 }
