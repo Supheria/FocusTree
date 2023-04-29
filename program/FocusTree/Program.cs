@@ -18,7 +18,7 @@ internal static class Program
     {
 #if MAIN
         //testInfo.Show();
-        Application.Run(new MainForm());
+        Application.Run(new GraphForm());
 #else
         Test.FMapTest();
         Application.Run(Test.gTest);
@@ -33,14 +33,14 @@ class Test
     {
         var graph = XmlIO.LoadFromXml<FocusGraph>("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\program\\FILES\\神佑村落.xml");
         UploadNodeMap(graph);
-        var gRect = graph.GetGraphMetaRect();
-        var canvasWidth = LatticeCell.SizeMax.Width * (gRect.Width);
-        var canvasHeight = LatticeCell.SizeMax.Height * (gRect.Height);
-        LatticeCell.Width = LatticeCell.SizeMax.Width;
-        LatticeCell.Height = LatticeCell.SizeMax.Height;
-        Lattice.SetBounds(new(0, 0, canvasWidth, canvasHeight));
-        Image cacher = new Bitmap(canvasWidth, canvasHeight);
-        gTest.LoadImageCacher(cacher, gRect);
+        //var gRect = graph.GetGraphMetaRect();
+        //var canvasWidth = LatticeCell.SizeMax.Width * (gRect.Width);
+        ////var canvasHeight = LatticeCell.SizeMax.Height * (gRect.Height);
+        //LatticeCell.Width = LatticeCell.SizeMax.Width;
+        //LatticeCell.Height = LatticeCell.SizeMax.Height;
+        //Lattice.SetBounds(new(0, 0, canvasWidth, canvasHeight));
+        //Image cacher = new Bitmap(canvasWidth, canvasHeight);
+        //gTest.LoadImageCacher(cacher, gRect);
         // FHistory.Enqueue(graph);
 
         //var suc = graph.AddNode(new FData(99,"Test", false, 0, "测试", "测试2", "测试3"));
@@ -58,7 +58,7 @@ class Test
             {
                 foreach (var requireId in requires)
                 {
-                    var require = Graph.GetFocus(requireId);
+                    //var require = Graph[requireId];
                     //GraphDrawer.UploadRequireLine(color, focus, require);
                 }
                 color++;

@@ -50,12 +50,12 @@ namespace FocusTree.Data.Focus
             FData = new();
 
             //==== 读取 Data ====//
-            FData.ID = int.Parse(reader.GetAttribute("ID"));
-            FData.Name = reader.GetAttribute("Name");
-            FData.BeginWithStar = bool.Parse(reader.GetAttribute("Star"));
-            FData.Duration = int.Parse(reader.GetAttribute("Duration"));
-            FData.Descript = reader.GetAttribute("Descript");
-            FData.Ps = reader.GetAttribute("Ps.");
+            FData.ID = int.Parse(reader.GetAttribute("ID") ?? throw new ArgumentException());
+            FData.Name = reader.GetAttribute("Name") ?? FData.Name;
+            FData.BeginWithStar = bool.Parse(reader.GetAttribute("Star") ?? "false");
+            FData.Duration = int.Parse(reader.GetAttribute("Duration") ?? "0");
+            FData.Descript = reader.GetAttribute("Descript") ?? FData.Descript;
+            FData.Ps = reader.GetAttribute("Ps.") ?? FData.Ps;
             var pair = ArrayString.Reader(reader.GetAttribute("Point"));
             if (pair == null || pair.Length != 2) { FData.LatticedPoint = new(0, 0); }
             else { FData.LatticedPoint = new(int.Parse(pair[0]), int.Parse(pair[1])); }

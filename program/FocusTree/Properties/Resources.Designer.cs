@@ -63,9 +63,9 @@ namespace FocusTree.Properties {
         /// <summary>
         ///   查找 System.Drawing.Bitmap 类型的本地化资源。
         /// </summary>
-        public static System.Drawing.Bitmap background {
+        public static System.Drawing.Bitmap BackImage {
             get {
-                object obj = ResourceManager.GetObject("background", resourceCulture);
+                object obj = ResourceManager.GetObject("BackImage", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

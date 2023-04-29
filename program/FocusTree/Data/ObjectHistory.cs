@@ -7,24 +7,18 @@
         /// </summary>
         public static bool IsEdit<T>(this T obj) where T : IHistoryable
         {
-            return !obj.Latest.Equals(obj.Format());
+            return obj.LatestIndex != obj.HistoryIndex;
         }
         /// <summary>
         /// 判断是否有下一个历史记录
         /// </summary>
         /// <returns>是否有下一个历史记录</returns>
-        public static bool HasNext<T>(this T obj) where T : IHistoryable
-        {
-            return obj.HistoryIndex + 1 < obj.CurrentHistoryLength;
-        }
+        public static bool HasNextHistory<T>(this T obj) where T : IHistoryable => obj.HistoryIndex + 1 < obj.CurrentHistoryLength;
         /// <summary>
         /// 判断是否有上一个历史记录
         /// </summary>
         /// <returns>是否有上一个历史记录</returns>
-        public static bool HasPrev<T>(this T obj) where T : IHistoryable
-        {
-            return obj.HistoryIndex > 0;
-        }
+        public static bool HasPrevHistory<T>(this T obj) where T : IHistoryable => obj.HistoryIndex > 0;
         /// <summary>
         /// 将当前的状态添加到历史记录（会使后续的记录失效）
         /// </summary>
@@ -67,12 +61,12 @@
             }
         }
         /// <summary>
-        /// 撤回 (调用前需要检查 HasPrev())
+        /// 撤回 (已检查 HasPrevHistory())
         /// </summary>
         /// <param name="graph">当前的Graph</param>
         public static void Undo<T>(this T obj) where T : IHistoryable
         {
-            if (obj.HasPrev() == false)
+            if (obj.HasPrevHistory() == false)
             {
                 return;
             }
@@ -80,13 +74,13 @@
             obj.Deformat(obj.History[obj.HistoryIndex]);
         }
         /// <summary>
-        /// 重做 (调用前需要检查 HasNext())
+        /// 重做 (已检查 HasNextHistory())
         /// </summary>
         /// <param name="graph">当前的Graph</param>
         /// <exception cref="HistoryIndexOutOfRangeException">访问的历史记录越界</exception>
         public static void Redo<T>(this T obj) where T : IHistoryable
         {
-            if (obj.HasNext() == false)
+            if (obj.HasNextHistory() == false)
             {
                 return;
             }
@@ -104,10 +98,17 @@
         /// <param name="obj"></param>
         public static void NewHistory<T>(this T obj) where T : IHistoryable
         {
-            obj.Latest = obj.Format();
             obj.CurrentHistoryLength = 0;
             obj.HistoryIndex = 0;
+            obj.LatestIndex = 0;
             obj.EnqueueHistory();
+        }
+        /// <summary>
+        /// 更新最近一次的保存
+        /// </summary>
+        public static void UpdateLatest<T>(this T obj) where T : IHistoryable
+        {
+            obj.LatestIndex = obj.HistoryIndex;
         }
     }
 }

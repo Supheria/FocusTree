@@ -1,490 +1,191 @@
-using FocusTree.Data;
+﻿using FocusTree.Data;
 using FocusTree.Data.Focus;
+using FocusTree.Graph;
 using FocusTree.IO;
 using FocusTree.IO.FileManege;
-using FocusTree.UI.Controls;
-using FocusTree.Graph;
-using FocusTree.UI.NodeToolDialogs;
-using FocusTree.UI.test;
-using System.Drawing;
-using static System.Formats.Asn1.AsnWriter;
-using System.Xml.Linq;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace FocusTree.UI
 {
-    public class GraphBox : PictureBox
+    /// <summary>
+    /// 封装给 UI 公用的
+    /// </summary>
+    public static class GraphBox
     {
-        #region ==== 基本变量 ====
-
         /// <summary>
-        /// 元数据（数据存储结构）
+        /// UI 不应该直接调用此对象的方法，而应该使用静态类封装好的
         /// </summary>
-        public FocusGraph Graph { get; private set; }
+        public static FocusGraph Graph { get; private set; }
         /// <summary>
-        /// 文件路径
+        /// 元图是否为空
         /// </summary>
-        public string FilePath;
-        public string FileName
+        public static bool IsNull => Graph == null;
+        /// <summary>
+        /// 元图文件路径
+        /// </summary>
+        public static string FilePath { get; private set; }
+        /// <summary>
+        /// 元图带上只读和未保存后缀的名称
+        /// </summary>
+        public static string Name
         {
             get
             {
                 if (ReadOnly) { return Graph.Name + "（只读）"; }
-                else if (GraphEdited == true) { return Graph.Name + "（未保存）"; }
+                else if (Graph.IsEdit() == true) { return Graph.Name + "（未保存）"; }
                 else { return Graph.Name; }
             }
         }
-
-        #endregion
-
-        #region ---- 关联控件 ----
-
-        readonly new MainForm Parent;
         /// <summary>
-        /// 工具对话框集（给父窗口下拉菜单“窗口”用）
+        /// 是否只读（文件路径在备份文件夹）
         /// </summary>
-        public readonly Dictionary<string, ToolDialog> ToolDialogs = new()
-        {
-            ["国策信息"] = new ToolDialog()
-        };
+        public static bool ReadOnly;
         /// <summary>
-        /// 国策信息对话框
+        /// 是否已编辑
         /// </summary>
-        NodeInfoDialog NodeInfo
+        public static bool Edited => Graph != null && Graph.IsEdit();
+        /// <summary>
+        /// 是否有向前的历史记录
+        /// </summary>
+        public static bool HasPrevHistory => Graph != null && Graph.HasPrevHistory();
+        /// <summary>
+        /// 是否有向后的历史记录
+        /// </summary>
+        public static bool HasNextHistory => Graph != null && Graph.HasNextHistory();
+        /// <summary>
+        /// 元图的国策列表
+        /// </summary>
+        public static List<FocusData> FocusList => IsNull ? new() : Graph.FocusList;
+        /// <summary>
+        /// 元图节点数量
+        /// </summary>
+        public static int NodeCount => IsNull ? 0 : Graph.FocusList.Count;
+        /// <summary>
+        /// 元图分支数量
+        /// </summary>
+        public static int BranchCount => IsNull ? 0 : Graph.GetBranches(Graph.GetRootNodes(), false, false).Count;
+        /// <summary>
+        /// 元图备份列表
+        /// </summary>
+        /// <returns></returns>
+        public static List<(string, string)> BackupList => Graph.GetBackupsList(FilePath);
+        /// <summary>
+        /// 元图元坐标矩形
+        /// </summary>
+        public static Rectangle MetaRect => Graph.GetMetaRect();
+        /// <summary>
+        /// 从文件路径加载元图
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="sealFilePath">是否封存文件路径</param>
+        public static void Load(string filePath)
         {
-            get { return (NodeInfoDialog)ToolDialogs["国策信息"]; }
-            init { ToolDialogs["国策信息"] = value; }
+            ReadOnly = Graph != null && Graph.IsBackupFile(filePath);
+            if (!ReadOnly) { FilePath = filePath; }
+            Graph?.ClearCache();
+            Graph = XmlIO.LoadFromXml<FocusGraph>(filePath);
+            Graph.NewHistory();
         }
         /// <summary>
-        /// 节点信息浮标
+        /// 从封存文件路径重新加载元图（如果文件路径存在的话）
         /// </summary>
-        readonly ToolTip NodeInfoTip = new();
-
-        #endregion
-
-        #region ==== 事件指示器 ====
-
+        public static void Reload()
+        {
+            if (!File.Exists(FilePath)) { return; }
+            ReadOnly = false;
+            Graph?.ClearCache();
+            Graph = XmlIO.LoadFromXml<FocusGraph>(FilePath);
+            Graph.NewHistory();
+        }
         /// <summary>
-        /// 已选中的节点
+        /// 如果元图已修改，则备份源文件并保存到源文件
         /// </summary>
-        public FocusData? SelectedNode
+        public static void Save()
         {
-            get => selectedNode;
-            private set
-            {
-                selectedNode = value;
-                PrevSelectNode = null;
-            }
-        }
-        FocusData? selectedNode;
-        /// <summary>
-        /// 预选中的节点
-        /// </summary>
-        FocusData? PrevSelectNode;
-        /// <summary>
-        /// 图像已更改
-        /// </summary>
-        public bool? GraphEdited { get { return Graph?.IsEdit(); } }
-        /// <summary>
-        /// 图像只读不可编辑
-        /// </summary>
-        public bool ReadOnly { get; private set; }
-        /// <summary>
-        /// 图像拖动指示器
-        /// </summary>
-        bool DragGraph_Flag = false;
-        /// <summary>
-        /// 拖动节点指示器
-        /// </summary>
-        bool DragNode_Flag = false;
-
-        #endregion
-
-        #region ---- 绘图工具 ----
-
-        /// <summary>
-        /// 信息展示条区域
-        /// </summary>
-        Rectangle InfoBrandRect { get => new(Left, Bottom - 100, Width, 75); }
-        /// <summary>
-        /// 鼠标移动灵敏度（值越大越迟顿）
-        /// </summary>
-        static int MouseMoveSensibility = 20;
-        /// <summary>
-        /// 拖动事件使用的鼠标参照坐标
-        /// </summary>
-        Point DragMouseFlagPoint = new(0, 0);
-        /// <summary>
-        /// 格元放置边界
-        /// </summary>
-        Rectangle LatticeBound { get=> new(Left, Top, Width, InfoBrandRect.Top - Top - 30); }
-        /// <summary>
-        /// 节点绘制委托列表
-        /// </summary>
-        public static Dictionary<int, LayerDrawer> NodeDrawerCatalog { get; private set; } = new();
-
-        #endregion
-
-
-        //===== 方法 =====//
-
-        #region ---- 初始化 ----
-
-        public GraphBox(MainForm mainForm)
-        {
-            base.Parent = Parent = mainForm;
-            NodeInfo = new NodeInfoDialog(this);
-            //SizeMode = PictureBoxSizeMode.Zoom;
-            //DoubleBuffered = true;
-
-            SizeChanged += OnSizeChanged;
-            MouseDown += OnMouseDown;
-            MouseMove += OnMouseMove;
-            MouseUp += OnMouseUp;
-            MouseWheel += OnMouseWheel;
-            MouseDoubleClick += OnMouseDoubleClick;
-        }
-
-        #endregion
-
-        #region ==== 绘图 ====
-
-        /// <summary>
-        /// 将节点绘制上载到栅格绘图委托（初始化节点列表时仅需上载第一次，除非节点列表或节点关系或节点位置信息发生变更才重新上载）
-        /// </summary>
-        private void UploadNodeMap()
-        {
-            if (Graph == null) { return; }
-            Lattice.Drawing.Clear();
-            foreach (var focus in Graph.FocusList)
-            {
-                int color = 0; //不同需求要变色
-                foreach (var requires in focus.Requires)
-                {
-                    foreach (var requireId in requires)
-                    {
-                        var require = Graph.GetFocus(requireId);
-                        Lattice.Drawing += new LayerDrawer(2, (image) => GraphDrawer.DrawRequireLine(image, focus.LatticedPoint, require.LatticedPoint));
-                    }
-                    color++;
-                }
-                Lattice.Drawing += NodeDrawerCatalog[focus.ID] = new(0, (image) => GraphDrawer.DrawFocusNode(image, focus, false));
-            }
-        }
-        public void DrawNodeMapInfo()
-        {
-            if (Graph == null) { return; }
-            DrawInfo($"节点数量：{Graph.NodesCount}，分支数量：{Graph.BranchesCount}",
-                new SolidBrush(Color.FromArgb(160, Color.DarkGray)),
-                new SolidBrush(Color.FromArgb(255, Color.WhiteSmoke))
-                );
-        }
-        public void DrawInfo(string info)
-        {
-            if (Graph == null) { return; }
-            DrawInfo(info,
-                new SolidBrush(Color.FromArgb(160, Color.DarkGray)),
-                new SolidBrush(Color.FromArgb(255, Color.WhiteSmoke))
-                );
-        }
-        private void DrawInfo(string info, Brush BackBrush, Brush FrontBrush)
-        {
-            var g = Graphics.FromImage(Image);
-            Rectangle infoRect = new(Bounds.Left, Bounds.Bottom - 100, Bounds.Width, 66);
-            g.FillRectangle(BackBrush, infoRect);
-            g.DrawString(
-                info,
-                new Font(GraphDrawer.InfoFont, 25, FontStyle.Bold, GraphicsUnit.Pixel),
-                FrontBrush,
-                infoRect,
-                GraphDrawer.NodeFontFormat);
-        }
-
-        #endregion
-
-        #region ---- 事件 ----
-
-        //---- OnSizeChanged ----//
-
-        private void OnSizeChanged(object sender, EventArgs args)
-        {
-            if (Math.Min(Size.Width, Size.Height) <= 0 || Parent.WindowState == FormWindowState.Minimized)
-            {
-                return;
-            }
-            Image?.Dispose();
-            Image = new Bitmap(ClientRectangle.Width, ClientRectangle.Height);
-            GraphDrawer.DrawNewBackground(Image);
-            Lattice.SetBounds(LatticeBound);
-            Lattice.Draw(Image);
-            Invalidate();
-        }
-
-        //---- OnMouseDown ----//
-
-        private void OnMouseDown(object sender, MouseEventArgs args)
-        {
-            if (CheckPrevSelect())
-            {
-                if (args.Button == MouseButtons.Left)
-                {
-                    NodeLeftClicked(PrevSelectNode.Value);
-                }
-                else if (args.Button == MouseButtons.Right)
-                {
-                    NodeRightClicked();
-                }
-            }
-            else
-            {
-                if (args.Button == MouseButtons.Left)
-                {
-                    GraphLeftClicked(args.Location);
-                }
-                else if (args.Button == MouseButtons.Right)
-                {
-                    OpenGraphContextMenu(args.Button);
-                    Parent.UpdateText("打开图像选项");
-                }
-                else if (args.Button == MouseButtons.Middle)
-                {
-                    OpenGraphContextMenu(args.Button);
-                    Parent.UpdateText("打开备份选项");
-                }
-            }
-            Invalidate();
-        }
-        private void GraphLeftClicked(Point startPoint)
-        {
-            DragGraph_Flag = true;
-            DragMouseFlagPoint = startPoint;
-            Invalidate();
-            Parent.UpdateText("拖动图像");
-        }
-        private void NodeLeftClicked(FocusData focus)
-        {
-            DragNode_Flag = true;
-            var info = $"{focus.Name}, {focus.Duration}日\n{focus.Descript}";
-            DrawInfo(info);
-            Parent.UpdateText("选择节点");
-        }
-        private void NodeRightClicked()
-        {
-            CloseAllNodeToolDialogs();
-            NodeInfoTip.Hide(this);
-            SelectedNode = PrevSelectNode;
-            RescaleToFocusNode(SelectedNode.Value, false);
-            new NodeContextMenu(this, Cursor.Position);
-            Parent.UpdateText("打开节点选项");
-        }
-        private void OpenGraphContextMenu(MouseButtons button)
-        {
-            SelectedNode = PrevSelectNode;
-            NodeInfoTip.Hide(this);
-            new GraphContextMenu(this, Cursor.Position, button);
-        }
-
-        //---- OnMouseDoubleClick ----//
-
-        private void OnMouseDoubleClick(object sender, MouseEventArgs args)
-        {
-            if (CheckPrevSelect())
-            {
-                // node double clicked
-            }
-            else
-            {
-                if (args.Button == MouseButtons.Left)
-                {
-                    GraphLeftDoubleClicked();
-                }
-            }
-            Invalidate();
-        }
-        private void GraphLeftDoubleClicked()
-        {
-            if (SelectedNode != null)
-            {
-                //var focus = SelectedNode.Value;
-                Lattice.Drawing -= LastCellDrawer;
-                SelectedNode = null;
-            }
-            if (!ReadOnly || MessageBox.Show("[202303052340]是否恢复备份？", "提示", MessageBoxButtons.YesNo) == DialogResult.No) { return; }
-            CloseAllNodeToolDialogs();
+            ReadOnly = false;
             FileBackup.Backup<FocusGraph>(FilePath);
             Graph.SaveToXml(FilePath);
+            Graph.UpdateLatest();
+        }
+        /// <summary>
+        /// 将元图另存到新的文件路径（如果给定路径和静态文件路径相同，则执行备份和保存）
+        /// </summary>
+        /// <param name="filePath"></param>
+        public static void SaveToNew(string filePath)
+        {
+            if (filePath == FilePath) 
+            {
+                Save();
+                return; 
+            }
             ReadOnly = false;
-            RescaleToPanorama();
-            Parent.UpdateText("恢复备份");
-        }
-
-        //---- OnMouseMove ----//
-
-        private void OnMouseMove(object sender, MouseEventArgs args)
-        {
-            if (args.Button == MouseButtons.Left && DragGraph_Flag)
-            {
-                DragGraph(args.Location);
-            }
-            else if (args.Button == MouseButtons.Left && DragNode_Flag)
-            {
-                DragNode(args.Location);
-            }
-            else if (args.Button == MouseButtons.None)
-            {
-                ShowNodeInfoTip(args.Location);
-            }
-
-            Invalidate();
-        }
-        private void DragGraph(Point newPoint)
-        {
-            var diffInWidth = newPoint.X - DragMouseFlagPoint.X;
-            var diffInHeight = newPoint.Y - DragMouseFlagPoint.Y;
-            if (Math.Abs(diffInWidth) > MouseMoveSensibility || Math.Abs(diffInHeight) > MouseMoveSensibility)
-            {
-                GraphDrawer.RedrawBackground(Image);
-                Lattice.OriginLeft += (newPoint.X - DragMouseFlagPoint.X) / MouseMoveSensibility * LatticeCell.Width;
-                Lattice.OriginTop += (newPoint.Y - DragMouseFlagPoint.Y) / MouseMoveSensibility * LatticeCell.Height;
-                DragMouseFlagPoint = newPoint;
-                Lattice.Draw(Image);;
-                DrawNodeMapInfo();
-            }
+            Graph?.ClearCache();
+            Graph?.SaveToXml(filePath);
+            Graph?.NewHistory();
+            FilePath = filePath;
         }
         /// <summary>
-        /// 上次光标所处的节点部分
+        /// 重做
         /// </summary>
-        LatticeCell.Parts LastCellPart = LatticeCell.Parts.Leave;
-        LatticedPoint LatticedPointCursorOn;
+        public static void Redo() => Graph?.Redo();
         /// <summary>
-        /// 上次使用的绘制委托
+        /// 撤销
         /// </summary>
-        LayerDrawer LastCellDrawer;
+        public static void Undo() => Graph?.Undo();
         /// <summary>
-        /// 1层级绘制委托备份暂存
+        /// 从元图获取国策
         /// </summary>
-        LayerDrawer NodeDrawerCache;
-        FocusData FocusNodeToDrag;
-        bool FirstDrag = true;
-        private void DragNode(Point newPoint)
-        {
-            NodeInfoTip.Hide(this);
-            Lattice.DrawBackLattice = true;
-            LatticedPointCursorOn = new(newPoint);
-            LatticeCell cell = new(LatticedPointCursorOn);
-            var cellPart = cell.GetPartPointOn(newPoint);
-            if (cellPart == LastCellPart) { return; }
-            LastCellPart = cellPart;
-            Lattice.Drawing -= LastCellDrawer;
-            if (PointInAnyFocusNode(newPoint, out var focus))
-            {
-                if (FirstDrag)
-                {
-                    FocusNodeToDrag = focus.Value;
-                    FirstDrag = false;
-                }
-                Lattice.Drawing -= NodeDrawerCache = NodeDrawerCatalog[focus.Value.ID];
-                Lattice.Drawing += LastCellDrawer = new(1, (image) => GraphDrawer.DrawFocusNode(image, focus.Value, true));
-            }
-            else
-            {
-                Lattice.Drawing += NodeDrawerCache;
-                NodeDrawerCache = new();
-                Lattice.Drawing += LastCellDrawer = new(1, (image) => GraphDrawer.DrawCellPart(image, LatticedPointCursorOn, cellPart));
-            }
-            GraphDrawer.RedrawBackground(Image);
-            Lattice.Draw(Image);
-            Parent.Text = $"W {LatticeCell.Width},H {LatticeCell.Height}, o: {Lattice.OriginLeft}, {Lattice.OriginTop}, cursor: {newPoint}, cellPart: {LastCellPart}";
-            //Parent.Text = $"cell left: {LatticedPointCursorOn.LatticedLeft}, cell top: {LatticedPointCursorOn.LatticedTop}, last part: {LastCellPart}, part: {part}";
-        }
-
-        private void ShowNodeInfoTip(Point location)
-        {
-            if (!PointInAnyFocusNode(location, out var focus))
-            {
-                NodeInfoTip.Hide(this);
-                return;
-            }
-            NodeInfoTip.BackColor = Color.FromArgb(0, Color.AliceBlue);
-            NodeInfoTip.Show($"{focus.Value.Name}\nID: {focus.Value.ID}", this, location.X + 10, location.Y);
-        }
-
-        //---- OnMouseUp ----//
-
-        private void OnMouseUp(object sender, MouseEventArgs args)
-        {
-            //if (Graph == null) { return; }
-            // 用于拖动事件
-            if (args.Button == MouseButtons.Left)
-            {
-                DragGraph_Flag = false;
-                if (DragNode_Flag)
-                {
-                    FirstDrag = true;
-                    DragNode_Flag = false;
-                    LastCellPart = LatticeCell.Parts.Leave;
-                    LastCellDrawer = new();
-                    Lattice.DrawBackLattice = false;
-                    FocusNodeToDrag.LatticedPoint = LatticedPointCursorOn;
-                    if (!Graph.ContainLatticedPoint(LatticedPointCursorOn))
-                    {
-                        Graph.EditNode(FocusNodeToDrag);
-                        Graph.EnqueueHistory();
-                    }
-                    GraphDrawer.RedrawBackground(Image);
-                    UploadNodeMap();
-                    Lattice.Draw(Image);;
-                }
-            }
-        }
-
-        //---- OnMouseWheel ----//
-
-        private void OnMouseWheel(object sender, MouseEventArgs args)
-        {
-            GraphDrawer.RedrawBackground(Image);
-            //if (Graph == null) { return; }
-            var diffInWidth = args.Location.X - Width / 2;
-            var diffInHeight = args.Location.Y - Height / 2;
-            Lattice.OriginLeft += diffInWidth / LatticeCell.Width * Lattice.DrawRect.Width / 200;
-            Lattice.OriginTop += diffInHeight / LatticeCell.Height * Lattice.DrawRect.Height / 200;
-
-            LatticeCell.Width += args.Delta / 100 * Lattice.DrawRect.Width / 200;
-            LatticeCell.Height += args.Delta / 100 * Lattice.DrawRect.Width / 200;
-
-            Lattice.SetBounds(LatticeBound);
-
-            Lattice.Draw(Image);;
-            //DrawNodeMapInfo();
-            Invalidate();
-            Parent.UpdateText("打开节点选项");
-        }
-
-        //---- Public ----//
-
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static FocusData GetFocus(int id) => Graph[id];
         /// <summary>
-        /// 检查预选择节点
+        /// 修改元图国策（根据国策数据内的 ID 值索引）
         /// </summary>
-        private bool CheckPrevSelect()
+        /// <param name="focus"></param>
+        public static void SetFocus(FocusData focus) 
         {
-            var clickPos = PointToClient(Cursor.Position);
-            if (!PointInAnyFocusNode(clickPos, out PrevSelectNode)) { return false; }
-            return true;
+            if (Graph == null) { return; }
+            Graph[focus.ID] = focus;
+            Graph.EnqueueHistory();
         }
-        private void CloseAllNodeToolDialogs()
+        public static void RemoveFocusNode(FocusData focus)
         {
-            ToolDialogs.ToList().ForEach(x => x.Value.Close());
+            Graph?.RemoveNode(focus.ID);
+            Graph?.EnqueueHistory();
         }
-
-        #endregion
-
-        #region ---- 坐标工具 ----
-
+        /// <summary>
+        /// 按分支顺序重排所有国策 ID
+        /// </summary>
+        public static void ReorderFocusNodesID()
+        {
+            Graph?.ReorderNodeIds();
+            Graph?.EnqueueHistory();
+        }
+        /// <summary>
+        /// 自动排版节点
+        /// </summary>
+        public static void AutoLayoutAllFocusNodes()
+        {
+            Graph?.ResetAllNodesLatticedPoint();
+            Graph?.EnqueueHistory();
+        }
+        /// <summary>
+        /// 元图包含给定栅格化坐标
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public static bool ContainLatticedPoint(LatticedPoint point) => Graph != null && Graph.ContainLatticedPoint(point);
         /// <summary>
         /// 坐标是否处于任何国策节点的绘图区域中
         /// </summary>
         /// <param name="location">指定坐标 </param>
         /// <returns>坐标所处于的节点id，若没有返回null</returns>
-        private bool PointInAnyFocusNode(Point point, out FocusData? focus)
+        public static bool PointInAnyFocusNode(Point point, out FocusData? focus)
         {
             focus = null;
             if (Graph == null) { return false; }
@@ -494,239 +195,12 @@ namespace FocusTree.UI
             if (part != LatticeCell.Parts.Node) { return false; }
             return true;
         }
-
-        #endregion
-
-        #region ==== 镜头操作 ====
-
         /// <summary>
-        /// 外部调用 - 缩放居中至全景
+        /// 删除当前备份
         /// </summary>
-        public void CamLocatePanorama()
+        public static void DeleteBackup()
         {
-            if (Graph == null) { return; }
-            RescaleToPanorama();
-            Invalidate();
+            Graph?.DeleteBackup();
         }
-        /// <summary>
-        /// 外部调用 - 聚焦至已选中的节点
-        /// </summary>
-        public void CamLocateSelected()
-        {
-            if (Graph == null || SelectedNode == null) { return; }
-            RescaleToFocusNode(SelectedNode.Value, true);
-            Invalidate();
-        }
-        /// <summary>
-        /// 缩放居中至全景
-        /// </summary>
-        private void RescaleToPanorama()
-        {
-            if (Graph == null) { return; }
-            var gRect = Graph.GetGraphMetaRect();
-            //
-            // 自适应大小
-            //
-            Parent.ForceResize = true;
-            if (Lattice.DrawRect.Width < (gRect.Width) * LatticeCell.SizeMin.Width)
-            {
-                LatticeCell.Width = LatticeCell.SizeMin.Width;
-                Parent.Width = (gRect.Width + 1) * LatticeCell.SizeMin.Width + Parent.Width - Width;
-            }
-            if (Lattice.DrawRect.Height < (gRect.Height) * LatticeCell.SizeMin.Height)
-            {
-                LatticeCell.Height = LatticeCell.SizeMin.Height;
-                Parent.Height = (gRect.Height + 1) * LatticeCell.SizeMin.Height + Parent.Height - Height + InfoBrandRect.Height + 30/*30 is blank between Lattice's DrawRect.Bottom and InfoBrandRect.Top*/;
-            }
-            Parent.ForceResize = false;
-            GraphDrawer.RedrawBackground(Image);
-            Lattice.SetBounds(LatticeBound);
-            //
-            //
-            //
-            var cellWidth = Lattice.DrawRect.Width / (gRect.Width + 1);
-            var cellHeight = Lattice.DrawRect.Height / (gRect.Height + 1);
-            LatticeCell.Width = LatticeCell.Height = Math.Min(cellWidth, cellHeight);
-            int GraphCenterX = gRect.Left + gRect.Width * LatticeCell.Width / 2;
-            int GraphCenterY = gRect.Top + gRect.Height * LatticeCell.Height / 2;
-            int WidthCenterDiff = (Lattice.DrawRect.Left + Lattice.DrawRect.Width / 2) - GraphCenterX;
-            int HeightCenterDiff = (Lattice.DrawRect.Top + Lattice.DrawRect.Height / 2) - GraphCenterY;
-            Lattice.OriginLeft = WidthCenterDiff;
-            Lattice.OriginTop = HeightCenterDiff;
-            Lattice.SetBounds(LatticeBound);
-            Lattice.Draw(Image);;
-        }
-        /// <summary>
-        /// 缩放居中至国策节点
-        /// </summary>
-        /// <param name="id">节点ID</param>
-        /// <param name="zoom">是否聚焦</param>
-        private void RescaleToFocusNode(FocusData focus, bool zoom)
-        {
-            if (Graph == null) { return; }
-            GraphDrawer.RedrawBackground(Image);
-            var drRect = Lattice.DrawRect;
-            if (zoom)
-            {
-                LatticeCell.Width = LatticeCell.SizeMax.Width;
-                LatticeCell.Height = LatticeCell.SizeMax.Height;
-            }
-            LatticeCell cell = new(focus.LatticedPoint);
-            var halfNodeWidth = LatticeCell.NodeWidth / 2;
-            var halfNodeHeight = LatticeCell.NodeHeight / 2;
-            int NodeCenterX = cell.NodeRealLeft + halfNodeWidth;
-            int NodeCenterY = cell.NodeRealTop + halfNodeHeight;
-            int WidthCenterDiff = (drRect.Left + drRect.Width / 2) - NodeCenterX;
-            int HeightCenterDiff = (drRect.Top + drRect.Height / 2) - NodeCenterY;
-            Lattice.OriginLeft += WidthCenterDiff;
-            Lattice.OriginTop += HeightCenterDiff;
-            Lattice.SetBounds(LatticeBound);
-            Lattice.Draw(Image);
-            Cursor.Position = PointToScreen(new Point(
-                cell.NodeRealLeft + halfNodeWidth,
-                cell.NodeRealTop + halfNodeHeight
-                ));
-        }
-
-        #endregion
-
-        #region ==== 读写操作调用 ====
-
-        /// <summary>
-        /// 保存
-        /// </summary>
-        public void SaveGraph()
-        {
-            if (Graph == null || ReadOnly || !Graph.IsEdit()) { return; }
-            FileBackup.Backup<FocusGraph>(FilePath);
-            Graph.SaveToXml(FilePath);
-            Graph.Latest = Graph.Format();
-            Invalidate();
-        }
-        /// <summary>
-        /// 另存为
-        /// </summary>
-        /// <param name="path"></param>
-        public void SaveAsNew(string path)
-        {
-            if (Graph == null) { return; }
-            FilePath = path;
-            Graph.ClearCache();
-            Graph.SaveToXml(path);
-            Graph.NewHistory();
-            Invalidate();
-        }
-        /// <summary>
-        /// 加载
-        /// </summary>
-        /// <param name="path"></param>
-        public void LoadGraph(string path)
-        {
-            CloseAllNodeToolDialogs();
-            ReadOnly = Graph == null ? false : Graph.IsBackupFile(path);
-            if (!ReadOnly) { FilePath = path; }
-            Graph?.ClearCache();
-            Graph = XmlIO.LoadFromXml<FocusGraph>(path);
-            FileBackup.Backup<FocusGraph>(FilePath);
-            Graph.NewHistory();
-            SelectedNode = null;
-            UploadNodeMap();
-            RescaleToPanorama();
-            Invalidate();
-        }
-        /// <summary>
-        /// 撤销
-        /// </summary>
-        public void Undo()
-        {
-            Graph.Undo();
-            UploadNodeMap();
-            GraphDrawer.RedrawBackground(Image);
-            Lattice.Draw(Image);
-            Invalidate();
-        }
-        /// <summary>
-        /// 重做
-        /// </summary>
-        public void Redo()
-        {
-            Graph.Redo();
-            UploadNodeMap();
-            GraphDrawer.RedrawBackground(Image);
-            Lattice.Draw(Image);
-            Invalidate();
-        }
-
-        public bool HasPrevHistory()
-        {
-            if (Graph == null) { return false; }
-            return Graph.HasPrev();
-        }
-        public bool HasNextHistory()
-        {
-            if (Graph == null) { return false; }
-            return Graph.HasNext();
-        }
-
-        #endregion
-
-        #region ==== 节点操作调用 ====
-
-        /// <summary>
-        /// 弹出节点信息对话框
-        /// </summary>
-        public void ShowNodeInfo()
-        {
-            NodeInfo.Show();
-        }
-        /// <summary>
-        /// 删除节点
-        /// </summary>
-        public void RemoveNode()
-        {
-            if (SelectedNode == null) { return; }
-            Graph.RemoveNode(SelectedNode.Value.ID);
-            Graph.EnqueueHistory();
-            SelectedNode = null;
-            UploadNodeMap();
-            GraphDrawer.RedrawBackground(Image);
-            Lattice.Draw(Image);;
-            Invalidate();
-        }
-
-        #endregion
-
-        #region ==== 图像操作调用 ====
-
-        /// <summary>
-        /// 重排节点 id
-        /// </summary>
-        public void ReorderNodeIds()
-        {
-            if (Graph == null) { return; }
-            Graph.ReorderNodeIds();
-            Graph.EnqueueHistory();
-            Invalidate();
-            Parent.UpdateText("重排节点ID");
-        }
-        /// <summary>
-        /// 自动排版
-        /// </summary>
-        public void ResetNodeLatticedPoints()
-        {
-            if (Graph == null) { return; }
-            Graph.ResetNodeLatticedPoints();
-            Graph.EnqueueHistory();
-            UploadNodeMap();
-            RescaleToPanorama();
-            Invalidate();
-            Parent.UpdateText("自动排版");
-        }
-
-        #endregion
-
-        #region ---- 绘图操作调用 ----
-
-        #endregion
     }
 }

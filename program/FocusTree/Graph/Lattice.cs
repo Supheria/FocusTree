@@ -20,14 +20,6 @@ namespace FocusTree.Graph
         /// </summary>
         static int ColNumber;
         /// <summary>
-        /// 栅格总列宽
-        /// </summary>
-        static int RowWidth;
-        /// <summary>
-        /// 栅格总行高
-        /// </summary>
-        static int ColHeight;
-        /// <summary>
         /// 栅格绘图区域（根据给定放置区域、列数、行数自动生成，并在给定放置区域内居中）
         /// </summary>
         public static Rectangle DrawRect { get; private set; }
@@ -82,16 +74,16 @@ namespace FocusTree.Graph
         public static void SetBounds(Rectangle bounds)
         {
             ColNumber = bounds.Width / LatticeCell.Width;
-            RowWidth = ColNumber * LatticeCell.Width;
             RowNumber = bounds.Height / LatticeCell.Height;
-            ColHeight = RowNumber * LatticeCell.Height;
-            var deviDiffWidth = (int)((float)(bounds.Width - RowWidth) * 0.5f);
-            var deviDiffHeight = (int)((float)(bounds.Height - ColHeight) * 0.5f);
+            var width = ColNumber * LatticeCell.Width;
+            var height = RowNumber * LatticeCell.Height;
+            var deviDiffWidth = (bounds.Width - width) / 2;
+            var deviDiffHeight = (bounds.Height - height) / 2;
             DrawRect = new Rectangle(
                 bounds.X + deviDiffWidth,
                 bounds.Y + deviDiffHeight,
-                RowWidth,
-                ColHeight
+                width,
+                height
                 );
         }
         /// <summary>
@@ -116,9 +108,9 @@ namespace FocusTree.Graph
                 g.DrawLine(GuidePen, new(DrawRect.Left, OriginTop), new(DrawRect.Right, OriginTop));
                 g.Flush(); g.Dispose();
             }
-            Program.testInfo.Show();
-            Program.testInfo.InfoText = $"{Drawing.MethodNumber()}\n" +
-                $"1. {Drawing.MethodNumber(0)}, 2. {Drawing.MethodNumber(1)}, 3. {Drawing.MethodNumber(2)}";
+            //Program.testInfo.Show();
+            //Program.testInfo.InfoText = $"{Drawing.MethodNumber()}\n" +
+            //    $"1. {Drawing.MethodNumber(0)}, 2. {Drawing.MethodNumber(1)}, 3. {Drawing.MethodNumber(2)}";
         }
 
         #endregion

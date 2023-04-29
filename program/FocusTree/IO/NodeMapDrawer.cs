@@ -1,4 +1,5 @@
 ﻿using FocusTree.Data.Focus;
+using FocusTree.UI;
 using System.Numerics;
 
 namespace FocusTree.IO
@@ -61,15 +62,12 @@ namespace FocusTree.IO
         static NodeMapDrawer Drawer;
         public static void SaveasImage(FocusGraph Graph, string toSavePath)
         {
-            if (Graph == null)
-            {
-                return;
-            }
+            if (Graph == null && GraphBox.IsNull) { return; }
             var canvas = GetCanvas(Graph);
             Graphics g = Graphics.FromImage(canvas);
             g.Clear(Color.White);
 
-            Drawer = new(Graph.NodesCount + 1);
+            Drawer = new(Graph.FocusList.Count + 1);
             foreach (var focus in Graph.FocusList)
             {
                 DrawNodeLinks(g, Graph, focus);
@@ -88,6 +86,7 @@ namespace FocusTree.IO
             g.Flush();
             g.Dispose();
 
+            toSavePath = Path.ChangeExtension(toSavePath, ".jpg");
             canvas.Save(toSavePath);
             canvas.Dispose();
             Drawer.Close();
@@ -102,7 +101,7 @@ namespace FocusTree.IO
         static float Border = 1000f;
         private static Image GetCanvas(FocusGraph Graph)
         {
-            var rect = Graph.GetGraphMetaRect();
+            var rect = Graph.GetMetaRect();
             Point center = new(rect.X + rect.Width / 2, rect.Y + rect.Height / 2);
             var size = new Size(
                 (int)(center.X * ScalingUnit.X + Border * 2),
@@ -137,7 +136,7 @@ namespace FocusTree.IO
             {
                 foreach (var require in requireGroup)
                 {
-                    var todrawingRect = NodeDrawingRect(Graph.GetFocus(require));
+                    var todrawingRect = NodeDrawingRect(Graph[require]);
 
                     var startLoc = new Point((int)(drawingRect.X + drawingRect.Width / 2), (int)(drawingRect.Y + drawingRect.Height / 2)); // x -> 中间, y -> 下方
                     var endLoc = new Point((int)(todrawingRect.X + todrawingRect.Width / 2), (int)(todrawingRect.Y + todrawingRect.Height / 2)); // x -> 中间, y -> 上方

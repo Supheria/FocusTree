@@ -2,11 +2,11 @@
 {
     class NodeContextMenu : ContextMenuStrip
     {
-        private GraphBox Display;
-        public NodeContextMenu(GraphBox display, Point showPoint)
+        private GraphDisplayer Display;
+        public NodeContextMenu(GraphDisplayer display, Point showPoint)
         {
             Display = display;
-            if (Display.ReadOnly)
+            if (GraphBox.ReadOnly)
             {
                 InitializeInReadonly();
             }
@@ -103,7 +103,9 @@
         }
         private void MenuItem_removeNode_Click(object sender, EventArgs e)
         {
-            Display.RemoveNode();
+            if (Display.SelectedNode == null) { return; }
+            GraphBox.RemoveFocusNode(Display.SelectedNode.Value);
+            Display.Refresh();
         }
         private void MenuItem_checkout_Click(object sender, EventArgs e)
         {

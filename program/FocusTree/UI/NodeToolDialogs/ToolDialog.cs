@@ -5,7 +5,7 @@ namespace FocusTree.UI.NodeToolDialogs
 {
     public partial class ToolDialog : Form
     {
-        internal GraphBox Display;
+        internal GraphDisplayer Display;
         /// <summary>
         /// 初始宽高比
         /// </summary>
@@ -48,6 +48,7 @@ namespace FocusTree.UI.NodeToolDialogs
 
         private void NodeToolDialog_SizeChanged(object sender, EventArgs e)
         {
+            ControlResize.SetTag(this);
             DrawClient();
         }
 

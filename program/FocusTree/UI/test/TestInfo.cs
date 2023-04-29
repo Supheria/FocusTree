@@ -61,7 +61,7 @@ namespace FocusTree.UI.test
                 foreach (var focus in g.FocusList)
                 {
                     Info.Text += focus.ID + ". ";
-                    foreach (var effect in g.GetFocus(focus.ID).RawEffects)
+                    foreach (var effect in g[focus.ID].RawEffects)
                     {
                         Info.Text += effect.ToString() + "\n";
                     }

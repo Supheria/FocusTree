@@ -70,123 +70,7 @@ namespace FocusTree.Graph
 
         #endregion
 
-        #region ==== 背景 ====
-
-        /// <summary>
-        /// 无图片背景
-        /// </summary>
-        public static Color BlankBackground = Color.WhiteSmoke;
-        /// <summary>
-        /// 背景图片文件路径
-        /// </summary>
-        public static string BackImagePath = "Background.jpg";
-        /// <summary>
-        /// 背景图片在给定尺寸下的缓存
-        /// </summary>
-        static Bitmap BackImageCache;
-        /// <summary>
-        /// 获取源背景图片尺寸
-        /// </summary>
-        public static Size BackImageSize 
-        { 
-            get
-            {
-                if (File.Exists(BackImagePath))
-                {
-                    return Image.FromFile(BackImagePath).Size;
-                }
-                else { return Resources.background.Size; }
-            }
-        }
-        /// <summary>
-        /// 是否显示背景图片
-        /// </summary>
-        public static bool ShowBackImage = true;
-
-        #endregion
-
-        #region ==== 加载背景 ====
-
-        /// <summary>
-        /// 新键背景缓存，并重绘背景
-        /// </summary>
-        /// <param name="image"></param>
-        /// <param name="rect"></param>
-        public static void DrawNewBackground(Image image)
-        {
-            SetBackImageCacher(image.Size);
-            RedrawBackground(image);
-        }
-        /// <summary>
-        /// 重绘背景（首次重绘应该使用 DrawNewBackground）
-        /// </summary>
-        /// <param name="image"></param>
-        public static void RedrawBackground(Image image)
-        {
-            Graphics g = Graphics.FromImage(image);
-            g.DrawImage(BackImageCache, 0, 0);
-            g.Flush(); g.Dispose();
-        }
-        /// <summary>
-        /// 根据给定尺寸设置背景图片缓存
-        /// </summary>
-        private static void SetBackImageCacher(Size size)
-        {
-            var Width = size.Width;
-            var Height = size.Height;
-            if (!ShowBackImage) 
-            {
-                BackImageCache?.Dispose();
-                BackImageCache = new Bitmap(Width, Height);
-                PointBitmap pCache = new(BackImageCache);
-                pCache.LockBits();
-                for (int i = 0; i < Width; i++)
-                {
-                    for (int j = 0; j < Height; j++)
-                    {
-                        pCache.SetPixel(i, j, BlankBackground);
-                    }
-                }
-                pCache.UnlockBits();
-                return;
-            }
-            Image sourceImage;
-            if (File.Exists(BackImagePath))
-            {
-                sourceImage = Image.FromFile(BackImagePath);
-            }
-            else
-            {
-                sourceImage = Resources.background;
-            }
-            var bkWidth = Width;
-            var bkHeight = Height;
-            float sourceRatio = (float)sourceImage.Width / (float)sourceImage.Height;
-            float clientRatio = (float)Width / (float)Height;
-            if (sourceRatio < clientRatio)
-            {
-                bkWidth = Width;
-                bkHeight = (int)(Width / sourceRatio);
-            }
-            else if (sourceRatio > clientRatio)
-            {
-                bkHeight = Height;
-                bkWidth = (int)(Height * sourceRatio);
-            }
-            Bitmap newBackImage = new(bkWidth, bkHeight);
-            var g = Graphics.FromImage(newBackImage);
-            g.DrawImage(sourceImage, 0, 0, bkWidth, bkHeight);
-            g.Flush(); g.Dispose();
-            sourceImage.Dispose();
-
-            BackImageCache?.Dispose();
-            BackImageCache = new(Width, Height);
-            g = Graphics.FromImage(BackImageCache);
-            Rectangle cutRect = new(0, 0, Width, Height);
-            g.DrawImage(newBackImage, cutRect, cutRect, GraphicsUnit.Pixel); 
-            g.Flush(); g.Dispose();
-            newBackImage.Dispose();
-        }
+        #region ==== 绘制背景和重绘 ====
 
         #endregion
 
@@ -261,7 +145,7 @@ namespace FocusTree.Graph
             if (!CellPartsBG.TryGetValue(cellPart, out var fillColor)) { return; }
             PointBitmap pImage = new(image);
             pImage.LockBits();
-            PointBitmap pCache = new(BackImageCache);
+            PointBitmap pCache = new(Background.BackImage);
             pCache.LockBits();
             for (int i = 0; i < rect.Width; i++)
             {
@@ -291,7 +175,7 @@ namespace FocusTree.Graph
         {
             PointBitmap pImage = new(image);
             pImage.LockBits();
-            PointBitmap pCache = new(BackImageCache);
+            PointBitmap pCache = new(Background.BackImage);
             pCache.LockBits();
             // left
             for (int i = 0; i < NodeBorderWidth; i++)
@@ -346,7 +230,7 @@ namespace FocusTree.Graph
         {
             PointBitmap pImage = new(image);
             pImage.LockBits();
-            PointBitmap pCache = new(BackImageCache);
+            PointBitmap pCache = new(Background.BackImage);
             pCache.LockBits();
             for (int i = 0; i < nodeRect.Width; i++)
             {
@@ -377,7 +261,7 @@ namespace FocusTree.Graph
             Color stringColor = GetNodeNamePattern(image, nodeRect, name) ? NodeFGDark : NodeFGBright;
             PointBitmap pImage = new(image);
             pImage.LockBits();
-            PointBitmap pCache = new(BackImageCache);
+            PointBitmap pCache = new(Background.BackImage);
             pCache.LockBits();
             for (int i = 0; i < nodeRect.Width; i++)
             {
@@ -417,7 +301,7 @@ namespace FocusTree.Graph
             Color stringColor = GetNodeNamePattern(image, nodeRect, name) ? NodeFGDark : NodeFGBright;
             PointBitmap pImage = new(image);
             pImage.LockBits();
-            PointBitmap pCache = new(BackImageCache);
+            PointBitmap pCache = new(Background.BackImage);
             pCache.LockBits();
             for (int i = 0; i < nodeRect.Width; i++)
             {
@@ -631,7 +515,7 @@ namespace FocusTree.Graph
             if (!Lattice.RectWithin(lineRect, out lineRect)) { return; }
             PointBitmap pImage = new(image);
             pImage.LockBits();
-            PointBitmap pCache = new(BackImageCache);
+            PointBitmap pCache = new(Background.BackImage);
             pCache.LockBits();
             if (horizon)
             {

@@ -2,7 +2,7 @@
 
 namespace FocusTree.UI
 {
-    partial class MainForm
+    partial class GraphForm
     {
         /// <summary>
         /// Required designer variable.
@@ -264,7 +264,7 @@ namespace FocusTree.UI
             MainForm_Menu_graph_setNodePointAuto.Name = "MainForm_Menu_graph_setNodePointAuto";
             MainForm_Menu_graph_setNodePointAuto.Size = new Size(135, 22);
             MainForm_Menu_graph_setNodePointAuto.Text = "自动排版";
-            MainForm_Menu_graph_setNodePointAuto.Click += MainForm_Menu_graph_setNodePointAuto_Click;
+            MainForm_Menu_graph_setNodePointAuto.Click += MainForm_Menu_graph_autoLayout_Click;
             // 
             // toolStripSeparator2
             // 
@@ -290,14 +290,14 @@ namespace FocusTree.UI
             MainForm_Menu_loc_camreset.Name = "MainForm_Menu_loc_camreset";
             MainForm_Menu_loc_camreset.Size = new Size(100, 22);
             MainForm_Menu_loc_camreset.Text = "全景";
-            MainForm_Menu_loc_camreset.Click += MainForm_Menu_loc_panorama_Click;
+            MainForm_Menu_loc_camreset.Click += MainForm_Menu_camLoc_panorama_Click;
             // 
             // MainForm_Menu_loc_camfocus
             // 
             MainForm_Menu_loc_camfocus.Name = "MainForm_Menu_loc_camfocus";
             MainForm_Menu_loc_camfocus.Size = new Size(100, 22);
             MainForm_Menu_loc_camfocus.Text = "聚焦";
-            MainForm_Menu_loc_camfocus.Click += MainForm_Menu_loc_focus_Click;
+            MainForm_Menu_loc_camfocus.Click += MainForm_Menu_camLoc_focus_Click;
             // 
             // MainForm_Menu_window
             // 
