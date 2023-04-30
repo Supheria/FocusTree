@@ -36,19 +36,19 @@
         /// <summary>
         /// 节点宽
         /// </summary>
-        public static int NodeWidth { get => Width - NodePaddingWidth; }
+        public static int NodeWidth => Width - NodePaddingWidth;
         /// <summary>
         /// 节点高
         /// </summary>
-        public static int NodeHeight { get => Height - NodePaddingHeight; }
+        public static int NodeHeight => Height - NodePaddingHeight;
         /// <summary>
         /// 节点 Left 到格元 Left 的空隙
         /// </summary>
-        public static int NodePaddingWidth { get => (int)(width * NodePaddingZoomFactor.X); }
+        public static int NodePaddingWidth => (int)(width * NodePaddingZoomFactor.X);
         /// <summary>
         /// 节点 Top 到格元 Top 的空隙
         /// </summary>
-        public static int NodePaddingHeight { get => (int)(height * NodePaddingZoomFactor.Y); }
+        public static int NodePaddingHeight => (int)(height * NodePaddingZoomFactor.Y);
         /// <summary>
         /// 节点空隙系数（0.3 < X < 0.7, 0.3 < Y < 0.7)
         /// </summary>
@@ -74,32 +74,32 @@
         /// <summary>
         /// 格元栅格化坐标
         /// </summary>
-        public LatticedPoint LatticedPoint { get => new(LatticedLeft, LatticedTop); }
+        public LatticedPoint LatticedPoint => new(LatticedLeft, LatticedTop);
         /// <summary>
         /// 格元真实左边界
         /// </summary>
-        public int RealLeft { get => Width * LatticedLeft + Lattice.OriginLeft; }
+        public int RealLeft => Width * LatticedLeft + Lattice.OriginLeft;
         /// <summary>
         /// 格元真实上边界
         /// </summary>
-        public int RealTop { get => Height * LatticedTop + Lattice.OriginTop; }
+        public int RealTop => Height * LatticedTop + Lattice.OriginTop;
         /// <summary>
         /// 格元真实坐标矩形
         /// </summary>
         /// <returns></returns>
-        public Rectangle RealRect { get => new(RealLeft, RealTop, Width, Height); }
+        public Rectangle RealRect => new(RealLeft, RealTop, Width, Height);
         /// <summary>
         /// 节点真实左边界
         /// </summary>
-        public int NodeRealLeft { get => RealLeft + NodePaddingWidth; }
+        public int NodeRealLeft => RealLeft + NodePaddingWidth;
         /// <summary>
         /// 节点真实上边界
         /// </summary>
-        public int NodeRealTop { get => RealTop + NodePaddingHeight; }
+        public int NodeRealTop => RealTop + NodePaddingHeight;
         /// <summary>
         /// 节点真实坐标矩形
         /// </summary>
-        public Rectangle NodeRealRect { get => new(NodeRealLeft, NodeRealTop, NodeWidth, NodeHeight); }
+        public Rectangle NodeRealRect => new(NodeRealLeft, NodeRealTop, NodeWidth, NodeHeight);
 
         #endregion
 
@@ -183,6 +183,27 @@
                 }
             }
             return Parts.Leave;
+        }
+
+        #endregion
+
+        #region ==== 线头 ====
+
+        public (Point, Point) TopIntroLineUpper
+        { 
+            get
+            {
+                var x = NodeRealLeft + NodeWidth / 2;
+                return (new(x, RealTop + NodePaddingHeight / 2), new(x, RealTop));
+            }
+        }
+        public (Point, Point) TopIntroLineLower
+        {
+            get
+            {
+                var x = NodeRealLeft + NodeWidth / 2;
+                return (new(x, NodeRealTop), new(x, RealTop + NodePaddingHeight / 2));
+            }
         }
 
         #endregion

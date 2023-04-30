@@ -129,7 +129,7 @@ namespace FocusTree.UI
                 }
             }
             GraphBox.Load(item.Tag.ToString());
-            Display.Refresh();
+            Display.RefreshGraphBox();
         }
         private void MainForm_Menu_file_backup_delete_Click(object sender, EventArgs e)
         {
@@ -175,7 +175,7 @@ namespace FocusTree.UI
         private void MainForm_Menu_edit_undo_Click(object sender, EventArgs e)
         {
             GraphBox.Undo();
-            Display.Refresh();
+            Display.RefreshGraphBox();
             MainForm_Menu_edit_status_check();
             UpdateText();
         }
@@ -183,7 +183,7 @@ namespace FocusTree.UI
         private void MainForm_Menu_edit_redo_Click(object sender, EventArgs e)
         {
             GraphBox.Redo();
-            Display.Refresh();
+            Display.RefreshGraphBox();
             MainForm_Menu_edit_status_check();
             UpdateText();
         }
@@ -243,6 +243,7 @@ namespace FocusTree.UI
         private void MainForm_Menu_graph_autoLayout_Click(object sender, EventArgs e)
         {
             GraphBox.AutoLayoutAllFocusNodes();
+            Display.RefreshGraphBox();
         }
 
         #endregion
@@ -392,24 +393,30 @@ namespace FocusTree.UI
                 size.Width + Width - ClientRectangle.Width,
                 size.Height + Height - ClientRectangle.Height
                 );
-            ResizeGraphDisplayer(sender, e);
+            ResizeGraphDisplayer();
             SizeChanged += MainForm_SizeChanged;
-            ResizeEnd += ResizeGraphDisplayer;
+            ResizeEnd += GraphForm_ResizeEnd;
 #if DEBUG
-            //GraphBox.Load("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\program\\FILES\\神佑村落.xml");
-            //Display.ResetDisplay();
+            GraphBox.Load("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\program\\FILES\\神佑村落.xml");
+            Display.ResetDisplay();
 #endif
         }
+
+        private void GraphForm_ResizeEnd(object sender, EventArgs e)
+        {
+            ResizeGraphDisplayer();
+        }
+
         private void MainForm_SizeChanged(object sender, EventArgs e)
         {
             if (ForceResize ||
                 (LastState == FormWindowState.Maximized && WindowState == FormWindowState.Normal) ||
                 WindowState == FormWindowState.Maximized)
             {
-                ResizeGraphDisplayer(sender, e);
+                ResizeGraphDisplayer();
             }
         }
-        private void ResizeGraphDisplayer(object sender, EventArgs e)
+        public void ResizeGraphDisplayer()
         {
             if (Math.Min(ClientRectangle.Width, ClientRectangle.Height) <= 0)
             {

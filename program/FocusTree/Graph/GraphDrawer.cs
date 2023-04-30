@@ -422,65 +422,38 @@ namespace FocusTree.Graph
         public static void DrawRequireLine(Bitmap image, LatticedPoint startLoc, LatticedPoint endLoc)
         {
             var colDiff = endLoc.Col - startLoc.Col;
-            var rowDiff = startLoc.Row - endLoc.Row;
+            var rowDiff = endLoc.Row - startLoc.Row;
             LatticeCell cell = new(startLoc);
-            var paddingHeight = LatticeCell.NodePaddingHeight;
-            var halfPaddingHeight = paddingHeight / 2;
-            var nodeWidth = LatticeCell.NodeWidth;
-            var drLeft = Lattice.DrawRect.Left;
-            var drRight = Lattice.DrawRect.Right;
-            //
-            // 竖线1
-            //
-            if (rowDiff > 0)
+            var halfPaddingHeight = LatticeCell.NodePaddingHeight / 2;
+            var halfPaddingWidth = LatticeCell.NodePaddingWidth / 2;
+            var halfNodeWidth = LatticeCell.NodeWidth / 2;
+
+            var x1 = cell.NodeRealLeft + halfNodeWidth;
+            var y1 = cell.NodeRealTop;
+            var y2 = cell.RealTop + halfPaddingHeight;
+            DrawLine(image, new(x1, y1), new(x1, y2), false);
+            if (rowDiff < 0)
             {
-                var halfRowDiff = rowDiff - 1 /*/ 2*/;
-                var x = cell.NodeRealLeft + nodeWidth / 2;
-                var y = cell.RealTop + paddingHeight;
-                cell.LatticedTop -= halfRowDiff;
-                var y2 = cell.RealTop + halfPaddingHeight;
-                if (x >= drLeft && x <= drRight)
-                {
-                    DrawLine(image, new(x, y), new(x, y2), false);
-                }
-                //
-                // 横线
-                //
+                cell.LatticedLeft += colDiff;
+                var x2 = cell.NodeRealLeft + halfNodeWidth;
                 if (Math.Abs(colDiff) > 0)
                 {
-                    cell.LatticedLeft += colDiff;
-                    var x2 = cell.NodeRealLeft + nodeWidth / 2;
-                    DrawLine(image, new(x, y2), new(x2, y2), true);
+                    DrawLine(image, new(x1, y2), new(x2, y2), true);
                 }
-                //
-                // 竖线2
-                //
-                x = cell.NodeRealLeft + nodeWidth / 2;
-                if (x >= drLeft && x <= drRight)
-                {
-                    y = y2;
-                    var leaveHeight = /*rowDiff - halfRowDiff - 1*/0;
-                    cell.LatticedTop -= leaveHeight;
-                    y2 = cell.RealTop;
-                    DrawLine(image, new(x, y), new(x, y2), false);
-                }
+                cell.LatticedTop += rowDiff + 1;
+                DrawLine(image, new(x2, y2), new(x2, cell.RealTop), false);
             }
             else
             {
-                //
-                // 竖线1
-                //
-                var x = cell.NodeRealLeft + nodeWidth / 2;
-                var y = cell.RealTop + paddingHeight;
-                var y2 = y - halfPaddingHeight;
-                if (x >= drLeft && x <= drRight)
-                {
-                    DrawLine(image, new(x, y), new(x, y2), false);
-                }
-                if (Math.Abs(colDiff) > 0)
-                {
-                    var halfColDiff = colDiff < 0 ? colDiff / 2 + 1 : colDiff / 2;
-                }
+                cell.LatticedLeft += colDiff < 0 ? colDiff + 1 : colDiff;
+                var x2 = cell.RealLeft + halfPaddingWidth;
+                DrawLine(image, new(x1, y2), new(x2, y2), true);
+                cell.LatticedTop += rowDiff + 1;
+                var y3 = cell.RealTop + halfPaddingHeight;
+                DrawLine(image, new(x2, y2), new(x2, y3), false);
+                var x3 = x2 + (colDiff < 0 ? -(halfPaddingWidth +  halfNodeWidth) : halfPaddingWidth + halfNodeWidth);
+                DrawLine(image, new(x2, y3), new(x3, y3), true);
+                DrawLine(image, new(x3, y3), new(x3, y3 - halfPaddingHeight), false);
             }
         }
 
@@ -501,11 +474,11 @@ namespace FocusTree.Graph
             Rectangle lineRect;
             if (horizon)
             {
-                lineRect = new(Math.Min(p1.X, p2.X), Math.Min(p1.Y, p2.Y) - halfLineWidth, Math.Abs(p1.X - p2.X), Math.Abs(p1.Y - p2.Y) + NodeLineWidth);
+                lineRect = new(Math.Min(p1.X, p2.X), Math.Min(p1.Y, p2.Y) - halfLineWidth, Math.Abs(p1.X - p2.X) + 1, Math.Abs(p1.Y - p2.Y) + NodeLineWidth);
             }
             else
             {
-                lineRect = new(Math.Min(p1.X, p2.X) - halfLineWidth, Math.Min(p1.Y, p2.Y), Math.Abs(p1.X - p2.X) + NodeLineWidth, Math.Abs(p1.Y - p2.Y));
+                lineRect = new(Math.Min(p1.X, p2.X) - halfLineWidth, Math.Min(p1.Y, p2.Y), Math.Abs(p1.X - p2.X) + NodeLineWidth, Math.Abs(p1.Y - p2.Y) + 1);
             }
             if (!Lattice.RectWithin(lineRect, out lineRect)) { return; }
             PointBitmap pImage = new(image);
@@ -542,33 +515,37 @@ namespace FocusTree.Graph
                     }
                 }
             }
-            // left
-            for (int j = 0; j < lineRect.Height; j++)
+            else
             {
-                var left = lineRect.Left;
-                var top = lineRect.Top + j;
-                var pixel = pCache.GetPixel(left, top);
-                var A = pixel.A;
-                var R = pixel.R;
-                var G = pixel.G;
-                var B = pixel.B;
-                pImage.SetPixel(left, top, Color.FromArgb(A, 255 - R, 255 - G, 255 - B));
-            }
-            // right
-            var right = lineRect.Right;
-            if (lineRect.Left < right)
-            {
+                // left
                 for (int j = 0; j < lineRect.Height; j++)
                 {
+                    var left = lineRect.Left;
                     var top = lineRect.Top + j;
-                    var pixel = pCache.GetPixel(right, top);
+                    var pixel = pCache.GetPixel(left, top);
                     var A = pixel.A;
                     var R = pixel.R;
                     var G = pixel.G;
                     var B = pixel.B;
-                    pImage.SetPixel(right, top, Color.FromArgb(A, 255 - R, 255 - G, 255 - B));
+                    pImage.SetPixel(left, top, Color.FromArgb(A, 255 - R, 255 - G, 255 - B));
+                }
+                // right
+                var right = lineRect.Right;
+                if (lineRect.Left < right)
+                {
+                    for (int j = 0; j < lineRect.Height; j++)
+                    {
+                        var top = lineRect.Top + j;
+                        var pixel = pCache.GetPixel(right, top);
+                        var A = pixel.A;
+                        var R = pixel.R;
+                        var G = pixel.G;
+                        var B = pixel.B;
+                        pImage.SetPixel(right, top, Color.FromArgb(A, 255 - R, 255 - G, 255 - B));
+                    }
                 }
             }
+            
             pCache.UnlockBits();
             pImage.UnlockBits();
         }

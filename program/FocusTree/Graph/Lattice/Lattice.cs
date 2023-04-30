@@ -19,9 +19,9 @@ namespace FocusTree.Graph
         /// </summary>
         static int ColNumber;
         /// <summary>
-        /// 栅格绘图区域（根据给定放置区域、列数、行数自动生成，并在给定放置区域内居中）
+        /// 栅格边界
         /// </summary>
-        public static Rectangle DrawRect { get; private set; }
+        public static Rectangle Bounds { get; private set; }
         /// <summary>
         /// 栅格坐标系原点 x 坐标
         /// </summary>
@@ -74,16 +74,7 @@ namespace FocusTree.Graph
         {
             ColNumber = bounds.Width / LatticeCell.Width;
             RowNumber = bounds.Height / LatticeCell.Height;
-            var width = ColNumber * LatticeCell.Width;
-            var height = RowNumber * LatticeCell.Height;
-            var deviDiffWidth = (bounds.Width - width) / 2;
-            var deviDiffHeight = (bounds.Height - height) / 2;
-            DrawRect = new Rectangle(
-                bounds.X + deviDiffWidth,
-                bounds.Y + deviDiffHeight,
-                width,
-                height
-                );
+            Bounds = bounds;
         }
         /// <summary>
         /// 绘制无限制栅格，并调用绘制格元的委托
@@ -103,8 +94,8 @@ namespace FocusTree.Graph
                     }
                 }
                 // guide line
-                g.DrawLine(GuidePen, new(OriginLeft, DrawRect.Top), new(OriginLeft, DrawRect.Bottom));
-                g.DrawLine(GuidePen, new(DrawRect.Left, OriginTop), new(DrawRect.Right, OriginTop));
+                g.DrawLine(GuidePen, new(OriginLeft, Bounds.Top), new(OriginLeft, Bounds.Bottom));
+                g.DrawLine(GuidePen, new(Bounds.Left, OriginTop), new(Bounds.Right, OriginTop));
                 g.Flush(); g.Dispose();
             }
             //Program.testInfo.Show();
@@ -142,8 +133,8 @@ namespace FocusTree.Graph
         /// <param name="size">格元或节点的大小</param>
         private static void DrawLoopCellLine(Graphics g, Pen pen, Point LeftTop, Size size)
         {
-            var LeftRight = GetLoopedLineEnds(LeftTop.X, size.Width, (DrawRect.Left, DrawRect.Right), DrawRect.Width);
-            var TopBottom = GetLoopedLineEnds(LeftTop.Y, size.Height, (DrawRect.Top, DrawRect.Bottom), DrawRect.Height);
+            var LeftRight = GetLoopedLineEnds(LeftTop.X, size.Width, (Bounds.Left, Bounds.Right), Bounds.Width);
+            var TopBottom = GetLoopedLineEnds(LeftTop.Y, size.Height, (Bounds.Top, Bounds.Bottom), Bounds.Height);
             var left = LeftRight[0].Item1;
             var top = TopBottom[0].Item1;
             //
@@ -178,8 +169,8 @@ namespace FocusTree.Graph
         /// </summary>
         /// <param name="head">起点横（纵）坐标（left or top）</param>
         /// <param name="length">线段长度</param>
-        /// <param name="drBounds">head在DrawRect(dr)里的限制范围</param>
-        /// <param name="drLength">DrawRect(dr)的宽度（长度）</param>
+        /// <param name="drBounds">head在Bounds(dr)里的限制范围</param>
+        /// <param name="drLength">Bounds(dr)的宽度（长度）</param>
         /// <returns>转换后的坐标数对，前者是起点横（纵）坐标，后者是终点的。如果线需要分割，则返回数组里有一个额外的分割后另一部分线段的坐标数对。</returns>
         private static (int, int)[] GetLoopedLineEnds(int head, int length, (int, int) drBounds, int drLength)
         {
@@ -220,25 +211,25 @@ namespace FocusTree.Graph
             var right = rect.Right;
             var top = rect.Top;
             var bottom = rect.Bottom;
-            if (left <= DrawRect.Left)
+            if (left <= Bounds.Left)
             {
-                if (right <= DrawRect.Left) { return false; }
-                left = DrawRect.Left;
+                if (right <= Bounds.Left) { return false; }
+                left = Bounds.Left;
             }
-            if (right >= DrawRect.Right)
+            if (right >= Bounds.Right)
             {
-                if (left >= DrawRect.Right) { return false; }
-                right = DrawRect.Right;
+                if (left >= Bounds.Right) { return false; }
+                right = Bounds.Right;
             }
-            if (top <= DrawRect.Top)
+            if (top <= Bounds.Top)
             {
-                if (bottom <= DrawRect.Top) { return false; }
-                top = DrawRect.Top;
+                if (bottom <= Bounds.Top) { return false; }
+                top = Bounds.Top;
             }
-            if (bottom >= DrawRect.Bottom)
+            if (bottom >= Bounds.Bottom)
             {
-                if (top >= DrawRect.Bottom) { return false; }
-                bottom = DrawRect.Bottom;
+                if (top >= Bounds.Bottom) { return false; }
+                bottom = Bounds.Bottom;
             }
             saveRect = new(left, top, right - left, bottom - top);
             return true;

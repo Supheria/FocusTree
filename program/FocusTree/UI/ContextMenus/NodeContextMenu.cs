@@ -105,7 +105,7 @@
         {
             if (Display.SelectedNode == null) { return; }
             GraphBox.RemoveFocusNode(Display.SelectedNode.Value);
-            Display.Refresh();
+            Display.RefreshGraphBox();
         }
         private void MenuItem_checkout_Click(object sender, EventArgs e)
         {

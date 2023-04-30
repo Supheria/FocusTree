@@ -93,14 +93,14 @@
         private void MenuItem_edit_undo_Click(object sender, EventArgs args)
         {
             GraphBox.Undo();
-            Display.Refresh();
+            Display.RefreshGraphBox();
             menuItem_edit_status_check();
             Invalidate();
         }
         private void MenuItem_edit_redo_Click(object sender, EventArgs args)
         {
             GraphBox.Redo();
-            Display.Refresh();
+            Display.RefreshGraphBox();
             menuItem_edit_status_check();
             Invalidate();
         }
@@ -134,7 +134,7 @@
                 }
             }
             GraphBox.Load(item.Tag.ToString());
-            Display.Refresh();
+            Display.RefreshGraphBox();
             ButtonTag = MouseButtons.None;
         }
         private void DeleteBackupClicked(object sender, EventArgs e)
