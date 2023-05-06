@@ -2,6 +2,7 @@
 using System.Text;
 
 var fs = new FileStream("bulgaria.txt", FileMode.Open);
+//var fs = File.ReadAllText(@"bulgaria.txt");
 Hoi4Reader reader = new(fs);
 FileStream file = new("output.txt", FileMode.Create);
 StreamWriter writer = new(file);
@@ -18,3 +19,4 @@ while (reader.Read())
     writer.Write(sb.ToString() + '\n');
     writer.Flush();
 }
+Console.WriteLine();

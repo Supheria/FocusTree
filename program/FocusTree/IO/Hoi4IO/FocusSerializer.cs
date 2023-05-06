@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace FocusTree.IO.Hoi4IO
 {
-    public class FocusSerializer
-    {
-        FocusNode Deserialize(FileStream )
-    }
+    //public class FocusSerializer
+    //{
+    //    FocusNode Deserialize(FileStream )
+    //}
 }

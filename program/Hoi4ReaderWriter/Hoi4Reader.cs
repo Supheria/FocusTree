@@ -40,23 +40,34 @@ namespace Hoi4ReaderWriter
         /// </summary>
         public int TabTimes { get; private set; } = 0;
         /// <summary>
-        /// 裁剪流
+        /// 裁剪好的字节缓冲区
         /// </summary>
-        MemoryStream TrimedStream = new();
+        byte[] TrimedBuffer;
+        /// <summary>
+        /// 当前所在缓冲区位置
+        /// </summary>
+        int BufferPosition = 0;
 
         #region ==== 初始化裁剪流 ====
 
         public Hoi4Reader(Stream rawStream)
         {
-            ReadTrimedStream(rawStream);
+            var pair = ReadTrimedBuffer(rawStream);
+            TrimedBuffer = new byte[pair.Item2];
+            for (int i = 0; i < pair.Item2; i++)
+            {
+                TrimedBuffer[i] = pair.Item1[i];
+            }
 #if DEBUG
             FileStream file = new("trimed stream.txt", FileMode.Create);
-            file.Write(TrimedStream.ToArray());
+            file.Write(TrimedBuffer.ToArray());
 #endif
         }
-        private void ReadTrimedStream(Stream stream)
+        private (byte[], int) ReadTrimedBuffer(Stream stream)
         {
-            bool lastIsBlank = false;
+            var buffer = new byte[stream.Length + 1];
+            int trimedLength = 0;
+            bool lastByteIsBlank = false; 
             int currentByte;
             while ((currentByte = stream.ReadByte()) != -1)
             {
@@ -66,17 +77,18 @@ namespace Hoi4ReaderWriter
                 }
                 if (currentByte == '\n' || currentByte == ' ' || currentByte == '\t' || currentByte == '\r')
                 {
-                    if (!lastIsBlank)
+                    if (!lastByteIsBlank)
                     {
-                        lastIsBlank = true;
-                        TrimedStream.WriteByte((byte)' ');
+                        lastByteIsBlank = true;
+                        buffer[trimedLength++] = (byte)' ';
                     }
                     continue;
                 }
-                TrimedStream.WriteByte((byte)currentByte);
-                lastIsBlank = false;
+                buffer[trimedLength++] = (byte)currentByte;
+                lastByteIsBlank = false;
             }
-            TrimedStream.Position = 0;
+            buffer[trimedLength++] = (byte)' ';
+            return (buffer, trimedLength);
         }
         
         #endregion
@@ -88,95 +100,65 @@ namespace Hoi4ReaderWriter
         /// <exception cref="InvalidDataException"></exception>
         public bool Read()
         {
-            int currentByte;
-            while ((currentByte = TrimedStream.ReadByte()) == ' ') ;
-            if (currentByte == -1) { return false; }
-            if (currentByte == '}')
+            while (TrimedBuffer[BufferPosition] == ' ')
             {
+                if (++BufferPosition >= TrimedBuffer.Length) { return false; }
+            }
+            if (TrimedBuffer[BufferPosition] == '}')
+            {
+                BufferPosition++;
                 Type = ElementTypes.EndElement;
                 Name = StartElements.Pop();
                 Value = string.Empty;
                 TabTimes = StartElements.Count;
-                return true;
             }
-            Type = ElementTypes.Element;
-            TabTimes = StartElements.Count;
+            else
+            {
+                Type = ElementTypes.Element;
+                TabTimes = StartElements.Count;
+                var sign = ReadName();
+
+                if (TrimedBuffer[BufferPosition] == '{')
+                {
+                    BufferPosition++;
+                    if (SearchForAssignmentWithinBrace())
+                    {
+                        StartElements.Push(Name);
+                        Value = string.Empty;
+                    }
+                    else { ReadBraceAssignment(sign); }
+                }
+                else { ReadAssignment(sign); }
+            }
+            return true;
+        }
+        /// <summary>
+        /// 读取节点名称
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="InvalidDataException"></exception>
+        private byte ReadName()
+        {
             StringBuilder sb = new();
             bool hasBlank = false;
-            do
+            while (TrimedBuffer[BufferPosition] != '=' && TrimedBuffer[BufferPosition] != '<' && TrimedBuffer[BufferPosition] != '>')
             {
-                if (currentByte != ' ')
+                if (TrimedBuffer[BufferPosition] != ' ')
                 {
-                    if (currentByte == -1) { throw new InvalidDataException("No Element Name was found."); }
-                    if (hasBlank) { throw new InvalidDataException("Element Name cannot contain blank."); }
-                    sb.Append((char)currentByte);
+                    if (hasBlank) { throw new InvalidDataException("Element name cannot contain blank."); }
+                    sb.Append((char)TrimedBuffer[BufferPosition]);
                 }
                 else { hasBlank = true; }
-            } while ((currentByte = TrimedStream.ReadByte()) != '=' && currentByte != '<' && currentByte != '>');
+                if (++BufferPosition >= TrimedBuffer.Length) { throw new InvalidDataException("Unexpected end of assignment."); }
+            }
             if (sb.Length == 0) { throw new InvalidDataException("No Element Name was found."); }
-            sb.Append((char)currentByte); // = or < or >
-            Name = sb.ToString()[..^1].Trim();
-            while ((currentByte = TrimedStream.ReadByte()) == ' ') ;
-            if (currentByte == '{')
-            {
-                if (SearchForAssignmentWithinBrace())
-                {
-                    //Type = ElementTypes.StartElement;
-                    StartElements.Push(Name);
-                    TrimedStream.ReadByte();
-                    Value = string.Empty;
-                    return true;
-                }
-                // enum condition
-                Type = ElementTypes.Element;
-                sb = new(sb.ToString().Substring(sb.Length - 1, 1)); // new since = or < or >
-                hasBlank = false;
-                while ((currentByte = TrimedStream.ReadByte()) != '}')
-                {
-                    if (currentByte == ' ') 
-                    {
-                        hasBlank = true;
-                        continue; 
-                    }
-                    if (hasBlank)
-                    {
-                        sb.Append(',');
-                        hasBlank = false;
-                    }
-                    sb.Append((char)currentByte);
-                }
-                Value = sb.ToString();
-                return true;
-            }
-            //Type = ElementTypes.Element;
-            sb = new(sb.ToString().Substring(sb.Length - 1, 1)); // new since = or < or >
-            // "... ..." or "UTF-8" condition
-            if (currentByte == '\"')
-            {
-                var buffer = new byte[1024];
-                int realLength = 0;
-                while ((currentByte = TrimedStream.ReadByte()) != '\"')
-                {
-                    buffer[realLength++] = (byte)currentByte;
-                }
-                sb.Append(Encoding.UTF8.GetString(buffer, 0, realLength));
-                Value = sb.ToString();
-                return true;
-            }
-            if (currentByte == ' ')
-            {
-                while ((currentByte = TrimedStream.ReadByte()) == ' ') ;
-            }
+            var sign = TrimedBuffer[BufferPosition];
             do
             {
-                sb.Append((char)currentByte);
-            } while ((currentByte = TrimedStream.ReadByte()) != ' ' && currentByte != '}');
-            if (currentByte == '}')
-            {
-                TrimedStream.Position--;
-            }
-            Value = sb.ToString();
-            return true;
+                if (++BufferPosition >= TrimedBuffer.Length) { throw new InvalidDataException("Unexpected end of assignment."); }
+            } while (TrimedBuffer[BufferPosition] == ' ');
+            Name = sb.ToString();
+            return sign;
         }
         /// <summary>
         /// 在花括号内预查找是否有赋值语句（ = or < or > ）
@@ -184,19 +166,79 @@ namespace Hoi4ReaderWriter
         /// <returns></returns>
         private bool SearchForAssignmentWithinBrace()
         {
-            var streamPositionCache = TrimedStream.Position;
-            int currentByte;
+            var tempPostion = BufferPosition;
             bool result = false;
-            while ((currentByte = TrimedStream.ReadByte()) != '}')
+            while (TrimedBuffer[tempPostion] != '}')
             {
-                if (currentByte == '=' || currentByte == '<' || currentByte == '>') 
+                if (TrimedBuffer[tempPostion] == '=' || TrimedBuffer[tempPostion] == '<' || TrimedBuffer[tempPostion] == '>')
                 {
                     result = true;
                     break;
                 }
+                if (++tempPostion >= TrimedBuffer.Length) { throw new InvalidDataException("Unexpected end of brace."); }
             }
-            TrimedStream.Position = streamPositionCache;
             return result;
+        }
+        /// <summary>
+        /// 读取花括号赋值节点（枚举组合赋值 或 赋空值）
+        /// </summary>
+        private void ReadBraceAssignment(byte assignmentSign)
+        {
+            StringBuilder sb = new(((char)assignmentSign).ToString()); // = or < or >
+            bool hasBlank = false;
+            while (TrimedBuffer[BufferPosition] != '}')
+            {
+                if (TrimedBuffer[BufferPosition] == ' ')
+                {
+                    hasBlank = true;
+                    BufferPosition++;
+                    continue;
+                }
+                if (hasBlank)
+                {
+                    sb.Append(',');
+                    hasBlank = false;
+                }
+                sb.Append((char)TrimedBuffer[BufferPosition]);
+                BufferPosition++;
+            }
+            BufferPosition++;
+            Value = sb.ToString();
+        }
+        /// <summary>
+        /// 读取赋值节点（ = or < or > ）
+        /// </summary>
+        /// <param name="assignmentSign"></param>
+        /// <exception cref="InvalidDataException"></exception>
+        private void ReadAssignment(byte assignmentSign)
+        {
+            StringBuilder sb = new(((char)assignmentSign).ToString()); // = or < or >
+            if (TrimedBuffer[BufferPosition] == '\"')
+            {
+                // "... ..." or "UTF-8" condition
+                if (++BufferPosition >= TrimedBuffer.Length) { throw new InvalidDataException("Unexpected end of quote."); }
+                int startPos = BufferPosition;
+                int length = 0;
+                bool doTransfer = false;
+                while (TrimedBuffer[BufferPosition] != '\"' || (doTransfer && TrimedBuffer[BufferPosition] == '\"')) 
+                {
+                    length++;
+                    if (doTransfer) { doTransfer = false; }
+                    if (TrimedBuffer[BufferPosition] == '\\') { doTransfer = true; }
+                    if (++BufferPosition >= TrimedBuffer.Length) { throw new InvalidDataException("Unexpected end of quote."); }
+                }
+                BufferPosition++;
+                sb.Append(Encoding.UTF8.GetString(TrimedBuffer, startPos, length));
+                Value = sb.ToString();
+            }
+            else
+            {
+                while (TrimedBuffer[BufferPosition] != ' ' && TrimedBuffer[BufferPosition] != '}')
+                {
+                    sb.Append((char)TrimedBuffer[BufferPosition++]);
+                }
+                Value = sb.ToString();
+            }
         }
     }
 }
