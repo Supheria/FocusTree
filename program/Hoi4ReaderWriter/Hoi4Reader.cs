@@ -78,9 +78,14 @@ namespace Hoi4ReaderWriter
             }
             TrimedStream.Position = 0;
         }
-
+        
         #endregion
 
+        /// <summary>
+        /// 逐节点向下读取
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="InvalidDataException"></exception>
         public bool Read()
         {
             int currentByte;

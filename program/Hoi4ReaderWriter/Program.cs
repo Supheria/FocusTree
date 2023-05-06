@@ -1,7 +1,7 @@
 ﻿using Hoi4ReaderWriter;
 using System.Text;
 
-var fs = new FileStream("AKI_focus.txt", FileMode.Open);
+var fs = new FileStream("bulgaria.txt", FileMode.Open);
 Hoi4Reader reader = new(fs);
 FileStream file = new("output.txt", FileMode.Create);
 StreamWriter writer = new(file);
