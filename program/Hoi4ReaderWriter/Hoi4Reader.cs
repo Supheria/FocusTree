@@ -42,13 +42,13 @@ namespace Hoi4ReaderWriter
         /// <summary>
         /// 裁剪好的字节缓冲区
         /// </summary>
-        byte[] TrimedBuffer;
+        readonly byte[] TrimedBuffer;
         /// <summary>
         /// 当前所在缓冲区位置
         /// </summary>
         int BufferPosition = 0;
 
-        #region ==== 初始化裁剪流 ====
+        #region ==== 初始化裁剪缓冲区 ====
 
         public Hoi4Reader(Stream rawStream)
         {

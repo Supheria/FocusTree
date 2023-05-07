@@ -11,9 +11,21 @@ namespace Hoi4ReaderWriter
     {
         public void ReadHoi4(Hoi4Reader reader)
         {
+            Console.WriteLine("\nReadHoi4 in FocusTree!\n");
+            FileStream file = new("FocusTree deserialize test.txt", FileMode.Create);
+            StreamWriter writer = new(file);
             while (reader.Read())
             {
-
+                if (reader.Type == Hoi4Reader.ElementTypes.EndElement) { continue; }
+                StringBuilder sb = new();
+                for (int i = 0; i < reader.TabTimes; i++)
+                {
+                    sb.Append('\t');
+                }
+                sb.Append(reader.Name);
+                sb.Append(reader.Value);
+                writer.Write(sb.ToString() + '\n');
+                writer.Flush();
             }
         }
     }
