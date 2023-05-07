@@ -38,21 +38,23 @@ namespace Hoi4ReaderWriter
         //Point 
         public FocusTreeInfo() { }
     }
-    public class TriggerableBlock
+    public interface IMtthOperatable
+    {
+        float Base { get; set; }
+        float Add { get; set; }
+        float Factor { get; set; }
+    }
+    public class Country : IMtthOperatable
+    {
+        public float Base { get; set; }
+        public float Add { get; set; }
+        public float Factor { get; set; }
+    }
+    public abstract class TiggerBlock
     {
 
     }
-    public class MTTH_Block
-    {
-        protected float Base;
-        protected float Add;
-        protected float Factor;
-    }
-    public class Country : MTTH_Block
-    {
-        
-    }
-    public class Modifier
+    public class Modifier : TiggerBlock
     {
 
     }

@@ -52,21 +52,23 @@ namespace Hoi4ReaderWriter
 
         public Hoi4Reader(Stream rawStream)
         {
-            var pair = ReadTrimedBuffer(rawStream);
-            TrimedBuffer = new byte[pair.Item2];
-            for (int i = 0; i < pair.Item2; i++)
+            var buffer = ReadTrimedBuffer(rawStream);
+            var length = buffer.Length;
+            bool isBOM = length > 3 && buffer[0] == 0xEF && buffer[1] == 0xBB && buffer[2] == 0xBF; // has UTF-8 BOM head
+            length = isBOM ? length - 3 : length;
+            TrimedBuffer = new byte[length];
+            for (int i = 0; i < length; i++)
             {
-                TrimedBuffer[i] = pair.Item1[i];
+                TrimedBuffer[i] = buffer[isBOM ? i + 3 : i];
             }
 #if DEBUG
-            FileStream file = new("trimed stream.txt", FileMode.Create);
+            FileStream file = new(@"C:\Users\Non_E\Documents\GitHub\FocusTree\FocusTree\modding analysis\test\trimed stream.txt", FileMode.Create);
             file.Write(TrimedBuffer.ToArray());
 #endif
         }
-        private (byte[], int) ReadTrimedBuffer(Stream stream)
+        private byte[] ReadTrimedBuffer(Stream stream)
         {
-            var buffer = new byte[stream.Length + 1];
-            int trimedLength = 0;
+            MemoryStream buffer = new();
             bool lastByteIsBlank = false; 
             int currentByte;
             while ((currentByte = stream.ReadByte()) != -1)
@@ -80,15 +82,15 @@ namespace Hoi4ReaderWriter
                     if (!lastByteIsBlank)
                     {
                         lastByteIsBlank = true;
-                        buffer[trimedLength++] = (byte)' ';
+                        buffer.WriteByte((byte)' ');
                     }
                     continue;
                 }
-                buffer[trimedLength++] = (byte)currentByte;
+                buffer.WriteByte((byte)currentByte);
                 lastByteIsBlank = false;
             }
-            buffer[trimedLength++] = (byte)' ';
-            return (buffer, trimedLength);
+            buffer.WriteByte((byte)' ');
+            return buffer.ToArray();
         }
         
         #endregion
