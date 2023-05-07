@@ -1,6 +1,7 @@
 #define DEBUG
+using FocusTree.Graph;
 using FocusTree.IO;
-using FocusTree.IO.FileManege;
+using FocusTree.IO.FileManage;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
@@ -20,6 +21,16 @@ namespace FocusTree.Data.Focus
         /// </summary>
         Dictionary<int, FocusData> FocusCatalog;
         /// <summary>
+        /// 国策列表
+        /// </summary>
+        public List<FocusData> FocusList { get { return FocusCatalog.Values.ToList(); } }
+        /// <summary>
+        /// 通过国策 ID 获得国策（不应该滥用，仅用在 require id 获取国策时），或修改国策
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public FocusData this[int id] { get => FocusCatalog[id]; set => FocusCatalog[id] = value; }
+        /// <summary>
         /// 名称
         /// </summary>
         public string Name { get; private set; }
@@ -27,31 +38,6 @@ namespace FocusTree.Data.Focus
         /// 所有节点的子链接（使用前调用 CreateNodeLinks ）
         /// </summary>
         Dictionary<int, List<int>> NodeLinks;
-        /// <summary>
-        /// 节点数量
-        /// </summary>
-        public int NodesCount
-        {
-            get { return FocusCatalog.Count; }
-        }
-        /// <summary>
-        /// 分支数量
-        /// </summary>
-        public int BranchesCount { get => GetBranches(GetRootNodes(), true, true).Count; }
-        /// <summary>
-        /// 节点id列表
-        /// </summary>
-        public List<int> IdList { get { return FocusCatalog.Keys.ToList(); } }
-        /// <summary>
-        /// 获取节点
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentException"></exception>
-        public FocusData GetFocus(int id)
-        {
-            return FocusCatalog.TryGetValue(id, out var focus) ? focus : throw new ArgumentException("不存在的节点id");
-        }
 
         #endregion
 
@@ -99,17 +85,17 @@ namespace FocusTree.Data.Focus
         /// <param name="id">节点ID</param>
         /// <param name="newData">要替换的数据</param>
         /// <returns>修改是否成功</returns>
-        public bool EditNode(FocusData focus)
-        {
-            var id = focus.ID;
-            if (FocusCatalog.ContainsKey(id) == false)
-            {
-                MessageBox.Show($"[2303031232]提示：无法编辑节点 - 新节点数据的 ID({id}) 不存在于 FocusCatalog。");
-                return false;
-            }
-            FocusCatalog[id] = focus;
-            return true;
-        }
+        //public bool EditNode(FocusData focus)
+        //{
+        //    var id = focus.ID;
+        //    if (FocusCatalog.ContainsKey(id) == false)
+        //    {
+        //        MessageBox.Show($"[2303031232]提示：无法编辑节点 - 新节点数据的 ID({id}) 不存在于 FocusCatalog。");
+        //        return false;
+        //    }
+        //    FocusCatalog[id] = focus;
+        //    return true;
+        //}
         /// <summary>
         /// 获取所有无任何依赖的节点（根节点）  O(n)
         /// </summary>
@@ -169,6 +155,13 @@ namespace FocusTree.Data.Focus
             GetBranches(id, ref branches, ref steps, sort, reverse);
             return branches;
         }
+        /// <summary>
+        /// 获取若干个节点各自的所有分支
+        /// </summary>
+        /// <param name="id">节点ID</param>
+        /// <param name="sort">是否按照节点ID排序</param>
+        /// <param name="reverse">是否从根节点向末节点排序</param>
+        /// <returns></returns>
         public List<int[]> GetBranches(int[] ids, bool sort, bool reverse)
         {
             var branches = new List<int[]>();
@@ -225,7 +218,7 @@ namespace FocusTree.Data.Focus
         /// </summary>
         /// <param name="resetAll">是否重置所有：无论元坐标有无值都重置</param>
         /// <returns></returns>
-        public void ResetNodeLatticedPoints()
+        public void ResetAllNodesLatticedPoint()
         {
             var branches = GetBranches(GetRootNodes(), true, true);
             if (branches.Count == 0) { return; }
@@ -288,7 +281,7 @@ namespace FocusTree.Data.Focus
                 {
                     foreach (var nodePoint in xMetaPoints[x])
                     {
-                        Point point = new(nodePoint.Value.X - blank, nodePoint.Value.Y);
+                        LatticedPoint point = new(nodePoint.Value.X - blank, nodePoint.Value.Y);
                         var focus = FocusCatalog[nodePoint.Key];
                         focus.LatticedPoint = point;
                         FocusCatalog[nodePoint.Key] = focus;
@@ -358,20 +351,20 @@ namespace FocusTree.Data.Focus
             }
         }
         /// <summary>
-        /// 全图的元中心坐标和元尺寸
+        /// 获得整图元坐标矩形
         /// </summary>
         /// <returns></returns>
-        public Rectangle GetGraphMetaRect()
+        public Rectangle GetMetaRect()
         {
             int left, top, right, bottom;
             left = top = right = bottom = 0;
             foreach (var focus in FocusCatalog.Values)
             {
                 var point = focus.LatticedPoint;
-                left = point.X < left ? point.X : left;
-                top = point.Y < top ? point.Y : top;
-                right = point.X > right ? point.X : right;
-                bottom = point.Y > bottom ? point.Y : bottom;
+                left = point.Col < left ? point.Col : left;
+                top = point.Row < top ? point.Row : top;
+                right = point.Col > right ? point.Col : right;
+                bottom = point.Row > bottom ? point.Row : bottom;
             }
             return new(left, top, right - left + 1, bottom - top + 1);
         }
@@ -381,14 +374,25 @@ namespace FocusTree.Data.Focus
         /// <param name="latticedPoint"></param>
         /// <param name="id">默认为-1</param>
         /// <returns>如果有则返回true，id为节点id；否则返回false，id为-1</returns>
-        public bool ContainLatticedPoint(Point latticedPoint, out int id)
+        public bool ContainLatticedPoint(LatticedPoint latticedPoint, out FocusData? focus)
         {
-            id = -1;
-            foreach (var focus in FocusCatalog.Values)
+            focus = null;
+            foreach (var f in FocusCatalog.Values)
             {
-                if (latticedPoint == focus.LatticedPoint)
+                if (latticedPoint == f.LatticedPoint)
                 {
-                    id = focus.ID;
+                    focus = f;
+                    return true;
+                }
+            }
+            return false;
+        }
+        public bool ContainLatticedPoint(LatticedPoint latticedPoint)
+        {
+            foreach (var f in FocusCatalog.Values)
+            {
+                if (latticedPoint == f.LatticedPoint)
+                {
                     return true;
                 }
             }
@@ -503,7 +507,7 @@ namespace FocusTree.Data.Focus
         public int HistoryIndex { get; set; } = 0;
         public int CurrentHistoryLength { get; set; } = 0;
         public FormattedData[] History { get; set; } = new FormattedData[20];
-        public FormattedData Latest { get; set; } = new();
+        public int LatestIndex { get; set; } = 0;
         public FormattedData Format()
         {
             var hashCode = GetHashString();

@@ -15,8 +15,8 @@
         /// </summary>
         public FormattedData[] History { get; set; }
         /// <summary>
-        /// 最近一次保存时的数据
+        /// 最近一次保存时所在的历史记录指针
         /// </summary>
-        public FormattedData Latest { get; set; }
+        public int LatestIndex { get; set; }
     }
 }

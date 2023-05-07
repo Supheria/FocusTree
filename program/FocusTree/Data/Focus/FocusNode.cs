@@ -2,7 +2,6 @@
 #define RAW_EFFECTS
 using FocusTree.Data.Hoi4Object;
 using System.Xml;
-using System.Xml.Linq;
 
 namespace FocusTree.Data.Focus
 {
@@ -24,9 +23,9 @@ namespace FocusTree.Data.Focus
         public List<string> Effects
         {
             get { return effects.Select(x => x.ToString()).ToList(); }
-            set { value.ForEach(x => effects.Add(Sentence.FromString(x))); }
+            set { value.ForEach(x => effects.Add(Hoi4Sentence.FromString(x))); }
         }
-        public List<Sentence> effects = new();
+        public List<Hoi4Sentence> effects = new();
 
 
         #endregion
@@ -50,12 +49,12 @@ namespace FocusTree.Data.Focus
             FData = new();
 
             //==== 读取 Data ====//
-            FData.ID = int.Parse(reader.GetAttribute("ID"));
-            FData.Name = reader.GetAttribute("Name");
-            FData.BeginWithStar = bool.Parse(reader.GetAttribute("Star"));
-            FData.Duration = int.Parse(reader.GetAttribute("Duration"));
-            FData.Descript = reader.GetAttribute("Descript");
-            FData.Ps = reader.GetAttribute("Ps.");
+            FData.ID = int.Parse(reader.GetAttribute("ID") ?? throw new ArgumentException());
+            FData.Name = reader.GetAttribute("Name") ?? FData.Name;
+            FData.BeginWithStar = bool.Parse(reader.GetAttribute("Star") ?? "false");
+            FData.Duration = int.Parse(reader.GetAttribute("Duration") ?? "0");
+            FData.Descript = reader.GetAttribute("Descript") ?? FData.Descript;
+            FData.Ps = reader.GetAttribute("Ps.") ?? FData.Ps;
             var pair = ArrayString.Reader(reader.GetAttribute("Point"));
             if (pair == null || pair.Length != 2) { FData.LatticedPoint = new(0, 0); }
             else { FData.LatticedPoint = new(int.Parse(pair[0]), int.Parse(pair[1])); }
@@ -82,21 +81,22 @@ namespace FocusTree.Data.Focus
                     ReadRawEffects(reader, ref FData.RawEffects);
                 }
             }
-
+#if FORMAT_TEST
             FormatRawEffects(FData.RawEffects, FData.ID);
+#endif
         }
         [Obsolete("临时使用，作为转换语句格式的过渡")]
         private void FormatRawEffects(List<string> rawEffects, int id)
         {
             foreach (var raw in rawEffects)
             {
-                //Program.testInfo.total++;
+                Program.testInfo.total++;
                 if (!FormatRawEffectSentence.Formatter(raw, out var formattedList))
                 {
 #if RAW_EFFECTS
-                    //Program.testInfo.erro++;
-                    //Program.testInfo.good = Program.testInfo.total - Program.testInfo.erro;
-                    //Program.testInfo.InfoText += $"{id}. {raw}\n";
+                    Program.testInfo.erro++;
+                    Program.testInfo.good = Program.testInfo.total - Program.testInfo.erro;
+                    Program.testInfo.InfoText += $"{id}. {raw}\n";
 #endif
                     continue;
                 }
@@ -120,7 +120,7 @@ namespace FocusTree.Data.Focus
                 if (reader.Name == "Effects" && reader.NodeType == XmlNodeType.EndElement) { return; }
                 if (reader.Name == "Sentence")
                 {
-                    Sentence sentence = new();
+                    Hoi4Sentence sentence = new();
                     sentence.ReadXml(reader);
                     effects.Add(sentence);
                 }
@@ -177,7 +177,7 @@ namespace FocusTree.Data.Focus
             writer.WriteAttributeString("Descript", FData.Descript.ToString());
             writer.WriteAttributeString("Ps.", FData.Ps);
             var point = FData.LatticedPoint;
-            writer.WriteAttributeString("Point", ArrayString.Writer(new string[] { point.X.ToString(), point.Y.ToString() }));
+            writer.WriteAttributeString("Point", ArrayString.Writer(new string[] { point.Col.ToString(), point.Row.ToString() }));
 #if RAW_EFFECTS
             // <RawEffects>
             writer.WriteStartElement("RawEffects");
@@ -189,9 +189,10 @@ namespace FocusTree.Data.Focus
             writer.WriteEndElement();
 #endif
 #if FORMAT_TEST
+            FormatRawEffects(FData.RawEffects, FData.ID);
             // <Effects>
             writer.WriteStartElement("Effects");
-            foreach (var sentence in Data.Effects)
+            foreach (var sentence in effects)
             {
                 sentence.WriteXml(writer);
             }

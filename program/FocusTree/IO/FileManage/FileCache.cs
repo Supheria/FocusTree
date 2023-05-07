@@ -1,4 +1,4 @@
-﻿namespace FocusTree.IO.FileManege
+﻿namespace FocusTree.IO.FileManage
 {
     public static class FileCache
     {

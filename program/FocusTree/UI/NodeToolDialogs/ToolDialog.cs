@@ -1,8 +1,10 @@
-﻿namespace FocusTree.UI.NodeToolDialogs
+﻿using FocusTree.Graph;
+
+namespace FocusTree.UI.NodeToolDialogs
 {
     public partial class ToolDialog : Form
     {
-        internal GraphBox Display;
+        internal GraphDisplayer Display;
         /// <summary>
         /// 初始宽高比
         /// </summary>
@@ -14,7 +16,7 @@
             SizeChanged += NodeToolDialog_SizeChanged;
             FormClosing += NodeToolDialog_FormClosing;
         }
-        public virtual new void Close() { }
+        public virtual new void Close() { Hide(); }
 
         private void NodeToolDialog_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -58,8 +60,10 @@
                 MessageBox.Show("没有选中的节点。");
                 return;
             }
-            var pos = Display.GetSelectedNodeCenterOnScreen();
-            Location = pos;
+            LatticeCell cell = new(Display.SelectedNode.Value.LatticedPoint);
+            var rect = cell.NodeRealRect;
+            var point = new Point(rect.Left + rect.Width / 2, rect.Top + rect.Height / 2);
+            Location = Display.PointToScreen(point);
             base.Show();
         }
     }

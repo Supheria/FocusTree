@@ -1,8 +1,12 @@
 ﻿using FocusTree.Data.Focus;
+using FocusTree.UI;
 using System.Numerics;
 
 namespace FocusTree.IO
 {
+    /// <summary>
+    /// 输出带国策信息的图片
+    /// </summary>
     public class NodeMapDrawer : Form
     {
         private ProgressBar Progress;
@@ -58,33 +62,31 @@ namespace FocusTree.IO
         static NodeMapDrawer Drawer;
         public static void SaveasImage(FocusGraph Graph, string toSavePath)
         {
-            if (Graph == null)
-            {
-                return;
-            }
+            if (Graph == null && GraphBox.IsNull) { return; }
             var canvas = GetCanvas(Graph);
             Graphics g = Graphics.FromImage(canvas);
             g.Clear(Color.White);
 
-            Drawer = new(Graph.NodesCount + 1);
-            foreach (var id in Graph.IdList)
+            Drawer = new(Graph.FocusList.Count + 1);
+            foreach (var focus in Graph.FocusList)
             {
-                DrawNodeLinks(g, Graph, id);
+                DrawNodeLinks(g, Graph, focus);
             }
-            foreach (var id in Graph.IdList)
+            foreach (var focus in Graph.FocusList)
             {
-                var drawingRect = NodeDrawingRect(Graph, id);
+                var drawingRect = NodeDrawingRect(focus);
                 g.FillRectangle(
                     new SolidBrush(Color.FromArgb(60, Color.DimGray)),
                     drawingRect
                     );
-                DrawNodeInfo(g, drawingRect, Graph.GetFocus(id));
+                DrawNodeInfo(g, drawingRect, focus);
                 Drawer.StepNext();
                 Drawer.Text = $"{Graph.Name}.jpg: {(int)(Drawer.Percent)}%";
             }
             g.Flush();
             g.Dispose();
 
+            toSavePath = Path.ChangeExtension(toSavePath, ".jpg");
             canvas.Save(toSavePath);
             canvas.Dispose();
             Drawer.Close();
@@ -99,7 +101,7 @@ namespace FocusTree.IO
         static float Border = 1000f;
         private static Image GetCanvas(FocusGraph Graph)
         {
-            var rect = Graph.GetGraphMetaRect();
+            var rect = Graph.GetMetaRect();
             Point center = new(rect.X + rect.Width / 2, rect.Y + rect.Height / 2);
             var size = new Size(
                 (int)(center.X * ScalingUnit.X + Border * 2),
@@ -107,12 +109,12 @@ namespace FocusTree.IO
                 );
             return new Bitmap(size.Width, size.Height);
         }
-        private static RectangleF NodeDrawingRect(FocusGraph Graph, int id)
+        private static RectangleF NodeDrawingRect(FocusData focus)
         {
-            var point = Graph.GetFocus(id).LatticedPoint;
+            var point = focus.LatticedPoint;
             return new(
-                    point.X * ScalingUnit.X + Border,
-                    point.Y * ScalingUnit.Y + Border,
+                    point.Col * ScalingUnit.X + Border,
+                    point.Row * ScalingUnit.Y + Border,
                     NodeSize.Width,
                     NodeSize.Height
                     );
@@ -121,10 +123,10 @@ namespace FocusTree.IO
         #endregion
 
         #region ==== 绘图 ====
-        private static void DrawNodeLinks(Graphics g, FocusGraph Graph, int id)
+        private static void DrawNodeLinks(Graphics g, FocusGraph Graph, FocusData focus)
         {
-            var drawingRect = NodeDrawingRect(Graph, id);
-            var requires = Graph.GetFocus(id).Requires;
+            var drawingRect = NodeDrawingRect(focus);
+            var requires = focus.Requires;
             // 对于根节点，requires 为 null
             if (requires == null)
             {
@@ -134,7 +136,7 @@ namespace FocusTree.IO
             {
                 foreach (var require in requireGroup)
                 {
-                    var todrawingRect = NodeDrawingRect(Graph, require);
+                    var todrawingRect = NodeDrawingRect(Graph[require]);
 
                     var startLoc = new Point((int)(drawingRect.X + drawingRect.Width / 2), (int)(drawingRect.Y + drawingRect.Height / 2)); // x -> 中间, y -> 下方
                     var endLoc = new Point((int)(todrawingRect.X + todrawingRect.Width / 2), (int)(todrawingRect.Y + todrawingRect.Height / 2)); // x -> 中间, y -> 上方

@@ -4,7 +4,6 @@
 using FocusTree.Data.Focus;
 using FocusTree.IO;
 using FocusTree.UI;
-using FocusTree.UI.Graph;
 using FocusTree.UI.test;
 
 internal static class Program
@@ -17,8 +16,8 @@ internal static class Program
     static void Main()
     {
 #if MAIN
-        testInfo.Show();
-        Application.Run(new MainForm());
+        //testInfo.Show();
+        Application.Run(new GraphForm());
 #else
         Test.FMapTest();
         Application.Run(Test.gTest);
@@ -33,14 +32,14 @@ class Test
     {
         var graph = XmlIO.LoadFromXml<FocusGraph>("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\program\\FILES\\神佑村落.xml");
         UploadNodeMap(graph);
-        var gRect = graph.GetGraphMetaRect();
-        var canvasWidth = LatticeCell.SizeMax.Width * (gRect.Width);
-        var canvasHeight = LatticeCell.SizeMax.Height * (gRect.Height);
-        LatticeCell.Width = LatticeCell.SizeMax.Width;
-        LatticeCell.Height = LatticeCell.SizeMax.Height;
-        Lattice.SetBounds(new(0, 0, canvasWidth, canvasHeight));
-        Image cacher = new Bitmap(canvasWidth, canvasHeight);
-        gTest.LoadImageCacher(cacher, gRect);
+        //var gRect = graph.GetGraphMetaRect();
+        //var canvasWidth = LatticeCell.SizeMax.Width * (gRect.Width);
+        ////var canvasHeight = LatticeCell.SizeMax.Height * (gRect.Height);
+        //LatticeCell.Width = LatticeCell.SizeMax.Width;
+        //LatticeCell.Height = LatticeCell.SizeMax.Height;
+        //Lattice.SetBounds(new(0, 0, canvasWidth, canvasHeight));
+        //Image cacher = new Bitmap(canvasWidth, canvasHeight);
+        //gTest.LoadImageCacher(cacher, gRect);
         // FHistory.Enqueue(graph);
 
         //var suc = graph.AddNode(new FData(99,"Test", false, 0, "测试", "测试2", "测试3"));
@@ -50,16 +49,15 @@ class Test
     /// </summary>
     public static void UploadNodeMap(FocusGraph Graph)
     {
-        Lattice.DrawingClear();
-        foreach (var id in Graph.IdList)
+        //Lattice.DrawingClear();
+        foreach (var focus in Graph.FocusList)
         {
-            var focus = Graph.GetFocus(id);
             int color = 0; //不同需求要变色
             foreach (var requires in focus.Requires)
             {
                 foreach (var requireId in requires)
                 {
-                    var require = Graph.GetFocus(requireId);
+                    //var require = Graph[requireId];
                     //GraphDrawer.UploadRequireLine(color, focus, require);
                 }
                 color++;

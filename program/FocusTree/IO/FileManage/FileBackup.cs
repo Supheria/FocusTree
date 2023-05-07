@@ -2,7 +2,7 @@
 using System.IO.Compression;
 using System.Text.RegularExpressions;
 
-namespace FocusTree.IO.FileManege
+namespace FocusTree.IO.FileManage
 {
     public static class FileBackup
     {

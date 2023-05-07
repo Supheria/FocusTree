@@ -12,8 +12,9 @@
         [Flags]
         public enum Motions
         {
-            #region ==== 动作时机 ====
+            None = 0,
 
+            #region ==== 动作时机 ====
             /// <summary>
             /// 国策完成后开始实施
             /// </summary>
@@ -98,6 +99,8 @@
         [Flags]
         public enum Types
         {
+            None = 0,
+
             #region ==== 基础 ====
 
             /// <summary>

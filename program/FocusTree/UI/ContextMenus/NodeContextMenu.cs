@@ -2,11 +2,11 @@
 {
     class NodeContextMenu : ContextMenuStrip
     {
-        private GraphBox Display;
-        public NodeContextMenu(GraphBox display, Point showPoint)
+        private GraphDisplayer Display;
+        public NodeContextMenu(GraphDisplayer display, Point showPoint)
         {
             Display = display;
-            if (Display.ReadOnly)
+            if (GraphBox.ReadOnly)
             {
                 InitializeInReadonly();
             }
@@ -87,8 +87,12 @@
         }
         public new void Show(Point location)
         {
-            var data = Display.GetSelectedNodeData();
-            var info = data == null ? "" : $"{data.Value.Name}, {data.Value.Duration}日\n{data.Value.Descript}";
+            string info = string.Empty;
+            if (Display.SelectedNode != null)
+            {
+                var focus = Display.SelectedNode.Value;
+                info = $"{focus.Name}, {focus.Duration}日\n{focus.Descript}";
+            }
             Display.DrawInfo(info);
             base.Show(location);
         }
@@ -99,7 +103,9 @@
         }
         private void MenuItem_removeNode_Click(object sender, EventArgs e)
         {
-            Display.RemoveNode();
+            if (Display.SelectedNode == null) { return; }
+            GraphBox.RemoveFocusNode(Display.SelectedNode.Value);
+            Display.RefreshGraphBox();
         }
         private void MenuItem_checkout_Click(object sender, EventArgs e)
         {

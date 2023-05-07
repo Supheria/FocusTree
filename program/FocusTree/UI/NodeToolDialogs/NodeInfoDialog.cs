@@ -9,7 +9,7 @@ namespace FocusTree.UI.NodeToolDialogs
 
         #region ==== 初始化和更新 ====
 
-        internal NodeInfoDialog(GraphBox display)
+        internal NodeInfoDialog(GraphDisplayer display)
         {
             Display = display;
             InitializeComponent();
@@ -32,25 +32,24 @@ namespace FocusTree.UI.NodeToolDialogs
 
         private void InfoDialog_VisibleChanged(object sender, EventArgs e)
         {
-            var data = Display.GetSelectedNodeData();
-            if (data == null)
+            if (Display.SelectedNode == null)
             {
                 return;
             }
-            var focus = data.Value;
+            var focus = Display.SelectedNode.Value;
             Text = $"id: {focus.ID}";
             FocusName.Text = focus.Name;
             Duration.Text = $"{focus.Duration}";
             Descript.Text = focus.Descript;
             Effects.Text = string.Join('\n', focus.RawEffects);
 
-            AllowDrop = Display.ReadOnly ? false : true;
-            FocusName.ReadOnly = Display.ReadOnly;
-            Duration.ReadOnly = Display.ReadOnly;
-            ButtonEvent.Text = Display.ReadOnly ? "开始" : "保存";
-            Requires.ReadOnly = Display.ReadOnly;
-            Descript.ReadOnly = Display.ReadOnly;
-            Effects.ReadOnly = Display.ReadOnly;
+            AllowDrop = GraphBox.ReadOnly ? false : true;
+            FocusName.ReadOnly = GraphBox.ReadOnly;
+            Duration.ReadOnly = GraphBox.ReadOnly;
+            ButtonEvent.Text = GraphBox.ReadOnly ? "开始" : "保存";
+            Requires.ReadOnly = GraphBox.ReadOnly;
+            Descript.ReadOnly = GraphBox.ReadOnly;
+            Effects.ReadOnly = GraphBox.ReadOnly;
 
             this.NewHistory();
         }
@@ -83,7 +82,7 @@ namespace FocusTree.UI.NodeToolDialogs
 
         private void ButtonEvent_Click(object sender, EventArgs e)
         {
-            if (Display.ReadOnly)
+            if (GraphBox.ReadOnly)
             {
                 EventReadOnly();
             }
@@ -122,12 +121,11 @@ namespace FocusTree.UI.NodeToolDialogs
         }
         private void RichTextBox_MouseWheel(object sender, MouseEventArgs e)
         {
-            if (DoFontScale == false)
+            if (DoFontScale)
             {
-                return;
+                var richBox = sender as RichTextBox;
+                ScaleFontSize(richBox.ZoomFactor + e.Delta * 0.00001f);
             }
-            var richBox = sender as RichTextBox;
-            ScaleFontSize(richBox.ZoomFactor + e.Delta * 0.00001f);
         }
         private void ScaleFontSize(float zoomFactor)
         {
@@ -143,10 +141,6 @@ namespace FocusTree.UI.NodeToolDialogs
             {
                 DoFontScale = true;
             }
-        }
-        public override void Close()
-        {
-            Hide();
         }
         protected override void DrawClient()
         {
@@ -388,7 +382,7 @@ namespace FocusTree.UI.NodeToolDialogs
         public int HistoryIndex { get; set; } = 0;
         public int CurrentHistoryLength { get; set; } = 0;
         public FormattedData[] History { get; set; } = new FormattedData[50];
-        public FormattedData Latest { get; set; }
+        public int LatestIndex { get; set; } = 0;
         public FormattedData Format()
         {
             return new FormattedData(

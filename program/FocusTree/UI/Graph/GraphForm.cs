@@ -1,27 +1,26 @@
-﻿#define DEBUG
+#define DEBUG
 using FocusTree.Data.Focus;
+using FocusTree.Graph;
 using FocusTree.IO;
-using FocusTree.IO.FileManege;
+using FocusTree.IO.FileManage;
 using System.IO.Compression;
 
 namespace FocusTree.UI
 {
-    public partial class MainForm : Form
+    public partial class GraphForm : Form
     {
-        readonly GraphBox Display;
+        readonly GraphDisplayer Display;
         FormWindowState LastState;
         /// <summary>
         /// 当触发 SizeChanged 事件时，强制调用 ResizeGraphBox
         /// </summary>
-        public bool ForceResize = true;
-        public MainForm()
+        public bool ForceResize = false;
+        public GraphForm()
         {
-            Display = new GraphBox(this);
+            Display = new GraphDisplayer(this);
             InitializeComponent();
             UpdateText();
 
-            ResizeEnd += MainForm_ResizeEnd;
-            SizeChanged += MainForm_SizeChanged;
             Shown += MainForm_Shown;
 
             foreach (var name in Display.ToolDialogs.Keys)
@@ -35,6 +34,7 @@ namespace FocusTree.UI
             }
 #if DEBUG
             //Display.LoadGraph("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\program\\FILES\\隐居村落_测试连线用.xml");
+            //Display.LoadGraph("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\program\\FILES\\神佑村落.xml");
 
             //WindowState = FormWindowState.Minimized;
             //Display.SaveAsNew("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\国策\\国策测试\\test.xml");
@@ -43,47 +43,13 @@ namespace FocusTree.UI
             //Display.SelectedNode = 1;
             //a.Show(new(Screen.PrimaryScreen.Bounds.Width / 3, Screen.PrimaryScreen.Bounds.Height / 3));
 #endif
-
-
-        }
-
-        private void MainForm_Shown(object sender, EventArgs e)
-        {
-            ResizeGraphBox();
-            ForceResize = false;
-        }
-
-        private void MainForm_SizeChanged(object sender, EventArgs e)
-        {
-            if (ForceResize || 
-                (LastState == FormWindowState.Maximized && WindowState == FormWindowState.Normal) || 
-                WindowState == FormWindowState.Maximized || 
-                WindowState == FormWindowState.Minimized)
-            {
-                ResizeGraphBox();
-            }
-        }
-
-        private void MainForm_ResizeEnd(object sender, EventArgs e)
-        {
-            ResizeGraphBox();
-        }
-        private void ResizeGraphBox()
-        {
-            Display.Bounds = new(
-                ClientRectangle.Left,
-                ClientRectangle.Top + MainForm_Menu.Height,
-                ClientRectangle.Width,
-                ClientRectangle.Height - MainForm_Menu.Height - MainForm_StatusStrip.Height
-                );
-            LastState = WindowState;
         }
 
         #region ==== File ====
 
         private void MainForm_Menu_file_open_Click(object sender, EventArgs e)
         {
-            if (Display.GraphEdited == true)
+            if (GraphBox.Edited == true)
             {
                 if (MessageBox.Show("要放弃当前的更改吗？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No)
                 {
@@ -96,21 +62,22 @@ namespace FocusTree.UI
                 return;
             }
             MainForm_Openfile.InitialDirectory = Path.GetDirectoryName(MainForm_Openfile.FileName);
-            Display.LoadGraph(MainForm_Openfile.FileName);
+            GraphBox.Load(MainForm_Openfile.FileName);
+            Display.ResetDisplay();
             UpdateText();
         }
         private void MainForm_Menu_file_save_Click(object sender, EventArgs e)
         {
-            Display.SaveGraph();
+            GraphBox.Save();
             UpdateText();
         }
         private void MainForm_Menu_file_saveas_Click(object sender, EventArgs e)
         {
-            MainForm_Savefile.InitialDirectory = Path.GetDirectoryName(Display.FilePath);
-            MainForm_Savefile.FileName = Path.GetFileNameWithoutExtension(Display.FilePath) + "_new.xml";
+            MainForm_Savefile.InitialDirectory = Path.GetDirectoryName(GraphBox.FilePath);
+            MainForm_Savefile.FileName = Path.GetFileNameWithoutExtension(GraphBox.FilePath) + "_new.xml";
             if (MainForm_Savefile.ShowDialog() == DialogResult.OK)
             {
-                Display.SaveAsNew(MainForm_Savefile.FileName);
+                GraphBox.SaveToNew(MainForm_Savefile.FileName);
             }
             UpdateText();
         }
@@ -122,7 +89,7 @@ namespace FocusTree.UI
         private void MainForm_Menu_file_backup_DropDownOpening(object sender, EventArgs e)
         {
             MainForm_Menu_file_backup_open_ReadBackupList(sender, e);
-            MainForm_Menu_file_backup_delete.Visible = Display.ReadOnly;
+            MainForm_Menu_file_backup_delete.Visible = GraphBox.ReadOnly;
         }
 
         private void MainForm_Menu_file_backup_DropDownOpened(object sender, EventArgs e)
@@ -132,10 +99,10 @@ namespace FocusTree.UI
         private void MainForm_Menu_file_backup_open_ReadBackupList(object sender, EventArgs e)
         {
             MainForm_Menu_file_backup_open.Visible = false;
-            if (Display.Graph == null) { return; }
+            if (GraphBox.IsNull) { return; }
 
             MainForm_Menu_file_backup_open.DropDownItems.Clear();
-            var backupList = Display.Graph.GetBackupsList(Display.FilePath);
+            var backupList = GraphBox.BackupList;
             if (backupList.Count == 1) { return; }
 
             MainForm_Menu_file_backup_open.Visible = true;
@@ -154,19 +121,21 @@ namespace FocusTree.UI
         private void BackupItemClicked(object sender, EventArgs args)
         {
             ToolStripMenuItem item = (ToolStripMenuItem)sender;
-            if (Display.GraphEdited == true)
+            if (GraphBox.Edited == true)
             {
                 if (MessageBox.Show("要放弃当前的更改切换到备份吗？", "提示 ", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No)
                 {
                     return;
                 }
             }
-            Display.LoadGraph(item.Tag.ToString());
+            GraphBox.Load(item.Tag.ToString());
+            Display.RefreshGraphBox();
         }
         private void MainForm_Menu_file_backup_delete_Click(object sender, EventArgs e)
         {
-            Display.Graph.DeleteBackup();
-            Display.LoadGraph(Display.FilePath);
+            GraphBox.DeleteBackup();
+            GraphBox.Reload();
+            Display.ResetDisplay();
             MainForm_StatusStrip_status.Text = "已删除";
         }
         private void MainForm_Menu_file_backup_clear_Click(object sender, EventArgs e)
@@ -205,27 +174,31 @@ namespace FocusTree.UI
 
         private void MainForm_Menu_edit_undo_Click(object sender, EventArgs e)
         {
-            Display.Undo();
+            GraphBox.Undo();
+            Display.RefreshGraphBox();
             MainForm_Menu_edit_status_check();
+            UpdateText();
         }
 
         private void MainForm_Menu_edit_redo_Click(object sender, EventArgs e)
         {
-            Display.Redo();
+            GraphBox.Redo();
+            Display.RefreshGraphBox();
             MainForm_Menu_edit_status_check();
+            UpdateText();
         }
         /// <summary>
         /// 更新撤回和重做按钮是否可用的状态
         /// </summary>
         public void MainForm_Menu_edit_status_check()
         {
-            MainForm_Menu_edit_undo.Enabled = Display.HasPrevHistory();
-            MainForm_Menu_edit_redo.Enabled = Display.HasNextHistory();
+            MainForm_Menu_edit_undo.Enabled = GraphBox.HasPrevHistory;
+            MainForm_Menu_edit_redo.Enabled = GraphBox.HasNextHistory;
         }
         private void MainForm_Menu_edit_status_check(object sender, EventArgs e)
         {
-            MainForm_Menu_edit_undo.Enabled = Display.HasPrevHistory();
-            MainForm_Menu_edit_redo.Enabled = Display.HasNextHistory();
+            MainForm_Menu_edit_undo.Enabled = GraphBox.HasPrevHistory;
+            MainForm_Menu_edit_redo.Enabled = GraphBox.HasNextHistory;
         }
 
         private void MainForm_Menu_edit_Click(object sender, EventArgs e)
@@ -237,13 +210,13 @@ namespace FocusTree.UI
 
         #region ==== Camera ====
 
-        private void MainForm_Menu_loc_panorama_Click(object sender, EventArgs e)
+        private void MainForm_Menu_camLoc_panorama_Click(object sender, EventArgs e)
         {
-            Display.CamLocatePanorama();
+            Display.CameraLocatePanorama();
         }
-        private void MainForm_Menu_loc_focus_Click(object sender, EventArgs e)
+        private void MainForm_Menu_camLoc_focus_Click(object sender, EventArgs e)
         {
-            Display.CamLocateSelected();
+            Display.CameraLocateSelectedNode(true);
         }
 
         #endregion
@@ -261,16 +234,16 @@ namespace FocusTree.UI
 
         private void MainForm_Menu_graph_saveas_Click(object sender, EventArgs e)
         {
-            var savePath = Path.ChangeExtension(Display.FilePath, ".jpg");
-            NodeMapDrawer.SaveasImage(Display.Graph, savePath);
+            NodeMapDrawer.SaveasImage(GraphBox.Graph, GraphBox.FilePath);
         }
         private void MainForm_Menu_graph_reorderIds_Click(object sender, EventArgs e)
         {
-            Display.ReorderNodeIds();
+            GraphBox.ReorderFocusNodesID();
         }
-        private void MainForm_Menu_graph_setNodePointAuto_Click(object sender, EventArgs e)
+        private void MainForm_Menu_graph_autoLayout_Click(object sender, EventArgs e)
         {
-            Display.ResetNodeLatticedPoints();
+            GraphBox.AutoLayoutAllFocusNodes();
+            Display.RefreshGraphBox();
         }
 
         #endregion
@@ -329,7 +302,6 @@ namespace FocusTree.UI
                 {
                     var graph = XmlIO.LoadFromXml<FocusGraph>(fileName);
                     var savePath = Path.Combine(folderBrowser.SelectedPath, Path.GetFileName(fileName));
-                    savePath = Path.ChangeExtension(savePath, ".jpg");
                     NodeMapDrawer.SaveasImage(graph, savePath);
                     suc++;
                     MainForm_ProgressBar.PerformStep();
@@ -355,6 +327,27 @@ namespace FocusTree.UI
 
         #endregion
 
+        #region ==== Setting ====
+
+        private void MainForm_Menu_setting_backImage_show_Click(object sender, EventArgs e)
+        {
+            if (Background.Show == true)
+            {
+                MainForm_Menu_setting_backImage_show.CheckState = CheckState.Unchecked;
+                Background.Show = false;
+            }
+            else
+            {
+                MainForm_Menu_setting_backImage_show.CheckState = CheckState.Checked;
+                Background.Show = true;
+            }
+            Background.DrawNew(Display.Image);
+            Lattice.Draw(Display.Image);
+            Display.Invalidate();
+        }
+
+        #endregion
+
         #region ==== MainForm ====
 
         /// <summary>
@@ -368,34 +361,84 @@ namespace FocusTree.UI
         private void UpdateText()
         {
             MainForm_ProgressBar.Value = 0;
-            if (Display.ReadOnly)
-            {
-                Text = Display.FileName;
-                MainForm_StatusStrip_filename.Text = Display.FilePath;
-                MainForm_StatusStrip_status.Text = "正在预览";
-            }
-            else if (Display.GraphEdited == true)
-            {
-                Text = Display.FileName;
-                MainForm_StatusStrip_filename.Text = Display.FilePath + "*";
-                MainForm_StatusStrip_status.Text = "正在编辑";
-            }
-            else if (Display.GraphEdited == false)
-            {
-                Text = Display.FileName;
-                MainForm_StatusStrip_filename.Text = Display.FilePath;
-                MainForm_StatusStrip_status.Text = "就绪";
-            }
-            else
+            if (GraphBox.IsNull)
             {
                 Text = "FocusTree";
                 MainForm_StatusStrip_status.Text = "等待打开文件";
                 MainForm_StatusStrip_filename.Text = "";
             }
+            else if (GraphBox.ReadOnly)
+            {
+                Text = GraphBox.Name;
+                MainForm_StatusStrip_filename.Text = GraphBox.FilePath;
+                MainForm_StatusStrip_status.Text = "正在预览";
+            }
+            else if (GraphBox.Edited)
+            {
+                Text = GraphBox.Name;
+                MainForm_StatusStrip_filename.Text = GraphBox.FilePath + "*";
+                MainForm_StatusStrip_status.Text = "正在编辑";
+            }
+            else
+            {
+                Text = GraphBox.Name;
+                MainForm_StatusStrip_filename.Text = GraphBox.FilePath;
+                MainForm_StatusStrip_status.Text = "就绪";
+            }
+        }
+        private void MainForm_Shown(object sender, EventArgs e)
+        {
+            Size size = Background.Size;
+            Size = new(
+                size.Width + Width - ClientRectangle.Width,
+                size.Height + Height - ClientRectangle.Height
+                );
+            ResizeGraphDisplayer();
+            SizeChanged += MainForm_SizeChanged;
+            ResizeEnd += GraphForm_ResizeEnd;
+#if DEBUG
+            GraphBox.Load("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\program\\FILES\\神佑村落.xml");
+            Display.ResetDisplay();
+#endif
+        }
+
+        private void GraphForm_ResizeEnd(object sender, EventArgs e)
+        {
+            ResizeGraphDisplayer();
+        }
+
+        private void MainForm_SizeChanged(object sender, EventArgs e)
+        {
+            if (ForceResize ||
+                (LastState == FormWindowState.Maximized && WindowState == FormWindowState.Normal) ||
+                WindowState == FormWindowState.Maximized)
+            {
+                ResizeGraphDisplayer();
+            }
+        }
+        public void ResizeGraphDisplayer()
+        {
+            if (Math.Min(ClientRectangle.Width, ClientRectangle.Height) <= 0)
+            {
+                return;
+            }
+            Display.Bounds = new(
+                ClientRectangle.Left,
+                ClientRectangle.Top + MainForm_Menu.Height,
+                ClientRectangle.Width,
+                ClientRectangle.Height - MainForm_Menu.Height - MainForm_StatusStrip.Height
+                );
+            Display.Image?.Dispose();
+            Display.Image = new Bitmap(ClientRectangle.Width, ClientRectangle.Height);
+            Background.DrawNew(Display.Image);
+            Lattice.SetBounds(Display.LatticeBound);
+            Lattice.Draw(Display.Image);
+            Invalidate();
+            LastState = WindowState;
         }
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (Display.Graph == null || Display.GraphEdited == false)
+            if (GraphBox.IsNull || GraphBox.Edited == false)
             {
                 FileCache.Clear();
                 return;
@@ -408,7 +451,7 @@ namespace FocusTree.UI
             }
             if (result == DialogResult.Yes)
             {
-                Display.SaveGraph();
+                GraphBox.Save();
             }
         }
 

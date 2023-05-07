@@ -1,14 +1,8 @@
 ﻿#define DEBUG
 
-using FocusTree.UI.test;
 
-namespace FocusTree.UI.Graph
+namespace FocusTree.Graph
 {
-    /// <summary>
-    /// 绘制栅格时，绘制非循环节点的委托类型
-    /// </summary>
-    /// <param name="g">传入栅格的 GDI</param>
-    public delegate void CellDrawer(Bitmap image);
     /// <summary>
     /// 栅格
     /// </summary>
@@ -25,17 +19,9 @@ namespace FocusTree.UI.Graph
         /// </summary>
         static int ColNumber;
         /// <summary>
-        /// 栅格总列宽
+        /// 栅格边界
         /// </summary>
-        static int RowWidth;
-        /// <summary>
-        /// 栅格总行高
-        /// </summary>
-        static int ColHeight;
-        /// <summary>
-        /// 栅格绘图区域（根据给定放置区域、列数、行数自动生成，并在给定放置区域内居中）
-        /// </summary>
-        public static Rectangle DrawRect { get; private set; }
+        public static Rectangle Bounds { get; private set; }
         /// <summary>
         /// 栅格坐标系原点 x 坐标
         /// </summary>
@@ -52,7 +38,7 @@ namespace FocusTree.UI.Graph
         /// <summary>
         /// 格元边界绘制用笔
         /// </summary>
-        public static Pen CellPen = new(Color.AliceBlue, 1.5f);
+        public static Pen CellPen = new(Color.FromArgb(200, Color.AliceBlue), 1.5f);
         /// <summary>
         /// 节点边界绘制用笔
         /// </summary>
@@ -62,9 +48,9 @@ namespace FocusTree.UI.Graph
         /// </summary>
         public static Pen GuidePen = new Pen(Color.FromArgb(200, Color.Red), 1.75f);
         /// <summary>
-        /// 需要单独绘制的格元委托列表
+        /// 绘制委托列表（三层绘制）
         /// </summary>
-        public static event CellDrawer Drawing;
+        public static DrawLayers Drawing = new(3);
 
         #endregion
 
@@ -87,17 +73,8 @@ namespace FocusTree.UI.Graph
         public static void SetBounds(Rectangle bounds)
         {
             ColNumber = bounds.Width / LatticeCell.Width;
-            RowWidth = ColNumber * LatticeCell.Width;
             RowNumber = bounds.Height / LatticeCell.Height;
-            ColHeight = RowNumber * LatticeCell.Height;
-            var deviDiffWidth = (int)((float)(bounds.Width - RowWidth) * 0.5f);
-            var deviDiffHeight = (int)((float)(bounds.Height - ColHeight) * 0.5f);
-            DrawRect = new Rectangle(
-                bounds.X + deviDiffWidth,
-                bounds.Y + deviDiffHeight,
-                RowWidth,
-                ColHeight
-                );
+            Bounds = bounds;
         }
         /// <summary>
         /// 绘制无限制栅格，并调用绘制格元的委托
@@ -105,8 +82,7 @@ namespace FocusTree.UI.Graph
         /// <param name="g"></param>
         public static void Draw(Image image)
         {
-            Drawing?.Invoke((Bitmap)image);
-
+            Drawing.Invoke((Bitmap)image);
             if (DrawBackLattice)
             {
                 var g = Graphics.FromImage(image);
@@ -118,24 +94,13 @@ namespace FocusTree.UI.Graph
                     }
                 }
                 // guide line
-                g.DrawLine(GuidePen, new(OriginLeft, DrawRect.Top), new(OriginLeft, DrawRect.Bottom));
-                g.DrawLine(GuidePen, new(DrawRect.Left, OriginTop), new(DrawRect.Right, OriginTop));
+                g.DrawLine(GuidePen, new(OriginLeft, Bounds.Top), new(OriginLeft, Bounds.Bottom));
+                g.DrawLine(GuidePen, new(Bounds.Left, OriginTop), new(Bounds.Right, OriginTop));
                 g.Flush(); g.Dispose();
             }
-            if (Drawing == null) { return; }
-            var delArray = Drawing.GetInvocationList();
-        }
-        /// <summary>
-        /// 清空绘制委托
-        /// </summary>
-        public static void DrawingClear()
-        {
-            if (Drawing == null) { return; }
-            var delArray = Drawing.GetInvocationList();
-            foreach (var del in delArray)
-            {
-                Drawing -= del as CellDrawer;
-            }
+            //Program.testInfo.Show();
+            //Program.testInfo.InfoText = $"{Drawing.MethodNumber()}\n" +
+            //    $"1. {Drawing.MethodNumber(0)}, 2. {Drawing.MethodNumber(1)}, 3. {Drawing.MethodNumber(2)}";
         }
 
         #endregion
@@ -168,8 +133,8 @@ namespace FocusTree.UI.Graph
         /// <param name="size">格元或节点的大小</param>
         private static void DrawLoopCellLine(Graphics g, Pen pen, Point LeftTop, Size size)
         {
-            var LeftRight = GetLoopedLineEnds(LeftTop.X, size.Width, (DrawRect.Left, DrawRect.Right), DrawRect.Width);
-            var TopBottom = GetLoopedLineEnds(LeftTop.Y, size.Height, (DrawRect.Top, DrawRect.Bottom), DrawRect.Height);
+            var LeftRight = GetLoopedLineEnds(LeftTop.X, size.Width, (Bounds.Left, Bounds.Right), Bounds.Width);
+            var TopBottom = GetLoopedLineEnds(LeftTop.Y, size.Height, (Bounds.Top, Bounds.Bottom), Bounds.Height);
             var left = LeftRight[0].Item1;
             var top = TopBottom[0].Item1;
             //
@@ -204,8 +169,8 @@ namespace FocusTree.UI.Graph
         /// </summary>
         /// <param name="head">起点横（纵）坐标（left or top）</param>
         /// <param name="length">线段长度</param>
-        /// <param name="drBounds">head在DrawRect(dr)里的限制范围</param>
-        /// <param name="drLength">DrawRect(dr)的宽度（长度）</param>
+        /// <param name="drBounds">head在Bounds(dr)里的限制范围</param>
+        /// <param name="drLength">Bounds(dr)的宽度（长度）</param>
         /// <returns>转换后的坐标数对，前者是起点横（纵）坐标，后者是终点的。如果线需要分割，则返回数组里有一个额外的分割后另一部分线段的坐标数对。</returns>
         private static (int, int)[] GetLoopedLineEnds(int head, int length, (int, int) drBounds, int drLength)
         {
@@ -246,25 +211,25 @@ namespace FocusTree.UI.Graph
             var right = rect.Right;
             var top = rect.Top;
             var bottom = rect.Bottom;
-            if (left <= DrawRect.Left)
+            if (left <= Bounds.Left)
             {
-                if (right <= DrawRect.Left) { return false; }
-                left = DrawRect.Left;
+                if (right <= Bounds.Left) { return false; }
+                left = Bounds.Left;
             }
-            if (right >= DrawRect.Right)
+            if (right >= Bounds.Right)
             {
-                if (left >= DrawRect.Right) { return false; }
-                right = DrawRect.Right;
+                if (left >= Bounds.Right) { return false; }
+                right = Bounds.Right;
             }
-            if (top <= DrawRect.Top)
+            if (top <= Bounds.Top)
             {
-                if (bottom <= DrawRect.Top) { return false; }
-                top = DrawRect.Top;
+                if (bottom <= Bounds.Top) { return false; }
+                top = Bounds.Top;
             }
-            if (bottom >= DrawRect.Bottom)
+            if (bottom >= Bounds.Bottom)
             {
-                if (top >= DrawRect.Bottom) { return false; }
-                bottom = DrawRect.Bottom;
+                if (top >= Bounds.Bottom) { return false; }
+                bottom = Bounds.Bottom;
             }
             saveRect = new(left, top, right - left, bottom - top);
             return true;

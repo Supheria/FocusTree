@@ -1,16 +1,14 @@
-﻿using FocusTree.IO.FileManege;
-
-namespace FocusTree.UI.Controls
+﻿namespace FocusTree.UI.Controls
 {
     class GraphContextMenu : ContextMenuStrip
     {
         public MouseButtons ButtonTag;
-        private GraphBox Display;
+        private GraphDisplayer Display;
 
         private ToolStripMenuItem menuItem_edit_undo = new();
         private ToolStripMenuItem menuItem_edit_redo = new();
 
-        public GraphContextMenu(GraphBox display, Point showPoint, MouseButtons button)
+        public GraphContextMenu(GraphDisplayer display, Point showPoint, MouseButtons button)
         {
             ButtonTag = button;
             Display = display;
@@ -19,7 +17,7 @@ namespace FocusTree.UI.Controls
                 InitializeInMiddleClick();
                 Show(showPoint);
             }
-            else if (button == MouseButtons.Right && !Display.ReadOnly)
+            else if (button == MouseButtons.Right && !GraphBox.ReadOnly)
             {
                 InitializeInRightClick();
                 Show(showPoint);
@@ -64,7 +62,7 @@ namespace FocusTree.UI.Controls
         }
         private void InitializeInMiddleClick()
         {
-            var backupList = Display.Graph.GetBackupsList(Display.FilePath);
+            var backupList = GraphBox.BackupList;
             if (backupList.Count == 1) { return; }
 
             ToolStripMenuItem item;
@@ -78,7 +76,7 @@ namespace FocusTree.UI.Controls
                 item.Click += BackupItemClicked;
                 Items.Add(item);
             }
-            if (!Display.ReadOnly) { return; }
+            if (!GraphBox.ReadOnly) { return; }
             item = new()
             {
                 Text = "删除"
@@ -90,57 +88,60 @@ namespace FocusTree.UI.Controls
         }
         private void MenuItem_file_save_Click(object sender, EventArgs args)
         {
-            Display.SaveGraph();
+            GraphBox.Save();
         }
         private void MenuItem_edit_undo_Click(object sender, EventArgs args)
         {
-            Display.Undo();
+            GraphBox.Undo();
+            Display.RefreshGraphBox();
             menuItem_edit_status_check();
             Invalidate();
         }
         private void MenuItem_edit_redo_Click(object sender, EventArgs args)
         {
-            Display.Redo();
+            GraphBox.Redo();
+            Display.RefreshGraphBox();
             menuItem_edit_status_check();
             Invalidate();
         }
         private void MenuItem_loc_panorama_Click(object sender, EventArgs args)
         {
-            Display.CamLocatePanorama();
+            Display.CameraLocatePanorama();
         }
         private void menuItem_loc_focus_Click(object sender, EventArgs args)
         {
-            Display.CamLocateSelected();
+            Display.CameraLocateSelectedNode(true);
         }
         public void menuItem_edit_status_check()
         {
-            menuItem_edit_undo.Enabled = Display.HasPrevHistory();
-            menuItem_edit_redo.Enabled = Display.HasNextHistory();
+            menuItem_edit_undo.Enabled = GraphBox.HasPrevHistory;
+            menuItem_edit_redo.Enabled = GraphBox.HasNextHistory;
         }
         private void menuItem_edit_status_check(object sender, EventArgs e)
         {
-            menuItem_edit_undo.Enabled = Display.HasPrevHistory();
-            menuItem_edit_redo.Enabled = Display.HasNextHistory();
+            menuItem_edit_undo.Enabled = GraphBox.HasPrevHistory;
+            menuItem_edit_redo.Enabled = GraphBox.HasNextHistory;
         }
 
         private void BackupItemClicked(object sender, EventArgs args)
         {
             ToolStripMenuItem item = (ToolStripMenuItem)sender;
-            if (Display.GraphEdited == true)
+            if (GraphBox.Edited == true)
             {
                 if (MessageBox.Show("要放弃当前的更改切换到备份吗？", "提示 ", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No)
                 {
                     return;
                 }
             }
-            Display.LoadGraph(item.Tag.ToString());
+            GraphBox.Load(item.Tag.ToString());
+            Display.RefreshGraphBox();
             ButtonTag = MouseButtons.None;
         }
         private void DeleteBackupClicked(object sender, EventArgs e)
         {
-            Display.Graph.DeleteBackup();
-            Display.LoadGraph(Display.FilePath);
+            GraphBox.DeleteBackup();
+            GraphBox.Reload();
+            Display.ResetDisplay();
         }
-
     }
 }

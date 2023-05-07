@@ -1,4 +1,6 @@
-﻿namespace FocusTree.Data.Focus
+﻿using FocusTree.Graph;
+
+namespace FocusTree.Data.Focus
 {
     /// <summary>
     /// 国策数据
@@ -8,7 +10,7 @@
         /// <summary>
         /// 栅格化坐标
         /// </summary>
-        public Point LatticedPoint = new();
+        public LatticedPoint LatticedPoint = new();
         /// <summary>
         /// 节点ID
         /// </summary>
