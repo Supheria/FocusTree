@@ -104,7 +104,11 @@ namespace Hoi4ReaderWriter
         {
             while (TrimedBuffer[BufferPosition] == ' ')
             {
-                if (++BufferPosition >= TrimedBuffer.Length) { return false; }
+                if (++BufferPosition >= TrimedBuffer.Length) 
+                { 
+                    if (StartElements.Count != 0) { throw new InvalidDataException("Brace signs are asymmetrical."); }
+                    return false; 
+                }
             }
             if (TrimedBuffer[BufferPosition] == '}')
             {
@@ -169,17 +173,15 @@ namespace Hoi4ReaderWriter
         private bool SearchForAssignmentWithinBrace()
         {
             var tempPostion = BufferPosition;
-            bool result = false;
-            while (TrimedBuffer[tempPostion] != '}')
+            while (TrimedBuffer[tempPostion] != '=' && TrimedBuffer[tempPostion] != '<' && TrimedBuffer[tempPostion] != '>')
             {
-                if (TrimedBuffer[tempPostion] == '=' || TrimedBuffer[tempPostion] == '<' || TrimedBuffer[tempPostion] == '>')
+                if (TrimedBuffer[tempPostion] == '}')
                 {
-                    result = true;
-                    break;
+                    return false;
                 }
                 if (++tempPostion >= TrimedBuffer.Length) { throw new InvalidDataException("Unexpected end of brace."); }
             }
-            return result;
+            return true;
         }
         /// <summary>
         /// 读取花括号赋值节点（枚举组合赋值 或 赋空值）
