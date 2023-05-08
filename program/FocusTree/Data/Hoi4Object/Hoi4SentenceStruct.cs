@@ -33,7 +33,7 @@ namespace FocusTree.Data.Hoi4Object
             ValueType = Types.None;
             Value = string.Empty;
             TriggerType = Types.None;
-            Triggers = new string[0];
+            Triggers = Array.Empty<string>();
         }
     }
 }

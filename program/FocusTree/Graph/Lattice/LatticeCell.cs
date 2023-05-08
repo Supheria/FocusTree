@@ -54,10 +54,10 @@
         /// </summary>
         public static PointF NodePaddingZoomFactor
         {
-            get => new(npf.X < 0.3f ? 0.3f : npf.X > 0.7f ? 0.7f : npf.X, npf.Y < 0.3f ? 0.3f : npf.Y > 0.7f ? 0.7f : npf.Y);
-            set => npf = new(value.X < 0.3f ? 0.3f : value.X > 0.7f ? 0.7f : value.X, value.Y < 0.3f ? 0.3f : value.Y > 0.7f ? 0.7f : value.Y);
+            get => nodePaddingZoomFactor;
+            set => nodePaddingZoomFactor = new(value.X < 0.3f ? 0.3f : value.X > 0.7f ? 0.7f : value.X, value.Y < 0.3f ? 0.3f : value.Y > 0.7f ? 0.7f : value.Y);
         }
-        static PointF npf = new(0.3f, 0.5f);
+        static PointF nodePaddingZoomFactor = new(0.3f, 0.5f);
 
         #endregion
 

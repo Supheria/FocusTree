@@ -42,13 +42,14 @@ namespace FocusTree.Data.Focus
         /// </summary>
         public FocusNode()
         {
+            FData = new();
         }
         public void ReadXml(XmlReader reader)
         {
             Effects = new();
             FData = new();
 
-            //==== 读取 Data ====//
+            //==== 读取 FData ====//
             FData.ID = int.Parse(reader.GetAttribute("ID") ?? throw new ArgumentException());
             FData.Name = reader.GetAttribute("Name") ?? FData.Name;
             FData.BeginWithStar = bool.Parse(reader.GetAttribute("Star") ?? "false");

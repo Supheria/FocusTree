@@ -19,9 +19,9 @@ namespace FocusTree.Graph
         /// </summary>
         static int ColNumber;
         /// <summary>
-        /// 栅格边界
+        /// 栅格绘图区域矩形
         /// </summary>
-        public static Rectangle Bounds { get; private set; }
+        public static Rectangle DrawRect { get; private set; }
         /// <summary>
         /// 栅格坐标系原点 x 坐标
         /// </summary>
@@ -74,7 +74,7 @@ namespace FocusTree.Graph
         {
             ColNumber = bounds.Width / LatticeCell.Width;
             RowNumber = bounds.Height / LatticeCell.Height;
-            Bounds = bounds;
+            DrawRect = bounds;
         }
         /// <summary>
         /// 绘制无限制栅格，并调用绘制格元的委托
@@ -94,8 +94,8 @@ namespace FocusTree.Graph
                     }
                 }
                 // guide line
-                g.DrawLine(GuidePen, new(OriginLeft, Bounds.Top), new(OriginLeft, Bounds.Bottom));
-                g.DrawLine(GuidePen, new(Bounds.Left, OriginTop), new(Bounds.Right, OriginTop));
+                g.DrawLine(GuidePen, new(OriginLeft, DrawRect.Top), new(OriginLeft, DrawRect.Bottom));
+                g.DrawLine(GuidePen, new(DrawRect.Left, OriginTop), new(DrawRect.Right, OriginTop));
                 g.Flush(); g.Dispose();
             }
             //Program.testInfo.Show();
@@ -133,8 +133,8 @@ namespace FocusTree.Graph
         /// <param name="size">格元或节点的大小</param>
         private static void DrawLoopCellLine(Graphics g, Pen pen, Point LeftTop, Size size)
         {
-            var LeftRight = GetLoopedLineEnds(LeftTop.X, size.Width, (Bounds.Left, Bounds.Right), Bounds.Width);
-            var TopBottom = GetLoopedLineEnds(LeftTop.Y, size.Height, (Bounds.Top, Bounds.Bottom), Bounds.Height);
+            var LeftRight = GetLoopedLineEnds(LeftTop.X, size.Width, (DrawRect.Left, DrawRect.Right), DrawRect.Width);
+            var TopBottom = GetLoopedLineEnds(LeftTop.Y, size.Height, (DrawRect.Top, DrawRect.Bottom), DrawRect.Height);
             var left = LeftRight[0].Item1;
             var top = TopBottom[0].Item1;
             //
@@ -211,25 +211,25 @@ namespace FocusTree.Graph
             var right = rect.Right;
             var top = rect.Top;
             var bottom = rect.Bottom;
-            if (left <= Bounds.Left)
+            if (left <= DrawRect.Left)
             {
-                if (right <= Bounds.Left) { return false; }
-                left = Bounds.Left;
+                if (right <= DrawRect.Left) { return false; }
+                left = DrawRect.Left;
             }
-            if (right >= Bounds.Right)
+            if (right >= DrawRect.Right)
             {
-                if (left >= Bounds.Right) { return false; }
-                right = Bounds.Right;
+                if (left >= DrawRect.Right) { return false; }
+                right = DrawRect.Right;
             }
-            if (top <= Bounds.Top)
+            if (top <= DrawRect.Top)
             {
-                if (bottom <= Bounds.Top) { return false; }
-                top = Bounds.Top;
+                if (bottom <= DrawRect.Top) { return false; }
+                top = DrawRect.Top;
             }
-            if (bottom >= Bounds.Bottom)
+            if (bottom >= DrawRect.Bottom)
             {
-                if (top >= Bounds.Bottom) { return false; }
-                bottom = Bounds.Bottom;
+                if (top >= DrawRect.Bottom) { return false; }
+                bottom = DrawRect.Bottom;
             }
             saveRect = new(left, top, right - left, bottom - top);
             return true;

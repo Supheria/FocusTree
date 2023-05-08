@@ -36,7 +36,7 @@ namespace FocusTree.Graph
             Redraw(image);
         }
         /// <summary>
-        /// 重绘背景（首次重绘应该使用 DrawNewBackground）
+        /// 重绘背景（首次重绘应该使用 DrawNew）
         /// </summary>
         /// <param name="image"></param>
         public static void Redraw(Image image)

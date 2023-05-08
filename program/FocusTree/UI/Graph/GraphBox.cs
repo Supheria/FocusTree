@@ -76,7 +76,6 @@ namespace FocusTree.UI
         /// 从文件路径加载元图
         /// </summary>
         /// <param name="filePath"></param>
-        /// <param name="sealFilePath">是否封存文件路径</param>
         public static void Load(string filePath)
         {
             ReadOnly = Graph != null && Graph.IsBackupFile(filePath);

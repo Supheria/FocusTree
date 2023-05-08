@@ -49,12 +49,16 @@ namespace Hoi4ReaderWriter
         public float Base { get; set; }
         public float Add { get; set; }
         public float Factor { get; set; }
+        Modifier modifier { get; set; }
     }
-    public abstract class TiggerBlock
+    public class Modifier : IMtthOperatable
     {
-
+        public float Base { get; set; }
+        public float Add { get; set; }
+        public float Factor { get; set; }
+        public Trigger[] triggers { get; set; }
     }
-    public class Modifier : TiggerBlock
+    public class Trigger
     {
 
     }
