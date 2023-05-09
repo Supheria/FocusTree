@@ -431,7 +431,7 @@ namespace FocusTree.UI
             Display.Image?.Dispose();
             Display.Image = new Bitmap(ClientRectangle.Width, ClientRectangle.Height);
             Background.DrawNew(Display.Image);
-            Lattice.SetBounds(Display.LatticeBound);
+            Lattice.DrawRect = Display.LatticeBound;
             Lattice.Draw(Display.Image);
             Invalidate();
             LastState = WindowState;

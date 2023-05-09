@@ -369,8 +369,8 @@ namespace FocusTree.Graph
                 for (int i = 0; i < fontHeight; i++)
                 {
                     var start = i * fontWidth;
-                    var leave = name.Length - start;
-                    sName += $"{name.Substring(start, fontWidth > leave ? leave : fontWidth)}\n";
+                    var remain = name.Length - start;
+                    sName += $"{name.Substring(start, fontWidth > remain ? remain : fontWidth)}\n";
                 }
             }
             var font = new Font(NodeFont, fontSize, FontStyle.Regular, GraphicsUnit.Pixel);
@@ -431,29 +431,29 @@ namespace FocusTree.Graph
             var x1 = cell.NodeRealLeft + halfNodeWidth;
             var y1 = cell.NodeRealTop;
             var y2 = cell.RealTop + halfPaddingHeight;
-            DrawLine(image, new(x1, y1), new(x1, y2), false);
+            DrawCrossLine(image, new(x1, y1), new(x1, y2));
             if (rowDiff < 0)
             {
                 cell.LatticedLeft += colDiff;
                 var x2 = cell.NodeRealLeft + halfNodeWidth;
                 if (Math.Abs(colDiff) > 0)
                 {
-                    DrawLine(image, new(x1, y2), new(x2, y2), true);
+                    DrawCrossLine(image, new(x1, y2), new(x2, y2));
                 }
                 cell.LatticedTop += rowDiff + 1;
-                DrawLine(image, new(x2, y2), new(x2, cell.RealTop), false);
+                DrawCrossLine(image, new(x2, y2), new(x2, cell.RealTop));
             }
             else
             {
                 cell.LatticedLeft += colDiff < 0 ? colDiff + 1 : colDiff;
                 var x2 = cell.RealLeft + halfPaddingWidth;
-                DrawLine(image, new(x1, y2), new(x2, y2), true);
+                DrawCrossLine(image, new(x1, y2), new(x2, y2));
                 cell.LatticedTop += rowDiff + 1;
                 var y3 = cell.RealTop + halfPaddingHeight;
-                DrawLine(image, new(x2, y2), new(x2, y3), false);
+                DrawCrossLine(image, new(x2, y2), new(x2, y3));
                 var x3 = x2 + (colDiff < 0 ? -(halfPaddingWidth +  halfNodeWidth) : halfPaddingWidth + halfNodeWidth);
-                DrawLine(image, new(x2, y3), new(x3, y3), true);
-                DrawLine(image, new(x3, y3), new(x3, y3 - halfPaddingHeight), false);
+                DrawCrossLine(image, new(x2, y3), new(x3, y3));
+                DrawCrossLine(image, new(x3, y3), new(x3, y3 - halfPaddingHeight));
             }
         }
 
@@ -462,30 +462,20 @@ namespace FocusTree.Graph
         #region ==== 绘制线方法 ====
 
         /// <summary>
-        /// 绘制空心线，或直接画线
+        /// 绘制横纵空心直线
         /// </summary>
         /// <param name="image"></param>
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="pen"></param>
-        private static void DrawLine(Bitmap image, Point p1, Point p2, bool horizon)
+        private static void DrawCrossLine(Bitmap image, Point p1, Point p2)
         {
-            var halfLineWidth = NodeLineWidth / 2;
-            Rectangle lineRect;
-            if (horizon)
-            {
-                lineRect = new(Math.Min(p1.X, p2.X), Math.Min(p1.Y, p2.Y) - halfLineWidth, Math.Abs(p1.X - p2.X) + 1, Math.Abs(p1.Y - p2.Y) + NodeLineWidth);
-            }
-            else
-            {
-                lineRect = new(Math.Min(p1.X, p2.X) - halfLineWidth, Math.Min(p1.Y, p2.Y), Math.Abs(p1.X - p2.X) + NodeLineWidth, Math.Abs(p1.Y - p2.Y) + 1);
-            }
-            if (!Lattice.RectWithin(lineRect, out lineRect)) { return; }
+            if (!Lattice.CrossLineWithin(p1, p2, NodeLineWidth, out var lineRect, out var isHorizon)) { return; }
             PointBitmap pImage = new(image);
             pImage.LockBits();
             PointBitmap pCache = new(Background.BackImage);
             pCache.LockBits();
-            if (horizon)
+            if (isHorizon)
             {
                 // top
                 for (int i = 0; i < lineRect.Width; i++)
@@ -545,7 +535,6 @@ namespace FocusTree.Graph
                     }
                 }
             }
-            
             pCache.UnlockBits();
             pImage.UnlockBits();
         }

@@ -3,7 +3,7 @@
     /// <summary>
     /// 绘制委托类型
     /// </summary>
-    /// <param name="g">传入栅格的 GDI</param>
+    /// <param name="image"></param>
     public delegate void Drawer(Bitmap image);
     /// <summary>
     /// 绘制层级
