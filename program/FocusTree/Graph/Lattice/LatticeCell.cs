@@ -186,26 +186,5 @@
         }
 
         #endregion
-
-        #region ==== 线头 ====
-
-        public (Point, Point) TopIntroLineUpper
-        { 
-            get
-            {
-                var x = NodeRealLeft + NodeWidth / 2;
-                return (new(x, RealTop + NodePaddingHeight / 2), new(x, RealTop));
-            }
-        }
-        public (Point, Point) TopIntroLineLower
-        {
-            get
-            {
-                var x = NodeRealLeft + NodeWidth / 2;
-                return (new(x, NodeRealTop), new(x, RealTop + NodePaddingHeight / 2));
-            }
-        }
-
-        #endregion
     }
 }

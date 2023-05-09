@@ -11,14 +11,6 @@ namespace FocusTree.Graph
         #region ==== 基本参数 ====
 
         /// <summary>
-        /// 栅格行数（根据格元高自动生成）
-        /// </summary>
-        static int RowNumber;
-        /// <summary>
-        /// 栅格列数（根据格元宽自动生成）
-        /// </summary>
-        static int ColNumber;
-        /// <summary>
         /// 栅格绘图区域矩形
         /// </summary>
         public static Rectangle DrawRect { get; private set; }
@@ -46,7 +38,7 @@ namespace FocusTree.Graph
         /// <summary>
         /// 坐标辅助线绘制用笔
         /// </summary>
-        public static Pen GuidePen = new Pen(Color.FromArgb(200, Color.Red), 1.75f);
+        public static Pen GuidePen = new Pen(Color.FromArgb(50, Color.Red), 1.75f);
         /// <summary>
         /// 绘制委托列表（三层绘制）
         /// </summary>
@@ -72,8 +64,6 @@ namespace FocusTree.Graph
         /// <param name="bounds">放置区域</param>
         public static void SetBounds(Rectangle bounds)
         {
-            ColNumber = bounds.Width / LatticeCell.Width;
-            RowNumber = bounds.Height / LatticeCell.Height;
             DrawRect = bounds;
         }
         /// <summary>
@@ -83,22 +73,17 @@ namespace FocusTree.Graph
         public static void Draw(Image image)
         {
             Drawing.Invoke((Bitmap)image);
-            if (DrawBackLattice)
+            //if (DrawBackLattice)
             {
                 var g = Graphics.FromImage(image);
-                for (int i = 0; i < ColNumber; i++)
-                {
-                    for (int j = 0; j < RowNumber; j++)
-                    {
-                        DrawLoopCell(g, i, j);
-                    }
-                }
+                DrawLatticeCells(g);
                 // guide line
                 g.DrawLine(GuidePen, new(OriginLeft, DrawRect.Top), new(OriginLeft, DrawRect.Bottom));
                 g.DrawLine(GuidePen, new(DrawRect.Left, OriginTop), new(DrawRect.Right, OriginTop));
                 g.Flush(); g.Dispose();
             }
             //Program.testInfo.Show();
+            //Program.testInfo.InfoText = $"{new Point(ColNumber, RowNumber)}";
             //Program.testInfo.InfoText = $"{Drawing.MethodNumber()}\n" +
             //    $"1. {Drawing.MethodNumber(0)}, 2. {Drawing.MethodNumber(1)}, 3. {Drawing.MethodNumber(2)}";
         }
@@ -115,82 +100,31 @@ namespace FocusTree.Graph
         /// <param name="row">循环到的行数</param>
         /// <param name="drawMain">是否绘制未超出栅格绘图区域的部分</param>
         /// <param name="drawAppend">是否补绘超出栅格绘图区域的部分</param>
-        private static void DrawLoopCell(Graphics g, int col, int row)
+        private static void DrawLatticeCells(Graphics g)
         {
-            var cellLeft = col * LatticeCell.Width + (OriginLeft) % LatticeCell.Width;
-            var cellTop = row * LatticeCell.Height + (OriginTop) % LatticeCell.Height;
-            DrawLoopCellLine(g, CellPen, new(cellLeft, cellTop), new(LatticeCell.Width, LatticeCell.Height));
-
-            var nodeLeft = cellLeft + LatticeCell.NodePaddingWidth;
-            var nodeTop = cellTop + LatticeCell.NodePaddingHeight;
-            DrawLoopCellLine(g, NodePen, new(nodeLeft, nodeTop), new(LatticeCell.NodeWidth, LatticeCell.NodeHeight));
-        }
-        /// <summary>
-        /// 绘制循环格元的边界线或节点线
-        /// </summary>
-        /// <param name="pen">绘制格元或节点用的笔刷</param>
-        /// <param name="LeftTop">格元或节点的左上角坐标</param>
-        /// <param name="size">格元或节点的大小</param>
-        private static void DrawLoopCellLine(Graphics g, Pen pen, Point LeftTop, Size size)
-        {
-            var LeftRight = GetLoopedLineEnds(LeftTop.X, size.Width, (DrawRect.Left, DrawRect.Right), DrawRect.Width);
-            var TopBottom = GetLoopedLineEnds(LeftTop.Y, size.Height, (DrawRect.Top, DrawRect.Bottom), DrawRect.Height);
-            var left = LeftRight[0].Item1;
-            var top = TopBottom[0].Item1;
-            //
-            // draw main: LeftBottom -> LeftTop -> TopRight
-            //
-            g.DrawLines(pen, new Point[]
+            var offsetLeft = OriginLeft % LatticeCell.Width;
+            var offSetTop = OriginTop % LatticeCell.Height;
+            if (offsetLeft < 0) { offsetLeft += LatticeCell.Width; }
+            if (offSetTop < 0) { offSetTop += LatticeCell.Height; }
+            if (offsetLeft > 0) { offsetLeft -= LatticeCell.Width; }
+            if (offSetTop > 0) { offSetTop -= LatticeCell.Height; }
+            for (int i = 0; i < DrawRect.Width / LatticeCell.Width + 2; i++)
             {
-                        new(left, TopBottom[0].Item2),
-                        new(left, top),
-                        new(LeftRight[0].Item2, top)
-            });
-            //
-            // draw append
-            //
-            if (LeftRight.Length > 1)
-            {
-                g.DrawLine(pen,
-                    new(LeftRight[1].Item1, top),
-                    new(LeftRight[1].Item2, top)
-                    );
-            }
-            if (TopBottom.Length > 1)
-            {
-                g.DrawLine(pen,
-                    new(left, TopBottom[1].Item1),
-                    new(left, TopBottom[1].Item2)
-                    );
-            }
-        }
-        /// <summary>
-        /// 得到转换为在栅格绘图区域内循环绘制后的格元或节点边界线的端点的横（纵）坐标数对
-        /// </summary>
-        /// <param name="head">起点横（纵）坐标（left or top）</param>
-        /// <param name="length">线段长度</param>
-        /// <param name="drBounds">head在Bounds(dr)里的限制范围</param>
-        /// <param name="drLength">Bounds(dr)的宽度（长度）</param>
-        /// <returns>转换后的坐标数对，前者是起点横（纵）坐标，后者是终点的。如果线需要分割，则返回数组里有一个额外的分割后另一部分线段的坐标数对。</returns>
-        private static (int, int)[] GetLoopedLineEnds(int head, int length, (int, int) drBounds, int drLength)
-        {
-            var left_top = drBounds.Item1;
-            var right_bottom = drBounds.Item2;
-
-            if (head < left_top) { head += drLength; }
-            else if (head > right_bottom) { head -= drLength; }
-            var realWidth = right_bottom - head;
-            if (realWidth >= length)
-            {
-                return new (int, int)[] { (head, head + length) };
-            }
-            else
-            {
-                return new (int, int)[]
+                for (int j = 0; j < DrawRect.Height / LatticeCell.Height + 2; j++)
                 {
-                    (head, head + realWidth),
-                    (left_top, left_top + length - realWidth)
-                };
+                    var cellLeft = offsetLeft + i * LatticeCell.Width;
+                    var cellTop = offSetTop + j * LatticeCell.Height;
+                    var cellRight = cellLeft + LatticeCell.Width;
+                    var cellBottom = cellTop + LatticeCell.Height;
+                    if (CrossLineWithin(new(cellLeft, cellBottom), new(cellRight, cellBottom), out var line))
+                    {
+                        g.DrawLine(NodePen, line.Item1, line.Item2);
+                    }
+                    if(CrossLineWithin(new(cellRight, cellTop), new(cellRight, cellBottom), out line))
+                    {
+                        g.DrawLine(NodePen, line.Item1, line.Item2);
+                    }
+                }
             }
         }
 
@@ -198,6 +132,34 @@ namespace FocusTree.Graph
 
         #region ==== 范围裁剪 ====
 
+        public static bool CrossLineWithin(Point p1, Point p2, out (Point, Point) line)
+        {
+            line = new(p1, p2);
+            if (p1 == p2) { throw new ArgumentException("Two points are the same."); }
+            if (p1.X == p2.X)
+            {
+                var x = p1.X;
+                if (x < DrawRect.Left || x > DrawRect.Right) { return false; }
+                var yMin = Math.Min(p1.Y, p2.Y);
+                var yMax = Math.Max(p1.Y, p2.Y);
+                var drBottom = DrawRect.Bottom;
+                if (yMax <= DrawRect.Top || yMin >= drBottom) { return false; }
+                line = (new(x, yMin < DrawRect.Top ? DrawRect.Top : yMin), new(x, yMax > drBottom ? drBottom : yMax));
+                return true;
+            }
+            if (p1.Y == p2.Y)
+            {
+                var y = p1.Y;
+                if (y < DrawRect.Top || y > DrawRect.Bottom) { return false; }
+                var xMin = Math.Min(p1.X, p2.X);
+                var xMax = Math.Max(p1.X, p2.X);
+                var drRight = DrawRect.Right;
+                if (xMax <= DrawRect.Left || xMin >= drRight) { return false; }
+                line = (new(xMin < DrawRect.Left ? DrawRect.Left : xMin, y), new(xMax > drRight ? drRight : xMax, y));
+                return true;
+            }
+            throw new ArgumentException("Only cross line is supported.");
+        }
         /// <summary>
         /// 获取一个在栅格绘图区域内的矩形
         /// </summary>

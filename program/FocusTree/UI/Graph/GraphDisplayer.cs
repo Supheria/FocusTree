@@ -72,7 +72,7 @@ namespace FocusTree.UI
         /// <summary>
         /// 鼠标移动灵敏度（值越大越迟顿）
         /// </summary>
-        static int MouseMoveSensibility = 20;
+        static int MouseMoveSensibility = 1;
         /// <summary>
         /// 拖动事件使用的鼠标参照坐标
         /// </summary>
@@ -80,7 +80,7 @@ namespace FocusTree.UI
         /// <summary>
         /// 格元放置边界
         /// </summary>
-        public Rectangle LatticeBound { get => new(Left, Top, Width, InfoBrandRect.Top - Top - 30); }
+        public Rectangle LatticeBound { get => new(Left + 30, Top + 30, Width - 60, InfoBrandRect.Top - Top - 60); }
         /// <summary>
         /// 节点绘制委托列表
         /// </summary>
@@ -282,8 +282,8 @@ namespace FocusTree.UI
             var diffInHeight = newPoint.Y - DragMouseFlagPoint.Y;
             if (Math.Abs(diffInWidth) > MouseMoveSensibility || Math.Abs(diffInHeight) > MouseMoveSensibility)
             {
-                Lattice.OriginLeft += (newPoint.X - DragMouseFlagPoint.X) / MouseMoveSensibility * LatticeCell.Width;
-                Lattice.OriginTop += (newPoint.Y - DragMouseFlagPoint.Y) / MouseMoveSensibility * LatticeCell.Height;
+                Lattice.OriginLeft += (newPoint.X - DragMouseFlagPoint.X) / MouseMoveSensibility /** LatticeCell.Width*/;
+                Lattice.OriginTop += (newPoint.Y - DragMouseFlagPoint.Y) / MouseMoveSensibility /** LatticeCell.Height*/;
                 DragMouseFlagPoint = newPoint;
                 Refresh();
                 DrawNodeMapInfo();
