@@ -1,0 +1,1 @@
+start "" "..\Event modding - Hearts of Iron 4 Wiki.pdf"
