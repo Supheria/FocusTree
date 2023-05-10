@@ -1,7 +1,7 @@
 ﻿using Hoi4ReaderWriter;
 using System.Text;
 
-var fs = new FileStream(@"C:\Users\Non_E\Documents\GitHub\FocusTree\FocusTree\modding analysis\test\bulgaria.txt", FileMode.Open);
+var fs = new FileStream(@"C:\Users\Non_E\Documents\GitHub\FocusTree\FocusTree\modding analysis\test\00_on_actions.txt", FileMode.Open);
 //Hoi4Serializer serializer = new(typeof(FocusTree));
 //var tree = serializer.Deserialize(fs);
 Hoi4Reader reader = new(fs);
