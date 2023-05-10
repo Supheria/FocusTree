@@ -41,8 +41,8 @@ namespace FocusTree.Graph
         {
             var widthDiff = realPoint.X - Lattice.OriginLeft;
             var heightDiff = realPoint.Y - Lattice.OriginTop;
-            ColNumber = widthDiff / LatticeCell.Width;
-            RowNumber = heightDiff / LatticeCell.Height;
+            ColNumber = widthDiff / LatticeCell.Length;
+            RowNumber = heightDiff / LatticeCell.Length;
             if (widthDiff < 0) { ColNumber--; }
             if (heightDiff < 0) { RowNumber--; }
         }

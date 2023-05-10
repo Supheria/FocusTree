@@ -8,47 +8,38 @@
         #region ==== 设置宽高和间距 ====
 
         /// <summary>
-        /// 格元宽（限制最小值和最大值）
+        /// 格元边长（限制最小值和最大值）
         /// </summary>
-        public static int Width
+        public static int Length
         {
-            get => width;
-            set => width = value < SizeMin.Width ? SizeMin.Width : value > SizeMax.Width ? SizeMax.Width : value;
+            get => sideLength;
+            set => sideLength = value < LengthMin ? LengthMin : value > LengthMax ? LengthMax : value;
         }
-        static int width = 30;
-        /// <summary>
-        /// 格元高（限制最小值和最大值）
-        /// </summary>
-        public static int Height
-        {
-            get => height;
-            set => height = value < SizeMin.Height ? SizeMin.Height : value > SizeMax.Height ? SizeMax.Height : value;
-        }
-        static int height = 30;
+        static int sideLength = 30;
         /// <summary>
         /// 最小尺寸
         /// </summary>
-        public static Size SizeMin = new(25, 25);
+        public static int LengthMin { get; set; } = 25;
         /// <summary>
         /// 最大尺寸
         /// </summary>
-        public static Size SizeMax = new(125, 125);
+        public static int LengthMax { get; set; } = 125;
         /// <summary>
         /// 节点宽
         /// </summary>
-        public static int NodeWidth => Width - NodePaddingWidth;
+        public static int NodeWidth => Length - NodePaddingWidth;
         /// <summary>
         /// 节点高
         /// </summary>
-        public static int NodeHeight => Height - NodePaddingHeight;
+        public static int NodeHeight => Length - NodePaddingHeight;
         /// <summary>
         /// 节点 Left 到格元 Left 的空隙
         /// </summary>
-        public static int NodePaddingWidth => (int)(width * NodePaddingZoomFactor.X);
+        public static int NodePaddingWidth => (int)(Length * NodePaddingZoomFactor.X);
         /// <summary>
         /// 节点 Top 到格元 Top 的空隙
         /// </summary>
-        public static int NodePaddingHeight => (int)(height * NodePaddingZoomFactor.Y);
+        public static int NodePaddingHeight => (int)(Length * NodePaddingZoomFactor.Y);
         /// <summary>
         /// 节点空隙系数（0.3 < X < 0.7, 0.3 < Y < 0.7)
         /// </summary>
@@ -57,7 +48,7 @@
             get => nodePaddingZoomFactor;
             set => nodePaddingZoomFactor = new(value.X < 0.3f ? 0.3f : value.X > 0.7f ? 0.7f : value.X, value.Y < 0.3f ? 0.3f : value.Y > 0.7f ? 0.7f : value.Y);
         }
-        static PointF nodePaddingZoomFactor = new(0.3f, 0.5f);
+        static PointF nodePaddingZoomFactor = new(0.3f, 0.485f);
 
         #endregion
 
@@ -78,16 +69,11 @@
         /// <summary>
         /// 格元真实左边界
         /// </summary>
-        public int RealLeft => Width * LatticedLeft + Lattice.OriginLeft;
+        public int RealLeft => Length * LatticedLeft + Lattice.OriginLeft;
         /// <summary>
         /// 格元真实上边界
         /// </summary>
-        public int RealTop => Height * LatticedTop + Lattice.OriginTop;
-        /// <summary>
-        /// 格元真实坐标矩形
-        /// </summary>
-        /// <returns></returns>
-        public Rectangle RealRect => new(RealLeft, RealTop, Width, Height);
+        public int RealTop => Length * LatticedTop + Lattice.OriginTop;
         /// <summary>
         /// 节点真实左边界
         /// </summary>
@@ -161,9 +147,9 @@
         {
             get => new()
             {
-                [Parts.Left] = new(RealLeft, NodeRealTop, Width - NodeWidth, Height - NodePaddingHeight),
-                [Parts.Top] = new(NodeRealLeft, RealTop, Width - NodePaddingWidth, Height - NodeHeight),
-                [Parts.LeftTop] = new(RealLeft, RealTop, Width - NodeWidth, Height - NodeHeight),
+                [Parts.Left] = new(RealLeft, NodeRealTop, Length - NodeWidth, Length - NodePaddingHeight),
+                [Parts.Top] = new(NodeRealLeft, RealTop, Length - NodePaddingWidth, Length - NodeHeight),
+                [Parts.LeftTop] = new(RealLeft, RealTop, Length - NodeWidth, Length - NodeHeight),
                 [Parts.Node] = NodeRealRect
             };
         }

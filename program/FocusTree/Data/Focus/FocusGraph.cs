@@ -361,10 +361,10 @@ namespace FocusTree.Data.Focus
             foreach (var focus in FocusCatalog.Values)
             {
                 var point = focus.LatticedPoint;
-                left = point.Col < left ? point.Col : left;
-                top = point.Row < top ? point.Row : top;
-                right = point.Col > right ? point.Col : right;
-                bottom = point.Row > bottom ? point.Row : bottom;
+                if (point.Col < left) { left = point.Col; }
+                else if (point.Col > right) { right = point.Col; }
+                if (point.Row < top) { top = point.Row; }
+                else if (point.Row > bottom) { bottom = point.Row; }
             }
             return new(left, top, right - left + 1, bottom - top + 1);
         }

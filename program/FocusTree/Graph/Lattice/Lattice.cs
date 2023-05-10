@@ -95,22 +95,22 @@ namespace FocusTree.Graph
         /// <param name="g"></param>
         private static void DrawLatticeCells(Graphics g)
         {
-            var offsetLeft = (OriginLeft - DrawRect.Left) % LatticeCell.Width;
-            var offSetTop = (OriginTop - DrawRect.Top) % LatticeCell.Height;
-            if (offsetLeft > 0) { offsetLeft -= LatticeCell.Width; }
-            if (offSetTop > 0) { offSetTop -= LatticeCell.Height; }
+            var offsetLeft = (OriginLeft - DrawRect.Left) % LatticeCell.Length;
+            var offSetTop = (OriginTop - DrawRect.Top) % LatticeCell.Length;
+            if (offsetLeft > 0) { offsetLeft -= LatticeCell.Length; }
+            if (offSetTop > 0) { offSetTop -= LatticeCell.Length; }
             offsetLeft += DrawRect.Left;
             offSetTop += DrawRect.Top;
-            var colNum = DrawRect.Width / LatticeCell.Width + 2;
-            var rowNum = DrawRect.Height / LatticeCell.Height + 2;
+            var colNum = DrawRect.Width / LatticeCell.Length + 2;
+            var rowNum = DrawRect.Height / LatticeCell.Length + 2;
             for (int i = 0; i < colNum; i++)
             {
                 for (int j = 0; j < rowNum; j++)
                 {
-                    var cellLeft = offsetLeft + i * LatticeCell.Width;
-                    var cellTop = offSetTop + j * LatticeCell.Height;
-                    var cellRight = cellLeft + LatticeCell.Width;
-                    var cellBottom = cellTop + LatticeCell.Height;
+                    var cellLeft = offsetLeft + i * LatticeCell.Length;
+                    var cellTop = offSetTop + j * LatticeCell.Length;
+                    var cellRight = cellLeft + LatticeCell.Length;
+                    var cellBottom = cellTop + LatticeCell.Length;
                     //
                     // draw cell
                     //
