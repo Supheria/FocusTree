@@ -125,7 +125,7 @@ namespace FocusTree.UI
                         Lattice.Drawing += new LayerDrawer(2, (image) => GraphDrawer.DrawRequireLine(image, focus.LatticedPoint, require.LatticedPoint));
                     }
                 }
-                Lattice.Drawing += NodeDrawerCatalog[focus.ID] = new(0, (image) => GraphDrawer.DrawFocusNode(image, focus, false));
+                Lattice.Drawing += NodeDrawerCatalog[focus.ID] = new(0, (image) => GraphDrawer.DrawFocusNodeNormal(image, focus));
             }
         }
         public void DrawNodeMapInfo()
@@ -321,13 +321,13 @@ namespace FocusTree.UI
                     FirstDrag = false;
                 }
                 Lattice.Drawing -= NodeDrawerCache = NodeDrawerCatalog[focus.Value.ID];
-                Lattice.Drawing += LastCellDrawer = new(1, (image) => GraphDrawer.DrawFocusNode(image, focus.Value, true));
+                Lattice.Drawing += LastCellDrawer = new(1, (image) => GraphDrawer.DrawFocusNodeSelected(image, focus.Value));
             }
             else
             {
                 Lattice.Drawing += NodeDrawerCache;
                 NodeDrawerCache = new();
-                Lattice.Drawing += LastCellDrawer = new(1, (image) => GraphDrawer.DrawCellPart(image, LatticedPointCursorOn, cellPart));
+                Lattice.Drawing += LastCellDrawer = new(1, (image) => GraphDrawer.DrawSelectedCell(image, LatticedPointCursorOn, cellPart));
             }
             Refresh();
             Parent.Text = $"W {LatticeCell.Width},H {LatticeCell.Height}, o: {Lattice.OriginLeft}, {Lattice.OriginTop}, cursor: {newPoint}, cellPart: {LastCellPart}";
