@@ -9,7 +9,7 @@ namespace FocusTree.IO
         /// </summary>
         /// <param name="path">保存路径</param>
         /// <param name="graph">FGraph</param>
-        public static void SaveToXml<T>(this T obj, string path) where T : IXmlSerializable
+        public static void SaveToXml<T>(T obj, string path) where T : IXmlSerializable
         {
             var file = File.Create(path);
             var writer = new XmlSerializer(typeof(T));

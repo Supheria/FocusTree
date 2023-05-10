@@ -1,4 +1,4 @@
-#define DEBUG
+//#define DEBUG
 using FocusTree.Data.Focus;
 using FocusTree.Graph;
 using FocusTree.IO;
@@ -270,7 +270,7 @@ namespace FocusTree.UI
                 {
                     var graph = XmlIO.LoadFromXml<FocusGraph>(fileName);
                     graph.ReorderNodeIds();
-                    graph.SaveToXml(Path.Combine(folderBrowser.SelectedPath, Path.GetFileName(fileName)));
+                    XmlIO.SaveToXml(graph, Path.Combine(folderBrowser.SelectedPath, Path.GetFileName(fileName)));
                     suc++;
                     MainForm_ProgressBar.PerformStep();
                 }
@@ -397,8 +397,8 @@ namespace FocusTree.UI
             SizeChanged += MainForm_SizeChanged;
             ResizeEnd += GraphForm_ResizeEnd;
 #if DEBUG
-            GraphBox.Load("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\program\\FILES\\神佑村落.xml");
-            Display.ResetDisplay();
+            //GraphBox.Load("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\program\\FILES\\神佑村落.xml");
+            //Display.ResetDisplay();
 #endif
         }
 

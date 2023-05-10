@@ -73,14 +73,14 @@ namespace FocusTree.UI
         /// </summary>
         public static Rectangle MetaRect => Graph.GetMetaRect();
         /// <summary>
-        /// 从文件路径加载元图
+        /// 从文件路径加载元图，如果只读则封存文件路径
         /// </summary>
         /// <param name="filePath"></param>
         public static void Load(string filePath)
         {
             ReadOnly = Graph != null && Graph.IsBackupFile(filePath);
             if (!ReadOnly) { FilePath = filePath; }
-            Graph?.ClearCache();
+            FileCache.ClearCache(Graph);
             Graph = XmlIO.LoadFromXml<FocusGraph>(filePath);
             Graph.NewHistory();
         }
@@ -91,7 +91,7 @@ namespace FocusTree.UI
         {
             if (!File.Exists(FilePath)) { return; }
             ReadOnly = false;
-            Graph?.ClearCache();
+            FileCache.ClearCache(Graph);
             Graph = XmlIO.LoadFromXml<FocusGraph>(FilePath);
             Graph.NewHistory();
         }
@@ -100,9 +100,10 @@ namespace FocusTree.UI
         /// </summary>
         public static void Save()
         {
+            if (IsNull) { return; }
             ReadOnly = false;
             FileBackup.Backup<FocusGraph>(FilePath);
-            Graph.SaveToXml(FilePath);
+            XmlIO.SaveToXml(Graph, FilePath);
             Graph.UpdateLatest();
         }
         /// <summary>
@@ -111,14 +112,15 @@ namespace FocusTree.UI
         /// <param name="filePath"></param>
         public static void SaveToNew(string filePath)
         {
+            if (IsNull) { return; }
             if (filePath == FilePath)
             {
                 Save();
                 return;
             }
             ReadOnly = false;
-            Graph?.ClearCache();
-            Graph?.SaveToXml(filePath);
+            FileCache.ClearCache(Graph);
+            XmlIO.SaveToXml(Graph, filePath);
             Graph?.NewHistory();
             FilePath = filePath;
         }

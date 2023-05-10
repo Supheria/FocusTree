@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using System.Xml;
 using static FocusTree.Data.Hoi4Object.PublicSign;
 
@@ -197,7 +196,7 @@ namespace FocusTree.Data.Hoi4Object
         /// <returns></returns>
         public new string ToString()
         {
-            return JsonConvert.SerializeObject(this);
+            throw new NotImplementedException();
         }
         /// <summary>
         /// 用json字符串生成
@@ -205,7 +204,7 @@ namespace FocusTree.Data.Hoi4Object
         /// <param name="jsonString"></param>
         public static Hoi4Sentence FromString(string jsonString)
         {
-            return JsonConvert.DeserializeObject<Hoi4Sentence>(jsonString);
+            throw new NotImplementedException();
         }
 
         #endregion

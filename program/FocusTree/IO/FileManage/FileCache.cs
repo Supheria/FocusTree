@@ -22,7 +22,7 @@
         /// <param name="obj"></param>
         /// <param name="FileNameWithoutExtension">纯文件名</param>
         /// <returns></returns>
-        public static string GetCachePath<T>(this T obj, string FileNameWithoutExtension) where T : IFileManageable
+        public static string GetCachePath<T>(T obj, string FileNameWithoutExtension) where T : IFileManageable
         {
             var cachePath = Path.Combine(obj.DirectoryName(), FileNameWithoutExtension);
             return cachePath;
@@ -30,9 +30,13 @@
         /// <summary>
         /// 删除所有缓存
         /// </summary>
-        public static void ClearCache<T>(this T obj) where T : IFileManageable
+        public static void ClearCache<T>(T obj) where T : IFileManageable
         {
-            Directory.Delete(obj.DirectoryName(), true);
+            var dir = obj?.DirectoryName();
+            if(Directory.Exists(dir))
+            {
+                Directory.Delete(dir, true);
+            }
         }
         /// <summary>
         /// 清空根目录
