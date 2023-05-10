@@ -397,8 +397,8 @@ namespace FocusTree.UI
             SizeChanged += MainForm_SizeChanged;
             ResizeEnd += GraphForm_ResizeEnd;
 #if DEBUG
-            //GraphBox.Load("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\program\\FILES\\神佑村落.xml");
-            //Display.ResetDisplay();
+            GraphBox.Load("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\program\\FILES\\神佑村落.xml");
+            Display.ResetDisplay();
 #endif
         }
 
