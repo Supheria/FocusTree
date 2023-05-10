@@ -253,11 +253,13 @@ namespace FocusTree.Graph
         /// <param name="black"></param>
         private static void DrawStringNode(Bitmap image, Rectangle nodeRect, string name)
         {
-            Color stringColor = GetNodeNamePattern(image, nodeRect, name) ? NodeFGDark : NodeFGBright;
+            //Color stringColor = GetNodeNamePattern(image, nodeRect, name) ? NodeFGDark : NodeFGBright;
             PointBitmap pImage = new(image);
             pImage.LockBits();
             PointBitmap pCache = new(Background.BackImage);
             pCache.LockBits();
+            int black, white;
+            black = white = 0;
             for (int i = 0; i < nodeRect.Width; i++)
             {
                 for (int j = 0; j < nodeRect.Height; j++)
@@ -266,22 +268,21 @@ namespace FocusTree.Graph
                     var y = nodeRect.Top + j;
                     var bkPixel = pCache.GetPixel(x, y);
                     var pixel = pImage.GetPixel(x, y);
-                    // string part
-                    if (pixel.R != 255/* || pixel.G != 255 || pixel.B != 255*/)
+                    if (pixel.GetBrightness() < 0.5f)
                     {
-                        pImage.SetPixel(x, y, stringColor);
-                        continue;
+                        black++;
                     }
-                    // shading part
+                    else { white++; }
                     if (i <= NodeBorderWidth || i >= nodeRect.Width - NodeBorderWidth || j <= NodeBorderWidth || j >= nodeRect.Height - NodeBorderWidth)
                     {
                         pImage.SetPixel(x, y, GetInverseColor(bkPixel));
                     }
-                    else { pImage.SetPixel(x, y, bkPixel); }
+                    //else { pImage.SetPixel(x, y, bkPixel); }
                 }
             }
             pCache.UnlockBits();
             pImage.UnlockBits();
+            DrawName(image, nodeRect, name, black <= white ? NodeFGDark : NodeFGBright);
         }
         /// <summary>
         /// 绘制无文字节点，有填充色
@@ -293,11 +294,13 @@ namespace FocusTree.Graph
         /// <param name="fillColor"></param>
         private static void DrawStringNode(Bitmap image, Rectangle nodeRect, string name, Color fillColor)
         {
-            Color stringColor = GetNodeNamePattern(image, nodeRect, name) ? NodeFGDark : NodeFGBright;
+            //Color stringColor = GetNodeNamePattern(image, nodeRect, name) ? NodeFGDark : NodeFGBright;
             PointBitmap pImage = new(image);
             pImage.LockBits();
             PointBitmap pCache = new(Background.BackImage);
             pCache.LockBits();
+            int black, white;
+            black = white = 0;
             for (int i = 0; i < nodeRect.Width; i++)
             {
                 for (int j = 0; j < nodeRect.Height; j++)
@@ -306,13 +309,11 @@ namespace FocusTree.Graph
                     var y = nodeRect.Top + j;
                     var bkPixel = pCache.GetPixel(x, y);
                     var pixel = pImage.GetPixel(x, y);
-                    // string part
-                    if (pixel.R != 255/* || pixel.G != 255 || pixel.B != 255*/)
+                    if (pixel.GetBrightness() < 0.5f)
                     {
-                        pImage.SetPixel(x, y, stringColor);
-                        continue;
+                        black++;
                     }
-                    // shading part
+                    else { white++; }
                     if (i <= NodeBorderWidth || i >= nodeRect.Width - NodeBorderWidth || j <= NodeBorderWidth || j >= nodeRect.Height - NodeBorderWidth)
                     {
                         pImage.SetPixel(x, y, GetInverseColor(bkPixel));
@@ -322,6 +323,7 @@ namespace FocusTree.Graph
             }
             pCache.UnlockBits();
             pImage.UnlockBits();
+            DrawName(image, nodeRect, name, black <= white ? NodeFGDark : NodeFGBright);
         }
         /// <summary>
         /// 确定区域内的像素亮度分布，并用黑、白纯色区分出文字和底纹的区别
@@ -329,31 +331,8 @@ namespace FocusTree.Graph
         /// <param name="image"></param>
         /// <param name="nodeRect"></param>
         /// <param name="name"></param>
-        private static bool GetNodeNamePattern(Bitmap image, Rectangle nodeRect, string name)
+        private static void DrawName(Bitmap image, Rectangle nodeRect, string name, Color color)
         {
-            int black = 0;
-            int white = 0;
-
-            PointBitmap pImage = new(image);
-            pImage.LockBits();
-            for (int i = 0; i < nodeRect.Width; i++)
-            {
-                for (int j = 0; j < nodeRect.Height; j++)
-                {
-                    var x = nodeRect.Left + i;
-                    var y = nodeRect.Top + j;
-                    var pixel = pImage.GetPixel(x, y);
-                    if (pixel.GetBrightness() < 0.5f)
-                    {
-                        black++;
-                    }
-                    else { white++; }
-                    // set rect to white blank
-                    pImage.SetPixel(x, y, Color.White);
-                }
-            }
-            pImage.UnlockBits();
-
             var fontHeight = name.Length / 3;
             if (name.Length % 3 != 0) { fontHeight++; }
             if (fontHeight == 0) { fontHeight++; }
@@ -373,13 +352,11 @@ namespace FocusTree.Graph
                     sName += $"{name.Substring(start, fontWidth > remain ? remain : fontWidth)}\n";
                 }
             }
-            var font = new Font(NodeFont, fontSize, FontStyle.Regular, GraphicsUnit.Pixel);
+            var font = new Font(NodeFont, fontSize, FontStyle.Bold, GraphicsUnit.Pixel);
 
             var g = Graphics.FromImage(image);
-            g.DrawString(sName, font, new SolidBrush(Color.Black), nodeRect, NodeFontFormat);
+            g.DrawString(sName, font, new SolidBrush(color), nodeRect, NodeFontFormat);
             g.Flush(); g.Dispose();
-
-            return black <= white;
         }
         /// <summary>
         /// 反色
