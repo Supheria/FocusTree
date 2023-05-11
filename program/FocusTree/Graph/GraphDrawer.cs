@@ -69,9 +69,10 @@ namespace FocusTree.Graph
         /// <param name="focus"></param>
         public static void DrawFocusNodeNormal(Bitmap image, FocusData focus)
         {
+            if (!Lattice.LatticedPointWithin(focus.LatticedPoint)) { return; }
             LatticeCell cell = new(focus.LatticedPoint);
             var nodeRect = cell.CellPartsRealRect[LatticeCell.Parts.Node];
-            if (!Lattice.RectWithin(nodeRect, out nodeRect)) { return; }
+            nodeRect = Lattice.RectWithin(nodeRect);
             if (LatticeCell.Length < LatticeCell.LengthMax / 2)
             {
                 DrawFocusNode(image, nodeRect, null);
@@ -85,9 +86,10 @@ namespace FocusTree.Graph
         /// <param name="focus"></param>
         public static void DrawFocusNodeSelected(Bitmap image, FocusData focus)
         {
+            if (!Lattice.LatticedPointWithin(focus.LatticedPoint)) { return; }
             LatticeCell cell = new(focus.LatticedPoint);
             var nodeRect = cell.CellPartsRealRect[LatticeCell.Parts.Node];
-            if (!Lattice.RectWithin(nodeRect, out nodeRect)) { return; }
+            nodeRect = Lattice.RectWithin(nodeRect);
             if (LatticeCell.Length < LatticeCell.LengthMax / 2)
             {
                 DrawFocusNode(image, nodeRect, FocusNodeBG_Selected);
@@ -313,23 +315,24 @@ namespace FocusTree.Graph
         /// <param name="cellPart"></param>
         public static void DrawSelectedCell(Bitmap image, LatticedPoint point, LatticeCell.Parts cellPart)
         {
+            if (!Lattice.LatticedPointWithin(point)) { return; }
             LatticeCell cell = new(point);
             if (!CellSelectedPartsBG.TryGetValue(cellPart, out var shading)) { return; }
-            if (!Lattice.RectWithin(cell.CellPartsRealRect[cellPart], out var rect)) { return; }
+            var rect = Lattice.RectWithin(cell.CellPartsRealRect[cellPart]);
             PointBitmap pImage = new(image);
             pImage.LockBits();
-            PointBitmap pCache = new(Background.BackImage);
-            pCache.LockBits();
+            PointBitmap pBack = new(Background.BackImage);
+            pBack.LockBits();
             for (int i = 0; i < rect.Width; i++)
             {
                 for (int j = 0; j < rect.Height; j++)
                 {
                     var x = rect.Left + i;
                     var y = rect.Top + j;
-                    pImage.SetPixel(x, y, GetMixedColor(pCache.GetPixel(x, y), shading));
+                    pImage.SetPixel(x, y, GetMixedColor(pBack.GetPixel(x, y), shading));
                 }
             }
-            pCache.UnlockBits();
+            pBack.UnlockBits();
             pImage.UnlockBits();
         }
 

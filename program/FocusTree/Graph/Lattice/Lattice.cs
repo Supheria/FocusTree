@@ -13,7 +13,30 @@ namespace FocusTree.Graph
         /// <summary>
         /// 栅格绘图区域矩形
         /// </summary>
-        public static Rectangle DrawRect { get; set; }
+        public static Rectangle DrawRect 
+        {
+            get => drawRect;
+            set
+            {
+                Program.testInfo.Show();
+                drawRect = value;
+                ColNumber = DrawRect.Width / LatticeCell.Length;
+                Program.testInfo.InfoText = $"colNum{ColNumber}\n";
+                var mod = DrawRect.Width % LatticeCell.Length;
+                var originOffset = (DrawRect.Left - OriginLeft) % LatticeCell.Length;
+                if (mod == 0 && originOffset != 0) { ColNumber++; Program.testInfo.InfoText += $"mod == 0 && offset colNum{ColNumber}\n"; }
+                if (mod != 0) { ColNumber++; Program.testInfo.InfoText += $"mod != 0 {ColNumber}\n"; }
+                if (mod > LatticeCell.Length / 2 && originOffset != 0) { ColNumber++; Program.testInfo.InfoText += $"mod > LatticeCell.Length / 2 && offset colNum{ColNumber}\n"; }
+                //Program.testInfo.InfoText += $"DrawRect.Width - div * LatticeCell.Length {DrawRect.Width - div * LatticeCell.Length}\n";
+                //var diffLeft = Math.Abs(DrawRect.Left - OriginLeft);
+                //if (diffLeft % LatticeCell.Length != 0) { ColNumber++; }
+                RowNumber = DrawRect.Height / LatticeCell.Length;
+                if (DrawRect.Height % LatticeCell.Length > 0) { RowNumber++; }
+            }
+        }
+        static Rectangle drawRect;
+        static int ColNumber;
+        static int RowNumber;
         /// <summary>
         /// 栅格坐标系原点 x 坐标
         /// </summary>
@@ -22,11 +45,17 @@ namespace FocusTree.Graph
         /// 栅格坐标系原点 y 坐标
         /// </summary>
         public static int OriginTop { get; set; }
+        static (int ,int) LatticedPointWithinCol;
+        static (int, int) LatticedPointWithinRow;
 
         #endregion
 
         #region ==== 绘图工具 ====
 
+        /// <summary>
+        /// 绘制委托列表（三层绘制）
+        /// </summary>
+        public static DrawLayers Drawing = new(3);
         /// <summary>
         /// 格元边框宽度
         /// </summary>
@@ -47,10 +76,6 @@ namespace FocusTree.Graph
         /// 坐标辅助线绘制用笔
         /// </summary>
         public static Pen GuidePen = new Pen(Color.FromArgb(200, Color.Red), 1.75f);
-        /// <summary>
-        /// 绘制委托列表（三层绘制）
-        /// </summary>
-        public static DrawLayers Drawing = new(3);
 
         #endregion
 
@@ -71,7 +96,7 @@ namespace FocusTree.Graph
         /// <param name="image"></param>
         public static void Draw(Image image)
         {
-            if (DrawBackLattice)
+            //if (DrawBackLattice)
             {
                 var g = Graphics.FromImage(image);
                 DrawLatticeCells(g);
@@ -83,7 +108,18 @@ namespace FocusTree.Graph
                 g.Flush(); g.Dispose();
             }
             Drawing.Invoke((Bitmap)image);
-            //Program.testInfo.Show();
+
+            DrawRect = DrawRect;
+
+            var diffLeft = DrawRect.Left - OriginLeft;
+            LatticedPointWithinCol.Item1 = diffLeft / LatticeCell.Length;
+            if (diffLeft < 0 && diffLeft % LatticeCell.Length != 0) { LatticedPointWithinCol.Item1--; }
+            LatticedPointWithinCol.Item2 = LatticedPointWithinCol.Item1 + ColNumber - 1;
+            Program.testInfo.InfoText += $"col min {LatticedPointWithinCol.Item1} max {LatticedPointWithinCol.Item2}";
+            var diffTop = DrawRect.Top - OriginTop;
+            LatticedPointWithinRow.Item1 = diffTop / LatticeCell.Length;
+            if (diffTop % LatticeCell.Length != 0) { LatticedPointWithinRow.Item1--; }
+            LatticedPointWithinRow.Item2 = LatticedPointWithinRow.Item1 + RowNumber;
             //Program.testInfo.InfoText = $"{new Point(ColNumber, RowNumber)}";
             //Program.testInfo.InfoText = $"{Drawing.MethodNumber()}\n" +
             //    $"1. {Drawing.MethodNumber(0)}, 2. {Drawing.MethodNumber(1)}, 3. {Drawing.MethodNumber(2)}";
@@ -101,8 +137,8 @@ namespace FocusTree.Graph
             if (offSetTop > 0) { offSetTop -= LatticeCell.Length; }
             offsetLeft += DrawRect.Left;
             offSetTop += DrawRect.Top;
-            var colNum = DrawRect.Width / LatticeCell.Length + 2;
-            var rowNum = DrawRect.Height / LatticeCell.Length + 2;
+            var colNum = ColNumber + 1;
+            var rowNum = RowNumber + 1;
             for (int i = 0; i < colNum; i++)
             {
                 for (int j = 0; j < rowNum; j++)
@@ -153,15 +189,19 @@ namespace FocusTree.Graph
         /// <returns></returns>
         public static bool CrossLineWithin(Point p1, Point p2, int lineWidth, out Rectangle lineRect)
         {
+            lineRect = Rectangle.Empty;
             var halfLineWidth = lineWidth / 2;
             if (p1.Y == p2.Y)
             {
-                return RectWithin(new(Math.Min(p1.X, p2.X), p1.Y - halfLineWidth, Math.Abs(p1.X - p2.X) + halfLineWidth, lineWidth), out lineRect); 
+                if (!CrossLineWithin(p1.Y, DrawRect.Top, DrawRect.Bottom, (p1.X, p2.X), DrawRect.Left, DrawRect.Right, out var xMin, out var xMax)) { return false; }
+                lineRect = new(xMin, p1.Y - halfLineWidth, xMax - xMin + halfLineWidth, lineWidth);
             }
-            else 
+            else
             {
-                return RectWithin(new(p1.X - halfLineWidth, Math.Min(p1.Y, p2.Y), lineWidth, Math.Abs(p1.Y - p2.Y) + halfLineWidth), out lineRect); 
+                if (!CrossLineWithin(p1.X, DrawRect.Left, DrawRect.Right, (p1.Y, p2.Y), DrawRect.Top, DrawRect.Bottom, out var yMin, out var yMax)) { return false; }
+                lineRect = new(p1.X - halfLineWidth, yMin, lineWidth, yMax - yMin + halfLineWidth);
             }
+            return true;
         }
         /// <summary>
         /// 获取给定横纵直线在栅格绘图区域内的矩形
@@ -174,17 +214,33 @@ namespace FocusTree.Graph
         /// <returns></returns>
         public static bool CrossLineWithin(Point p1, Point p2, int lineWidth, out Rectangle lineRect, out bool isHorizon)
         {
+            lineRect = Rectangle.Empty;
             var halfLineWidth = lineWidth / 2;
             if (p1.Y == p2.Y)
             {
                 isHorizon = true;
-                return RectWithin(new(Math.Min(p1.X, p2.X), p1.Y - halfLineWidth, Math.Abs(p1.X - p2.X) + halfLineWidth, lineWidth), out lineRect);
+                if (!CrossLineWithin(p1.Y, DrawRect.Top, DrawRect.Bottom, (p1.X, p2.X), DrawRect.Left, DrawRect.Right, out var xMin, out var xMax)) { return false; }
+                lineRect = new(xMin, p1.Y - halfLineWidth, xMax - xMin + halfLineWidth, lineWidth);
             }
             else
             {
                 isHorizon = false;
-                return RectWithin(new(p1.X - halfLineWidth, Math.Min(p1.Y, p2.Y), lineWidth, Math.Abs(p1.Y - p2.Y) + halfLineWidth), out lineRect);
+                if (!CrossLineWithin(p1.X, DrawRect.Left, DrawRect.Right, (p1.Y, p2.Y), DrawRect.Top, DrawRect.Bottom, out var yMin, out var yMax)) { return false; }
+                lineRect = new(p1.X - halfLineWidth, yMin, lineWidth, yMax - yMin + halfLineWidth);
             }
+            return true;
+        }
+        private static bool CrossLineWithin(int theSame, int theSameLimitMin, int theSameLimitMax, (int, int) ends, int endLimitMin, int endLimitMax, out int endMin, out int endMax)
+        {
+            endMin = endMax = 0;
+            if (ends.Item1 == ends.Item2 || theSame < theSameLimitMin || theSame > theSameLimitMax) { return false; }
+            endMin = Math.Min(ends.Item1, ends.Item2);
+            endMax = Math.Max(ends.Item1, ends.Item2);
+            if (endMin >= endLimitMax) { return false; }
+            if (endMax <= endLimitMin) { return false; }
+            if (endMin < endLimitMin) { endMin = endLimitMin; }
+            if (endMax > endLimitMax) { endMax = endLimitMax; }
+            return true;
         }
         /// <summary>
         /// 获取给定的矩形在栅格绘图区域内的矩形
@@ -192,21 +248,26 @@ namespace FocusTree.Graph
         /// <param name="rect">给定的矩形</param>
         /// <param name="saveRect">在绘图区域内的可能被裁剪过的矩形（默认为 empty）</param>
         /// <returns>如果给定的矩形完全超出了绘图区域，返回false；否则返回true</returns>
-        public static bool RectWithin(Rectangle rect, out Rectangle saveRect)
+        public static Rectangle RectWithin(Rectangle rect)
         {
-            saveRect = Rectangle.Empty;
             var left = rect.Left;
             var right = rect.Right;
             var top = rect.Top;
             var bottom = rect.Bottom;
             var drRight = DrawRect.Right;
             var drBottom = DrawRect.Bottom;
-            if (right <= DrawRect.Left || left >= drRight || bottom <= DrawRect.Top || top >= drBottom) { return false; }
             if (left < DrawRect.Left) { left = DrawRect.Left; }
             if (right > DrawRect.Right) { right = drRight; }
             if (top < DrawRect.Top) { top = DrawRect.Top; }
             if (bottom > DrawRect.Bottom) { bottom = drBottom; }
-            saveRect = new(left, top, right - left, bottom - top);
+            return new(left, top, right - left, bottom - top);
+        }
+        public static bool LatticedPointWithin(LatticedPoint point)
+        {
+            if (point.Col < LatticedPointWithinCol.Item1) { return false; }
+            if (point.Col > LatticedPointWithinCol.Item2) { return false; }
+            if (point.Row < LatticedPointWithinRow.Item1) { return false; }
+            if (point.Row > LatticedPointWithinRow.Item2) { return false; }
             return true;
         }
 

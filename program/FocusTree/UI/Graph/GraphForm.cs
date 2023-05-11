@@ -409,9 +409,9 @@ namespace FocusTree.UI
 
         private void MainForm_SizeChanged(object sender, EventArgs e)
         {
-            if (ForceResize ||
-                (LastState == FormWindowState.Maximized && WindowState == FormWindowState.Normal) ||
-                WindowState == FormWindowState.Maximized)
+            //if (ForceResize ||
+            //    (LastState == FormWindowState.Maximized && WindowState == FormWindowState.Normal) ||
+            //    WindowState == FormWindowState.Maximized)
             {
                 ResizeGraphDisplayer();
             }

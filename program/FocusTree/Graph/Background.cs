@@ -24,7 +24,7 @@ namespace FocusTree.Graph
         /// <summary>
         /// 是否显示背景图片
         /// </summary>
-        public static bool Show = true;
+        public static bool Show = false;
         /// <summary>
         /// 新键背景缓存，并重绘背景
         /// </summary>

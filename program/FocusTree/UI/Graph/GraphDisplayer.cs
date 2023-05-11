@@ -1,3 +1,4 @@
+#define MOUSE_DRAG_FREE
 using FocusTree.Data.Focus;
 using FocusTree.Graph;
 using FocusTree.IO.FileManage;
@@ -72,7 +73,11 @@ namespace FocusTree.UI
         /// <summary>
         /// 鼠标移动灵敏度（值越大越迟顿）
         /// </summary>
+#if MOUSE_DRAG_FREE
+        static int MouseMoveSensibility = 1;
+#else
         static int MouseMoveSensibility = 20;
+#endif
         /// <summary>
         /// 拖动事件使用的鼠标参照坐标
         /// </summary>
@@ -86,7 +91,7 @@ namespace FocusTree.UI
         /// </summary>
         public static Dictionary<int, LayerDrawer> NodeDrawerCatalog { get; private set; } = new();
 
-        #endregion
+#endregion
 
 
         //===== 方法 =====//
@@ -280,8 +285,13 @@ namespace FocusTree.UI
             var diffInHeight = newPoint.Y - DragMouseFlagPoint.Y;
             if (Math.Abs(diffInWidth) > MouseMoveSensibility || Math.Abs(diffInHeight) > MouseMoveSensibility)
             {
+#if MOUSE_DRAG_FREE
+                Lattice.OriginLeft += (newPoint.X - DragMouseFlagPoint.X) / MouseMoveSensibility;
+                Lattice.OriginTop += (newPoint.Y - DragMouseFlagPoint.Y) / MouseMoveSensibility;
+#else
                 Lattice.OriginLeft += (newPoint.X - DragMouseFlagPoint.X) / MouseMoveSensibility * LatticeCell.Length;
                 Lattice.OriginTop += (newPoint.Y - DragMouseFlagPoint.Y) / MouseMoveSensibility * LatticeCell.Length;
+#endif
                 DragMouseFlagPoint = newPoint;
                 Refresh();
                 DrawNodeMapInfo();
@@ -408,7 +418,7 @@ namespace FocusTree.UI
             ToolDialogs.ToList().ForEach(x => x.Value.Close());
         }
 
-        #endregion
+#endregion
 
         #region ==== 镜头操作 ====
 
@@ -482,14 +492,6 @@ namespace FocusTree.UI
             UploadNodeMap();
             CameraLocatePanorama();
         }
-
-        /// <summary>
-        /// 弹出节点信息对话框
-        /// </summary>
-        public void ShowNodeInfo()
-        {
-            NodeInfo.Show();
-        }
         /// <summary>
         /// 更改 GraphBox 后刷新显示
         /// </summary>
@@ -498,11 +500,21 @@ namespace FocusTree.UI
             UploadNodeMap();
             Refresh();
         }
+        /// <summary>
+        /// 刷新显示（不重新上载绘图委托）
+        /// </summary>
         private new void Refresh()
         {
             Background.Redraw(Image);
             Lattice.Draw(Image);
             Invalidate();
+        }
+        /// <summary>
+        /// 弹出节点信息对话框
+        /// </summary>
+        public void ShowNodeInfo()
+        {
+            NodeInfo.Show();
         }
 
         #endregion
