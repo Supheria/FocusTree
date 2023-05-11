@@ -18,18 +18,20 @@ namespace FocusTree.Graph
             get => drawRect;
             set
             {
-                Program.testInfo.Show();
                 drawRect = value;
                 ColNumber = DrawRect.Width / LatticeCell.Length;
-                Program.testInfo.InfoText = $"colNum{ColNumber}\n";
-                var mod = DrawRect.Width % LatticeCell.Length;
-                var originOffset = (DrawRect.Left - OriginLeft) % LatticeCell.Length;
-                if (mod == 0 && originOffset != 0) { ColNumber++; Program.testInfo.InfoText += $"mod == 0 && offset colNum{ColNumber}\n"; }
-                if (mod != 0) { ColNumber++; Program.testInfo.InfoText += $"mod != 0 {ColNumber}\n"; }
-                if (mod > LatticeCell.Length / 2 && originOffset != 0) { ColNumber++; Program.testInfo.InfoText += $"mod > LatticeCell.Length / 2 && offset colNum{ColNumber}\n"; }
-                //Program.testInfo.InfoText += $"DrawRect.Width - div * LatticeCell.Length {DrawRect.Width - div * LatticeCell.Length}\n";
-                //var diffLeft = Math.Abs(DrawRect.Left - OriginLeft);
-                //if (diffLeft % LatticeCell.Length != 0) { ColNumber++; }
+                if (DrawRect.Width % LatticeCell.Length == 0 && (DrawRect.Left - OriginLeft) % LatticeCell.Length != 0) 
+                { 
+                    ColNumber++; 
+                }
+                else
+                { 
+                    ColNumber++;
+                    if (DrawRect.Width % LatticeCell.Length > LatticeCell.Length / 2 && (DrawRect.Left - OriginLeft) % LatticeCell.Length != 0) 
+                    { 
+                        ColNumber++;
+                    }
+                }
                 RowNumber = DrawRect.Height / LatticeCell.Length;
                 if (DrawRect.Height % LatticeCell.Length > 0) { RowNumber++; }
             }
