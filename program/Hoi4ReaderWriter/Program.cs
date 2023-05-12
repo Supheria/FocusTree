@@ -1,6 +1,9 @@
 ﻿using Hoi4ReaderWriter;
 using System.Text;
 
+var b = new byte[]{17};
+var a = Encoding.Unicode.GetBytes("1");
+
 var fs = new FileStream(@"C:\Users\Non_E\Documents\GitHub\FocusTree\FocusTree\modding analysis\test\00_on_actions.txt", FileMode.Open);
 //Hoi4Serializer serializer = new(typeof(FocusTree));
 //var tree = serializer.Deserialize(fs);
