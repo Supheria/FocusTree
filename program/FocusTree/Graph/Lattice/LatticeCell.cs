@@ -147,6 +147,7 @@
         {
             get => new()
             {
+                [Parts.Leave] = Rectangle.Empty,
                 [Parts.Left] = new(RealLeft, NodeRealTop, Length - NodeWidth, Length - NodePaddingHeight),
                 [Parts.Top] = new(NodeRealLeft, RealTop, Length - NodePaddingWidth, Length - NodeHeight),
                 [Parts.LeftTop] = new(RealLeft, RealTop, Length - NodeWidth, Length - NodeHeight),

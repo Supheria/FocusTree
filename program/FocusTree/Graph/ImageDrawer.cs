@@ -1,30 +1,28 @@
 ﻿namespace FocusTree.Graph
 {
-    public class ImageDrawer
+    public static class ImageDrawer
     {
-        Bitmap Target;
-        Bitmap Source;
-        Rectangle AllRect;
-        public ImageDrawer(Bitmap target, Bitmap source, Rectangle rect)
+        public static void DrawImageOn(Bitmap source, Bitmap target, Rectangle toRect, bool ignoreTransparent)
         {
-            Target = target;
-            Source = source;
-            AllRect = rect;
-        }
-        public void Bounds1()
-        {
-            Graphics g = Graphics.FromImage(Target);
-            Rectangle rect = new(AllRect.Left, AllRect.Top, AllRect.Width / 2, AllRect.Height);
-            g.DrawImage(Source, rect, rect, GraphicsUnit.Pixel);
-            //PointBitmap.FillRectWithSource(Target, Source, rect);
-        }
-        public void Bounds2()
-        {
-            Graphics g = Graphics.FromImage(Target);
-            var halfWidth = AllRect.Width / 2;
-            Rectangle rect = new(AllRect.Left + halfWidth + 1, AllRect.Top, halfWidth, AllRect.Height);
-            g.DrawImage(Source, rect, rect, GraphicsUnit.Pixel);
-            //PointBitmap.FillRectWithSource(Target, Source, rect);
+            PointBitmap pSource = new(source);
+            PointBitmap pTarget = new(target);
+            pSource.LockBits();
+            pTarget.LockBits();
+            var right = toRect.Right;
+            var bottom = toRect.Bottom;
+            for (int x = toRect.X; x < right; x++)
+            {
+                for (int y = toRect.Y; y < bottom; y++)
+                {
+                    var pixel = pSource.GetPixel(x, y);
+                    if (!ignoreTransparent || pixel.A != 0 || pixel.R != 0 || pixel.G != 0 || pixel.B != 0)
+                    {
+                        pTarget.SetPixel(x, y, pixel);
+                    }
+                }
+            }
+            pSource.UnlockBits();
+            pTarget.UnlockBits();
         }
     }
 }

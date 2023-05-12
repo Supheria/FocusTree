@@ -175,7 +175,7 @@ namespace FocusTree.Data.Focus
             writer.WriteAttributeString("Name", FData.Name);
             writer.WriteAttributeString("Star", FData.BeginWithStar.ToString());
             writer.WriteAttributeString("Duration", FData.Duration.ToString());
-            writer.WriteAttributeString("Descript", FData.Descript.ToString());
+            writer.WriteAttributeString("Descript", FData.Descript);
             writer.WriteAttributeString("Ps.", FData.Ps);
             var point = FData.LatticedPoint;
             writer.WriteAttributeString("Point", ArrayString.Writer(new string[] { point.Col.ToString(), point.Row.ToString() }));

@@ -1,6 +1,5 @@
 #define PointBmp
 using FocusTree.Data.Focus;
-using System.Xml.Linq;
 
 namespace FocusTree.Graph
 {
@@ -60,6 +59,11 @@ namespace FocusTree.Graph
 
         #endregion
 
+        /// <summary>
+        /// 显示节点名称的最小格元边长
+        /// </summary>
+        public static int ShowNodeNameCellLength { get; set; } = 65;
+
         #region ==== 绘制国策节 ====
 
         /// <summary>
@@ -69,11 +73,10 @@ namespace FocusTree.Graph
         /// <param name="focus"></param>
         public static void DrawFocusNodeNormal(Bitmap image, FocusData focus)
         {
-            if (!Lattice.LatticedPointWithin(focus.LatticedPoint)) { return; }
             LatticeCell cell = new(focus.LatticedPoint);
-            var nodeRect = cell.CellPartsRealRect[LatticeCell.Parts.Node];
-            nodeRect = Lattice.RectWithin(nodeRect);
-            if (LatticeCell.Length < LatticeCell.LengthMax / 2)
+            var nodeRect = cell.NodeRealRect;
+            if (!Lattice.RectWithin(nodeRect, out nodeRect)) { return; }
+            if (LatticeCell.Length < ShowNodeNameCellLength)
             {
                 DrawFocusNode(image, nodeRect, null);
             }
@@ -86,11 +89,10 @@ namespace FocusTree.Graph
         /// <param name="focus"></param>
         public static void DrawFocusNodeSelected(Bitmap image, FocusData focus)
         {
-            if (!Lattice.LatticedPointWithin(focus.LatticedPoint)) { return; }
             LatticeCell cell = new(focus.LatticedPoint);
-            var nodeRect = cell.CellPartsRealRect[LatticeCell.Parts.Node];
-            nodeRect = Lattice.RectWithin(nodeRect);
-            if (LatticeCell.Length < LatticeCell.LengthMax / 2)
+            var nodeRect = cell.NodeRealRect;
+            if (!Lattice.RectWithin(nodeRect, out nodeRect)) { return; }
+            if (LatticeCell.Length < ShowNodeNameCellLength)
             {
                 DrawFocusNode(image, nodeRect, FocusNodeBG_Selected);
             }
@@ -272,31 +274,39 @@ namespace FocusTree.Graph
         /// <param name="pen"></param>
         private static void DrawCrossHollowLine(Bitmap image, Point p1, Point p2)
         {
-            if (!Lattice.CrossLineWithin(p1, p2, RequireLineWidth, out var lineRect, out var isHorizon)) { return; }
             PointBitmap pImage = new(image);
             pImage.LockBits();
             PointBitmap pBack = new(Background.BackImage);
             pBack.LockBits();
-            if (isHorizon)
+            var halfLineWidth = RequireLineWidth / 2;
+            if (p1.Y == p2.Y)
             {
-                // top & bottom
-                var bottom = lineRect.Bottom;
-                for (int i = 0; i < lineRect.Width; i++)
+                Rectangle lineRect = new(Math.Min(p1.X, p2.X), p1.Y - halfLineWidth, Math.Abs(p1.X - p2.X) + halfLineWidth, RequireLineWidth);
+                if (Lattice.RectWithin(lineRect, out lineRect))
                 {
-                    var x = lineRect.Left + i;
-                    pImage.SetPixel(x, lineRect.Top, GetInverseColor(pBack.GetPixel(x, lineRect.Top))); 
-                    pImage.SetPixel(x, bottom, GetInverseColor(pBack.GetPixel(x, bottom)));
+                    // top & bottom
+                    var bottom = lineRect.Bottom;
+                    for (int i = 0; i < lineRect.Width; i++)
+                    {
+                        var x = lineRect.Left + i;
+                        pImage.SetPixel(x, lineRect.Top, GetInverseColor(pBack.GetPixel(x, lineRect.Top)));
+                        pImage.SetPixel(x, bottom, GetInverseColor(pBack.GetPixel(x, bottom)));
+                    }
                 }
             }
             else
             {
-                // left & right
-                var right = lineRect.Right;
-                for (int j = 0; j < lineRect.Height; j++)
+                Rectangle lineRect = new(p1.X - halfLineWidth, Math.Min(p1.Y, p2.Y), RequireLineWidth, Math.Abs(p1.Y - p2.Y) + halfLineWidth);
+                if (Lattice.RectWithin(lineRect, out lineRect))
                 {
-                    var y = lineRect.Top + j;
-                    pImage.SetPixel(lineRect.Left, y, GetInverseColor(pBack.GetPixel(lineRect.Left, y)));
-                    pImage.SetPixel(right, y, GetInverseColor(pBack.GetPixel(right, y)));
+                    // left & right
+                    var right = lineRect.Right;
+                    for (int j = 0; j < lineRect.Height; j++)
+                    {
+                        var y = lineRect.Top + j;
+                        pImage.SetPixel(lineRect.Left, y, GetInverseColor(pBack.GetPixel(lineRect.Left, y)));
+                        pImage.SetPixel(right, y, GetInverseColor(pBack.GetPixel(right, y)));
+                    }
                 }
             }
             pBack.UnlockBits();
@@ -313,12 +323,11 @@ namespace FocusTree.Graph
         /// <param name="image"></param>
         /// <param name="point"></param>
         /// <param name="cellPart"></param>
-        public static void DrawSelectedCell(Bitmap image, LatticedPoint point, LatticeCell.Parts cellPart)
+        public static void DrawSelectedCellPart(Bitmap image, LatticedPoint point, LatticeCell.Parts cellPart)
         {
-            if (!Lattice.LatticedPointWithin(point)) { return; }
             LatticeCell cell = new(point);
             if (!CellSelectedPartsBG.TryGetValue(cellPart, out var shading)) { return; }
-            var rect = Lattice.RectWithin(cell.CellPartsRealRect[cellPart]);
+            if (!Lattice.RectWithin(cell.CellPartsRealRect[cellPart], out var rect)) { return; }
             PointBitmap pImage = new(image);
             pImage.LockBits();
             PointBitmap pBack = new(Background.BackImage);

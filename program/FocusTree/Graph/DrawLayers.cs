@@ -57,9 +57,9 @@
         /// <param name="layer"></param>
         /// <param name="drawer"></param>
         /// <returns></returns>
-        public static DrawLayers operator +(DrawLayers layer, LayerDrawer drawer)
+        public static DrawLayers operator +(DrawLayers layer, (uint, Drawer) layerDrawer)
         {
-            layer.Layers[drawer.LayerIndex] += drawer.Method;
+            layer.Layers[layerDrawer.Item1] += layerDrawer.Item2;
             return layer;
         }
         /// <summary>
@@ -68,39 +68,10 @@
         /// <param name="layer"></param>
         /// <param name="drawer"></param>
         /// <returns></returns>
-        public static DrawLayers operator -(DrawLayers layer, LayerDrawer drawer)
+        public static DrawLayers operator -(DrawLayers layer, (uint, Drawer) layerDrawer)
         {
-            layer.Layers[drawer.LayerIndex] -= drawer.Method;
+            layer.Layers[layerDrawer.Item1] -= layerDrawer.Item2;
             return layer;
-        }
-    }
-    public readonly struct LayerDrawer
-    {
-        /// <summary>
-        /// 层级序号
-        /// </summary>
-        public uint LayerIndex { get; init; }
-        /// <summary>
-        /// 委托方法
-        /// </summary>
-        public Drawer Method { get; init; }
-        /// <summary>
-        /// 默认构造函数：层级序号0，委托为 null
-        /// </summary>
-        public LayerDrawer()
-        {
-            LayerIndex = 0;
-            Method = null;
-        }
-        /// <summary>
-        /// 根据给定层级序号和委托方法创建
-        /// </summary>
-        /// <param name="layer"></param>
-        /// <param name="method"></param>
-        public LayerDrawer(uint layer, Drawer method)
-        {
-            LayerIndex = layer;
-            Method = method;
         }
     }
 }

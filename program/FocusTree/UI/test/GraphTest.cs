@@ -1,6 +1,4 @@
-﻿using FocusTree.Graph;
-
-namespace FocusTree.UI
+﻿namespace FocusTree.UI
 {
     public partial class GraphTest : Form
     {
