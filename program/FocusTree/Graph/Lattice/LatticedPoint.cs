@@ -1,4 +1,6 @@
-﻿namespace FocusTree.Graph
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace FocusTree.Graph
 {
     /// <summary>
     /// 栅格化坐标
@@ -39,8 +41,8 @@
         {
             var widthDiff = realPoint.X - Lattice.OriginLeft;
             var heightDiff = realPoint.Y - Lattice.OriginTop;
-            ColNumber = widthDiff / LatticeCell.Width;
-            RowNumber = heightDiff / LatticeCell.Height;
+            ColNumber = widthDiff / LatticeCell.Length;
+            RowNumber = heightDiff / LatticeCell.Length;
             if (widthDiff < 0) { ColNumber--; }
             if (heightDiff < 0) { RowNumber--; }
         }
@@ -64,10 +66,8 @@
         /// <param name="obj"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public override bool Equals(object obj)
-        {
-            throw new NotImplementedException();
-        }
+        public override readonly bool Equals([NotNullWhen(true)] object obj) => obj is LatticedPoint && Equals((LatticedPoint)obj);
+        public readonly bool Equals(LatticedPoint other) => this == other;
         /// <summary>
         /// 已重写 GetHashCode
         /// </summary>

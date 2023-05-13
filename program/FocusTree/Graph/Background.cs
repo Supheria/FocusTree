@@ -1,10 +1,11 @@
 ﻿using FocusTree.Properties;
+using System.Drawing.Drawing2D;
 
 namespace FocusTree.Graph
 {
     public static class Background
     {
-        public static string BackImagePath = "Background.jpg";
+        public static string BackImagePath { get; set; } = "Background.jpg";
         /// <summary>
         /// 当前的背景图片
         /// </summary>
@@ -20,11 +21,11 @@ namespace FocusTree.Graph
         /// <summary>
         /// 无图片背景
         /// </summary>
-        public static Color BlankBackground = Color.WhiteSmoke;
+        public static Color BlankBackground { get; set; } = Color.WhiteSmoke;
         /// <summary>
         /// 是否显示背景图片
         /// </summary>
-        public static bool Show = true;
+        public static bool Show { get; set; } = true;
         /// <summary>
         /// 新键背景缓存，并重绘背景
         /// </summary>
@@ -36,12 +37,14 @@ namespace FocusTree.Graph
             Redraw(image);
         }
         /// <summary>
-        /// 重绘背景（首次重绘应该使用 DrawNewBackground）
+        /// 重绘背景（首次重绘应该使用 DrawNew）
         /// </summary>
         /// <param name="image"></param>
         public static void Redraw(Image image)
         {
             Graphics g = Graphics.FromImage(image);
+            g.CompositingMode = CompositingMode.SourceCopy;
+            g.CompositingQuality = CompositingQuality.Invalid;
             g.DrawImage(Image, 0, 0);
             g.Flush(); g.Dispose();
         }
@@ -66,7 +69,7 @@ namespace FocusTree.Graph
         {
             if (Show)
             {
-                SetFromSourceImage(size);
+                InitializeFromSourceImage(size);
                 return;
             }
             var Width = size.Width;
@@ -88,7 +91,7 @@ namespace FocusTree.Graph
         /// 从图源设置背景
         /// </summary>
         /// <param name="size"></param>
-        private static void SetFromSourceImage(Size size)
+        private static void InitializeFromSourceImage(Size size)
         {
             Bitmap sourceImage;
             if (File.Exists(BackImagePath))
@@ -100,8 +103,8 @@ namespace FocusTree.Graph
             var Height = size.Height;
             var bkWidth = Width;
             var bkHeight = Height;
-            float sourceRatio = (float)sourceImage.Width / (float)sourceImage.Height;
-            float clientRatio = (float)Width / (float)Height;
+            double sourceRatio = (double)sourceImage.Width / (double)sourceImage.Height;
+            double clientRatio = (double)Width / (double)Height;
             if (sourceRatio < clientRatio)
             {
                 bkWidth = Width;
@@ -112,19 +115,18 @@ namespace FocusTree.Graph
                 bkHeight = Height;
                 bkWidth = (int)(Height * sourceRatio);
             }
-            Bitmap newBackImage = new(bkWidth, bkHeight);
-            var g = Graphics.FromImage(newBackImage);
-            g.DrawImage(sourceImage, 0, 0, bkWidth, bkHeight);
-            g.Flush(); g.Dispose();
-            sourceImage.Dispose();
-
-            Image?.Dispose();
-            Image = new(Width, Height);
-            g = Graphics.FromImage(Image);
-            Rectangle cutRect = new(0, 0, Width, Height);
-            g.DrawImage(newBackImage, cutRect, cutRect, GraphicsUnit.Pixel);
-            g.Flush(); g.Dispose();
-            newBackImage.Dispose();
+            if (Image.Width != bkWidth || Image.Height != bkHeight)
+            {
+                Image?.Dispose();
+                Image = new(bkWidth, bkHeight);
+                var g = Graphics.FromImage(Image);
+                g.CompositingMode = CompositingMode.SourceCopy;
+                g.CompositingQuality = CompositingQuality.Invalid;
+                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                g.DrawImage(sourceImage, 0, 0, bkWidth, bkHeight);
+                g.Flush(); g.Dispose();
+                sourceImage.Dispose();
+            }
         }
     }
 }

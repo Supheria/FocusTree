@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using System.Xml;
 using static FocusTree.Data.Hoi4Object.PublicSign;
 
@@ -12,7 +11,7 @@ namespace FocusTree.Data.Hoi4Object
         /// <summary>
         /// 主句属性
         /// </summary>
-        Hoi4SentenceStruct Main = new();
+        Hoi4SentenceStruct Main;
         /// <summary>
         /// 子句
         /// </summary>
@@ -75,11 +74,14 @@ namespace FocusTree.Data.Hoi4Object
             List<Hoi4Sentence> subSentences
             )
         {
-            Main.Motion = motion;
-            Main.ValueType = valueType;
-            Main.Value = value;
-            Main.TriggerType = triggerType;
-            Main.Triggers = triggers ?? new string[0];
+            Main = new()
+            {
+                Motion = motion,
+                ValueType = valueType,
+                Value = value ?? string.Empty,
+                TriggerType = triggerType,
+                Triggers = triggers ?? Array.Empty<string>()
+            };
             SubSentences = subSentences ?? new();
         }
         /// <summary>
@@ -87,6 +89,7 @@ namespace FocusTree.Data.Hoi4Object
         /// </summary>
         public Hoi4Sentence()
         {
+            Main = new();
         }
 
         #endregion
@@ -193,7 +196,7 @@ namespace FocusTree.Data.Hoi4Object
         /// <returns></returns>
         public new string ToString()
         {
-            return JsonConvert.SerializeObject(this);
+            throw new NotImplementedException();
         }
         /// <summary>
         /// 用json字符串生成
@@ -201,7 +204,7 @@ namespace FocusTree.Data.Hoi4Object
         /// <param name="jsonString"></param>
         public static Hoi4Sentence FromString(string jsonString)
         {
-            return JsonConvert.DeserializeObject<Hoi4Sentence>(jsonString);
+            throw new NotImplementedException();
         }
 
         #endregion

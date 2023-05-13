@@ -106,9 +106,6 @@
         /// <summary>
         /// 更新最近一次的保存
         /// </summary>
-        public static void UpdateLatest<T>(this T obj) where T : IHistoryable
-        {
-            obj.LatestIndex = obj.HistoryIndex;
-        }
+        public static void UpdateLatest<T>(this T obj) where T : IHistoryable => obj.LatestIndex = obj.HistoryIndex;
     }
 }

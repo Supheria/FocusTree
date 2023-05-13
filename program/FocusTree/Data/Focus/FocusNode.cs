@@ -42,13 +42,14 @@ namespace FocusTree.Data.Focus
         /// </summary>
         public FocusNode()
         {
+            FData = new();
         }
         public void ReadXml(XmlReader reader)
         {
             Effects = new();
             FData = new();
 
-            //==== 读取 Data ====//
+            //==== 读取 FData ====//
             FData.ID = int.Parse(reader.GetAttribute("ID") ?? throw new ArgumentException());
             FData.Name = reader.GetAttribute("Name") ?? FData.Name;
             FData.BeginWithStar = bool.Parse(reader.GetAttribute("Star") ?? "false");
@@ -174,7 +175,7 @@ namespace FocusTree.Data.Focus
             writer.WriteAttributeString("Name", FData.Name);
             writer.WriteAttributeString("Star", FData.BeginWithStar.ToString());
             writer.WriteAttributeString("Duration", FData.Duration.ToString());
-            writer.WriteAttributeString("Descript", FData.Descript.ToString());
+            writer.WriteAttributeString("Descript", FData.Descript);
             writer.WriteAttributeString("Ps.", FData.Ps);
             var point = FData.LatticedPoint;
             writer.WriteAttributeString("Point", ArrayString.Writer(new string[] { point.Col.ToString(), point.Row.ToString() }));

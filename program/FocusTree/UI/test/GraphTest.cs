@@ -1,6 +1,4 @@
-﻿using FocusTree.Graph;
-
-namespace FocusTree.UI
+﻿namespace FocusTree.UI
 {
     public partial class GraphTest : Form
     {
@@ -51,13 +49,7 @@ namespace FocusTree.UI
         {
             gBox.Image = new Bitmap(gBox.Width, gBox.Height);
             gCore = Graphics.FromImage(gBox.Image);
-            //gCore.Clear(Color.White);
-            var width = LatticeCell.Width * GraphRect.Width;
-            var height = LatticeCell.Height * GraphRect.Height;
             gCore.DrawImage(ImageCacher, gBox.ClientRectangle, left, top, gBox.Width, gBox.Height, GraphicsUnit.Pixel);
-            //var width = LatticeCell.Width * GraphRect.Width;
-            //var height = LatticeCell.Height * GraphRect.Height;
-            //gBox.Image = ImageCacher.GetThumbnailImage(width, height, null, IntPtr.Zero);
             gCore.Flush();
         }
 

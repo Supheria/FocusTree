@@ -361,10 +361,10 @@ namespace FocusTree.Data.Focus
             foreach (var focus in FocusCatalog.Values)
             {
                 var point = focus.LatticedPoint;
-                left = point.Col < left ? point.Col : left;
-                top = point.Row < top ? point.Row : top;
-                right = point.Col > right ? point.Col : right;
-                bottom = point.Row > bottom ? point.Row : bottom;
+                if (point.Col < left) { left = point.Col; }
+                else if (point.Col > right) { right = point.Col; }
+                if (point.Row < top) { top = point.Row; }
+                else if (point.Row > bottom) { bottom = point.Row; }
             }
             return new(left, top, right - left + 1, bottom - top + 1);
         }
@@ -406,9 +406,7 @@ namespace FocusTree.Data.Focus
         /// <summary>
         /// 用于序列化
         /// </summary>
-        private FocusGraph()
-        {
-        }
+        private FocusGraph() { }
         /// <summary>
         /// 序列化预留方法，默认返回 null
         /// </summary>
@@ -486,7 +484,7 @@ namespace FocusTree.Data.Focus
         }
         public string GetHashString()
         {
-            var cachePath = this.GetCachePath("hashtest");
+            var cachePath = FileCache.GetCachePath(this, "hashtest");
             XmlIO.SaveToXml(this, cachePath);
             FileStream data = new(cachePath, FileMode.Open);
             MD5 sha = MD5.Create();
@@ -513,14 +511,14 @@ namespace FocusTree.Data.Focus
             var hashCode = GetHashString();
             if (!Directory.Exists(hashCode))
             {
-                XmlIO.SaveToXml(this, this.GetCachePath(hashCode));
+                XmlIO.SaveToXml(this, FileCache.GetCachePath(this, hashCode));
             }
             return new(hashCode);
         }
         public void Deformat(FormattedData data)
         {
             FocusCatalog = new();
-            FocusCatalog = XmlIO.LoadFromXml<FocusGraph>(this.GetCachePath(data.Items[0])).FocusCatalog;
+            FocusCatalog = XmlIO.LoadFromXml<FocusGraph>(FileCache.GetCachePath(this, data.Items[0])).FocusCatalog;
         }
 
         #endregion

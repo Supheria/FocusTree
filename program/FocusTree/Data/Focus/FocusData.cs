@@ -10,41 +10,50 @@ namespace FocusTree.Data.Focus
         /// <summary>
         /// 栅格化坐标
         /// </summary>
-        public LatticedPoint LatticedPoint = new();
+        public LatticedPoint LatticedPoint;
         /// <summary>
         /// 节点ID
         /// </summary>
-        public int ID = 0;
+        public int ID;
         /// <summary>
         /// 国策名称
         /// </summary>
-        public string Name = string.Empty;
+        public string Name;
         /// <summary>
         /// 实施国策所需的天数
         /// </summary>
-        public int Duration = 0;
+        public int Duration;
         /// <summary>
         /// 国策描述
         /// </summary>
-        public string Descript = string.Empty;
+        public string Descript;
         /// <summary>
         /// 备注
         /// </summary>
-        public string Ps = string.Empty;
+        public string Ps;
         /// <summary>
         /// 字段是否以 * 开头
         /// </summary>
-        public bool BeginWithStar = false;
+        public bool BeginWithStar;
         /// <summary>
         /// 原始效果语句
         /// </summary>
-        public List<string> RawEffects = new();
+        public List<string> RawEffects;
         /// <summary>
         /// 依赖组
         /// </summary>
-        public List<HashSet<int>> Requires = new();
+        public List<HashSet<int>> Requires;
         public FocusData()
         {
+            LatticedPoint = new();
+            ID = 0;
+            Name = string.Empty;
+            Duration = 0;
+            Descript = string.Empty;
+            Ps = string.Empty;
+            BeginWithStar = false;
+            RawEffects = new();
+            Requires = new();
         }
     }
 }
