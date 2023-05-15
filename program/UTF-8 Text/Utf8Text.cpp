@@ -1,38 +1,40 @@
-#include <windows.h>
-#include <comutil.h>
+#include <iostream>
+#include <fstream>
 #include <codecvt>
 #include "Utf8Text.h"
+
+const char Utf8Text::BOM_Head[3] = { 0xEF, 0xBB, 0xBF };
 
 using namespace std;
 
 Utf8Text::~Utf8Text()
 {
+    delete[] Buffer;
 }
 /// <summary>
 /// 参考：https://blog.csdn.net/weixin_41055260/article/details/121434010
 /// </summary>
 Utf8Text::Utf8Text(std::string path) : CharIndex(0), CurrentUtf8Char(string())
 {
-    ifstream inFile;
-    inFile.open(path.c_str(), ios::binary);
-    if (!inFile.is_open())
+    ifstream infile;
+    infile.open(path.c_str(), ios::binary);
+    if (!infile.is_open())
     {
         throw "[Utf8Text.cpp]: [2305131210]无法读取文件。\n";
     }
-    int fileHead[3] = { 0, 0, 0 };
-    for (int i = 0; i < 3 && !inFile.eof(); i++)
+    char fileHead[3] = { 0, 0, 0 };
+    for (int i = 0; i < 3 && !infile.eof(); i++)
     {
-        fileHead[i] = inFile.get();
+        fileHead[i] = infile.get();
     }
-    isBOM = fileHead[0] == 0xEF && fileHead[1] == 0xBB && fileHead[2] == 0xBF;
-    filebuf* filebuffer;
-    filebuffer = inFile.rdbuf();
-    int starter = isBOM ? 3 : 0;
-    BufferLength = (int)filebuffer->pubseekoff(starter, ios::end, ios::in);
+    HasBOM = fileHead[0] == BOM_Head[0] && fileHead[1] == BOM_Head[1] && fileHead[2] == BOM_Head[2];
+    filebuf* filebuffer = infile.rdbuf();
+    size_t starter = HasBOM ? 3 : 0;
+    BufferLength = (int)filebuffer->pubseekoff(0, ios::end, ios::in) - starter;
+    Buffer = new char[BufferLength];
     filebuffer->pubseekpos(starter, ios::in);
-    Buffer = new char[BufferLength + 1];
     filebuffer->sgetn(Buffer, BufferLength);
-    inFile.close();
+    infile.close();
 }
 /// <summary>
 /// 参考：https://blog.csdn.net/weixin_41055260/article/details/121434010
@@ -46,13 +48,7 @@ bool Utf8Text::Read()
     {
         throw "[Utf8Text.cpp]: [2305131213]字符起始位置越界。\n";
     }
-    char* str = new char[charLength + 1];
-    for (int i = 0; i < charLength; i++)
-    {
-        str[i] = *(Buffer + CharIndex + i);
-    }
-    str[charLength] = '\0';
-    CurrentUtf8Char = str;
+    CurrentUtf8Char.assign(Buffer + CharIndex, charLength);
     CharIndex = nextIndex;
     return true;
 }
@@ -72,10 +68,10 @@ size_t Utf8Text::GetUtf8CharLength(const char& startMark)
         }
         mask >>= 1;
     }
-    if (0 == length) { return 1; } // ASCII's 8th byte is 0, and length of two utf-8's startMark is 110xxxxx, so variable 'length' itself will be 0 or 2...6
+    if (0 == length) { return 1; } // ASCII's 8th bit is 0, and startMark of two-bytes utf-8's is 110xxxxx, so variable 'length' itself will be 0 or 2...6
     return length;
 }
-std::string Utf8Text::GetUtf8Char()
+const std::string& Utf8Text::GetUtf8Char()
 {
     return CurrentUtf8Char;
 }
@@ -84,7 +80,7 @@ std::string Utf8Text::GetUtf8Char()
 /// </summary>
 /// <param name="str"></param>
 /// <returns></returns>
-std::wstring Utf8Text::GetWideUnicode()
+std::wstring Utf8Text::GetUnicodeChar()
 {
     setlocale(LC_CTYPE, "");
     wstring wstr;
@@ -96,22 +92,6 @@ std::wstring Utf8Text::GetWideUnicode()
         cerr << e.what() << endl;
     }
     return wstr;
-}
-/// <summary>
-/// 参考：https://blog.csdn.net/libaineu2004/article/details/119393505
-/// </summary>
-/// <param name="UnicodeChar"></param>
-/// <returns></returns>
-std::string Utf8Text::GetShortUnicode()
-{
-    wstring unicode = GetWideUnicode();
-    int length = WideCharToMultiByte(LC_CTYPE, 0, unicode.c_str(), unicode.size(), NULL, 0, NULL, NULL);
-    char* buffer = new char[length + 1];
-    //宽字节编码转换成多字节编码
-    WideCharToMultiByte(LC_CTYPE, 0, unicode.c_str(), unicode.size(), buffer, length, NULL, NULL);
-    buffer[length] = '\0';
-    //删除缓冲区并返回值
-    return buffer;
 }
 /// <summary>
 /// 参看：https://blog.csdn.net/FlushHip/article/details/82836867
@@ -130,4 +110,15 @@ std::string Utf8Text::UnicodeToUTF8(const std::wstring& unicode)
         cerr << e.what() << endl;
     }
     return ret;
+}
+
+void Utf8Text::AddBOMHead(std::filebuf* fileBuffer)
+{
+    if (fileBuffer == nullptr) { throw "[Utf8Text.cpp]: [2305141004]无效的文件缓存流。\n"; }
+    fileBuffer->sputn(BOM_Head, sizeof(BOM_Head));
+}
+
+int Utf8Text::GetBufferLength()
+{
+    return BufferLength;
 }
