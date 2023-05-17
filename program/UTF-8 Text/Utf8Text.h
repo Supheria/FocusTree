@@ -3,61 +3,61 @@
 
 class Utf8Text
 {
+public:
+    static const char BOM[3];
+    /// <summary>
+    /// 将 Unicode 编码转换为 UTF-8 编码
+    /// </summary>
+    /// <param name="unicode"></param>
+    /// <returns></returns>
+    static std::string uto8(const std::wstring& unicode);
 private:
     /// <summary>
     /// 字节缓存区
     /// </summary>
-    char * Buffer;
+    char * buffer;
     /// <summary>
     /// 缓存区长度
     /// </summary>
-    size_t BufferLength;
+    size_t length;
     /// <summary>
     /// 是否有 BOM 文件头
     /// </summary>
-    bool HasBOM;
+    bool hasbom;
 public:
-    static const char BOM_Head[3];
-public:
-    int GetBufferLength();
+    int bufferlength();
 private:
     /// <summary>
     /// 当前的 UTF-8 字符
     /// </summary>
-    std::string CurrentUtf8Char;
+    std::string u8char;
     /// <summary>
     /// 当前字符的位置索引
     /// </summary>
-    size_t CharIndex;
+    size_t index;
 public:
     /// <summary>
     /// 使用文件路径新建字节缓冲区
     /// </summary>
     /// <param name="path">文件路径</param>
-    Utf8Text(std::string path);
+    Utf8Text(std::string filepath);
     ~Utf8Text();
     /// <summary>
     /// 读取宇哥转换为 Unicode 长字符的 UTF-8 字符
     /// </summary>
     /// <param name="UnicodeChar"></param>
     /// <returns></returns>
-    bool Read();
+    bool read();
     /// <summary>
     /// 获得当前的 UTF-8 字符的引用
     /// </summary>
     /// <returns>当前的 UTF-8 字符的引用（不要用此返回值赋值）</returns>
-    const std::string& GetUtf8Char();
+    const std::string& getu8char();
     /// <summary>
     /// 获取当前 UTF-8 字符的 Unicode 编码字符
     /// </summary>
     /// <returns></returns>
-    std::wstring GetUnicodeChar();
-    /// <summary>
-    /// 将 Unicode 编码转换为 UTF-8 编码
-    /// </summary>
-    /// <param name="unicode"></param>
-    /// <returns></returns>
-    static std::string UnicodeToUTF8(const std::wstring& unicode);
+    std::wstring getunichar(std::string utf8);
 private:
     /// <summary>
     /// 获取UTF-8字符长度
@@ -71,9 +71,7 @@ private:
     /// <param name="byte"></param>
     /// <returns>返回1-6</returns>
     /// <exception cref="无效的UTF-8字符标识"></exception>
-    size_t GetUtf8CharLength(const char& start);
-public:
-    void AddBOMHead(std::filebuf* fileBuffer);
+    size_t get_u8char_length(const char& start);
 };
 
 #endif

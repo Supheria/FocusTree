@@ -62,8 +62,8 @@ namespace Hoi4ReaderWriter
                 TrimedBuffer[i] = buffer[isBOM ? i + 3 : i];
             }
 #if DEBUG
-            FileStream file = new(@"C:\Users\Non_E\Documents\GitHub\FocusTree\FocusTree\modding analysis\test\trimed stream.txt", FileMode.Create);
-            file.Write(TrimedBuffer.ToArray());
+            //FileStream file = new(@"C:\Users\Non_E\Documents\GitHub\FocusTree\FocusTree\modding analysis\test\trimed stream.txt", FileMode.Create);
+            //file.Write(TrimedBuffer.ToArray());
 #endif
         }
         private byte[] ReadTrimedBuffer(Stream stream)
@@ -75,7 +75,7 @@ namespace Hoi4ReaderWriter
             {
                 if (currentByte == '#')
                 {
-                    while ((currentByte = stream.ReadByte()) != '\n') ;
+                    while ((currentByte = stream.ReadByte()) != '\n' && currentByte != -1) ;
                 }
                 if (currentByte == '\n' || currentByte == ' ' || currentByte == '\t' || currentByte == '\r')
                 {
@@ -124,6 +124,7 @@ namespace Hoi4ReaderWriter
                 TabTimes = StartElements.Count;
                 var sign = ReadName();
 
+                if (sign == 0) { return false; }
                 if (TrimedBuffer[BufferPosition] == '{')
                 {
                     BufferPosition++;
@@ -155,7 +156,7 @@ namespace Hoi4ReaderWriter
                     sb.Append((char)TrimedBuffer[BufferPosition]);
                 }
                 else { hasBlank = true; }
-                if (++BufferPosition >= TrimedBuffer.Length) { throw new InvalidDataException("Unexpected end of assignment."); }
+                if (++BufferPosition >= TrimedBuffer.Length) { return 0; }
             }
             if (sb.Length == 0) { throw new InvalidDataException("No Element Name was found."); }
             var sign = TrimedBuffer[BufferPosition];
@@ -189,22 +190,10 @@ namespace Hoi4ReaderWriter
         private void ReadBraceAssignment(byte assignmentSign)
         {
             StringBuilder sb = new(((char)assignmentSign).ToString()); // = or < or >
-            bool hasBlank = false;
+            //bool hasBlank = false;
             while (TrimedBuffer[BufferPosition] != '}')
             {
-                if (TrimedBuffer[BufferPosition] == ' ')
-                {
-                    hasBlank = true;
-                    BufferPosition++;
-                    continue;
-                }
-                if (hasBlank)
-                {
-                    sb.Append(',');
-                    hasBlank = false;
-                }
-                sb.Append((char)TrimedBuffer[BufferPosition]);
-                BufferPosition++;
+                sb.Append((char)TrimedBuffer[BufferPosition++]);
             }
             BufferPosition++;
             Value = sb.ToString();
@@ -220,14 +209,15 @@ namespace Hoi4ReaderWriter
             if (TrimedBuffer[BufferPosition] == '\"')
             {
                 // "... ..." or "UTF-8" condition
+                //if (++BufferPosition >= TrimedBuffer.Length) { throw new InvalidDataException("Unexpected end of quote."); }
                 if (++BufferPosition >= TrimedBuffer.Length) { throw new InvalidDataException("Unexpected end of quote."); }
                 int startPos = BufferPosition;
                 int length = 0;
                 bool doTransfer = false;
-                while (TrimedBuffer[BufferPosition] != '\"' || (doTransfer && TrimedBuffer[BufferPosition] == '\"')) 
+                while (TrimedBuffer[BufferPosition] != '\"' || (doTransfer && TrimedBuffer[BufferPosition] == '\"'))
                 {
                     length++;
-                    if (doTransfer) { doTransfer = false; }
+                    if (doTransfer) { doTransfer = false; if(TrimedBuffer[BufferPosition] == '\"') throw new Exception("escape quote."); }
                     if (TrimedBuffer[BufferPosition] == '\\') { doTransfer = true; }
                     if (++BufferPosition >= TrimedBuffer.Length) { throw new InvalidDataException("Unexpected end of quote."); }
                 }

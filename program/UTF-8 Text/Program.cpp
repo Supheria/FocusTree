@@ -6,21 +6,6 @@
 #include <fstream>
 
 using namespace std;
-std::string UnicodeToANSI(const std::wstring& wstr)
-{
-    std::string ret;
-    std::mbstate_t state = {};
-    const wchar_t* src = wstr.data();
-    size_t len = std::wcsrtombs(nullptr, &src, 0, &state);
-    if (static_cast<size_t>(-1) != len) {
-        std::unique_ptr< char[] > buff(new char[len + 1]);
-        len = std::wcsrtombs(buff.get(), &src, len, &state);
-        if (static_cast<size_t>(-1) != len) {
-            ret.assign(buff.get(), len);
-        }
-    }
-    return ret;
-}
 
 int main()
 {
@@ -30,16 +15,18 @@ int main()
     {
         ofstream ofile;
         ofile.open("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\modding analysis\\test\\resave.txt", ios::binary);
-        //wstring wstr;
-        reader.AddBOMHead(ofile.rdbuf());
+        filebuf* fbuff = ofile.rdbuf();
+        fbuff->sputn(Utf8Text::BOM, sizeof(Utf8Text::BOM));
         string buffer;
-        while (reader.Read())
+        while (reader.read())
         {
-            wstring wstr = reader.GetUnicodeChar();
-            buffer += reader.UnicodeToUTF8(wstr);
+            buffer += reader.getu8char();
+            //int a = 0;
+            //buffer += Utf8Text::uto8(L"wstr");
             //cout << UnicodeToANSI(wstr);
         }
 
+        wstring wstr = reader.getunichar(buffer);
         ofile.close();
     }
     catch (string massage)

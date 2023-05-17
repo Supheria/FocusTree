@@ -3,18 +3,18 @@
 #include <codecvt>
 #include "Utf8Text.h"
 
-const char Utf8Text::BOM_Head[3] = { 0xEF, 0xBB, 0xBF };
+const char Utf8Text::BOM[3] = { 0xEF, 0xBB, 0xBF };
 
 using namespace std;
 
 Utf8Text::~Utf8Text()
 {
-    delete[] Buffer;
+    delete[] buffer;
 }
 /// <summary>
-/// 参考：https://blog.csdn.net/weixin_41055260/article/details/121434010
+/// https://blog.csdn.net/weixin_41055260/article/details/121434010
 /// </summary>
-Utf8Text::Utf8Text(std::string path) : CharIndex(0), CurrentUtf8Char(string())
+Utf8Text::Utf8Text(std::string path) : index(0), u8char(string())
 {
     ifstream infile;
     infile.open(path.c_str(), ios::binary);
@@ -27,66 +27,66 @@ Utf8Text::Utf8Text(std::string path) : CharIndex(0), CurrentUtf8Char(string())
     {
         fileHead[i] = infile.get();
     }
-    HasBOM = fileHead[0] == BOM_Head[0] && fileHead[1] == BOM_Head[1] && fileHead[2] == BOM_Head[2];
+    hasbom = fileHead[0] == BOM[0] && fileHead[1] == BOM[1] && fileHead[2] == BOM[2];
     filebuf* filebuffer = infile.rdbuf();
-    size_t starter = HasBOM ? 3 : 0;
-    BufferLength = (int)filebuffer->pubseekoff(0, ios::end, ios::in) - starter;
-    Buffer = new char[BufferLength];
+    size_t starter = hasbom ? 3 : 0;
+    length = (int)filebuffer->pubseekoff(0, ios::end, ios::in) - starter;
+    buffer = new char[length];
     filebuffer->pubseekpos(starter, ios::in);
-    filebuffer->sgetn(Buffer, BufferLength);
+    filebuffer->sgetn(buffer, length);
     infile.close();
 }
 /// <summary>
 /// 参考：https://blog.csdn.net/weixin_41055260/article/details/121434010
 /// </summary>
-bool Utf8Text::Read()
+bool Utf8Text::read()
 {
-    if (CharIndex == BufferLength) { return false; }
-    size_t charLength = GetUtf8CharLength(Buffer[CharIndex]);
-    size_t nextIndex = CharIndex + charLength;
-    if (nextIndex > BufferLength)
+    if (index == length) { return false; }
+    size_t char_length = get_u8char_length(buffer[index]);
+    size_t next_index = index + char_length;
+    if (next_index > length)
     {
         throw "[Utf8Text.cpp]: [2305131213]字符起始位置越界。\n";
     }
-    CurrentUtf8Char.assign(Buffer + CharIndex, charLength);
-    CharIndex = nextIndex;
+    u8char.assign(buffer + index, char_length);
+    index = next_index;
     return true;
 }
 /// <summary>
 /// 参考：https://blog.csdn.net/weixin_41055260/article/details/121434010
 /// </summary>
-size_t Utf8Text::GetUtf8CharLength(const char& startMark)
+size_t Utf8Text::get_u8char_length(const char& starter)
 {
-    size_t length = 0;
+    size_t len = 0;
     unsigned char mask = 0b10000000;
-    while (startMark & mask)
+    while (starter & mask)
     {
-        length++;
-        if (length > 6)
+        len++;
+        if (len > 6)
         {
             throw "[Utf8Text.cpp]: [2305131155]无效的UTF-8字符标识。\n";
         }
         mask >>= 1;
     }
-    if (0 == length) { return 1; } // ASCII's 8th bit is 0, and startMark of two-bytes utf-8's is 110xxxxx, so variable 'length' itself will be 0 or 2...6
-    return length;
+    if (0 == len) { return 1; } // ASCII's 8th bit is 0, and startMark of two-bytes utf-8's is 110xxxxx, so variable 'length' itself will be 0 or 2...6
+    return len;
 }
-const std::string& Utf8Text::GetUtf8Char()
+const std::string& Utf8Text::getu8char()
 {
-    return CurrentUtf8Char;
+    return u8char;
 }
 /// <summary>
 /// 参看：https://blog.csdn.net/FlushHip/article/details/82836867
 /// </summary>
 /// <param name="str"></param>
 /// <returns></returns>
-std::wstring Utf8Text::GetUnicodeChar()
+std::wstring Utf8Text::getunichar(std::string utf8)
 {
     setlocale(LC_CTYPE, "");
     wstring wstr;
     try {
         wstring_convert<codecvt_utf8<wchar_t>> wcv;
-        wstr = wcv.from_bytes(CurrentUtf8Char);
+        wstr = wcv.from_bytes(utf8);
     }
     catch (const exception& e) {
         cerr << e.what() << endl;
@@ -98,7 +98,7 @@ std::wstring Utf8Text::GetUnicodeChar()
 /// </summary>
 /// <param name="wstr"></param>
 /// <returns></returns>
-std::string Utf8Text::UnicodeToUTF8(const std::wstring& unicode)
+std::string Utf8Text::uto8(const std::wstring& unicode)
 {
     setlocale(LC_CTYPE, "");
     string ret;
@@ -112,13 +112,7 @@ std::string Utf8Text::UnicodeToUTF8(const std::wstring& unicode)
     return ret;
 }
 
-void Utf8Text::AddBOMHead(std::filebuf* fileBuffer)
+int Utf8Text::bufferlength()
 {
-    if (fileBuffer == nullptr) { throw "[Utf8Text.cpp]: [2305141004]无效的文件缓存流。\n"; }
-    fileBuffer->sputn(BOM_Head, sizeof(BOM_Head));
-}
-
-int Utf8Text::GetBufferLength()
-{
-    return BufferLength;
+    return length;
 }
