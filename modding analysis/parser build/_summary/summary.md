@@ -1,10 +1,15 @@
+
 ### Read \*.txt, \*.gfx, \*.gui Under "Hearts of Iron IV\\" Using Basic Syntax for Test
 
-> Hoi4 Original Game Version 1.12.12(13)
-> the number of \*.txt is *3693*, \*.gfx is *294*, \*.gui is *414*
-> [raw exception log](/_teset/exception%20log.txt)
+>+ Hoi4 Original Game Version 1.12.12(13)
+>+ the number of \*.txt is *3693*, \*.gfx is *294*, \*.gui is *414*
+>+ [raw exception log](../_test/exception%20log.txt)
+
+
+<span id="top"></span>
 
 [toc]
+
 
 #### <font color=SandyBrown>Basic Syntax</font>
 > *Also **Tokenize Rule***
@@ -21,10 +26,13 @@
 >4. if no exception throw, read for next *operand* token, and repeat *Tokenize Rule* over and over again, *<font color=CornflowerBlue>[loop]</font>* until meet the end of the script file
 >5. at the end of file, if there is any '{' has not popped out from *stash**, throw ***<font color=DarkGreen>Brace is asymmetrical.</font>*** **stash records the sequence of all '{'*
 
-![avatar](.\basic_syntax.svg)
+![avatar](/basic_syntax.svg)
 
 
-#### <font color=OrangeRed>[syntax] </font>'#' Inside Quote
+[^](#top)
+
+#### <font color=OrangeRed>[syntax]</font> '#' Inside Quote
+
 
 ```CS
 // such as
@@ -35,9 +43,14 @@ web_link = "Land_warfare#Theater"
 > *Element name cannot contain blank.*
 
 
-#### <font color=OrangeRed>[syntax] </font>Special Assigning
+#### <font color=OrangeRed>[syntax]</font> Special Assigning
+
+
+[^](#top)
 
 ##### compound assigning
+
+
 ```CS
 // such as
 enable_equipments = {
@@ -51,7 +64,12 @@ enable_equipments = {
 > Hearts of Iron IV\common\technologies\\**electronic_mechanical_engineering.txt**
 > *Element name cannot contain blank.*
 
+
+[^](#top)
+
 ##### color assigning from struct enum
+
+
 ```CS
 // such as
 colors = {
@@ -64,7 +82,12 @@ colors = {
 > Hearts of Iron IV\common\medals\\**00_medals.txt**
 > *Element name cannot contain blank.*
 
+
+[^](#top)
+
 ##### color assigning from array enum
+
+
 ```CS
 // such as
 colors = {
@@ -78,7 +101,12 @@ colors = {
 > Hearts of Iron IV\common\ribbons\\**00_ribbons.txt**
 > *Element name cannot contain blank.*
 
+
+[^](#top)
+
 ##### color assigning from value enum
+
+
 ```CS
 // such as
 color = rgb { 0 0 0 }
@@ -294,7 +322,10 @@ color = rgb { 0 0 0 }
 > *Element name cannot contain blank.*
 
 
-#### <font color=OrangeRed>[syntax] </font>Contains Operant As Quoted-String
+[^](#top)
+
+#### <font color=OrangeRed>[syntax]</font> Contains Operant As Quoted-String
+
 
 ```CS
 // such as
@@ -319,7 +350,9 @@ color = rgb { 0 0 0 }
 > *Element name cannot contain blank.*
 
 
-#### <font color=OrangeRed>[syntax] </font>Contains Escape Quote \\"
+[^](#top)
+
+#### <font color=OrangeRed>[syntax]</font> Contains Escape Quote \\"
 
 
 > Hearts of Iron IV\events\\**BBA_Ethiopia.txt**
@@ -450,7 +483,10 @@ color = rgb { 0 0 0 }
 > *escape quote.*
 
 
-#### <font color=ForestGreen>[exception] </font>Unexpected Token
+[^](#top)
+
+#### <font color=ForestGreen>[exception]</font> Unexpected Token
+
 
 ```CS
 //
@@ -476,7 +512,9 @@ effectFile = "gfx/FX/buttonstate.lua";
 > *Element name cannot contain blank.*
 
 
-#### <font color=ForestGreen>[exception] </font>Missing Close Brace
+[^](#top)
+
+#### <font color=ForestGreen>[exception]</font> Missing Close Brace
 
 
 > *missing for **idea** bolck at the end of file*
@@ -525,6 +563,8 @@ effectFile = "gfx/FX/buttonstate.lua";
 > Hearts of Iron IV\interface\\**sov_propaganda_campaigns_scripted_gui.gui***
 > *Brace signs are asymmetrical.*
 
+
+[^](#top)
 
 #### <font color=DimGray>Nonstandard Hoi4 Script</font>
 
@@ -577,3 +617,6 @@ effectFile = "gfx/FX/buttonstate.lua";
 
 > Hearts of Iron IV\pdx_launcher\game\\**motd.txt**
 > *Element name cannot contain blank.*
+
+
+[^](#top)

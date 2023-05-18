@@ -362,6 +362,6 @@ MigrationBackup/
 FodyWeavers.xsd
 modding analysis/test/
 
-*.bkp
-
 program/Test Exception/
+
+.svg.bkp
