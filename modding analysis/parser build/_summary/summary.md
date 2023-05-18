@@ -1,20 +1,19 @@
-### Read \*.txt and \*.gfx Under "Hearts of Iron IV\\" Using Basic Syntax for Test
+### Read \*.txt, \*.gfx, \*.gui Under "Hearts of Iron IV\\" Using Basic Syntax for Test
 
 > Hoi4 Original Game Version 1.12.12(13)
-> the number of \*.txt is *3693*, of \*.gfx is *294*
-> [raw exception log](/exception_log.html)
+> the number of \*.txt is *3693*, \*.gfx is *294*, \*.gui is *414*
+> [raw exception log](/_teset/exception%20log.txt)
 
 [toc]
 
 #### <font color=SandyBrown>Basic Syntax</font>
 > *Also **Tokenize Rule***
->1. read script file byte by byte
+>1. read script file byte by byte, if meet '#' skip rest of the line
 >2. *<font color=CornflowerBlue>[loop]</font>* collect bytes for token while next byte is not *blank\**, then skip any *blank* to read next token, and '{' '}' '=', '>', '<', '"', "\\"" are special byte(s) need to be a single token. *\*blank refers to ' ', '\n', '\t', '\r'*
 >3. take a token assumed *operand*, *<font color=CornflowerBlue>[loop]</font>* then read next
 
-| *next token(s)* |  |  |  |  |  |
-|---|---|---|---|---|---|
-|  | IF '{' AND '=' |  | ELSE IF '=' OR '>' OR '<' |  | ELSE |
+| *next token(s)* | IF '{' AND '=' |  | ELSE IF '=' OR '>' OR '<' |  | ELSE |
+|---:|---|---|---|---|---|
 |  | IF contains any '=' '>' or '<' | ELSE | *type of value* |  | throw ***<font color=DarkGreen>Element name cannot contain blank.</font>*** |
 |  | *type of scope* | *type of enum* | IF next non-space byte is '"' | ELSE |  |
 |  |  | collect all tokens until found nearest '}' | value is a full-string, collect all tokens in quote, and trans to unicode | value is a string without *blank* |  |
@@ -23,6 +22,18 @@
 >5. at the end of file, if there is any '{' has not popped out from *stash**, throw ***<font color=DarkGreen>Brace is asymmetrical.</font>*** **stash records the sequence of all '{'*
 
 ![avatar](.\basic_syntax.svg)
+
+
+#### <font color=OrangeRed>[syntax] </font>'#' Inside Quote
+
+```CS
+// such as
+web_link = "Land_warfare#Theater"
+```
+
+> C:\Program Files\steam\steamapps\common\Hearts of Iron IV\interface\\**tutorialscreen.gui**
+> *Element name cannot contain blank.*
+
 
 #### <font color=OrangeRed>[syntax] </font>Special Assigning
 
@@ -439,6 +450,32 @@ color = rgb { 0 0 0 }
 > *escape quote.*
 
 
+#### <font color=ForestGreen>[exception] </font>Unexpected Token
+
+```CS
+//
+// SWE_1939_naval_legacy.txt
+//
+pride_of_the_fleet = yes definition definition = heavy
+// unexpected token of "definition" in line 17
+// this line is similar in SWE_1936_naval_legacy.txt but syntax good
+```
+
+> Hearts of Iron IV\history\units\\**SWE_1939_naval_legacy.txt**
+> *Element name cannot contain blank.*
+
+```CS
+//
+// core.gfx
+//
+effectFile = "gfx/FX/buttonstate.lua";
+// unexpected token of ";" in line 1735
+```
+
+> Hearts of Iron IV\interface\\**core.gfx**
+> *Element name cannot contain blank.*
+
+
 #### <font color=ForestGreen>[exception] </font>Missing Close Brace
 
 
@@ -480,32 +517,13 @@ color = rgb { 0 0 0 }
 > Hearts of Iron IV\dlc\dlc031_battle_for_the_bosporus\gfx\entities\\**_BfB_meshes_infantry.gfx**
 > *Brace is asymmetrical.*
 
+> *missing for **guiTypes** block at the end of file*
+> Hearts of Iron IV\interface\\**backend.gui**
+> *Brace signs are asymmetrical.*
 
-#### <font color=ForestGreen>[exception] </font>Unexpected Token
-
-```CS
-//
-// SWE_1939_naval_legacy.txt
-//
-pride_of_the_fleet = yes definition definition = heavy
-// unexpected token of "definition" in line 17
-// this line is similar in SWE_1936_naval_legacy.txt but syntax good
-```
-
-> Hearts of Iron IV\history\units\\**SWE_1939_naval_legacy.txt**
-> *Element name cannot contain blank.*
-
-```CS
-//
-// core.gfx
-//
-effectFile = "gfx/FX/buttonstate.lua";
-// unexpected token of ";" in line 1735
-```
-
-
-> Hearts of Iron IV\interface\\**core.gfx**
-> *Element name cannot contain blank.*
+> *missing for **guiTypes** block at the end of file*
+> Hearts of Iron IV\interface\\**sov_propaganda_campaigns_scripted_gui.gui***
+> *Brace signs are asymmetrical.*
 
 
 #### <font color=DimGray>Nonstandard Hoi4 Script</font>
