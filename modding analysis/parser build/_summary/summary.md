@@ -43,10 +43,10 @@ web_link = "Land_warfare#Theater"
 > *Element name cannot contain blank.*
 
 
+[^](#top)
+
 #### <font color=OrangeRed>[syntax]</font> Special Assigning
 
-
-[^](#top)
 
 ##### compound assigning
 
@@ -67,7 +67,7 @@ enable_equipments = {
 
 [^](#top)
 
-##### color assigning from struct enum
+##### color assigning from struct-array enum
 
 
 ```CS
@@ -85,7 +85,7 @@ colors = {
 
 [^](#top)
 
-##### color assigning from array enum
+##### color assigning from value-array enum
 
 
 ```CS
