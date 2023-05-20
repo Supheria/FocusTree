@@ -1,0 +1,711 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>no title</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+    .markdown-preview{width:100%;height:100%;box-sizing:border-box}.markdown-preview .pagebreak,.markdown-preview .newpage{page-break-before:always}.markdown-preview pre.line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}.markdown-preview pre.line-numbers>code{position:relative}.markdown-preview pre.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:1em;font-size:100%;left:0;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.markdown-preview pre.line-numbers .line-numbers-rows>span{pointer-events:none;display:block;counter-increment:linenumber}.markdown-preview pre.line-numbers .line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}.markdown-preview .mathjax-exps .MathJax_Display{text-align:center !important}.markdown-preview:not([for="preview"]) .code-chunk .btn-group{display:none}.markdown-preview:not([for="preview"]) .code-chunk .status{display:none}.markdown-preview:not([for="preview"]) .code-chunk .output-div{margin-bottom:16px}.markdown-preview .md-toc{padding:0}.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link{display:inline;padding:.25rem 0}.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link p,.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link div{display:inline}.markdown-preview .md-toc .md-toc-link-wrapper.highlighted .md-toc-link{font-weight:800}.scrollbar-style::-webkit-scrollbar{width:8px}.scrollbar-style::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}.scrollbar-style::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode]){position:relative;width:100%;height:100%;top:0;left:0;margin:0;padding:0;overflow:auto}html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{position:relative;top:0}@media screen and (min-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em calc(50% - 457px + 2em)}}@media screen and (max-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{font-size:14px !important;padding:1em}}@media print{html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{display:none}}html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{position:fixed;bottom:8px;left:8px;font-size:28px;cursor:pointer;color:inherit;z-index:99;width:32px;text-align:center;opacity:.4}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] #sidebar-toc-btn{opacity:1}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc{position:fixed;top:0;left:0;width:300px;height:100%;padding:32px 0 48px 0;font-size:14px;box-shadow:0 0 4px rgba(150,150,150,0.33);box-sizing:border-box;overflow:auto;background-color:inherit}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar{width:8px}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc a{text-decoration:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc{padding:0 16px}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link{display:inline;padding:.25rem 0}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link p,html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link div{display:inline}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper.highlighted .md-toc-link{font-weight:800}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{left:300px;width:calc(100% -  300px);padding:2em calc(50% - 457px -  300px/2);margin:0;box-sizing:border-box}@media screen and (max-width:1274px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{width:100%}}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .markdown-preview{left:50%;transform:translateX(-50%)}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .md-sidebar-toc{display:none}pre{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;direction:ltr;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;padding:1em;margin:.5em 0;overflow:auto;line-height:1.5;tab-size:4;hyphens:none;color:#555;background-color:#f0f0f0 !important;border:#d6d6d6;border-radius:3px}pre[class*="language-"]{padding:1em}code[class*="language-"] .token.comment,pre[class*="language-"] .token.comment,code[class*="language-"] .token.prolog,pre[class*="language-"] .token.prolog,code[class*="language-"] .token.doctype,pre[class*="language-"] .token.doctype,code[class*="language-"] .token.cdata,pre[class*="language-"] .token.cdata{color:#999988;font-style:italic}code[class*="language-"] .token.punctuation,pre[class*="language-"] .token.punctuation{color:#920B2D}code[class*="language-"] .namespace,pre[class*="language-"] .namespace{opacity:.7}code[class*="language-"] .token.property,pre[class*="language-"] .token.property{font-weight:bold;color:#333}code[class*="language-"] .token.boolean,pre[class*="language-"] .token.boolean,code[class*="language-"] .token.number,pre[class*="language-"] .token.number,code[class*="language-"] .token.function-name,pre[class*="language-"] .token.function-name{color:#D14}code[class*="language-"] .token.tag,pre[class*="language-"] .token.tag{color:#D14}code[class*="language-"] .token.symbol,pre[class*="language-"] .token.symbol{color:#990073}code[class*="language-"] .token.selector,pre[class*="language-"] .token.selector{color:#008080}code[class*="language-"] .token.attr-name,pre[class*="language-"] .token.attr-name{color:#458;font-weight:bold}code[class*="language-"] .token.string,pre[class*="language-"] .token.string{color:#D14}code[class*="language-"] .token.char,pre[class*="language-"] .token.char{color:#606aa1}code[class*="language-"] .token.url,pre[class*="language-"] .token.url{color:#888}code[class*="language-"] .token.atrule,pre[class*="language-"] .token.atrule,code[class*="language-"] .token.attr-value,pre[class*="language-"] .token.attr-value,code[class*="language-"] .token.keyword,pre[class*="language-"] .token.keyword{color:#222;font-weight:bold}code[class*="language-"] .token.function,pre[class*="language-"] .token.function{color:#900}code[class*="language-"] .token.class-name,pre[class*="language-"] .token.class-name{text-decoration:underline;color:#606aa1}code[class*="language-"] .token.variable,pre[class*="language-"] .token.variable{color:#008080}code[class*="language-"] .token.important,pre[class*="language-"] .token.important,code[class*="language-"] .token.bold,pre[class*="language-"] .token.bold{font-weight:bold}code[class*="language-"] .token.italic,pre[class*="language-"] .token.italic{font-style:italic}code[class*="language-"] .token.entity,pre[class*="language-"] .token.entity{cursor:help}pre[data-line]{position:relative;padding:1em 0 1em 3em}pre[data-line] .line-highlight-wrapper{position:absolute;top:0;left:0;background-color:transparent;display:block;width:100%}pre[data-line] .line-highlight{position:absolute;left:0;right:0;padding:inherit 0;margin-top:1em;background:rgba(153,122,102,0.08);background:linear-gradient(to right, rgba(153,122,102,0.1) 70%, rgba(153,122,102,0));pointer-events:none;line-height:inherit;white-space:pre}pre[data-line] .line-highlight:before,pre[data-line] .line-highlight[data-end]:after{content:attr(data-start);position:absolute;top:.4em;left:.6em;min-width:1em;padding:0 .5em;background-color:rgba(153,122,102,0.4);color:#f5f2f0;font:bold 65%/1.5 sans-serif;text-align:center;vertical-align:.3em;border-radius:999px;text-shadow:none;box-shadow:0 1px white}pre[data-line] .line-highlight[data-end]:after{content:attr(data-end);top:auto;bottom:.4em}.emoji {
+  height: 0.8em;
+}html body{font-family:"Helvetica Neue",Helvetica,"Segoe UI",Arial,freesans,sans-serif;font-size:16px;line-height:1.6;color:#555;background-color:#fff;overflow:initial;box-sizing:border-box;word-wrap:break-word}html body>:first-child{margin-top:0}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{line-height:1.2;margin-top:1em;margin-bottom:16px;color:#030303}html body h1{font-size:2.25em;font-weight:300;padding-bottom:.3em}html body h2{font-size:1.75em;font-weight:400;padding-bottom:.3em}html body h3{font-size:1.5em;font-weight:500}html body h4{font-size:1.25em;font-weight:600}html body h5{font-size:1.1em;font-weight:600}html body h6{font-size:1em;font-weight:600}html body h1,html body h2,html body h3,html body h4,html body h5{font-weight:600}html body h5{font-size:1em}html body h6{color:#7e7e7e}html body strong{color:#030303}html body del{color:#7e7e7e}html body a:not([href]){color:inherit;text-decoration:none}html body a{color:#08c;text-decoration:none}html body a:hover{color:#00a3f5;text-decoration:none}html body img{max-width:100%}html body>p{margin-top:0;margin-bottom:16px;word-wrap:break-word}html body>ul,html body>ol{margin-bottom:16px}html body ul,html body ol{padding-left:2em}html body ul.no-list,html body ol.no-list{padding:0;list-style-type:none}html body ul ul,html body ul ol,html body ol ol,html body ol ul{margin-top:0;margin-bottom:0}html body li{margin-bottom:0}html body li.task-list-item{list-style:none}html body li>p{margin-top:0;margin-bottom:0}html body .task-list-item-checkbox{margin:0 .2em .25em -1.8em;vertical-align:middle}html body .task-list-item-checkbox:hover{cursor:pointer}html body blockquote{margin:16px 0;font-size:inherit;padding:0 15px;color:#7e7e7e;background-color:#f0f0f0;border-left:4px solid #d6d6d6}html body blockquote>:first-child{margin-top:0}html body blockquote>:last-child{margin-bottom:0}html body hr{height:4px;margin:32px 0;background-color:#d6d6d6;border:0 none}html body table{margin:10px 0 15px 0;border-collapse:collapse;border-spacing:0;display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}html body table th{font-weight:bold;color:#030303}html body table td,html body table th{border:1px solid #d6d6d6;padding:6px 13px}html body dl{padding:0}html body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:bold}html body dl dd{padding:0 16px;margin-bottom:16px}html body code{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;font-size:.85em !important;color:#030303;background-color:#f0f0f0;border-radius:3px;padding:.2em 0}html body code::before,html body code::after{letter-spacing:-0.2em;content:"\00a0"}html body pre>code{padding:0;margin:0;font-size:.85em !important;word-break:normal;white-space:pre;background:transparent;border:0}html body .highlight{margin-bottom:16px}html body .highlight pre,html body pre{padding:1em;overflow:auto;font-size:.85em !important;line-height:1.45;border:#d6d6d6;border-radius:3px}html body .highlight pre{margin-bottom:0;word-break:normal}html body pre code,html body pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}html body pre code:before,html body pre tt:before,html body pre code:after,html body pre tt:after{content:normal}html body p,html body blockquote,html body ul,html body ol,html body dl,html body pre{margin-top:0;margin-bottom:16px}html body kbd{color:#030303;border:1px solid #d6d6d6;border-bottom:2px solid #c7c7c7;padding:2px 4px;background-color:#f0f0f0;border-radius:3px}@media print{html body{background-color:#fff}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{color:#030303;page-break-after:avoid}html body blockquote{color:#7e7e7e}html body pre{page-break-inside:avoid}html body table{display:table}html body img{display:block;max-width:100%;max-height:100%}html body pre,html body code{word-wrap:break-word;white-space:pre}}
+    /* Please visit the URL below for more information: */
+/*   https://shd101wyy.github.io/markdown-preview-enhanced/#/customize-css */
+
+    </style>
+    
+  </head>
+  <body for="html-export">
+    <div class="mume markdown-preview">
+    <html><head></head><body><div><h3 class="mume-header" id="read-txt-gfx-gui-under-hearts-of-iron-iv-using-basic-syntax-for-test">Read *.txt, *.gfx, *.gui Under &quot;Hearts of Iron IV\&quot; Using Basic Syntax for Test</h3>
+
+<blockquote>
+<ul>
+<li>Hoi4 Original Game Version 1.12.12(13)</li>
+<li>the number of *.txt is <em>3693</em>, *.gfx is <em>294</em>, *.gui is <em>414</em></li>
+<li><a href="file:///C:\Users\Non_E\Documents\GitHub\FocusTree\FocusTree\modding analysis\parser build\_test\exception%20log.txt">raw exception log</a></li>
+</ul>
+</blockquote>
+<p><span id="top"></span></p>
+
+<div class="md-toc">
+<details style="padding:0;;padding-left:0px;" open>
+        <summary class="md-toc-link-wrapper">
+          <a href="#read-txt-gfx-gui-under-hearts-of-iron-iv-using-basic-syntax-for-test" class="md-toc-link"><p>Read *.txt, *.gfx, *.gui Under &quot;Hearts of Iron IV\&quot; Using Basic Syntax for Test</p>
+</a>
+          </summary>
+        <div>
+          <div class="md-toc-link-wrapper" style="padding:0;;display:list-item;list-style:square;margin-left:42px">
+          <a href="#font-colorsandybrownbasic-syntaxfont" class="md-toc-link">
+            <p><font color="SandyBrown">Basic Syntax</font></p>
+
+          </a></div><div class="md-toc-link-wrapper" style="padding:0;;display:list-item;list-style:square;margin-left:42px">
+          <a href="#font-colororangeredsyntaxfont--inside-quote" class="md-toc-link">
+            <p><font color="OrangeRed">[syntax]</font> &apos;#&apos; Inside Quote</p>
+
+          </a></div><details style="padding:0;;padding-left:24px;" open>
+        <summary class="md-toc-link-wrapper">
+          <a href="#font-colororangeredsyntaxfont-special-assigning" class="md-toc-link"><p><font color="OrangeRed">[syntax]</font> Special Assigning</p>
+</a>
+          </summary>
+        <div>
+          <div class="md-toc-link-wrapper" style="padding:0;;display:list-item;list-style:square;margin-left:42px">
+          <a href="#compound-assigning" class="md-toc-link">
+            <p>compound assigning</p>
+
+          </a></div><div class="md-toc-link-wrapper" style="padding:0;;display:list-item;list-style:square;margin-left:42px">
+          <a href="#color-assigning-from-struct-array-enum" class="md-toc-link">
+            <p>color assigning from struct-array enum</p>
+
+          </a></div><div class="md-toc-link-wrapper" style="padding:0;;display:list-item;list-style:square;margin-left:42px">
+          <a href="#color-assigning-from-value-array-enum" class="md-toc-link">
+            <p>color assigning from value-array enum</p>
+
+          </a></div><div class="md-toc-link-wrapper" style="padding:0;;display:list-item;list-style:square;margin-left:42px">
+          <a href="#color-assigning-from-value-enum" class="md-toc-link">
+            <p>color assigning from value enum</p>
+
+          </a></div>
+        </div>
+      </details>
+    <div class="md-toc-link-wrapper" style="padding:0;;display:list-item;list-style:square;margin-left:42px">
+          <a href="#font-colororangeredsyntaxfont-contains-operant-as-quoted-string" class="md-toc-link">
+            <p><font color="OrangeRed">[syntax]</font> Contains Operant As Quoted-String</p>
+
+          </a></div><div class="md-toc-link-wrapper" style="padding:0;;display:list-item;list-style:square;margin-left:42px">
+          <a href="#font-colororangeredsyntaxfont-contains-escape-quote-" class="md-toc-link">
+            <p><font color="OrangeRed">[syntax]</font> Contains Escape Quote \&quot;</p>
+
+          </a></div><div class="md-toc-link-wrapper" style="padding:0;;display:list-item;list-style:square;margin-left:42px">
+          <a href="#font-colorforestgreenexceptionfont-unexpected-token" class="md-toc-link">
+            <p><font color="ForestGreen">[exception]</font> Unexpected Token</p>
+
+          </a></div><div class="md-toc-link-wrapper" style="padding:0;;display:list-item;list-style:square;margin-left:42px">
+          <a href="#font-colorforestgreenexceptionfont-missing-close-brace" class="md-toc-link">
+            <p><font color="ForestGreen">[exception]</font> Missing Close Brace</p>
+
+          </a></div><div class="md-toc-link-wrapper" style="padding:0;;display:list-item;list-style:square;margin-left:42px">
+          <a href="#font-colordimgraynonstandard-hoi4-scriptfont" class="md-toc-link">
+            <p><font color="DimGray">Nonstandard Hoi4 Script</font></p>
+
+          </a></div>
+        </div>
+      </details>
+    
+</div>
+<h4 class="mume-header" id="font-colorsandybrownbasic-syntaxfont"><font color="SandyBrown">Basic Syntax</font></h4>
+
+<blockquote>
+<p><em>Also <strong>Tokenize Rule</strong></em></p>
+<ol>
+<li>read script file byte by byte, if meet &apos;#&apos; skip rest of the line</li>
+<li><em><font color="CornflowerBlue">[loop]</font></em> collect bytes for token while next byte is not <em>blank*</em>, then skip any <em>blank</em> to read next token, and &apos;{&apos; &apos;}&apos; &apos;=&apos;, &apos;&gt;&apos;, &apos;&lt;&apos;, &apos;&quot;&apos;, &quot;\&quot;&quot; are special byte(s) need to be a single token. <em>*blank refers to &apos; &apos;, &apos;\n&apos;, &apos;\t&apos;, &apos;\r&apos;</em></li>
+<li>take a token assumed <em>operand</em>, <em><font color="CornflowerBlue">[loop]</font></em> then read next</li>
+</ol>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th style="text-align:right"><em>next token(s)</em></th>
+<th>IF &apos;{&apos; AND &apos;=&apos;</th>
+<th></th>
+<th>ELSE IF &apos;=&apos; OR &apos;&gt;&apos; OR &apos;&lt;&apos;</th>
+<th></th>
+<th>ELSE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right"></td>
+<td>IF contains any &apos;=&apos; &apos;&gt;&apos; or &apos;&lt;&apos;</td>
+<td>ELSE</td>
+<td><em>type of value</em></td>
+<td></td>
+<td>throw <em><strong><font color="DarkGreen">Element name cannot contain blank.</font></strong></em></td>
+</tr>
+<tr>
+<td style="text-align:right"></td>
+<td><em>type of scope</em></td>
+<td><em>type of enum</em></td>
+<td>IF next non-space byte is &apos;&quot;&apos;</td>
+<td>ELSE</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:right"></td>
+<td></td>
+<td>collect all tokens until found nearest &apos;}&apos;</td>
+<td>value is a full-string, collect all tokens in quote, and trans to unicode</td>
+<td>value is a string without <em>blank</em></td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:right"><em>note</em></td>
+<td>if found a &apos;}&apos;, pop out once from &apos;{&apos; <em>stash</em></td>
+<td></td>
+<td>if there is any &quot;\&quot;&quot; in value, throw <em><strong><font color="DarkGreen">escape quote.</font></strong></em></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<ol start="4">
+<li>if no exception throw, read for next <em>operand</em> token, and repeat <em>Tokenize Rule</em> over and over again, <em><font color="CornflowerBlue">[loop]</font></em> until meet the end of the script file</li>
+<li>at the end of file, if there is any &apos;{&apos; has not popped out from <em>stash</em>*, throw <em><strong><font color="DarkGreen">Brace is asymmetrical.</font></strong></em> *<em>stash records the sequence of all &apos;{&apos;</em></li>
+</ol>
+</blockquote>
+<p><img src="file:///C:\Users\Non_E\Documents\GitHub\FocusTree\FocusTree\modding analysis\parser build\_summary\basic_syntax.svg" alt="avatar"></p>
+<p><a href="#top">^</a></p>
+<h4 class="mume-header" id="font-colororangeredsyntaxfont--inside-quote"><font color="OrangeRed">[syntax]</font> &apos;#&apos; Inside Quote</h4>
+
+<pre data-role="codeBlock" data-info="CS" class="language-csharp"><span class="token comment">// such as</span>
+web_link <span class="token operator">=</span> <span class="token string">&quot;Land_warfare#Theater&quot;</span>
+</pre><blockquote>
+<p>C:\Program Files\steam\steamapps\common\Hearts of Iron IV\interface\<strong>tutorialscreen.gui</strong><br>
+<em>Element name cannot contain blank.</em></p>
+</blockquote>
+<p><a href="#top">^</a></p>
+<h4 class="mume-header" id="font-colororangeredsyntaxfont-special-assigning"><font color="OrangeRed">[syntax]</font> Special Assigning</h4>
+
+<h5 class="mume-header" id="compound-assigning">compound assigning</h5>
+
+<pre data-role="codeBlock" data-info="CS" class="language-csharp"><span class="token comment">// such as</span>
+enable_equipments <span class="token operator">=</span> <span class="token punctuation">{</span>
+    limit <span class="token operator">=</span> <span class="token punctuation">{</span>
+        NOT <span class="token operator">=</span> <span class="token punctuation">{</span> has_dlc <span class="token operator">=</span> <span class="token string">&quot;in Blood Alone&quot;</span> <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    rocket_interceptor_equipment_1
+<span class="token punctuation">}</span>
+</pre><blockquote>
+<p>Hearts of Iron IV\common\technologies\<strong>electronic_mechanical_engineering.txt</strong><br>
+<em>Element name cannot contain blank.</em></p>
+</blockquote>
+<p><a href="#top">^</a></p>
+<h5 class="mume-header" id="color-assigning-from-struct-array-enum">color assigning from struct-array enum</h5>
+
+<pre data-role="codeBlock" data-info="CS" class="language-csharp"><span class="token comment">// such as</span>
+colors <span class="token operator">=</span> <span class="token punctuation">{</span>
+    <span class="token punctuation">{</span> bronze <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token number">155.0</span> <span class="token number">105.0</span> <span class="token number">87.0</span> <span class="token number">1.0</span> <span class="token punctuation">}</span> silver <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token number">1.0</span> <span class="token number">1.0</span> <span class="token number">1.0</span> <span class="token number">1.0</span> <span class="token punctuation">}</span> gold <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token number">0.93</span> <span class="token number">0.74</span> <span class="token number">0.38</span> <span class="token number">1.0</span> <span class="token punctuation">}</span> <span class="token punctuation">}</span>
+    <span class="token punctuation">{</span> bronze <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token number">155.0</span> <span class="token number">105.0</span> <span class="token number">87.0</span> <span class="token number">1.0</span> <span class="token punctuation">}</span> silver <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token number">1.0</span> <span class="token number">1.0</span> <span class="token number">1.0</span> <span class="token number">1.0</span> <span class="token punctuation">}</span> gold <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token number">0.93</span> <span class="token number">0.74</span> <span class="token number">0.38</span> <span class="token number">1.0</span> <span class="token punctuation">}</span> <span class="token punctuation">}</span>
+    <span class="token punctuation">{</span> bronze <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token number">155.0</span> <span class="token number">105.0</span> <span class="token number">87.0</span> <span class="token number">1.0</span> <span class="token punctuation">}</span> silver <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token number">1.0</span> <span class="token number">1.0</span> <span class="token number">1.0</span> <span class="token number">1.0</span> <span class="token punctuation">}</span> gold <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token number">0.93</span> <span class="token number">0.74</span> <span class="token number">0.38</span> <span class="token number">1.0</span> <span class="token punctuation">}</span> <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</pre><blockquote>
+<p>Hearts of Iron IV\common\medals\<strong>00_medals.txt</strong><br>
+<em>Element name cannot contain blank.</em></p>
+</blockquote>
+<p><a href="#top">^</a></p>
+<h5 class="mume-header" id="color-assigning-from-value-array-enum">color assigning from value-array enum</h5>
+
+<pre data-role="codeBlock" data-info="CS" class="language-csharp"><span class="token comment">// such as</span>
+colors <span class="token operator">=</span> <span class="token punctuation">{</span>
+    <span class="token punctuation">{</span> <span class="token number">192.0</span> <span class="token number">66.0</span> <span class="token number">66.0</span> <span class="token number">1.0</span> <span class="token punctuation">}</span>
+    <span class="token punctuation">{</span> <span class="token number">48.0</span> <span class="token number">51.0</span> <span class="token number">60.0</span> <span class="token number">1.0</span> <span class="token punctuation">}</span>
+    <span class="token punctuation">{</span> <span class="token number">238.0</span> <span class="token number">189.0</span> <span class="token number">96.0</span> <span class="token number">1.0</span> <span class="token punctuation">}</span>
+    <span class="token punctuation">{</span> <span class="token number">211.0</span> <span class="token number">181.0</span> <span class="token number">128.0</span> <span class="token number">1.0</span> <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</pre><blockquote>
+<p>Hearts of Iron IV\common\ribbons\<strong>00_ribbons.txt</strong><br>
+<em>Element name cannot contain blank.</em></p>
+</blockquote>
+<p><a href="#top">^</a></p>
+<h5 class="mume-header" id="color-assigning-from-value-enum">color assigning from value enum</h5>
+
+<pre data-role="codeBlock" data-info="CS" class="language-csharp"><span class="token comment">// such as</span>
+color <span class="token operator">=</span> rgb <span class="token punctuation">{</span> <span class="token number">0</span> <span class="token number">0</span> <span class="token number">0</span> <span class="token punctuation">}</span>
+</pre><blockquote>
+<p>Hearts of Iron IV\common\countries\<strong>Afar.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Algeria.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Andalusia.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Bahamas.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Bangladesh.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Belize.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Benishangul-Gumuz.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Bosnia.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>British Antilles.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Brittany.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Burma.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Burundi.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Cameroon.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Catalonia.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Cayenne.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Central African Republic.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Chad.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>colors.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Corsica.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>cosmetic.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Curacao.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Cyprus.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Dahomey.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Danzig.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Djibouti.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Don Republic.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Equatorial Guinea.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Eritrea.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Fiji.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Gabon.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Galicia.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Gambela.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Gambia.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Ghana.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Guadeloupe.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Guam.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Guinea-Bissau.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Guinea.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Guyana.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Harar.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Hawaii.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Herzegovina.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Ivory Coast.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Jamaica.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Kashubia.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Kosovo.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Kuban Republic.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Kurdistan.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Kuwait.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Kyrgyzstan.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Macedonia.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Madagascar.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Malawi.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Maldives.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Mali.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Malta.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Mauritania.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Micronesia.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Moldova.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Morocco.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Namibia.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Navarra.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Niger.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Nigeria.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Northern Ireland.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Occitania.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Oromo.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Papua New Guinea.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Puerto Rico.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Qatar.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Qemant.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Republic of Congo.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Rif.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Rwanda.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Samoa.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Scotland.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Senegal.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Serbia.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Sidamo.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Sierra Leone.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Silesia.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Slovenia.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Solomon.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Somalia.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>South Africa.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Sri Lanka.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Sudan.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Suriname.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Tahiti.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Tajikistan.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Tanzania.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Tigray.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Togo.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Transylvania.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Trinidad and Tobago.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Tunisia.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Turkmenistan.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Uganda.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>United Arab Emirates.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Upper Volta.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Uzbekistan.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Wales.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Western Sahara.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\common\countries\<strong>Zambia.txt</strong><br>
+<em>Element name cannot contain blank.</em></p>
+</blockquote>
+<p><a href="#top">^</a></p>
+<h4 class="mume-header" id="font-colororangeredsyntaxfont-contains-operant-as-quoted-string"><font color="OrangeRed">[syntax]</font> Contains Operant As Quoted-String</h4>
+
+<pre data-role="codeBlock" data-info="CS" class="language-csharp"><span class="token comment">// such as</span>
+<span class="token string">&quot;HMS Furious&quot;</span><span class="token operator">=</span> <span class="token punctuation">{</span>
+</pre><blockquote>
+<p>Hearts of Iron IV\history\units\<strong>ENG_1936_air_bba.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\history\units\<strong>ENG_1936_air_legacy.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\history\units\<strong>ENG_1939_air_bba.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\history\units\<strong>ENG_1939_air_legacy.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\history\units\<strong>USA_1936_air_bba.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\history\units\<strong>USA_1936_air_legacy.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\history\units\<strong>USA_1939_air_bba.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\history\units\<strong>USA_1939_air_legacy.txt</strong><br>
+<em>Element name cannot contain blank.</em></p>
+</blockquote>
+<p><a href="#top">^</a></p>
+<h4 class="mume-header" id="font-colororangeredsyntaxfont-contains-escape-quote-"><font color="OrangeRed">[syntax]</font> Contains Escape Quote \&quot;</h4>
+
+<blockquote>
+<p>Hearts of Iron IV\events\<strong>BBA_Ethiopia.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\events\<strong>BBA_ItaloEthiopianWar.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\events\<strong>LAR_occupation.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\events\<strong>LAR_Spain.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\events\<strong>Mexico.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\events\<strong>MTG_Britain.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\events\<strong>MTG_Netherlands.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\events\<strong>MTG_USA.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\events\<strong>NSB_Baltic.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\events\<strong>NSB_Soviet.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\events\<strong>ss_recruitment_event.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\events\<strong>TestEvents.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\events\<strong>TFV_Raj.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\events\<strong>WTT_Japan.txt</strong><br>
+<em>escape quote.</em></p>
+</blockquote>
+<blockquote>
+<p>Hearts of Iron IV\common\decisions\<strong>BALTIC.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\decisions\<strong>BUL.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\decisions\<strong>ETH.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\decisions\<strong>FRA.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\decisions\<strong>ITA.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\decisions\<strong>MAN_decisions.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\decisions\<strong>POL.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\decisions\<strong>SOV.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\decisions\<strong>SPR.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\decisions\<strong>USA.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\decisions\<strong>YUG.txt</strong><br>
+<em>escape quote.</em></p>
+</blockquote>
+<blockquote>
+<p>Hearts of Iron IV\common\national_focus\<strong>baltic_shared.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\national_focus\<strong>china_shared.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\national_focus\<strong>estonia.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\national_focus\<strong>ethiopia.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\national_focus\<strong>france.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\national_focus\<strong>free_france.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\national_focus\<strong>horn_of_africa.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\national_focus\<strong>hungary.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\national_focus\<strong>india.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\national_focus\<strong>italy.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\national_focus\<strong>japan.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\national_focus\<strong>latvia.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\national_focus\<strong>lithuania.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\national_focus\<strong>manchukuo.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\national_focus\<strong>mexico.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\national_focus\<strong>netherlands.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\national_focus\<strong>new_zealand.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\national_focus\<strong>poland.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\national_focus\<strong>romania.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\national_focus\<strong>soviet.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\national_focus\<strong>spain.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\national_focus\<strong>switzerland.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\national_focus\<strong>yugoslavia.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\on_actions\<strong>05_lar_on_actions.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\operations\<strong>00_operations.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\operations\<strong>POL_historical_operations.txt</strong><br>
+<em>escape quote.</em></p>
+</blockquote>
+<blockquote>
+<p>Hearts of Iron IV\common\scripted_effects\<strong>00_scripted_effects.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\scripted_effects\<strong>BUL_scripted_effects.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\scripted_effects\<strong>ETH_scripted_effects.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\scripted_effects\<strong>ITA_scripted_effects.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\scripted_effects\<strong>POL_scripted_effects.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\scripted_effects\<strong>PRC_scripted_effects.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\scripted_effects\<strong>SOV_scripted_effects.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\scripted_effects\<strong>USA_scripted_effects.txt</strong><br>
+<em>escape quote.</em><br>
+Hearts of Iron IV\common\scripted_effects\<strong>zz_debug_effects.txt</strong><br>
+<em>escape quote.</em></p>
+</blockquote>
+<p><a href="#top">^</a></p>
+<h4 class="mume-header" id="font-colorforestgreenexceptionfont-unexpected-token"><font color="ForestGreen">[exception]</font> Unexpected Token</h4>
+
+<pre data-role="codeBlock" data-info="CS" class="language-csharp"><span class="token comment">//</span>
+<span class="token comment">// SWE_1939_naval_legacy.txt</span>
+<span class="token comment">//</span>
+pride_of_the_fleet <span class="token operator">=</span> yes <span class="token class-name">definition</span> definition <span class="token operator">=</span> heavy
+<span class="token comment">// unexpected token of &quot;definition&quot; in line 17</span>
+<span class="token comment">// this line is similar in SWE_1936_naval_legacy.txt but syntax good</span>
+</pre><blockquote>
+<p>Hearts of Iron IV\history\units\<strong>SWE_1939_naval_legacy.txt</strong><br>
+<em>Element name cannot contain blank.</em></p>
+</blockquote>
+<pre data-role="codeBlock" data-info="CS" class="language-csharp"><span class="token comment">//</span>
+<span class="token comment">// core.gfx</span>
+<span class="token comment">//</span>
+effectFile <span class="token operator">=</span> <span class="token string">&quot;gfx/FX/buttonstate.lua&quot;</span><span class="token punctuation">;</span>
+<span class="token comment">// unexpected token of &quot;;&quot; in line 1735</span>
+</pre><blockquote>
+<p>Hearts of Iron IV\interface\<strong>core.gfx</strong><br>
+<em>Element name cannot contain blank.</em></p>
+</blockquote>
+<p><a href="#top">^</a></p>
+<h4 class="mume-header" id="font-colorforestgreenexceptionfont-missing-close-brace"><font color="ForestGreen">[exception]</font> Missing Close Brace</h4>
+
+<blockquote>
+<p><em>missing for <strong>idea</strong> bolck at the end of file</em><br>
+Hearts of Iron IV\common\ideas\<strong>SOV.txt</strong><br>
+<em>Brace is asymmetrical.</em><br>
+Hearts of Iron IV\common\ideas\<strong>switzerland.txt</strong><br>
+<em>Brace is asymmetrical.</em></p>
+</blockquote>
+<blockquote>
+<p><em>missing for <strong>objectTypes</strong> bolck at the end of file</em><br>
+Hearts of Iron IV\gfx\entities\<strong>empty.gfx</strong><br>
+<em>Brace is asymmetrical.</em></p>
+</blockquote>
+<blockquote>
+<p><em>missing for <strong>1939 start</strong> block at the end of file</em><br>
+Hearts of Iron IV\history\countries\<strong>NOR - Norway.txt</strong><br>
+<em>Brace is asymmetrical.</em></p>
+</blockquote>
+<blockquote>
+<p><em>missing for <strong>instant_effect</strong> block at the end of file</em><br>
+Hearts of Iron IV\history\units\<strong>FRA_1936.txt</strong><br>
+<em>Brace is asymmetrical.</em><br>
+Hearts of Iron IV\history\units\<strong>FRA_1936_nsb.txt</strong><br>
+<em>Brace is asymmetrical.</em></p>
+</blockquote>
+<blockquote>
+<p><em>missing for <strong>BRA_GAR_01</strong> block at the end of file</em><br>
+Hearts of Iron IV\common\units\names_divisions\<strong>BRA_names_divisions.txt</strong><br>
+<em>Brace is asymmetrical.</em></p>
+</blockquote>
+<blockquote>
+<p><em>missing for <strong>spriteTypes</strong> block at the end of file</em><br>
+Hearts of Iron IV\dlc\dlc029_allied_armor_pack\interface\<strong>aap_technologies.gfx</strong><br>
+<em>Brace is asymmetrical.</em></p>
+</blockquote>
+<blockquote>
+<p><em>missing for <strong>objectTypes</strong> block at the end of file</em><br>
+Hearts of Iron IV\dlc\dlc031_battle_for_the_bosporus\gfx\entities\<strong>_BfB_meshes_infantry.gfx</strong><br>
+<em>Brace is asymmetrical.</em></p>
+</blockquote>
+<blockquote>
+<p><em>missing for <strong>guiTypes</strong> block at the end of file</em><br>
+Hearts of Iron IV\interface\<strong>backend.gui</strong><br>
+<em>Brace signs are asymmetrical.</em></p>
+</blockquote>
+<blockquote>
+<p><em>missing for <strong>guiTypes</strong> block at the end of file</em><br>
+Hearts of Iron IV\interface\<strong>sov_propaganda_campaigns_scripted_gui.gui</strong>*<br>
+<em>Brace signs are asymmetrical.</em></p>
+</blockquote>
+<p><a href="#top">^</a></p>
+<h4 class="mume-header" id="font-colordimgraynonstandard-hoi4-scriptfont"><font color="DimGray">Nonstandard Hoi4 Script</font></h4>
+
+<blockquote>
+<p>Hearts of Iron IV\<strong>changelog.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\<strong>checksum_manifest.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\<strong>console_history.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\<strong>licenses.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\<strong>ThirdPartyLicenses.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\<strong>unit_test.txt</strong><br>
+<em>Element name cannot contain blank.</em></p>
+</blockquote>
+<blockquote>
+<p>Hearts of Iron IV\interface\<strong>credits.txt</strong><br>
+<em>Element name cannot contain blank.</em></p>
+</blockquote>
+<blockquote>
+<p>Hearts of Iron IV\localisation\<strong>ignored_loc_keys.txt</strong><br>
+<em>Element name cannot contain blank.</em></p>
+</blockquote>
+<blockquote>
+<p>Hearts of Iron IV\map\<strong>buildings.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\map\<strong>railways.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\map\<strong>supply_nodes.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\map\<strong>unitstacks.txt</strong><br>
+<em>Element name cannot contain blank.</em><br>
+Hearts of Iron IV\map\<strong>weatherpositions.txt</strong><br>
+<em>Element name cannot contain blank.</em></p>
+</blockquote>
+<blockquote>
+<p>Hearts of Iron IV\pdx_launcher\<strong>motd.txt</strong><br>
+<em>Element name cannot contain blank.</em></p>
+</blockquote>
+<blockquote>
+<p>Hearts of Iron IV\previewer_assets\<strong>previewer_filefilter.txt</strong><br>
+<em>Element name cannot contain blank.</em></p>
+</blockquote>
+<blockquote>
+<p>Hearts of Iron IV\wiki\<strong>robots.txt</strong><br>
+<em>Element name cannot contain blank.</em></p>
+</blockquote>
+<blockquote>
+<p>Hearts of Iron IV\pdx_launcher\game\<strong>motd.txt</strong><br>
+<em>Element name cannot contain blank.</em></p>
+</blockquote>
+<p><a href="#top">^</a></p>
+</div></body></html>
+    </div>
+  </body>
+</html>

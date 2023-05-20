@@ -18,12 +18,18 @@
     <ClCompile Include="Program.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Utf8Text.cpp">
+    <ClCompile Include="Utf8Reader.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Tokenize.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Utf8Text.h">
+    <ClInclude Include="Utf8Reader.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Tokenize.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

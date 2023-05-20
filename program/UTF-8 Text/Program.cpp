@@ -1,26 +1,32 @@
-﻿#include <iostream>
+﻿#define _CRT_SECURE_NO_WARNINGS
 
-#include "Utf8Text.h"
+#include <iostream>
 
+#include "Utf8Reader.h"
+#include <fstream>
 
 using namespace std;
-
 
 int main()
 {
     using namespace std;
-    Utf8Text reader("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\modding analysis\\test\\test.txt");
     try
     {
-        ofstream ofile;
-        ofile.open("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\modding analysis\\test\\resave.txt");
-        wstring wstr;
-        while (reader.Read())
+        
+        Utf8Reader reader("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\modding analysis\\test\\新建 文本文档.txt");
+        ofstream ofile("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\modding analysis\\test\\resave.txt", ios::binary);
+        filebuf* fbuff = ofile.rdbuf();
+        fbuff->sputn(Utf8Reader::BOM, sizeof(Utf8Reader::BOM));
+        string buffer;
+        while (reader.read())
         {
-            cout << reader.GetShortUnicode();
-            wstr = reader.GetWideUnicode();
-            ofile << reader.UnicodeToUTF8(wstr);
+            buffer += reader.getu8char();
+            //int a = 0;
+            //buffer += Utf8Reader::uto8(L"wstr");
+            //cout << UnicodeToANSI(wstr);
         }
+
+        //wstring wstr = reader.getunichar(buffer);
         ofile.close();
     }
     catch (string massage)

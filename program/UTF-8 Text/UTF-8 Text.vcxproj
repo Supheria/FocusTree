@@ -128,10 +128,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Program.cpp" />
-    <ClCompile Include="Utf8Text.cpp" />
+    <ClCompile Include="Tokenize.cpp" />
+    <ClCompile Include="Utf8Reader.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Utf8Text.h" />
+    <ClInclude Include="Tokenize.h" />
+    <ClInclude Include="Utf8Reader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -361,3 +361,7 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 modding analysis/test/
+
+program/Test Exception/
+
+.svg.bkp

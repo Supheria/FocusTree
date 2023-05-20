@@ -1,1 +1,0 @@
-start "" "..\AI modding - Hearts of Iron 4 Wiki.pdf"
