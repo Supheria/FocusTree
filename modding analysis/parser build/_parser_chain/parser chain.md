@@ -1,100 +1,116 @@
 
 ```mermaid
 graph
-
-main.call(call) --> main.key[string]
-
-main.closeb --> main.return(return)
-
-subgraph main
-    main.nextis{next is} -.-> main.nextkey(string) --> main.op
-    main.nextis -.-> main.closeb((close brace))
-
+    main.call(call) --> main.key[string]
+    subgraph main
+        main.key --> main.op[operator]
+    end
 
     %% value
-    main.key --> main.op[operator] -.-> main.value.key[string] -.-> main.nextis
-    subgraph main.value
-       main.value.key -.-> main.value.openb((open brace)) --> main.value.next.key[string] -.-> main.value.next.key -.-> main.value.closeb((close brase))
+    subgraph main
+        main.op -.-> main.value[string]
+        main.value -.-> main.value.return(return)
     end
-    main.value.closeb --> main.nextis
 
+    %% value tag
+    subgraph main
+        main.value -.-> main.value.openb((open brace))
+        subgraph value tag
+            
+            main.value.openb --> main.value.tag[string]
 
-    main.op -.-> main.openb((open brace))
-    
+            main.value.tag -.-> main.value.tag
+            main.value.tag -.-> main.value.closeb((close brase))
+        end
+        main.value.closeb --> main.value.tag.return(return)
+    end
 
     %% array
-    main.openb -.-> main.array.openb((open brace))
+    subgraph main
+        main.op -.-> main.openb((open brace))
+        main.openb -.-> main.array.openb((open brace))
+    end
 
-    subgraph main.array
-        main.array.openb((open brace)) -.-> varr.ele.key[string] -.->varr.ele.key
-        
-        %% value-array array
-        subgraph value-array
-            varr.ele.key -.-> varr.ele.closeb((close brace))
-            varr.ele.closeb -.-> varr.ele.openb((open brace)) --> |to next| varr.ele.key
+    %% value-array array
+    subgraph main
+        subgraph value-array array
+            main.array.openb -.-> varr.ele[string]
+
+            varr.ele -.->varr.ele
+            varr.ele -.-> varr.ele.closeb((close brace))
+
             varr.ele.closeb -.-> varr.closeb((close brace))
+            varr.ele.closeb -.-> varr.ele.openb((open brace))
+
+            varr.ele.openb ----> |to next| varr.ele
         end
+        varr.closeb ---> main.varr.return(return)
     end
-    varr.closeb((close brace)) --> main.nextis
 
-    subgraph main.array
-        main.array.openb -.-> sarr.ele.key[string]
+    %% struct-array array
+    subgraph main
+        subgraph struct-array array
+            main.array.openb -.-> sarr.ele.key[string]
+            sarr.ele.key --> sarr.ele.op[operator]
+            sarr.ele.op --> sarr.ele.value.openb((open brace))
+            sarr.ele.value.openb --> sarr.ele.value.key[string]
 
-        %% struct-array array
-        subgraph struct-array
-            sarr.ele.key --> sarr.ele.op[operator] --> sarr.ele.value.openb((open brace)) --> sarr.ele.value.key[string] -.-> sarr.ele.value.key -.-> sarr.ele.value.closeb((close brace))
-            sarr.ele.value.closeb -.-> sarr.ele.value.openb ==> |to next| sarr.ele.key
+            sarr.ele.value.key -.-> sarr.ele.value.key
+            sarr.ele.value.key -.-> sarr.ele.value.closeb((close brace))
+
+            sarr.ele.value.closeb -.-> |to next| sarr.ele.key
             sarr.ele.value.closeb -.-> sarr.ele.closeb((close brace))
-            sarr.ele.closeb -.-> sarr.ele.openb((open brace)) ---> |to next| sarr.ele.key
+
             sarr.ele.closeb -.-> sarr.closeb((close brace))
+            sarr.ele.closeb -.-> sarr.ele.openb((open brace))
+
+            sarr.ele.openb --> |to next| sarr.ele.key
         end
+        sarr.closeb --> main.sarr.return(return)
     end
-    sarr.closeb --> main.nextis
 
+    %% sub
+    subgraph main
+        subgraph sub
+            main.openb -.-> sub.key[string]
+            sub.key -.-> sub.return
+            sub.key -.-> sub.op[operator]
+            sub.op -.-> sub.openb((open brace))
 
-    main.openb -.-> sub.key[string]
+            sub.op -.-> sub.value.key[string]
+            sub.value.key -.-> sub.return
+            sub.value.key -.-> sub.value.omit(...)
+            sub.value.omit --> sub.return
 
-    subgraph sub
-        sub.key -.-> sub.key -.-> sub.closeb(close brace)
-    end
-    sub.closeb(close brace) --> main.nextis
+            subgraph sub.value
+                sub.value.omit
+            end
 
-    subgraph sub
-        sub.key -.-> sub.op(operator) -.-> sub.openb(open brace)
+            sub.openb -.-> sub.array.omit(...)
+            sub.array.omit --> sub.return(return)
+            subgraph sub.array
+                sub.array.omit
+            end
 
-        sub.openb -.-> omitarr(...) --> sub.nextis{next is}
-        subgraph sub.array
-            omitarr
+            sub.openb -.-> sub.sub.omit(...)
+            sub.sub.omit --> sub.return
+            subgraph sub.sub
+                sub.sub.omit
+            end
         end
-
-        sub.openb -.-> omitsub(...) --> sub.nextis
-        subgraph sub.sub
-            omitsub
-        end
-        
-        sub.op -.-> sub.value.key(string) --> omitval(...) --> sub.nextis
-        subgraph sub.value
-            omitval
-        end
-
-        sub.nextis -.-> omitmain(...)
-        subgraph sub.main
-            omitmain
-        end
-        sub.nextis -.-> sub.closeb(close brace)
-        omitmain --> sub.main.return(return)
+        sub.return -.-> sub.closeb((close brace))
+        sub.closeb --> main.sub.return(return)
     end
     
-    sub.main.return --> main.nextis
-end
+    %% sub recursive
+    subgraph main
+        sub.return -.-> subr.key[string]
+        subgraph sub recursive
+            subr.key --> subr.key.omit(...) --> subr.return(return)
+        end
+        subr.return -.-> subr.closeb((close brace))
+        subr.return -.-> subr.omit(...)
+        
+        subr.closeb --> main.subr.return(return)
+    end
 ```
-
-|token *as*| type | *note* |
-|:---:|:---:|---:|
-| = | operator |
-| < | operator |
-| > | operator |
-| { | open brace |
-| } | close brace |
-| utf-8 string without blank | string | blank for ' ', '\n', '\t', '\r'
-| utf-8 string within quote | string | including escape quote "\\""

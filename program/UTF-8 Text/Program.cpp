@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "Utf8Text.h"
+#include "Utf8Reader.h"
 #include <fstream>
 
 using namespace std;
@@ -10,23 +10,23 @@ using namespace std;
 int main()
 {
     using namespace std;
-    Utf8Text reader("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\modding analysis\\test\\germany.txt");
     try
     {
-        ofstream ofile;
-        ofile.open("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\modding analysis\\test\\resave.txt", ios::binary);
+        
+        Utf8Reader reader("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\modding analysis\\test\\新建 文本文档.txt");
+        ofstream ofile("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\modding analysis\\test\\resave.txt", ios::binary);
         filebuf* fbuff = ofile.rdbuf();
-        fbuff->sputn(Utf8Text::BOM, sizeof(Utf8Text::BOM));
+        fbuff->sputn(Utf8Reader::BOM, sizeof(Utf8Reader::BOM));
         string buffer;
         while (reader.read())
         {
             buffer += reader.getu8char();
             //int a = 0;
-            //buffer += Utf8Text::uto8(L"wstr");
+            //buffer += Utf8Reader::uto8(L"wstr");
             //cout << UnicodeToANSI(wstr);
         }
 
-        wstring wstr = reader.getunichar(buffer);
+        //wstring wstr = reader.getunichar(buffer);
         ofile.close();
     }
     catch (string massage)
