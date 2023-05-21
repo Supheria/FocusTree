@@ -1,418 +1,417 @@
-2023/5/18 17:28
-Hoi4 Original Game Version 1.12.12(13)
-> the game was auto updated from 1.12.12 to 1.12.13 among tests
+2023/5/21 11:20
+Hoi4 Original Game Version 1.12.13
 
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\changelog.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\changelog.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\checksum_manifest.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\checksum_manifest.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\console_history.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\licenses.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\licenses.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\ThirdPartyLicenses.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\ThirdPartyLicenses.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\unit_test.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\unit_test.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\graphicalculturetype.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\events\BBA_Ethiopia.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\events\BBA_Ethiopia.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\events\BBA_ItaloEthiopianWar.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\events\BBA_ItaloEthiopianWar.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\events\LAR_occupation.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\events\LAR_occupation.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\events\LAR_Spain.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\events\LAR_Spain.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\events\Mexico.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\events\Mexico.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\events\MTG_Britain.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\events\MTG_Britain.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\events\MTG_Netherlands.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\events\MTG_Netherlands.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\events\MTG_USA.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\events\MTG_USA.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\events\NSB_Baltic.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\events\NSB_Baltic.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\events\NSB_Soviet.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\events\NSB_Soviet.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\events\ss_recruitment_event.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\events\ss_recruitment_event.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\events\TestEvents.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\events\TestEvents.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\events\TFV_Raj.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\events\TFV_Raj.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\events\WTT_Japan.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\events\WTT_Japan.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\interface\credits.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\interface\credits.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\localisation\ignored_loc_keys.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\localisation\ignored_loc_keys.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\map\buildings.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\map\buildings.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\map\railways.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\map\railways.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\map\supply_nodes.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\map\supply_nodes.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\map\unitstacks.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\map\unitstacks.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\map\weatherpositions.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\map\weatherpositions.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\pdx_launcher\motd.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\pdx_launcher\motd.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\previewer_assets\previewer_filefilter.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\previewer_assets\previewer_filefilter.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\wiki\robots.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\wiki\robots.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Afar.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Afar.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Algeria.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Algeria.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Andalusia.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Andalusia.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Bahamas.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Bahamas.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Bangladesh.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Bangladesh.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Belize.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Belize.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Benishangul-Gumuz.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Benishangul-Gumuz.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Bosnia.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Bosnia.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\British Antilles.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\British Antilles.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Brittany.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Brittany.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Burma.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Burma.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Burundi.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Burundi.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Cameroon.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Cameroon.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Catalonia.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Catalonia.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Cayenne.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Cayenne.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Central African Republic.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Central African Republic.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Chad.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Chad.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\colors.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\colors.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Corsica.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Corsica.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\cosmetic.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\cosmetic.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Curacao.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Curacao.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Cyprus.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Cyprus.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Dahomey.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Dahomey.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Danzig.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Danzig.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Djibouti.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Djibouti.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Don Republic.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Don Republic.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Equatorial Guinea.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Equatorial Guinea.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Eritrea.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Eritrea.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Fiji.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Fiji.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Gabon.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Gabon.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Galicia.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Galicia.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Gambela.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Gambela.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Gambia.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Gambia.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Ghana.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Ghana.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Guadeloupe.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Guadeloupe.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Guam.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Guam.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Guinea-Bissau.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Guinea-Bissau.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Guinea.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Guinea.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Guyana.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Guyana.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Harar.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Harar.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Hawaii.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Hawaii.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Herzegovina.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Herzegovina.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Ivory Coast.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Ivory Coast.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Jamaica.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Jamaica.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Kashubia.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Kashubia.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Kosovo.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Kosovo.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Kuban Republic.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Kuban Republic.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Kurdistan.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Kurdistan.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Kuwait.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Kuwait.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Kyrgyzstan.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Kyrgyzstan.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Macedonia.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Macedonia.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Madagascar.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Madagascar.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Malawi.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Malawi.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Maldives.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Maldives.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Mali.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Mali.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Malta.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Malta.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Mauritania.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Mauritania.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Micronesia.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Micronesia.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Moldova.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Moldova.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Morocco.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Morocco.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Namibia.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Namibia.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Navarra.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Navarra.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Niger.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Niger.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Nigeria.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Nigeria.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Northern Ireland.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Northern Ireland.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Occitania.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Occitania.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Oromo.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Oromo.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Papua New Guinea.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Papua New Guinea.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Puerto Rico.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Puerto Rico.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Qatar.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Qatar.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Qemant.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Qemant.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Republic of Congo.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Republic of Congo.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Rif.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Rif.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Rwanda.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Rwanda.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Samoa.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Samoa.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Scotland.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Scotland.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Senegal.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Senegal.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Serbia.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Serbia.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Sidamo.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Sidamo.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Sierra Leone.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Sierra Leone.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Silesia.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Silesia.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Slovenia.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Slovenia.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Solomon.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Solomon.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Somalia.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Somalia.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\South Africa.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\South Africa.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Sri Lanka.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Sri Lanka.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Sudan.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Sudan.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Suriname.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Suriname.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Tahiti.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Tahiti.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Tajikistan.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Tajikistan.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Tanzania.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Tanzania.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Tigray.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Tigray.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Togo.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Togo.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Transylvania.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Transylvania.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Trinidad and Tobago.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Trinidad and Tobago.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Tunisia.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Tunisia.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Turkmenistan.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Turkmenistan.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Uganda.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Uganda.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\United Arab Emirates.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\United Arab Emirates.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Upper Volta.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Upper Volta.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Uzbekistan.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Uzbekistan.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Wales.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Wales.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Western Sahara.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Western Sahara.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\countries\Zambia.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\countries\Zambia.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\decisions\BALTIC.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\decisions\BALTIC.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\decisions\BUL.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\decisions\BUL.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\decisions\ETH.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\decisions\ETH.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\decisions\FRA.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\decisions\FRA.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\decisions\ITA.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\decisions\ITA.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\decisions\MAN_decisions.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\decisions\MAN_decisions.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\decisions\POL.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\decisions\POL.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\decisions\SOV.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\decisions\SOV.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\decisions\SPR.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\decisions\SPR.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\decisions\USA.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\decisions\USA.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\decisions\YUG.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\decisions\YUG.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\ideas\SOV.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\ideas\SOV.txt
 Brace is asymmetrical.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\ideas\switzerland.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\ideas\switzerland.txt
 Brace is asymmetrical.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\medals\00_medals.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\medals\00_medals.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\national_focus\baltic_shared.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\national_focus\baltic_shared.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\national_focus\china_shared.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\national_focus\china_shared.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\national_focus\estonia.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\national_focus\estonia.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\national_focus\ethiopia.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\national_focus\ethiopia.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\national_focus\france.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\national_focus\france.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\national_focus\free_france.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\national_focus\free_france.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\national_focus\horn_of_africa.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\national_focus\horn_of_africa.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\national_focus\hungary.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\national_focus\hungary.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\national_focus\india.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\national_focus\india.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\national_focus\italy.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\national_focus\italy.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\national_focus\japan.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\national_focus\japan.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\national_focus\latvia.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\national_focus\latvia.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\national_focus\lithuania.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\national_focus\lithuania.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\national_focus\manchukuo.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\national_focus\manchukuo.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\national_focus\mexico.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\national_focus\mexico.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\national_focus\netherlands.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\national_focus\netherlands.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\national_focus\new_zealand.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\national_focus\new_zealand.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\national_focus\poland.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\national_focus\poland.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\national_focus\romania.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\national_focus\romania.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\national_focus\soviet.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\national_focus\soviet.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\national_focus\spain.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\national_focus\spain.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\national_focus\switzerland.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\national_focus\switzerland.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\national_focus\yugoslavia.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\national_focus\yugoslavia.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\on_actions\05_lar_on_actions.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\on_actions\05_lar_on_actions.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\operations\00_operations.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\operations\00_operations.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\operations\POL_historical_operations.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\operations\POL_historical_operations.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\ribbons\00_ribbons.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\ribbons\00_ribbons.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\scripted_effects\00_scripted_effects.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\scripted_effects\00_scripted_effects.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\scripted_effects\BUL_scripted_effects.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\scripted_effects\BUL_scripted_effects.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\scripted_effects\ETH_scripted_effects.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\scripted_effects\ETH_scripted_effects.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\scripted_effects\ITA_scripted_effects.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\scripted_effects\ITA_scripted_effects.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\scripted_effects\POL_scripted_effects.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\scripted_effects\POL_scripted_effects.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\scripted_effects\PRC_scripted_effects.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\scripted_effects\PRC_scripted_effects.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\scripted_effects\SOV_scripted_effects.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\scripted_effects\SOV_scripted_effects.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\scripted_effects\USA_scripted_effects.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\scripted_effects\USA_scripted_effects.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\scripted_effects\zz_debug_effects.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\scripted_effects\zz_debug_effects.txt
 escape quote.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\technologies\electronic_mechanical_engineering.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\technologies\electronic_mechanical_engineering.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\history\countries\NOR - Norway.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\history\countries\NOR - Norway.txt
 Brace is asymmetrical.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\history\units\ENG_1936_air_bba.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\history\units\ENG_1936_air_bba.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\history\units\ENG_1936_air_legacy.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\history\units\ENG_1936_air_legacy.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\history\units\ENG_1939_air_bba.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\history\units\ENG_1939_air_bba.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\history\units\ENG_1939_air_legacy.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\history\units\ENG_1939_air_legacy.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\history\units\FRA_1936.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\history\units\FRA_1936.txt
 Brace is asymmetrical.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\history\units\FRA_1936_nsb.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\history\units\FRA_1936_nsb.txt
 Brace is asymmetrical.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\history\units\SWE_1939_naval_legacy.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\history\units\SWE_1939_naval_legacy.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\history\units\USA_1936_air_bba.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\history\units\USA_1936_air_bba.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\history\units\USA_1936_air_legacy.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\history\units\USA_1936_air_legacy.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\history\units\USA_1939_air_bba.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\history\units\USA_1939_air_bba.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\history\units\USA_1939_air_legacy.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\history\units\USA_1939_air_legacy.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\pdx_launcher\game\motd.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\pdx_launcher\game\motd.txt
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\common\units\names_divisions\BRA_names_divisions.txt
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\units\names_divisions\BRA_names_divisions.txt
 Brace is asymmetrical.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\interface\core.gfx
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\interface\core.gfx
 Element name cannot contain blank.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\gfx\entities\empty.gfx
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\gfx\entities\empty.gfx
 Brace is asymmetrical.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\dlc\dlc029_allied_armor_pack\interface\aap_technologies.gfx
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\dlc\dlc029_allied_armor_pack\interface\aap_technologies.gfx
 Brace is asymmetrical.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\dlc\dlc031_battle_for_the_bosporus\gfx\entities\_BfB_meshes_infantry.gfx
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\dlc\dlc031_battle_for_the_bosporus\gfx\entities\_BfB_meshes_infantry.gfx
 Brace is asymmetrical.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\interface\backend.gui
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\interface\backend.gui
 Brace is asymmetrical.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\interface\sov_propaganda_campaigns_scripted_gui.gui
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\interface\sov_propaganda_campaigns_scripted_gui.gui
 Brace is asymmetrical.
-C:\Program Files\steam\steamapps\common\Hearts of Iron IV\interface\tutorialscreen.gui
+C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\interface\tutorialscreen.gui
 Element name cannot contain blank.
 
 txt num 3693, gfx num 295, gui num 414

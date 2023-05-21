@@ -64,8 +64,7 @@ var logPath = @"exception log.txt";
 FileStream log = new(logPath, FileMode.Create);
 StreamWriter logWriter = new(log);
 logWriter.WriteLine(System.DateTime.Now.ToString("g"));
-logWriter.WriteLine("Hoi4 Original Game Version 1.12.12(13)");
-logWriter.WriteLine("> the game was auto updated from 1.12.12 to 1.12.13 among tests");
+logWriter.WriteLine("Hoi4 Original Game Version 1.12.13");
 logWriter.WriteLine();
 
 int txtNumber, gfxNumber, guiNumber;
