@@ -1,5 +1,4 @@
 #include "Tokenize.h"
-#include "Utf8Reader.h"
 
 Tokenize::Tokenize(std::string filepath) :
 	chain(std::vector<Token>(0)),
@@ -11,11 +10,21 @@ Tokenize::Tokenize(std::string filepath) :
 	build(reader);
 }
 
+size_t Tokenize::get(Token& _t)
+{
+	return size_t();
+}
+
+bool Tokenize::get(int index, Token& _t)
+{
+	return false;
+}
+
 void Tokenize::build(Utf8Reader& r)
 {
 	while (r.read())
 	{
-		if (r.getu8char() == )
+		//if (r.getu8char() == )
 	}
 }
 

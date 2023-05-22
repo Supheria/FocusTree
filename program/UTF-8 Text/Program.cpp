@@ -13,14 +13,19 @@ int main()
     try
     {
         
-        Utf8Reader reader("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\modding analysis\\test\\新建 文本文档.txt");
-        ofstream ofile("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\modding analysis\\test\\resave.txt", ios::binary);
+        Utf8Reader reader("Baltic.txt");
+        ofstream ofile("resave.txt", ios::binary);
         filebuf* fbuff = ofile.rdbuf();
         fbuff->sputn(Utf8Reader::BOM, sizeof(Utf8Reader::BOM));
         string buffer;
         while (reader.read())
         {
-            buffer += reader.getu8char();
+            buffer = reader.getu8char();
+            size_t a = buffer.length();
+            if (buffer == "\r")
+            {
+                int a = 0;
+            }
             //int a = 0;
             //buffer += Utf8Reader::uto8(L"wstr");
             //cout << UnicodeToANSI(wstr);

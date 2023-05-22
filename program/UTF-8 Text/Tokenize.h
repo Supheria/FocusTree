@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include "Utf8Reader.h"
 
 class Tokenize
 {
