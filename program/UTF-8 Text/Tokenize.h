@@ -5,8 +5,13 @@
 #include <vector>
 #include "Utf8Reader.h"
 
+struct CompareChar;
+
 class Tokenize
 {
+public:
+	static const char BOM[3];
+	static const CompareChar delimiter, blank, endline, keychar, note, quote;
 public: 
 	struct Token
 	{
@@ -18,7 +23,8 @@ public:
 	};
 private:
 	std::vector<Token> chain;
-	size_t index;
+	size_t line;
+	size_t column;
 public:
 	Tokenize(std::string filepath);
 	/// <summary>
@@ -35,9 +41,41 @@ public:
 	/// <returns>存在并成功获取返回 true，否则返回 false</returns>
 	bool get(int index, Token& _t);
 private:
-	void build(Utf8Reader& r);
+	void build_line(const std::string& s);
+};
+
+
+struct CompareChar
+{
+	std::vector<char> chs;
+public:
+	CompareChar(std::vector<char> chars)
+	{
+		chs = chars;
+	}
+	bool operator==(const char ch) const
+	{
+		for (int i = 0; i < chs.size(); i++)
+		{
+			if (chs[i] != ch)
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	bool operator!=(const char ch) const
+	{
+		return !(*this == ch);
+	}
+	friend bool operator==(const char ch, const CompareChar& cc)
+	{
+		return cc == ch;
+	}
+	friend bool operator!=(const char ch, const CompareChar& cc)
+	{
+		return cc != ch;
+	}
 };
 
 #endif // ! _TOKENIZE_H
-
-
