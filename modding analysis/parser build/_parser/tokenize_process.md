@@ -1,35 +1,25 @@
 ``` mermaid
 graph LR
-	subgraph preprocess[extract bytes to element array - pre-process ]
+	subgraph composeBytes[compose bytes to element - the main loop ]
 		direction TB
 		file{{binary file}}
 			--> readfile(read byte by byte)
 			--> usetable(follow extract mode)
-			-.-> Marker(to be Marker)
-		usetable 
-			-.-> Token(to be Token)
-			--> genarray(generate element array)
-		Marker --> genarray 
+			--> compose(compose to element)
+			-.-> cmpdone(complish)
+			--> takeparser(jump and take to parser)
+		compose
+			-.-> cmpundone(unfinished or skip)
+			-.-> readfile
 	end
-	subgraph process[parse file to token map - a static way]
+	subgraph parse[parse a given element]
 		direction TB
-		elearray{{element array}}
-			--> readarray(take first element as main to parse)
-			--> parser(read element one by one)
-			--> usetree(follow parse tree)
-			-.-> value(find to Value)
-			--> genmap(generate Token map)
-		usetree
-        	-.-> tag(find to Tag)
-        	--> genmap(generate Token map)
-		usetree 
-			-.-> array(find to Array)
-			--> genmap(generate Token map)
-		usetree 
-			-.-> scope(find to Scope)
-			--> genmap(generate main's token map)
-			--> nextmain(take rest of array to a new main or finish reading)
-			--> genfilemap(generate file's token map)
+		element{{element}}
+			--> usetree(take to current step of parse tree)
+			--> tokenize(process in branch and cache on tree)
+			-.-> |has next step| treenext(step next and wait for next element to be called)
+		tokenize -.-> |end of tree| endtree(generate a type of token)
+			-.-> addtomap(add to file's token map)
 	end
 	subgraph setclass[use key to take Token]
 		direction TB
@@ -43,31 +33,30 @@ graph LR
 		setmember -.- memtype.struct(struct)
 		setmember -.- memtype.cla(class)
 	end
-	preprocess --> process
-	process --> setclass
+	composeBytes --> parse  --> setclass
+	
 ```
 
 
 
 
-|   extract mode | (multi-byte) type |                                                              |
-| -------------: | :---------------: | ------------------------------------------------------------ |
-|              - |     delimiter     | blank, line end, note, key char, "                           |
-|        abandon |                   |                                                              |
-|                |       blank       | \t, space                                                    |
-|                |     end line      | \n, \r                                                       |
-|                |   noted string    | chars behind # in the same line, except for within quote     |
-| keep as marker |                   |                                                              |
-|                |      marker       | =, >, <, }, {                                                |
-| keep  as Token |                   |                                                              |
-|                |   quoted token    | include chars and \\", begin with ", and end with " or end line |
-|                |  unquoted token   | include chars between two delimiters, not noted string       |
+|       compose mode | (multi-byte) type |                                                              |
+| -----------------: | :---------------: | ------------------------------------------------------------ |
+|                  - |     delimiter     | blank, line end, note, key char, "                           |
+|               skip |                   |                                                              |
+|                    |       blank       | \t, space                                                    |
+|                    |     end line      | \n, \r                                                       |
+|                    |   noted string    | chars behind # in the same line, except for within quote     |
+| compose to  marker |                   |                                                              |
+|                    |      marker       | =, >, <, }, {                                                |
+|   compose to Token |                   |                                                              |
+|                    |   quoted token    | include chars and \\", begin with ", and end with " or end line |
+|                    |  unquoted token   | include chars between two delimiters, not noted string       |
 
 ```mermaid
 classDiagram
 	class Element{
-		size_t line
-		size_t column
+		size_t _pos // the position in file stream
 		virtual char get() = 0
 	}
 	class Marker{
@@ -80,8 +69,18 @@ classDiagram
 		Token(string s)
 		void char get()
 	}
+	direction BT
 	Marker --|> Element
 	Token --|> Element
+	
+	class ParseTree{
+		Element key
+		Element operator
+		Enum Steps
+		Steps step
+		Token build
+		void parse(Element e)
+	}
 ```
 
 ```c++
@@ -225,10 +224,9 @@ scope struct
 > attentionally, it can append sub-key's property by using same key elsewhere in the same level and name scope
 
 ```mermaid
-classDiagram
+classDiagram 
 	class Element{
-		size_t line
-		size_t column
+		size_t _pos // the position in file stream
 		virtual char get() = 0
 	}
 	class Token{
@@ -244,21 +242,25 @@ classDiagram
 	}
 	class Value{
 		char operator
+		Value(Token _t) // conversion
 	}
 	class Tag{
 		char operator
 		vector~string~ value
 		parse()
+		Tag(Token _t) // conversion
 	}
 	class Array{
-			
+		Array(Token _t) // conversion
 	}
 		note for Scope "when find a existed key, it will take the block to\n(* value).subs other than use key-list<`Token*> here"
 	class Scope{
 		map<`string, Token *> props
 		void parse()
 		void parse(string token)
+		Scope(Token _t) // conversion
 	}
+	direction BT
 	Value --|> Token
 	Tag --|> Token
 	Array --|> Token

@@ -224,14 +224,14 @@ graph TB
 
 # element type
 
-|   token *as*   |     type     |                                                       *note* |
-| :------------: | :----------: | -----------------------------------------------------------: |
-|       =        |   operator   |                                                              |
-|       <        |   operator   |                                                              |
-|       >        |   operator   |                                                              |
-|       {        |  open brace  |                                                              |
-|       }        | close brace  |                                                              |
-| unquoted token |    string    |                                                              |
-|  quoted token  |    string    | characters within quote may encode to utf-8 or Unicode when displaying |
-|       \0       | end of chain |                               is always  included in "other" |
+|  element *as*  |    type     |                                                       *note* |
+| :------------: | :---------: | -----------------------------------------------------------: |
+|       =        |  operator   |                                                              |
+|       <        |  operator   |                                                              |
+|       >        |  operator   |                                                              |
+|       {        | open brace  |                                                              |
+|       }        | close brace |                                                              |
+| unquoted token |   string    |                                                              |
+|  quoted token  |   string    | characters within quote may encode to utf-8 or Unicode when displaying |
+|  end of file   |     EOF     |                               is always  included in "other" |
 
