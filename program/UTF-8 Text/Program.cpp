@@ -2,31 +2,51 @@
 
 #include <iostream>
 
+#include <codecvt>
 #include "Utf8Reader.h"
+#include "Tokenize.h"
 #include <fstream>
 
 using namespace std;
 
+char test(const char * ch) 
+{
+    string a;
+    a.assign(ch);
+    return a[0];
+}
+
 int main()
 {
     using namespace std;
+    string str = "abcd";
+    char a = test(str.c_str());
+    int b = 0;
+    
     try
     {
         
-        Utf8Reader reader("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\modding analysis\\test\\新建 文本文档.txt");
-        ofstream ofile("C:\\Users\\Non_E\\Documents\\GitHub\\FocusTree\\FocusTree\\modding analysis\\test\\resave.txt", ios::binary);
+        Utf8Reader reader("test.txt");
+        ofstream ofile("resave.txt", ios::binary);
         filebuf* fbuff = ofile.rdbuf();
-        fbuff->sputn(Utf8Reader::BOM, sizeof(Utf8Reader::BOM));
-        string buffer;
-        while (reader.read())
+        string str, buffer;
+        while (reader.read(str))
         {
-            buffer += reader.getu8char();
+            buffer += str;
+            size_t a = buffer.length();
+            if (buffer == "\r")
+            {
+                int a = 0;
+            }
+            auto b = reader.char_pos();
+            cout << b.line << ", " << b.column << '\n';
             //int a = 0;
             //buffer += Utf8Reader::uto8(L"wstr");
             //cout << UnicodeToANSI(wstr);
         }
-
-        //wstring wstr = reader.getunichar(buffer);
+        auto pos = reader.char_pos();
+        cout << buffer;
+        ofile << buffer;
         ofile.close();
     }
     catch (string massage)
