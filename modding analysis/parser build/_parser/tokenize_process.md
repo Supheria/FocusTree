@@ -1,28 +1,106 @@
-token struct
+``` mermaid
+graph LR
+	subgraph preprocess[extract bytes to element array - pre-process ]
+		direction TB
+		file{{binary file}}
+			--> readfile(read byte by byte)
+			--> usetable(follow extract mode)
+			-.-> Marker(to be Marker)
+		usetable 
+			-.-> Token(to be Token)
+			--> genarray(generate element array)
+		Marker --> genarray 
+	end
+	subgraph process[parse file to token map - a static way]
+		direction TB
+		elearray{{element array}}
+			--> readarray(take first element as main to parse)
+			--> parser(read element one by one)
+			--> usetree(follow parse tree)
+			-.-> value(find to Value)
+			--> genmap(generate Token map)
+		usetree
+        	-.-> tag(find to Tag)
+        	--> genmap(generate Token map)
+		usetree 
+			-.-> array(find to Array)
+			--> genmap(generate Token map)
+		usetree 
+			-.-> scope(find to Scope)
+			--> genmap(generate main's token map)
+			--> nextmain(take rest of array to a new main or finish reading)
+			--> genfilemap(generate file's token map)
+	end
+	subgraph setclass[use key to take Token]
+		direction TB
+		providekey(provide class name in enum map as key)
+			--> getvalue(try to get pointer of main token by key in token map)
+			--> providemember(provide class member name in enum map as key)
+			--> getmember(try to get pointer of sub token by key in main token's token map)
+			--> setmember(set member's value or property according to its type)
+			-.- memtype.value(value type)
+		setmember -.- memtype.array(array)
+		setmember -.- memtype.struct(struct)
+		setmember -.- memtype.cla(class)
+	end
+	preprocess --> process
+	process --> setclass
+```
 
-|   type |  data  |                                     |
-| -----: | :----: | ----------------------------------- |
-| string | token  |                                     |
-| size_t |  line  |                                     |
-| size_t | column | start position of token in the line |
+
+
+
+|   extract mode | (multi-byte) type |                                                              |
+| -------------: | :---------------: | ------------------------------------------------------------ |
+|              - |     delimiter     | blank, line end, note, key char, "                           |
+|        abandon |                   |                                                              |
+|                |       blank       | \t, space                                                    |
+|                |     end line      | \n, \r                                                       |
+|                |   noted string    | chars behind # in the same line, except for within quote     |
+| keep as marker |                   |                                                              |
+|                |      marker       | =, >, <, }, {                                                |
+| keep  as Token |                   |                                                              |
+|                |   quoted token    | include chars and \\", begin with ", and end with " or end line |
+|                |  unquoted token   | include chars between two delimiters, not noted string       |
+
+```mermaid
+classDiagram
+	class Element{
+		size_t line
+		size_t column
+		virtual char get() = 0
+	}
+	class Marker{
+		char sign
+		Marker(char ch)
+		void char get()
+	}
+	class Token{
+		string token
+		Token(string s)
+		void char get()
+	}
+	Marker --|> Element
+	Token --|> Element
+```
+
+```c++
+char Marker::get()
+{
+    return sign;
+}
+
+char Token::get()
+{
+    return token[0];
+}
+```
 
 
 
 
-| tokenize mode | (multi-byte) char type |                                                              |
-| ------------: | :--------------------: | ------------------------------------------------------------ |
-|             - |       delimiter        | blank, line end, note, key char, "                           |
-|        ignore |                        |                                                              |
-|               |         blank          | \t, space                                                    |
-|               |        end line        | \n, \r                                                       |
-|               |      noted string      | chars behind # in the same line, except for within quote     |
-|    char token |                        |                                                              |
-|               |        key char        | =, >, <, }, {                                                |
-|  string token |                        |                                                              |
-|               |     quoted string      | include chars and \\", begin and end with " in the same line |
-|               |     normal string      | include chars between two delimiters, not noted string       |
 
-# tokenize process
+# extract process
 
 ```mermaid
 graph
@@ -91,4 +169,98 @@ graph
 			-.-> eof
 		multi.quo.endline ~~~~ multi.quo.om2
 	end
+```
+
+scope struct
+
+| type                 | data     |      |
+| -------------------- | -------- | ---- |
+| Token                | key      |      |
+| Token                | operator |      |
+| map<string, Token *> | props    |      |
+| Token *              | from     |      |
+|                      |          |      |
+|                      |          |      |
+
+```mermaid
+%%graph
+	subgraph file
+		file.parse(parse)
+			--> file.main
+		subgraph file.main[token map]
+			a
+		end
+	end
+
+	subgraph main.from = null
+		main.parse(parse) 
+			-.-> main.entry 
+			-.- main.entry.next.omit(...) 
+			--> main.rear(null)
+		main.entry
+			-.-> main.rear
+		main.parse
+			-.-> ex.main.entry(empty: cannot parse main entry)
+		subgraph main.entry
+			direction LR
+			main.entry.parse(parse)
+				-.-> main.entry.entry
+				-.- main.entry.entry.next.omit(...)
+				--> main.entry.rear(null)
+			main.entry.entry
+				-.-> main.entry.rear
+			main.entry.parse
+				-.-> main.entry.empty(empty)
+			subgraph main.entry.entry
+				direction LR
+				main.entry.entry.parse
+					-.-> main.entry.entry.empty(empty)
+				main.entry.entry.parse(parse)
+					-.-> main.entry.entry.omit(...)
+			end
+		end
+	end
+```
+
+> attentionally, it can append sub-key's property by using same key elsewhere in the same level and name scope
+
+```mermaid
+classDiagram
+	class Element{
+		size_t line
+		size_t column
+		virtual char get() = 0
+	}
+	class Token{
+		string token
+		Token(string s)
+		void char get()
+	}
+	Token --|> Element
+	
+	class Token{
+		Token * from
+		abstract void parse() // do nothing
+	}
+	class Value{
+		char operator
+	}
+	class Tag{
+		char operator
+		vector~string~ value
+		parse()
+	}
+	class Array{
+			
+	}
+		note for Scope "when find a existed key, it will take the block to\n(* value).subs other than use key-list<`Token*> here"
+	class Scope{
+		map<`string, Token *> props
+		void parse()
+		void parse(string token)
+	}
+	Value --|> Token
+	Tag --|> Token
+	Array --|> Token
+	Scope --|> Token
 ```

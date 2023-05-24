@@ -9,10 +9,19 @@
 
 using namespace std;
 
+char test(const char * ch) 
+{
+    string a;
+    a.assign(ch);
+    return a[0];
+}
+
 int main()
 {
     using namespace std;
-
+    string str = "abcd";
+    char a = test(str.c_str());
+    int b = 0;
     
     try
     {
