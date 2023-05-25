@@ -128,12 +128,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="parsetree.cpp" />
     <ClCompile Include="Program.cpp" />
-    <ClCompile Include="Tokenize.cpp" />
+    <ClCompile Include="token.cpp" />
+    <ClCompile Include="tokenize.cpp" />
     <ClCompile Include="Utf8Reader.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Tokenize.h" />
+    <ClInclude Include="element.h" />
+    <ClInclude Include="parsetree.h" />
+    <ClInclude Include="token.h" />
+    <ClInclude Include="tokenize.h" />
     <ClInclude Include="Utf8Reader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

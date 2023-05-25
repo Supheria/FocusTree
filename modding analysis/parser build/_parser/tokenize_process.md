@@ -64,14 +64,14 @@ classDiagram
 		Marker(char ch)
 		void char get()
 	}
-	class Token{
+	class eToken{
 		string token
-		Token(string s)
+		eToken(string s)
 		void char get()
 	}
 	direction BT
 	Marker --|> Element
-	Token --|> Element
+	eToken --|> Element
 	
 	class ParseTree{
 		Element key
@@ -93,6 +93,25 @@ char Token::get()
 {
     return token[0];
 }
+```
+
+```mermaid
+graph BT
+	subgraph Tokenizer
+	direction LR
+		newEle(new eToken)
+			--o newStr(new string: token)
+		map(Token map)
+	end
+	subgraph ParseTree
+	direction LR
+		newEle 
+			--> eleCache(element cache and dispose)
+			--> build(Token* build)
+			--> map
+	end
+	map ---> tkDis(Token remove and dispose)
+	newStr ---> tkDis
 ```
 
 
@@ -225,33 +244,32 @@ scope struct
 
 ```mermaid
 classDiagram 
-	class Element{
-		size_t _pos // the position in file stream
-		virtual char get() = 0
-	}
 	class Token{
-		string token
+		string key
 		Token(string s)
 		void char get()
 	}
-	Token --|> Element
 	
 	class Token{
-		Token * from
-		abstract void parse() // do nothing
+		void parse() // will renew type of Token through update value or props from changed file dynamically by searching for the same key in the same level
+		virtual void append(Token* _t) // do nothing, for inherited classes will combine two instances' value or props into one instance's
 	}
 	class Value{
-		char operator
+		char operator // will set independently on condition, other than value passing
+		Token* value
 		Value(Token _t) // conversion
+		void append(Token* t) // if append by\n//other Token type will boost self type to Scope only when\n//operator is '=', notherwise will log erro and stay the same
 	}
 	class Tag{
-		char operator
-		vector~string~ value
+		char operator // same as Value.operator()
+		vector~Token*~ value
 		parse()
 		Tag(Token _t) // conversion
+		void append(Token* _t) // same as Value.append()
 	}
 	class Array{
 		Array(Token _t) // conversion
+		void append(Token* _t) // same as Value.append()
 	}
 		note for Scope "when find a existed key, it will take the block to\n(* value).subs other than use key-list<`Token*> here"
 	class Scope{
@@ -259,6 +277,7 @@ classDiagram
 		void parse()
 		void parse(string token)
 		Scope(Token _t) // conversion
+		void append(Token* _t) // combine two scope.props and\n//so for their sub scopes
 	}
 	direction BT
 	Value --|> Token
