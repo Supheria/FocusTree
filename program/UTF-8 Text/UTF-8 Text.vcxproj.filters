@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="头文件\syntax block">
+      <UniqueIdentifier>{30db2dcd-d0ce-4e64-807e-0f3eb95135c3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Program.cpp">
@@ -21,7 +24,13 @@
     <ClCompile Include="Utf8Reader.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Tokenize.cpp">
+    <ClCompile Include="tokenize.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="parsetree.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="key.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -29,8 +38,20 @@
     <ClInclude Include="Utf8Reader.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Tokenize.h">
+    <ClInclude Include="tokenize.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="parsetree.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="element.h">
+      <Filter>头文件\syntax block</Filter>
+    </ClInclude>
+    <ClInclude Include="key.h">
+      <Filter>头文件\syntax block</Filter>
+    </ClInclude>
+    <ClInclude Include="token.h">
+      <Filter>头文件\syntax block</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

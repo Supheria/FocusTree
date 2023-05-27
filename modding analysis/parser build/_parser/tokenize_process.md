@@ -1,35 +1,25 @@
 ``` mermaid
 graph LR
-	subgraph preprocess[extract bytes to element array - pre-process ]
+	subgraph composeBytes[compose bytes to element - the main loop ]
 		direction TB
 		file{{binary file}}
 			--> readfile(read byte by byte)
 			--> usetable(follow extract mode)
-			-.-> Marker(to be Marker)
-		usetable 
-			-.-> Token(to be Token)
-			--> genarray(generate element array)
-		Marker --> genarray 
+			--> compose(compose to element)
+			-.-> cmpdone(complish)
+			--> takeparser(jump and take to parser)
+		compose
+			-.-> cmpundone(unfinished or skip)
+			-.-> readfile
 	end
-	subgraph process[parse file to token map - a static way]
+	subgraph parse[parse a given element]
 		direction TB
-		elearray{{element array}}
-			--> readarray(take first element as main to parse)
-			--> parser(read element one by one)
-			--> usetree(follow parse tree)
-			-.-> value(find to Value)
-			--> genmap(generate Token map)
-		usetree
-        	-.-> tag(find to Tag)
-        	--> genmap(generate Token map)
-		usetree 
-			-.-> array(find to Array)
-			--> genmap(generate Token map)
-		usetree 
-			-.-> scope(find to Scope)
-			--> genmap(generate main's token map)
-			--> nextmain(take rest of array to a new main or finish reading)
-			--> genfilemap(generate file's token map)
+		element{{element}}
+			--> usetree(take to current step of parse tree)
+			--> tokenize(process in branch and cache on tree)
+			-.-> |has next step| treenext(step next and wait for next element to be called)
+		tokenize -.-> |end of tree| endtree(generate a type of token)
+			-.-> addtomap(add to file's token map)
 	end
 	subgraph setclass[use key to take Token]
 		direction TB
@@ -43,57 +33,174 @@ graph LR
 		setmember -.- memtype.struct(struct)
 		setmember -.- memtype.cla(class)
 	end
-	preprocess --> process
-	process --> setclass
+	composeBytes --> parse  --> setclass
+	
 ```
 
 
 
 
-|   extract mode | (multi-byte) type |                                                              |
-| -------------: | :---------------: | ------------------------------------------------------------ |
-|              - |     delimiter     | blank, line end, note, key char, "                           |
-|        abandon |                   |                                                              |
-|                |       blank       | \t, space                                                    |
-|                |     end line      | \n, \r                                                       |
-|                |   noted string    | chars behind # in the same line, except for within quote     |
-| keep as marker |                   |                                                              |
-|                |      marker       | =, >, <, }, {                                                |
-| keep  as Token |                   |                                                              |
-|                |   quoted token    | include chars and \\", begin with ", and end with " or end line |
-|                |  unquoted token   | include chars between two delimiters, not noted string       |
+|       compose mode | (multi-byte) type |                                                              |
+| -----------------: | :---------------: | ------------------------------------------------------------ |
+|                  - |     delimiter     | blank, line end, note, key char, "                           |
+|               skip |                   |                                                              |
+|                    |       blank       | \t, space, \n, \r                                            |
+|                    |     end line      | \n, \r                                                       |
+|                    |   noted string    | chars behind # in the same line, except for within quote     |
+| compose to  marker |                   |                                                              |
+|                    |      marker       | =, >, <, }, {                                                |
+|   compose to Token |                   |                                                              |
+|                    |   quoted token    | include chars and \\", begin with ", and end with " or end line |
+|                    |  unquoted token   | include chars between two delimiters, not noted string       |
 
 ```mermaid
 classDiagram
 	class Element{
-		size_t line
-		size_t column
-		virtual char get() = 0
+		#size_t dy_line
+		#size_t dy_column // char pos in line
+		+get()* char
+		+del() *
 	}
+	note for Element "dy_ means to dynamically allocate memory"
 	class Marker{
-		char sign
-		Marker(char ch)
-		void char get()
+		-char sign;
+		+Marker(char dy_c, size_t dy_ln, size_t dy_col)
+		+get() char
 	}
-	class Token{
-		string token
-		Token(string s)
-		void char get()
+	class eToken{
+		-string token
+		+eToken(string dy_s, size_t dy_ln, size_t end)
+		+get() char
 	}
+	direction BT
 	Marker --|> Element
-	Token --|> Element
+	eToken --|> Element
+	
 ```
 
-```c++
-char Marker::get()
-{
-    return sign;
+```mermaid
+classDiagram
+	class Token{
+		-string dy_token
+		#Token(string dy_token)
+		+get() string
+	}
+	note for Key "renew type: update value or props from\ndynamic file by searching for\nthe same key in the same level"
+	class Key{
+		-KeyTypes tp
+		-Key dy_fr
+		+enum KeyTypes
+		#Key(KeyTypes _type, string dy_key, Key dy_from)
+		#from() Key
+		+type() KeyTypes
+		+key() string
+		+parse(string filepath) Key pointer // will renew Key type and give back pointer to a new dynamic memory
+		+combine(Key dy_k) void // combine two Key instances' values or props into one instance's
+		+append(Token dy_t)*
+	}
+	class Value{
+		char dy_operator
+		Token dy_value
+		Value(string dy_key, Token dy_value, char dy_operator, Key dy_from)
+	}
+	
+	class Tag{
+		Token dy_tag
+		vector~Token~ dy_value
+		Tag(string dy_key, Token dy_tag, Key dy_from)
+		append(Token dy_t)
+	}
+	
+	class Array{
+		bool sarr // use struct array
+		vector~vector~Token~~ dy_value
+		Array(string dy_key, bool _sarr, Key dy_from)
+		append(Token dy_t)
+	}
+	class Scope{
+		map<`string, Token> dy_props
+		Scope(string dy_key, Key dy_from)
+		append(Token dy_t)
+	}
+	direction BT
+	Key --|> Token
+	Value --|> Key
+	Tag --|> Key
+	Array --|> Key
+	Scope --|> Key
+```
+
+```mermaid
+classDiagram
+	class ParseTree{
+		string dy_key
+		char dy_operator
+		Token dy_build
+		Enum Steps
+		Steps step
+		void parse(Element e)
+	}
+```
+
+type of Token
+
+```
+Value
+key = subkey
+
+Scope
+key = {
+	// scope
+	subkey = {
+		...
+	} ...
+	
+	// value
+	subkey ...
 }
 
-char Token::get()
-{
-    return token[0];
+Tag
+key = tag{
+	subkey ...
+	}
+	
+Array
+key = {
+	// value
+	{subkey ...}
+	// scope
+	{subkey = {} ...}
 }
+```
+
+Token::combine mode
+
+| instance type \| combine type | Value                                                        | Scope                                                        | Tag                                                   | Array                                                        |
+| ----------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ----------------------------------------------------- | ------------------------------------------------------------ |
+| Value                         | replace subkey to latter's [warn: replacement]               | add subkey to latter's map, skip if subkey exists in the map | ex: incompatible type                                 | ex: incompatible type                                        |
+| Scope                         | add latter's subkey to map, skip if subkey exists in the map | combine map elements of both                                 | ex: incompatible type                                 | ex: incompatible type                                        |
+| Tag                           | ex: incompatible type                                        | ex: incompatible type                                        | replace tag and value to latter's [warn: replacement] | ex: incompatible type                                        |
+| Array                         | ex: incompatible type                                        | ex: incompatible type                                        | ex: incompatible type                                 | only if both type of array same will combine value elements, otherwise ex: incompatible type |
+
+
+
+```mermaid
+graph BT
+	subgraph Tokenizer
+	direction LR
+		newEle(new eToken)
+			--o newStr(new string: token)
+		map(Token map)
+	end
+	subgraph ParseTree
+	direction LR
+		newEle 
+			--> eleCache(element cache and dispose)
+			--> build(Token* build)
+			--> map
+	end
+	map ---> tkDis(Token remove and dispose)
+	newStr ---> tkDis
 ```
 
 
@@ -224,43 +331,3 @@ scope struct
 
 > attentionally, it can append sub-key's property by using same key elsewhere in the same level and name scope
 
-```mermaid
-classDiagram
-	class Element{
-		size_t line
-		size_t column
-		virtual char get() = 0
-	}
-	class Token{
-		string token
-		Token(string s)
-		void char get()
-	}
-	Token --|> Element
-	
-	class Token{
-		Token * from
-		abstract void parse() // do nothing
-	}
-	class Value{
-		char operator
-	}
-	class Tag{
-		char operator
-		vector~string~ value
-		parse()
-	}
-	class Array{
-			
-	}
-		note for Scope "when find a existed key, it will take the block to\n(* value).subs other than use key-list<`Token*> here"
-	class Scope{
-		map<`string, Token *> props
-		void parse()
-		void parse(string token)
-	}
-	Value --|> Token
-	Tag --|> Token
-	Array --|> Token
-	Scope --|> Token
-```

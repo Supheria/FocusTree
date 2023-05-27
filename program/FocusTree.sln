@@ -25,6 +25,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "building", "building", "{F6
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basic Syntax Test", "Basic Syntax Test\Basic Syntax Test.csproj", "{452A6B00-C5E2-4061-ACE0-1C2DD8A9FEF5}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test virtual", "test virtual\test virtual.vcxproj", "{24C2D5B5-7065-4493-B3B7-8D16F7549709}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -131,6 +133,18 @@ Global
 		{452A6B00-C5E2-4061-ACE0-1C2DD8A9FEF5}.Release|x64.Build.0 = Release|Any CPU
 		{452A6B00-C5E2-4061-ACE0-1C2DD8A9FEF5}.Release|x86.ActiveCfg = Release|Any CPU
 		{452A6B00-C5E2-4061-ACE0-1C2DD8A9FEF5}.Release|x86.Build.0 = Release|Any CPU
+		{24C2D5B5-7065-4493-B3B7-8D16F7549709}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{24C2D5B5-7065-4493-B3B7-8D16F7549709}.Debug|Any CPU.Build.0 = Debug|x64
+		{24C2D5B5-7065-4493-B3B7-8D16F7549709}.Debug|x64.ActiveCfg = Debug|x64
+		{24C2D5B5-7065-4493-B3B7-8D16F7549709}.Debug|x64.Build.0 = Debug|x64
+		{24C2D5B5-7065-4493-B3B7-8D16F7549709}.Debug|x86.ActiveCfg = Debug|Win32
+		{24C2D5B5-7065-4493-B3B7-8D16F7549709}.Debug|x86.Build.0 = Debug|Win32
+		{24C2D5B5-7065-4493-B3B7-8D16F7549709}.Release|Any CPU.ActiveCfg = Release|x64
+		{24C2D5B5-7065-4493-B3B7-8D16F7549709}.Release|Any CPU.Build.0 = Release|x64
+		{24C2D5B5-7065-4493-B3B7-8D16F7549709}.Release|x64.ActiveCfg = Release|x64
+		{24C2D5B5-7065-4493-B3B7-8D16F7549709}.Release|x64.Build.0 = Release|x64
+		{24C2D5B5-7065-4493-B3B7-8D16F7549709}.Release|x86.ActiveCfg = Release|Win32
+		{24C2D5B5-7065-4493-B3B7-8D16F7549709}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -144,6 +158,7 @@ Global
 		{846AEC19-9A4C-40AB-96C8-259BCB8C58A2} = {F6F007BD-1B7F-46DF-8C27-75CE319B1DDB}
 		{52945116-E09A-4A89-BF55-B4F76711308A} = {575E3B8E-9163-43E5-B994-C7AD0F1FF8C2}
 		{452A6B00-C5E2-4061-ACE0-1C2DD8A9FEF5} = {575E3B8E-9163-43E5-B994-C7AD0F1FF8C2}
+		{24C2D5B5-7065-4493-B3B7-8D16F7549709} = {F6F007BD-1B7F-46DF-8C27-75CE319B1DDB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AF5BE78B-7958-4838-8158-05FDA613CB01}

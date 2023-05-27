@@ -19,6 +19,11 @@ char test(const char * ch)
 int main()
 {
     using namespace std;
+
+    const char* c = new char('a');
+    c = nullptr;
+
+    char c[3] = { '\0' };
     string str = "abcd";
     char a = test(str.c_str());
     int b = 0;

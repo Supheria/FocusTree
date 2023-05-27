@@ -23,6 +23,19 @@ Utf8Reader::Utf8Reader(std::string path) :
     ifstream fin;
     fin.open(path.c_str(), ios::binary);
     if (!fin.is_open()) { return; }
+    if (fin.get() != 0xEF || fin.get() != 0xBB || fin.get() != 0xBF) // fin.get() will return -1 if meet EOF
+    {
+        fin.seekg(0, fin.beg);
+    }
+    char t = fin.peek();
+    char h = fin.get();
+    
+    for (int i = 0; i < 3; i++)
+    {
+        char a = fin.get();
+        char b = fin.get();
+        char c = fin.get();
+    }
     while (!fin.eof())
     {
         string str;
