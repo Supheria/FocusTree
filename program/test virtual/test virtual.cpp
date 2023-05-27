@@ -21,7 +21,7 @@ public:
     { 
         type = _t;
     }
-    virtual void append(Base* base) = 0;
+    virtual Base* append(Base* base)const = 0;
     Type get_type() { return type; }
 };
 class A : public Base
@@ -39,7 +39,7 @@ public:
         }
     } s;
     A() : Base(TypeA) {}
-    void append(Base* base) 
+    A* append(A* base) const
     { 
         if (base->get_type() != TypeA)
         {
@@ -48,7 +48,7 @@ public:
         auto _s = ((A*)base)->s;
         cout << _s.a << ' ' << _s.b;
     }
-    void append(B* base)
+    void append(B* base)const
     {
         int c = 0;
         c = 2;
@@ -58,8 +58,8 @@ class B : public Base
 {
 public:
     B() : Base(TypeB) {}
-    void append(Base* base) { append(); }
-    void append() { cout << "B::append()\n"; }
+    B* append(B* base)const { cout << "B::append()\n"; }
+    void append() const { cout << "B::append()\n"; }
 };
 
 int main()
@@ -67,12 +67,15 @@ int main()
     Base * a = new A();
     B* b = new B();
     Base* _b = (Base*)b;
+    Base  & __b = *b;
+    __b = *a;
     a->append(b);
     _b->append(a);
     b->append();
+    __b.append(a);
     delete a;
-    delete b;
-
+    //delete b;
+    delete &__b;
 }
 
 // 运行程序: Ctrl + F5 或调试 >“开始执行(不调试)”菜单

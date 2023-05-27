@@ -2,6 +2,7 @@
 #define _TOKEN_KEY_H
 
 #include <vector>
+#include <unordered_map>
 #include "token.h"
 
 enum KeyTypes
@@ -15,32 +16,32 @@ enum KeyTypes
 class Key : public Token
 {
 	KeyTypes tp;
-	const Key* fr;
+	const Token* fr;
 public:
 	KeyTypes type() { return tp; }
-	const Key* from() { return fr; }
+	const Token* from() { return fr; }
 protected:
-	Key(KeyTypes _tp, const std::string* _key, const Key* _fr);
+	Key(KeyTypes _tp, const std::string* _key, const Token* _fr);
 	~Key();
 public:
-	const Key* parse(const std::string& filename);
+	const Token* parse(const std::string& filename);
 	// const Key* will be delete here, whatever combination is successful or not
-	void combine(const Key* k);
+	void combine(const T* _k);
 	virtual void append(const Token* _t) = 0;
 };
 
-class Value : public Key
+class ValueKey : public Key
 {
 	const char* op;
 	const Token* val;
 public:
-	Value(const std::string* _key, const Token* _value, const char* _oprat, const Key* _from)
+	ValueKey(const std::string* _key, const Token* _value, const char* _oprat, const Key* _from)
 		: Key(KeyTypes::Value, _key, _from),
 		op(_oprat),
 		val(_value)
 	{
 	}
-	~Value()
+	~ValueKey()
 	{
 		if (op != nullptr) { delete op; }
 		if (val != nullptr) { delete val; }
@@ -101,8 +102,22 @@ public:
 		}
 		val[val.size() - 1].push_back(value);
 	}
-	// set value to append the beginning of a new array
+	// set value to append to the beginning of a new array
 	void set_new() { addnew = true; }
+};
+
+class Scope : public Key
+{
+	std::unordered_map<const std::string&, const Token*> props; // use const string & for operating this memory by Token* other than map's key, 
+public:
+	Scope(const std::string* _key, const Key* _from)
+		: Key(KeyTypes::Scope, _key, _from)
+	{
+	}
+	void append(const Token* property)
+	{
+		if (props.count(property->)
+	}
 };
 
 #endif // !_TOKEN_KEY_H

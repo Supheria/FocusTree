@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Key::Key(KeyTypes _tp, const string* _key, const Key* _fr)
+Key::Key(KeyTypes _tp, const string* _key, const Token* _fr)
 	: Token(_key),
 	tp(_tp),
 	fr(_fr)
