@@ -6,8 +6,8 @@
 
 class ParseTree
 {
-	Element* key;
-	char op;
+	const std::string* key;
+	const char* op;
 	Token* build;
 	bool sarr; // use struct-array
 	ParseTree* sub;
@@ -15,9 +15,8 @@ class ParseTree
 public:
 	ParseTree();
 	~ParseTree();
-	ParseTree* parse(const Element* e);
-	void check_eof();
-	void fail_to_build();
+	ParseTree* parse(const Element* _e);
+	void fail_to_build(const Element* _e);
 	Token* get();
 private:
 	enum ParseSteps

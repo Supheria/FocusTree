@@ -44,7 +44,7 @@ graph LR
 | -----------------: | :---------------: | ------------------------------------------------------------ |
 |                  - |     delimiter     | blank, line end, note, key char, "                           |
 |               skip |                   |                                                              |
-|                    |       blank       | \t, space                                                    |
+|                    |       blank       | \t, space, \n, \r                                            |
 |                    |     end line      | \n, \r                                                       |
 |                    |   noted string    | chars behind # in the same line, except for within quote     |
 | compose to  marker |                   |                                                              |
@@ -56,44 +56,133 @@ graph LR
 ```mermaid
 classDiagram
 	class Element{
-		size_t _pos // the position in file stream
-		virtual char get() = 0
+		#size_t dy_line
+		#size_t dy_column // char pos in line
+		+get()* char
+		+del() *
 	}
+	note for Element "dy_ means to dynamically allocate memory"
 	class Marker{
-		char sign
-		Marker(char ch)
-		void char get()
+		-char sign;
+		+Marker(char dy_c, size_t dy_ln, size_t dy_col)
+		+get() char
 	}
 	class eToken{
-		string token
-		eToken(string s)
-		void char get()
+		-string token
+		+eToken(string dy_s, size_t dy_ln, size_t end)
+		+get() char
 	}
 	direction BT
 	Marker --|> Element
 	eToken --|> Element
 	
+```
+
+```mermaid
+classDiagram
+	class Token{
+		-string dy_token
+		#Token(string dy_token)
+		+get() string
+	}
+	note for Key "renew type: update value or props from\ndynamic file by searching for\nthe same key in the same level"
+	class Key{
+		-KeyTypes tp
+		-Key dy_fr
+		+enum KeyTypes
+		#Key(KeyTypes _type, string dy_key, Key dy_from)
+		#from() Key
+		+type() KeyTypes
+		+key() string
+		+parse(string filepath) Key pointer // will renew Key type and give back pointer to a new dynamic memory
+		+combine(Key dy_k) void // combine two Key instances' values or props into one instance's
+		+append(Token dy_t)*
+	}
+	class Value{
+		char dy_operator
+		Token dy_value
+		Value(string dy_key, Token dy_value, char dy_operator, Key dy_from)
+	}
+	
+	class Tag{
+		Token dy_tag
+		vector~Token~ dy_value
+		Tag(string dy_key, Token dy_tag, Key dy_from)
+		append(Token dy_t)
+	}
+	
+	class Array{
+		bool sarr // use struct array
+		vector~vector~Token~~ dy_value
+		Array(string dy_key, bool _sarr, Key dy_from)
+		append(Token dy_t)
+	}
+	class Scope{
+		map<`string, Token> dy_props
+		Scope(string dy_key, Key dy_from)
+		append(Token dy_t)
+	}
+	direction BT
+	Key --|> Token
+	Value --|> Key
+	Tag --|> Key
+	Array --|> Key
+	Scope --|> Key
+```
+
+```mermaid
+classDiagram
 	class ParseTree{
-		Element key
-		Element operator
+		string dy_key
+		char dy_operator
+		Token dy_build
 		Enum Steps
 		Steps step
-		Token build
 		void parse(Element e)
 	}
 ```
 
-```c++
-char Marker::get()
-{
-    return sign;
+type of Token
+
+```
+Value
+key = subkey
+
+Scope
+key = {
+	// scope
+	subkey = {
+		...
+	} ...
+	
+	// value
+	subkey ...
 }
 
-char Token::get()
-{
-    return token[0];
+Tag
+key = tag{
+	subkey ...
+	}
+	
+Array
+key = {
+	// value
+	{subkey ...}
+	// scope
+	{subkey = {} ...}
 }
 ```
+
+Token::combine mode
+
+| instance type \| combine type | Value                                                        | Scope                                                        | Tag                                                   | Array                                                        |
+| ----------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ----------------------------------------------------- | ------------------------------------------------------------ |
+| Value                         | replace subkey to latter's [warn: replacement]               | add subkey to latter's map, skip if subkey exists in the map | ex: incompatible type                                 | ex: incompatible type                                        |
+| Scope                         | add latter's subkey to map, skip if subkey exists in the map | combine map elements of both                                 | ex: incompatible type                                 | ex: incompatible type                                        |
+| Tag                           | ex: incompatible type                                        | ex: incompatible type                                        | replace tag and value to latter's [warn: replacement] | ex: incompatible type                                        |
+| Array                         | ex: incompatible type                                        | ex: incompatible type                                        | ex: incompatible type                                 | only if both type of array same will combine value elements, otherwise ex: incompatible type |
+
+
 
 ```mermaid
 graph BT
@@ -242,46 +331,3 @@ scope struct
 
 > attentionally, it can append sub-key's property by using same key elsewhere in the same level and name scope
 
-```mermaid
-classDiagram 
-	class Token{
-		string key
-		Token(string s)
-		void char get()
-	}
-	
-	class Token{
-		void parse() // will renew type of Token through update value or props from changed file dynamically by searching for the same key in the same level
-		virtual void append(Token* _t) // do nothing, for inherited classes will combine two instances' value or props into one instance's
-	}
-	class Value{
-		char operator // will set independently on condition, other than value passing
-		Token* value
-		Value(Token _t) // conversion
-		void append(Token* t) // if append by\n//other Token type will boost self type to Scope only when\n//operator is '=', notherwise will log erro and stay the same
-	}
-	class Tag{
-		char operator // same as Value.operator()
-		vector~Token*~ value
-		parse()
-		Tag(Token _t) // conversion
-		void append(Token* _t) // same as Value.append()
-	}
-	class Array{
-		Array(Token _t) // conversion
-		void append(Token* _t) // same as Value.append()
-	}
-		note for Scope "when find a existed key, it will take the block to\n(* value).subs other than use key-list<`Token*> here"
-	class Scope{
-		map<`string, Token *> props
-		void parse()
-		void parse(string token)
-		Scope(Token _t) // conversion
-		void append(Token* _t) // combine two scope.props and\n//so for their sub scopes
-	}
-	direction BT
-	Value --|> Token
-	Tag --|> Token
-	Array --|> Token
-	Scope --|> Token
-```

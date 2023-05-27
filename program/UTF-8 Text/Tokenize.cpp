@@ -12,19 +12,22 @@ using namespace std;
 
 
 Tokenize::Tokenize(std::string filepath) :
-	pos(0),
+	line(0),
+    column(0),
     tree(nullptr),
     _tr(tree),
-    elm(nullptr)
+    elm(nullptr),
+    state(None)
 {
     fin.open(filepath, ios::binary);
     if (!fin.is_open() || fin.eof()) { return; }
     //
     // remove BOM
     //
-    if (fin.get() != 0xEF || fin.get() != 0xBB || fin.get() != 0xBF) // fin.get() will return -1 if meet EOF
+    if (fget() != 0xEF || fget() != 0xBB || fget() != 0xBF) // fin.get() will return -1 if meet EOF
     { 
         fin.seekg(0, fin.beg);
+        column = 0;
     }
     tree = new ParseTree();
     while (true)
@@ -53,7 +56,7 @@ void Tokenize::map_cache()
     if (_t == nullptr) { return; }
     if (map.count(_t->get()))
     {
-        map[_t->get()]->append(_t);
+        map[_t->get()]->combine(_t);
     }
     else
     {
@@ -69,61 +72,73 @@ bool Tokenize::compose()
     case Build_quo:
         if (ch == quote)
         {
-            token << fin.get(); // keep the quote mark
-            elm = new eToken(new string(token.str()), pos); // new eToken will delete in tree->~ParseTree()
-                                                            // new string will delete finally in ~Token(), flow as:
-                                                            //      this.compose().eToken => tree->build => this.map
+            token << fget(); // keep the quote mark
+            elm = new eToken(new string(token.str()), new size_t(line), column); // new eToken will delete within process of tree->parse(_e)
+                                                            // new string and new size_t may delete finally in _e->~Token(), flow as:
+                                                            //      this.compose() => tree->build => this.map[key].~Token()
+                                                            // also may delete within process of parse() by using _e->del(), flow as:
+                                                            //      this.compose() => tree->parse(_e) => _e->del()
             state = None;
             return true;
         }
         else if (ch == endline)
         {
-            elm = new eToken(new string(token.str()), pos); // will delete in tree->~ParseTree()
+            elm = new eToken(new string(token.str()), new size_t(line), column);
             state = None;
             return true;
         }
-        token << fin.get();
+        token << fget();
         return false;
     case Build_unquo:
         if (ch == delimiter)
         {
-            elm = new eToken(new string(token.str()), pos); // will delete in tree->~ParseTree()
+            elm = new eToken(new string(token.str()), new size_t(line), column);
             state = None;
             return true;
         }
-        token << fin.get();
+        token << fget();
         return false;
     case Note:
         if (ch == endline) { state = None; }
-        fin.get();
+        fget();
         return false;
     default:
         if (ch == quote)
         {
             token.clear();
-            token << fin.get(); // keep the quote mark
+            token << fget(); // keep the quote mark
             state = Build_quo;
         }
         else if (ch == note)
         {
             state = Note;
-            fin.get();
+            fget();
         }
         else if (ch == marker)
         {
-            elm = new Marker(fin.get(), pos); // will delete in tree->~ParseTree()
+            elm = new Marker(new char(fget()), new size_t(line), new size_t(column)); // same as eToken above ^
             return true;
         }
         else if (ch == blank)
         {
-            fin.get();
+            if (fget() == '\n')
+            {
+                line++;
+                column = 0;
+            }
         }
         else
         {
             token.clear();
-            token << fin.get();
+            token << fget();
             state = Build_unquo;
         }
         return false;
     }
+}
+
+char Tokenize::fget()
+{
+    column++;
+    return fin.get();
 }

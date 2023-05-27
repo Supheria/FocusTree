@@ -5,12 +5,13 @@
 
 class Token
 {
-	const std::string* const key;
+	const std::string* token;
 public:
-	Token(const std::string* _key);
-	~Token();
-	void parse(std::string filepath);
-	virtual void append(Token*) = 0;
-	const std::string& get();
+	Token(const std::string* _t) : token(_t) {}
+	~Token()
+	{
+		if (token != nullptr) { delete token; }
+	}
+	const std::string& get() { return *token; }
 };
 #endif

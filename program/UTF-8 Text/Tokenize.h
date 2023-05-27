@@ -16,7 +16,8 @@ public:
 	static const CompareChar delimiter, blank, endline, marker;
 	static const char  note, quote;
 private:
-	size_t pos;
+	size_t line;
+	size_t column;
 	ParseTree* tree;
 	Element* elm;
 	const ParseTree* _tr;
@@ -28,6 +29,7 @@ public:
 	void map_cache();
 private:
 	bool compose();
+	char fget();
 private:
 	enum
 	{

@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{846aec19-9a4c-40ab-96c8-259bcb8c58a2}</ProjectGuid>
-    <RootNamespace>UTF8Text</RootNamespace>
+    <ProjectGuid>{24c2d5b5-7065-4493-b3b7-8d16f7549709}</ProjectGuid>
+    <RootNamespace>testvirtual</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -104,7 +104,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -128,19 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="key.cpp" />
-    <ClCompile Include="parsetree.cpp" />
-    <ClCompile Include="Program.cpp" />
-    <ClCompile Include="tokenize.cpp" />
-    <ClCompile Include="Utf8Reader.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="element.h" />
-    <ClInclude Include="key.h" />
-    <ClInclude Include="parsetree.h" />
-    <ClInclude Include="token.h" />
-    <ClInclude Include="tokenize.h" />
-    <ClInclude Include="Utf8Reader.h" />
+    <ClCompile Include="test virtual.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
