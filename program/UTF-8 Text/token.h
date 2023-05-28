@@ -42,8 +42,8 @@ public:
 class Value : public Token
 {
 public:
-	Value(std::string* volume, Token* from)
-		: Token(VALUE, volume, from)
+	Value(std::string* volume, Token* from, const size_t _lv)
+		: Token(VALUE, volume, from, _lv)
 	{
 	}
 	// do nothing, and will throw an erro log

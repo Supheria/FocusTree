@@ -8,11 +8,9 @@
 
 constexpr auto FileName = "key.cpp";
 
-// no use of const non-base-type Token, since values or props here are dynamic
-
 class ValueKey : public Token
 {
-	const char* op;
+	const char* op; // the pointer to op may change, and also for other key-types' values or props
 	const Token* val;
 public:
 	ValueKey(const std::string* _key, const Token* _val, const char* _op, const Token* _fr, const size_t _lv = 0)
@@ -34,13 +32,17 @@ public:
 		//
 		// replacement
 		//
-		if (level() == _t->level() && token() == _t->token() && type() == _t->type())
+		if (token() == _t->token() && type() == _t->type())
 		{
-			delete op;
-			op = ((ValueKey*)_t)->operat();
-			delete val;
-			val = ((ValueKey*)_t)->value();
-			errlog(FileName, "Replacement occurs in value of ValueKey", ErrorLog::WARN);
+			if (level() == _t->level())
+			{
+				delete op;
+				op = ((ValueKey*)_t)->operat();
+				delete val;
+				val = ((ValueKey*)_t)->value();
+				errlog(FileName, "Replacement occurs in value of ValueKey", ErrorLog::WARN);
+			}
+			else { errlog(FileName, "Level mismatch in Value replacement", ErrorLog::ERRO); }
 		}
 		else if (_t->type() == T::VALUE)
 		{
@@ -54,10 +56,12 @@ public:
 
 typedef std::vector<const Token*> tag_val;
 
+// no use of const vector or map, since its element will be changed
+
 class Tag : public Token
 {
 	const Token* tg;
-	std::vector<const Token*>* val;
+	tag_val* val;
 private:
 	void del_val()
 	{
@@ -92,20 +96,25 @@ public:
 		{
 			if (level() == _t->level())
 			{
-				del_val;
+				del_val();
 				val = ((Tag*)_t)->value();
 				errlog(FileName, "Replacement occurs in value of Tag", ErrorLog::WARN);
 			}
-			else { errlog(FileName, "Replacement occurs in value of Tag", ErrorLog::ERRO); }
+			else { errlog(FileName, "Level mismatch in Tag replacement", ErrorLog::ERRO); }
 		}
 		//
 		// assignment
 		//
-		else if (_t->type() == VALUE && _t->level() == level() + 1 && _t->from()->token() == token())
+		else if (_t->type() == VALUE && _t->from()->token() == token())
 		{
-			val->push_back(_t);
+			if (_t->level() == level() + 1)
+			{
+				val->push_back(_t);
+			}
+			else{ errlog(FileName, "Level mismatch in Tag assignment", ErrorLog::ERRO); }
 		}
-		else if (_t->type() == ){}
+		else { errlog(FileName, "Error type of appending to Tag ", ErrorLog::ERRO); }
+
 		delete _t;
 	}
 };
