@@ -6,15 +6,17 @@
 #include "token.h"
 #include "exception.h"
 
-constexpr auto FileName = "key.cpp";;
+constexpr auto FileName = "key.cpp";
+
+// no use of const non-base-type Token, since values or props here are dynamic
 
 class ValueKey : public Token
 {
-	const char* const op;
+	const char* op;
 	const Token* val;
 public:
-	ValueKey(std::string* _key, Token* _val, char* _op, Token* _fr)
-		: Token(VAL_KEY, _key, _fr),
+	ValueKey(const std::string* _key, const Token* _val, const char* _op, const Token* _fr, const size_t _lv = 0)
+		: Token(VAL_KEY, _key, _fr, _lv),
 		op(_op),
 		val(_val)
 	{
@@ -24,76 +26,87 @@ public:
 		if (op != nullptr) { delete op; }
 		if (val != nullptr) { delete val; }
 	}
+	const char* operat() { return op; }
 	const Token* value() { return val; }
-	// if are equal will do replacement, which will delete value and log warning: repeat assign
-	void append(Token* _t)
+	void append(const Token* _t)
 	{
 		if (_t == nullptr) { return; }
-		if (level() != _t->level() || token() != _t->token())
+		//
+		// replacement
+		//
+		if (level() == _t->level() && token() == _t->token() && type() == _t->type())
 		{
-			if (_t->type() != VALUE)
-			{
-				throw new ErroExc(FileName, "incompatible types");
-			}
-			if (_t->)
-				delete val;
-			val = _t;
-			delete _t;
-			throw new WarnExc(FileName, "repeated assignment");
+			delete op;
+			op = ((ValueKey*)_t)->operat();
+			delete val;
+			val = ((ValueKey*)_t)->value();
+			errlog(FileName, "Replacement occurs in value of ValueKey", ErrorLog::WARN);
 		}
-		if (type() != _t->type())
+		else if (_t->type() == T::VALUE)
 		{
-			delete _t;
-			throw new ErroExc(FileName, "different type for replacement");
+			errlog(FileName, "ValueKey cannot append value, assignment should be in constructor", ErrorLog::ERRO);
 		}
-		delete val;
-		val = ((ValueKey*)_t)->value();
+		else { errlog(FileName, "Error type of appending to ValueKey ", ErrorLog::ERRO); }
+
 		delete _t;
-		throw new WarnExc(FileName, "repeated assignment");
-		
 	}
 };
 
-typedef std::vector<Token*> tag_val;
+typedef std::vector<const Token*> tag_val;
 
 class Tag : public Token
 {
-	const Token* const tg;
-	const std::vector<Token*>* const val;
-public:
-	Tag(std::string* _key, Token* _tag, Token* _fr)
-		: Token(TAG, _key, _fr),
-		tg(_tag),
-		val(new tag_val{new Tag(), 2})
+	const Token* tg;
+	std::vector<const Token*>* val;
+private:
+	void del_val()
 	{
-	}
-	~Tag()
-	{
-		if (tg != nullptr) { delete tg; }
 		for (auto el : *val)
 		{
 			if (el != nullptr) { delete el; }
 		}
 		delete val;
 	}
-	const tag_val* value() { return val; }
+public:
+	Tag(const std::string* _key, const Token* _tag, const Token* _fr, const size_t _lv = 0)
+		: Token(TAG, _key, _fr, _lv),
+		tg(_tag),
+		val(new tag_val)
+	{
+	}
+	~Tag()
+	{
+		if (tg != nullptr) { delete tg; }
+		del_val();
+	}
+	tag_val* value() { return val; }
 	// if are equal will do replacement, which will delete value and log warning: repeat assign
 	// otherwise only if type is Value will be added, or will be delete and log erro: assign wrong type
-	void append(const Token* _t) const
+	void append(const Token* _t)
 	{
-		if (equals(_t))
+		if (_t == nullptr) { return; }
+		//
+		// replacement
+		//
+		if (token() == _t->token() && type() == _t->type())
 		{
-			for (auto el : *val)
+			if (level() == _t->level())
 			{
-				if (el != nullptr) { delete el; }
+				del_val;
+				val = ((Tag*)_t)->value();
+				errlog(FileName, "Replacement occurs in value of Tag", ErrorLog::WARN);
 			}
-			val = ((Tag*)_t)->value();
-			delete _t;
+			else { errlog(FileName, "Replacement occurs in value of Tag", ErrorLog::ERRO); }
 		}
-		if (_t->type() == T::Value)
+		//
+		// assignment
+		//
+		else if (_t->type() == VALUE && _t->level() == level() + 1 && _t->from()->token() == token())
 		{
-			val->pu
+			val->push_back(_t);
 		}
+		else if (_t->type() == ){}
+		delete _t;
 	}
 };
 

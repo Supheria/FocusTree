@@ -64,9 +64,9 @@ public:
 
 int main()
 {
-    Base s();
-    Base _s = s;
-    *_s = "";
+    A s;
+    Base* const _s = &s;
+    _s->a
     a = new string("new");
     cout << *a;
     cout <<*_s;

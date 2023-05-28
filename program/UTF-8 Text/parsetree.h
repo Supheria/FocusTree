@@ -6,14 +6,17 @@
 
 class ParseTree
 {
-	const std::string* key;
-	const char* op;
+	const std::string* key; // set to nullptr when pass to build
+	const char* op; // set to nullptr when pass to build
 	Token* build;
 	bool sarr; // use struct-array
 	ParseTree* sub;
 	ParseTree* from;
+	size_t level;
 public:
 	ParseTree();
+	// for sub-tree
+	ParseTree(const std::string* _key, size_t _level);
 	~ParseTree();
 	ParseTree* parse(const Element* _e);
 	void fail_to_build(const Element* _e);

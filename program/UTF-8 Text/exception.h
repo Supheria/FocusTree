@@ -1,25 +1,20 @@
 #ifndef _EXCEPTION_H
 #define _EXCEPTION_H
 
-#include <exception>
 #include <string>
 
-class ErroExc : public std::exception
+class ErrorLog
 {
 public:
-	ErroExc(std::string filename, std::string message)
+	enum T
 	{
-
-	}
-};
-
-class WarnExc : public std::exception
-{
+		ERRO,
+		WARN
+	};
 public:
-	WarnExc(std::string filename, std::string message)
-	{
-
-	}
-};
+	ErrorLog();
+	void append(std::string filename, std::string message, T type);
+	void operator()(std::string filename, std::string message, T type);
+} extern errlog;
 
 #endif // !_EXCEPTION_H

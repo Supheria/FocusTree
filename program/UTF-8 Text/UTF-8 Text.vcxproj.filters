@@ -39,6 +39,9 @@
     <ClCompile Include="token.cpp">
       <Filter>源文件\syntax block</Filter>
     </ClCompile>
+    <ClCompile Include="exception.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utf8Reader.h">
