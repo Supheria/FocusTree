@@ -5,27 +5,48 @@
 
 class Token
 {
-	const std::string* token;
 public:
-	Token(const std::string* _t) : token(_t) {}
-	~Token()
+	enum T
 	{
-		if (token != nullptr) { delete token; }
-	}
-	const std::string& get() const { return *token; }
-	virtual void parse(const std::string&) = 0;
-	virtual void combine(const Token*) = 0;
-	virtual void append(const Token*) = 0;
+		VALUE,
+		//
+		// key
+		//
+		VAL_KEY,
+		TAG,
+		ARRAY,
+		SCOPE
+	};
+private:
+	const std::string* const tok;
+	// nullptr means to main or say root
+	const Token* const fr;
+	const T tp;
+	// level start from 1 to use 0 present uninitialized other than -1
+	size_t lv;
+public:
+	Token(T _t, std::string* _s, Token* _fr);
+	~Token();
+	const T& type();
+	const std::string& token(); // use const string & to maintain control on memeory this->token points to
+	const Token* const from() const;
+	const size_t& level();
+	// parse from file with this->token(), and return a pointer to may new type of Token or null if failed to parse
+	const Token* const parse(std::string& filename);
+	// for replacement or combination, will delete given pointer whatever succeed or not 
+	virtual void append(Token* _t) = 0;
 };
 
 class Value : public Token
 {
 public:
-	Value(const std::string* _val) : Token(_val) {}
-	
+	Value(std::string* volume, Token* from)
+		: Token(VALUE, volume, from)
+	{
+	}
 	// do nothing, and will throw an erro log
-	void combine(const Token*) {}
-	// do nothing, and will throw an erro log
-	void append(const Token*) {}
+	void append(Token*)
+	{
+	}
 };
 #endif

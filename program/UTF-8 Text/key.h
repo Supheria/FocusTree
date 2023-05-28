@@ -4,41 +4,19 @@
 #include <vector>
 #include <unordered_map>
 #include "token.h"
+#include "exception.h"
 
-enum KeyTypes
-{
-	Value,
-	Tag,
-	Array,
-	Scope
-};
+constexpr auto FileName = "key.cpp";;
 
-class Key : public Token
+class ValueKey : public Token
 {
-	KeyTypes tp;
-	const Token* fr;
-public:
-	KeyTypes type() { return tp; }
-	const Token* from() { return fr; }
-protected:
-	Key(KeyTypes _tp, const std::string* _key, const Token* _fr);
-	~Key();
-public:
-	const Token* parse(const std::string& filename);
-	// const Key* will be delete here, whatever combination is successful or not
-	void combine(const T* _k);
-	virtual void append(const Token* _t) = 0;
-};
-
-class ValueKey : public Key
-{
-	const char* op;
+	const char* const op;
 	const Token* val;
 public:
-	ValueKey(const std::string* _key, const Token* _value, const char* _oprat, const Key* _from)
-		: Key(KeyTypes::Value, _key, _from),
-		op(_oprat),
-		val(_value)
+	ValueKey(std::string* _key, Token* _val, char* _op, Token* _fr)
+		: Token(VAL_KEY, _key, _fr),
+		op(_op),
+		val(_val)
 	{
 	}
 	~ValueKey()
@@ -46,39 +24,87 @@ public:
 		if (op != nullptr) { delete op; }
 		if (val != nullptr) { delete val; }
 	}
-	// do nothing
-	void append(const Token* _t) {}
+	const Token* value() { return val; }
+	// if are equal will do replacement, which will delete value and log warning: repeat assign
+	void append(Token* _t)
+	{
+		if (_t == nullptr) { return; }
+		if (level() != _t->level() || token() != _t->token())
+		{
+			if (_t->type() != VALUE)
+			{
+				throw new ErroExc(FileName, "incompatible types");
+			}
+			if (_t->)
+				delete val;
+			val = _t;
+			delete _t;
+			throw new WarnExc(FileName, "repeated assignment");
+		}
+		if (type() != _t->type())
+		{
+			delete _t;
+			throw new ErroExc(FileName, "different type for replacement");
+		}
+		delete val;
+		val = ((ValueKey*)_t)->value();
+		delete _t;
+		throw new WarnExc(FileName, "repeated assignment");
+		
+	}
 };
 
-class Tag : public Key
+typedef std::vector<Token*> tag_val;
+
+class Tag : public Token
 {
-	const Token* tag;
-	std::vector<const Token*> val;
+	const Token* const tg;
+	const std::vector<Token*>* const val;
 public:
-	Tag(const std::string* _key, const Token* _tag, const Key* _from)
-		: Key(KeyTypes::Tag, _key, _from),
-		tag(_tag)
+	Tag(std::string* _key, Token* _tag, Token* _fr)
+		: Token(TAG, _key, _fr),
+		tg(_tag),
+		val(new tag_val{new Tag(), 2})
 	{
 	}
 	~Tag()
 	{
-		if (tag != nullptr) { delete tag; }
-		for (auto elm : val)
+		if (tg != nullptr) { delete tg; }
+		for (auto el : *val)
 		{
-			if (elm != nullptr) { delete elm; }
+			if (el != nullptr) { delete el; }
+		}
+		delete val;
+	}
+	const tag_val* value() { return val; }
+	// if are equal will do replacement, which will delete value and log warning: repeat assign
+	// otherwise only if type is Value will be added, or will be delete and log erro: assign wrong type
+	void append(const Token* _t) const
+	{
+		if (equals(_t))
+		{
+			for (auto el : *val)
+			{
+				if (el != nullptr) { delete el; }
+			}
+			val = ((Tag*)_t)->value();
+			delete _t;
+		}
+		if (_t->type() == T::Value)
+		{
+			val->pu
 		}
 	}
-	void append(const Token* value) { val.push_back(value); }
 };
 
-class Array : public Key
+class Array : public Token
 {
 	bool sarr;
 	std::vector<std::vector<const Token*>> val;
 	bool addnew;
 public:
-	Array(const std::string* _key, bool _sarr, const Key* _from)
-		: Key(KeyTypes::Array, _key, _from),
+	Array(const std::string* _key, bool _sarr, const Token* _fr)
+		: Token(T::Array, _key, _fr),
 		sarr(_sarr),
 		addnew(false)
 	{
@@ -106,17 +132,35 @@ public:
 	void set_new() { addnew = true; }
 };
 
-class Scope : public Key
+class Scope : public Token
 {
-	std::unordered_map<const std::string&, const Token*> props; // use const string & for operating this memory by Token* other than map's key, 
+	std::unordered_map<const std::string&, const Token*> props; // use const string & here since Token::get() return such a type
 public:
-	Scope(const std::string* _key, const Key* _from)
-		: Key(KeyTypes::Scope, _key, _from)
+	Scope(const std::string* _key, const Token* _fr)
+		: Token(T::Scope, _key, _fr)
 	{
 	}
-	void append(const Token* property)
+	~Scope()
 	{
-		if (props.count(property->)
+		for (std::pair<const std::string&, const Token*> p : props)
+		{
+			if (p.second != nullptr) { delete p.second; }
+		}
+	}
+	void append(const Token* prop)
+	{
+		if (equals(prop))
+		{
+			// combine same scope's map elements
+		}
+		else
+		{
+			if (props.count(prop->token()) > 0)
+			{
+				props[prop->token()]->append(prop);
+			}
+			else { props[prop->token()] = prop; }
+		}
 	}
 };
 

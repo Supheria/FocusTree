@@ -73,11 +73,7 @@ bool Tokenize::compose()
         if (ch == quote)
         {
             token << fget(); // keep the quote mark
-            elm = new eToken(new string(token.str()), new size_t(line), column); // new eToken will delete within process of tree->parse(_e)
-                                                            // new string and new size_t may delete finally in _e->~Token(), flow as:
-                                                            //      this.compose() => tree->build => this.map[key].~Token()
-                                                            // also may delete within process of parse() by using _e->del(), flow as:
-                                                            //      this.compose() => tree->parse(_e) => _e->del()
+            elm = new eToken(token.str(), line, column); // will delete within process of tree->parse(_e)
             state = None;
             return true;
         }

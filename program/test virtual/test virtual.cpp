@@ -21,7 +21,7 @@ public:
     { 
         type = _t;
     }
-    virtual Base* append(Base* base)const = 0;
+    virtual Base* append(Base* base)const { return nullptr; };
     Type get_type() { return type; }
 };
 class A : public Base
@@ -64,18 +64,26 @@ public:
 
 int main()
 {
-    Base * a = new A();
-    B* b = new B();
-    Base* _b = (Base*)b;
-    Base  & __b = *b;
-    __b = *a;
-    a->append(b);
-    _b->append(a);
-    b->append();
-    __b.append(a);
-    delete a;
-    //delete b;
-    delete &__b;
+    Base s();
+    Base _s = s;
+    *_s = "";
+    a = new string("new");
+    cout << *a;
+    cout <<*_s;
+
+    //Base * a = new A();
+    //B* b = new B();
+    //Base* _b = (Base*)b;
+    //const Base  & __b = *b;
+    //auto c = nullptr;
+    //bool test = a == c;
+    //a->append(b);
+    //_b->append(a);
+    //b->append();
+    //__b.append(a);
+    //delete a;
+    ////delete b;
+    //delete &__b;
 }
 
 // 运行程序: Ctrl + F5 或调试 >“开始执行(不调试)”菜单

@@ -131,11 +131,13 @@
     <ClCompile Include="key.cpp" />
     <ClCompile Include="parsetree.cpp" />
     <ClCompile Include="Program.cpp" />
+    <ClCompile Include="token.cpp" />
     <ClCompile Include="tokenize.cpp" />
     <ClCompile Include="Utf8Reader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="element.h" />
+    <ClInclude Include="exception.h" />
     <ClInclude Include="key.h" />
     <ClInclude Include="parsetree.h" />
     <ClInclude Include="token.h" />

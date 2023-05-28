@@ -1,16 +1,25 @@
 #ifndef _ELEMENT_H
 #define _ELEMENT_H
 
-#include<string>
+#include <string>
+#include <memory>
 
-struct Element
+class Element
 {
 protected:
-	const size_t* line;
-	const size_t* column;
+	const std::unique_ptr<size_t> ln;
+	const std::unique_ptr<size_t> col;
 public:
-	virtual const char& get() const = 0; // use const behind for const Element* elm pointer to call
-	virtual void del() const = 0; // when element would be abandoned, and its value won't be used,
+	Element(const size_t _ln, const size_t _col) :
+		ln(new size_t(_ln)),
+		col(new size_t(_col))
+	{
+	}
+	const size_t& line() { return *ln; }
+	const size_t& column() { return *col; }
+	virtual const char& head() = 0;
+	virtual void* const get() = 0;
+	// when element would be abandoned, and its value won't be used,
 							// normally when ParseTree::parse() done with using an element, but
 							// former won't pass latter's value to ParseTree::build, such as a 
 							// Marker of open brace, its del() will be called after parse()
@@ -20,49 +29,50 @@ public:
 							// should also be called for del().
 							// for those signs or tokens passed to ParseTree::build, they will 
 							// be delete in Token::~Token(), normally of pointer in token map.
-
-	virtual Marker* a(Marker*) = 0;
+	virtual void del() = 0;
 };
 
-struct Marker : public Element
+class Marker : public Element
 {
 private:
-	const char* sign;
+	char* const sg;
 public:
-	Marker(const char* dy_c, const size_t* dy_ln, const size_t* dy_col) // dy_ means to dynamically allocate memory
-	{ 
-		sign = dy_c;
-		line = dy_ln;
-		column = dy_col;
-	}
-	const char& get() const { return (*sign); }
-	void del() const
+	Marker(const char sign, const size_t line, const size_t column)
+		: Element(line, column),
+		sg(new char(sign))	// new char finally may delete in ~ValueKey(), flow as:
+							//      new here => tree->build => ~ValueKey() somewhere in token map
+							// or may delete within process of parse() by using this->del(), flow as:
+							//      new here => tree->parse(...) => this->del()
 	{
-		if (sign != nullptr) { delete sign; }
-		if (line != nullptr) { delete line; }
-		if (column != nullptr) { delete column; }
 	}
-	Element* a(Element*) {}
+	const char& head() { return *sg; }
+	// char* 
+	void* const get() { return sg; }
+	void del()
+	{
+		if (sg != nullptr) { delete sg; }
+	}
 };
 
-struct eToken : public Element
+class eToken : public Element
 {
 private:
-	const std::string* token;
+	std::string* const tok;
 public:
-	eToken(const std::string* dy_s, const size_t* dy_ln, const size_t _end)
-	{ 
-		token = dy_s;
-		line = dy_ln;
-		column = new size_t(_end - (*dy_s).length() + 1);
-	}
-	const char& get() const { return (*token)[0]; }
-	const std::string* get_token() const { return token; }
-	void del() const
+	eToken(const std::string token, const size_t line, const size_t end_column)
+		: Element(line, end_column - token.length() + 1),
+		tok(new std::string(token))	// new string finally may delete in any Type of Token's distributer, flow as:
+									//      new here => tree->build => ~TokenType() somewhere in token map
+									// or may delete within process of parse() by using this->del(), flow as:
+									//      new here => tree->parse(...) => this->del()
 	{
-		if (token != nullptr) { delete token; }
-		if (line != nullptr) { delete line; }
-		if (column != nullptr) { delete column; }
+	}
+	const char& head() { return (*tok)[0]; }
+	// const string*
+	void* const get() { return tok; }
+	void del()
+	{
+		if (tok != nullptr) { delete tok; }
 	}
 };
 
