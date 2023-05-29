@@ -6,174 +6,107 @@
 #include "token.h"
 #include "exception.h"
 
-constexpr auto FileName = "key.cpp";
+class Value : public Token
+{
+public:
+	// volumn will be deleted 
+	Value(const Element* volume, Token* from, const size_t& _lv);
+	void append(Token*);
+};
+
+
+// the pointer to key-type Token' values or props may change, no use of (* const)  <-const pointer
+
 
 class ValueKey : public Token
 {
-	const char* op; // the pointer to op may change, and also for other key-types' values or props
+	const char* op; // new char[], must use delete[]
 	const Token* val;
+	bool lose_op;
+	bool lose_val;
 public:
-	ValueKey(const std::string* _key, const Token* _val, const char* _op, const Token* _fr, const size_t _lv = 0)
-		: Token(VAL_KEY, _key, _fr, _lv),
-		op(_op),
-		val(_val)
-	{
-	}
-	~ValueKey()
-	{
-		if (op != nullptr) { delete op; }
-		if (val != nullptr) { delete val; }
-	}
-	const char* operat() { return op; }
-	const Token* value() { return val; }
-	void append(const Token* _t)
-	{
-		if (_t == nullptr) { return; }
-		//
-		// replacement
-		//
-		if (token() == _t->token() && type() == _t->type())
-		{
-			if (level() == _t->level())
-			{
-				delete op;
-				op = ((ValueKey*)_t)->operat();
-				delete val;
-				val = ((ValueKey*)_t)->value();
-				errlog(FileName, "Replacement occurs in value of ValueKey", ErrorLog::WARN);
-			}
-			else { errlog(FileName, "Level mismatch in Value replacement", ErrorLog::ERRO); }
-		}
-		else if (_t->type() == T::VALUE)
-		{
-			errlog(FileName, "ValueKey cannot append value, assignment should be in constructor", ErrorLog::ERRO);
-		}
-		else { errlog(FileName, "Error type of appending to ValueKey ", ErrorLog::ERRO); }
-
-		delete _t;
-	}
+	// _key and _op will be deleted
+	ValueKey(const Element* _key, const Token* _val, const Element* _op, const Token* _fr, const size_t& _lv = 0);
+	~ValueKey();
+	const char& operat() const;
+	const bool value(Token& _val) const;
+	// if get_op() was called any time, ~Element() won't delete[] op.
+	const char* get_op() const;
+	// if get_val() was called any time, ~Element() won't delete val.
+	const char* get_val() const;
+	void append(const Token* _t);
 };
-
-typedef std::vector<const Token*> tag_val;
 
 // no use of const vector or map, since its element will be changed
 
+typedef std::vector<const Token*> tag_val;
 class Tag : public Token
 {
 	const Token* tg;
 	tag_val* val;
 private:
-	void del_val()
-	{
-		for (auto el : *val)
-		{
-			if (el != nullptr) { delete el; }
-		}
-		delete val;
-	}
+	void del_val();
 public:
-	Tag(const std::string* _key, const Token* _tag, const Token* _fr, const size_t _lv = 0)
-		: Token(TAG, _key, _fr, _lv),
-		tg(_tag),
-		val(new tag_val)
+	// _key should be a new char[] from eToken
+	Tag(const Element* _key, const Token* _tag, const Token* _fr, const size_t _lv = 0);
+	~Tag();
+	tag_val* value();
+	void append(const Token* _t);
+};
+
+
+typedef std::vector<std::vector<const Token*>> arr_val;
+class Array : public Token
+{
+	arr_val* val;
+	bool addnew;
+public:
+	Array(const Element* _key, const bool sarr, const Token* _fr, const size_t _lv = 0);
+	~Array();
+	arr_val* value();
+	void append(const Token* _t);
+	// set value assigned to a new array beginning
+	// when called append() will set false automatically, only if assignment succeed
+	void set_new();
+};
+
+
+typedef std::unordered_map<const std::string&, const Token*> tok_map;
+class Scope : public Token
+{
+	tok_map* props;
+public:
+	Scope(const Element* _key, const Token* _fr, const size_t _lv = 0)
+		: Token(SCOPE, _e_val(_key, NLL_KEY), _fr, _lv),
+		props(new tok_map)
 	{
 	}
-	~Tag()
+	~Scope()
 	{
-		if (tg != nullptr) { delete tg; }
-		del_val();
+		for (std::pair<const std::string&, const Token*> p : *props)
+		{
+			if (p.second != nullptr) { delete p.second; }
+		}
+		delete props;
 	}
-	tag_val* value() { return val; }
-	// if are equal will do replacement, which will delete value and log warning: repeat assign
-	// otherwise only if type is Value will be added, or will be delete and log erro: assign wrong type
+	tok_map* property() { return props; }
 	void append(const Token* _t)
 	{
 		if (_t == nullptr) { return; }
 		//
-		// replacement
+		// combination
 		//
 		if (token() == _t->token() && type() == _t->type())
 		{
 			if (level() == _t->level())
 			{
-				del_val();
-				val = ((Tag*)_t)->value();
-				errlog(FileName, "Replacement occurs in value of Tag", ErrorLog::WARN);
+				for (std::vector<const Token*> arr : *((Scope*)_t)->value())
+				{
+					val->push_back(arr);
+				}
+				WarnLog(FileName, "combination occurs in value of Tag");
 			}
-			else { errlog(FileName, "Level mismatch in Tag replacement", ErrorLog::ERRO); }
-		}
-		//
-		// assignment
-		//
-		else if (_t->type() == VALUE && _t->from()->token() == token())
-		{
-			if (_t->level() == level() + 1)
-			{
-				val->push_back(_t);
-			}
-			else{ errlog(FileName, "Level mismatch in Tag assignment", ErrorLog::ERRO); }
-		}
-		else { errlog(FileName, "Error type of appending to Tag ", ErrorLog::ERRO); }
-
-		delete _t;
-	}
-};
-
-class Array : public Token
-{
-	bool sarr;
-	std::vector<std::vector<const Token*>> val;
-	bool addnew;
-public:
-	Array(const std::string* _key, bool _sarr, const Token* _fr)
-		: Token(T::Array, _key, _fr),
-		sarr(_sarr),
-		addnew(false)
-	{
-	}
-	~Array()
-	{
-		for (std::vector<const Token*> arr : val)
-		{
-			for (auto elm : arr)
-			{
-				if (elm != nullptr) { delete elm; }
-			}
-		}
-	}
-	void append(const Token* value)
-	{
-		if (addnew) 
-		{ 
-			val.push_back({}); 
-			addnew = false;
-		}
-		val[val.size() - 1].push_back(value);
-	}
-	// set value to append to the beginning of a new array
-	void set_new() { addnew = true; }
-};
-
-class Scope : public Token
-{
-	std::unordered_map<const std::string&, const Token*> props; // use const string & here since Token::get() return such a type
-public:
-	Scope(const std::string* _key, const Token* _fr)
-		: Token(T::Scope, _key, _fr)
-	{
-	}
-	~Scope()
-	{
-		for (std::pair<const std::string&, const Token*> p : props)
-		{
-			if (p.second != nullptr) { delete p.second; }
-		}
-	}
-	void append(const Token* prop)
-	{
-		if (equals(prop))
-		{
-			// combine same scope's map elements
+			else { ErrLog(FileName, "level mismatch in Array combination"); }
 		}
 		else
 		{

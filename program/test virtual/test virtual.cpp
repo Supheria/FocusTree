@@ -17,17 +17,23 @@ protected:
 public:
     ~Base() { cout << "del base"; }
 public:
-    Base(Type _t) 
+    Base(Type _t, int a) 
     { 
         type = _t;
+        cout << a << endl;
     }
     virtual Base* append(Base* base)const { return nullptr; };
     Type get_type() { return type; }
+protected:
+     int test(int a) 
+    { 
+        return a; 
+    }
 };
 class A : public Base
 {
 public:
-    int a = 1;
+    mutable int a = 1;
     struct S
     {
         char a;
@@ -38,7 +44,7 @@ public:
             b = 200;
         }
     } s;
-    A() : Base(TypeA) {}
+    A() : Base(TypeA, mul(5)) {}
     A* append(A* base) const
     { 
         if (base->get_type() != TypeA)
@@ -53,24 +59,40 @@ public:
         int c = 0;
         c = 2;
     }
+    int mul(int b)
+    {
+        return b * 100;
+    }
 };
 class B : public Base
 {
 public:
-    B() : Base(TypeB) {}
+    B() : Base(TypeB, 10) {}
     B* append(B* base)const { cout << "B::append()\n"; }
     void append() const { cout << "B::append()\n"; }
 };
 
 int main()
 {
-    A s;
-    Base* const _s = &s;
-    _s->a
-    a = new string("new");
-    cout << *a;
-    cout <<*_s;
-
+ 
+    const A* a = new A;
+    const A& c = *a;
+    c.a = 0;
+    cout << c.a;
+    /*const int& _a = 1;
+    const char* ch = new char[6] {'t', 'e', 0, 's', 't', 0};
+    string a = string(ch);
+    a[2] = '\0';
+    char* c = new char[a.length() + 10] {0};
+    for (int i = 0; i < a.length(); i++)
+    {
+        c[i] = a[i];
+    }
+    const char* const p = c;
+    a.clear();
+    cout << *p;
+    delete[] p;
+    cout << p;*/
     //Base * a = new A();
     //B* b = new B();
     //Base* _b = (Base*)b;

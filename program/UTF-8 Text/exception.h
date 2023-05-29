@@ -1,20 +1,30 @@
 #ifndef _EXCEPTION_H
 #define _EXCEPTION_H
 
-#include <string>
+#include <fstream>
 
-class ErrorLog
+class ExceptionLog
+{
+private:
+	const char* logpath;
+	std::ofstream fout;
+protected:
+	ExceptionLog();
+	void append(std::string msg);
+};
+
+class ErrorLog : public ExceptionLog
 {
 public:
-	enum T
-	{
-		ERRO,
-		WARN
-	};
-public:
 	ErrorLog();
-	void append(std::string filename, std::string message, T type);
-	void operator()(std::string filename, std::string message, T type);
-} extern errlog;
+	void operator()(const char* filename, const char* message);
+} extern ErrLog;
+
+class WarningLog : public ExceptionLog
+{
+public:
+	WarningLog();
+	void operator()(const char* filename, const char* message);
+} extern WarnLog;
 
 #endif // !_EXCEPTION_H
