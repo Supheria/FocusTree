@@ -7,6 +7,7 @@ const char* FileName = "key.cpp";
 const char* NLL_VOL = "NULL_VOLUME";
 const char* NLL_KEY = "NULL_KEY";
 const char* NLL_OP = "NULL_OPERATOR";
+const char* NLL_TAG = "NULL_TAG";
 
 using namespace std;
 
@@ -31,14 +32,16 @@ void Value::append(Token*)
 ValueKey::ValueKey(const Element* _key, const Token* _val, const Element* _op, const Token* _fr, const size_t& _lv)
 	: Token(VAL_KEY, _e_val(_key, NLL_KEY), _fr, _lv),
 	op(_e_val(_op, NLL_OP)),
-	val(_val)
+	val(_val),
+	lose_op(false),
+	lose_val(false)
 {
 }
 
 ValueKey::~ValueKey()
 {
-	if (op != nullptr && lose_op) { delete[] op; }
-	if (val != nullptr && lose_val) { delete val; }
+	if (!lose_op) { delete[] op; }
+	if (!lose_val) { delete val; }
 }
 
 const char& ValueKey::operat() const 
@@ -46,10 +49,21 @@ const char& ValueKey::operat() const
 	return *op;
 }
 
-const bool ValueKey::value(const Token& _val) const
+const Token& ValueKey::value() const
 {
-	if (val == nullptr) { return false; }
-	_val = *val;
+	return *val;
+}
+
+const char* ValueKey::get_op() const
+{
+	lose_op = true;
+	return nullptr;
+}
+
+const Token* ValueKey::get_val() const
+{
+	lose_val = true;
+	return val;
 }
 
 void ValueKey::append(const Token* _t)
@@ -63,9 +77,9 @@ void ValueKey::append(const Token* _t)
 		if (level() == _t->level())
 		{
 			delete op;
-			op = ((ValueKey*)_t)->operat();
+			op = ((ValueKey*)_t)->get_op();
 			delete val;
-			val = ((ValueKey*)_t)->value();
+			val = ((ValueKey*)_t)->get_val();
 			WarnLog(FileName, "value of ValueKey was replaced");
 		}
 		else { ErrLog(FileName, "mismatched level in replacement of ValueKey"); }
@@ -94,9 +108,9 @@ void Tag::del_val()
 	delete val;
 }
 
-Tag::Tag(const Element* _key, const Token* _tag, const Token* _fr, const size_t _lv)
+Tag::Tag(const Element* _key, const Element* _tag, const Token* _fr, const size_t _lv)
 	: Token(TAG, _e_val(_key, NLL_KEY), _fr, _lv),
-	tg(_tag),
+	tg(_e_val(_tag, NLL_TAG)),
 	val(new tag_val)
 {
 }

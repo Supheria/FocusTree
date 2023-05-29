@@ -4,15 +4,16 @@ Token::Token(const T& _t, const char* _tok, const Token* _fr, const size_t& _lv)
 	tp(new T(_t)),
 	tok(_tok),
 	fr(_fr),
-	lv(0)
+	lv(0),
+	lose_tok(false)
 {
 }
 
 Token::~Token()
 {
 	if (tp != nullptr) { delete tp; }
-	if (tok != nullptr) { delete[] tok; } // must use delete[]
 	if (fr != nullptr) { delete fr; }
+	if (!lose_tok) { delete[] tok; } // must use delete[]
 }
 
 const Token::T& Token::type() const
@@ -20,9 +21,15 @@ const Token::T& Token::type() const
 	return *tp;
 }
 
-const std::string& Token::token() const
+const char* Token::token() const
 {
-	return std::string(tok); // convenient to compare
+	return tok;
+}
+
+const char* Token::get_tok() const
+{
+	lose_tok = true;
+	return tok;
 }
 
 const Token* const Token::from() const

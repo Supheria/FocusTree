@@ -22,18 +22,20 @@ class ValueKey : public Token
 {
 	const char* op; // new char[], must use delete[]
 	const Token* val;
-	bool lose_op;
-	bool lose_val;
+	mutable bool lose_op;
+	mutable bool lose_val;
 public:
 	// _key and _op will be deleted
 	ValueKey(const Element* _key, const Token* _val, const Element* _op, const Token* _fr, const size_t& _lv = 0);
 	~ValueKey();
+	// for compare with, won't lose op
 	const char& operat() const;
-	const bool value(Token& _val) const;
-	// if get_op() was called any time, ~Element() won't delete[] op.
+	// for compare with, won't lose val
+	const Token& value() const;
+	// if has been called for any time will lose op, and ~Token() won't delete[] op.
 	const char* get_op() const;
-	// if get_val() was called any time, ~Element() won't delete val.
-	const char* get_val() const;
+	// if has been called for any time will lose val, and ~Token() won't delete[] val.
+	const Token* get_val() const;
 	void append(const Token* _t);
 };
 
@@ -42,14 +44,18 @@ public:
 typedef std::vector<const Token*> tag_val;
 class Tag : public Token
 {
-	const Token* tg;
+	const char* tg;
 	tag_val* val;
 private:
 	void del_val();
 public:
 	// _key should be a new char[] from eToken
-	Tag(const Element* _key, const Token* _tag, const Token* _fr, const size_t _lv = 0);
+	Tag(const Element* _key, const Element* _tag, const Token* _fr, const size_t _lv = 0);
 	~Tag();
+	const char* tag() const;
+	const tag_val& val();
+	const char* get_tag() const;
+	const 
 	tag_val* value();
 	void append(const Token* _t);
 };

@@ -1,32 +1,33 @@
 #ifndef _ELEMENT_H
 #define _ELEMENT_H
 
-#include<string>
+#include <string>
+#include <memory>
 
 class Element
 {
-	const size_t* const ln;
-	const size_t* const col;
-	// if get() was called, will set to true, and ~Element() won't delete[] val.
-	mutable bool lose_val;
+	const size_t ln;
+	const size_t col;
+	//// if get() was called, will set to true, and ~Element() won't delete[] val.
+	//mutable bool lose_val;
 	// as new char[], must use delete[]
-	const char* const val;
+	std::unique_ptr<std::string> val;
 public:
 	// for marker
-	Element(const char marker, const size_t& line, const size_t& column);
+	Element(const char& marker, const size_t& line, const size_t& column);
 	// for token
 	Element(const std::string& token, const size_t& line, const size_t& end_column);
 	~Element();
-private:
-	const char* _str(const std::string& _s);
 public:
 	const size_t& line() const;
 	const size_t& column() const;
-	// use to compare with
+	// use to compare with first char
 	const char& head() const;
 	// will get const char* = new char[], must use delete[]
 	// if get() was called any time, ~Element() won't delete[] val.
-	const char* get() const;
+
+	// will transfer ownership
+	std::shared_ptr<char> get() const;
 	// when element would be abandoned, and its value won't be used,
 							// normally when ParseTree::parse() done with using an element, but
 							// former won't pass latter's value to ParseTree::build, such as a 

@@ -2,6 +2,8 @@
 //
 
 #include <iostream>
+#include <memory>
+#include <vector>
 
 using namespace std;
 class A;
@@ -63,6 +65,11 @@ public:
     {
         return b * 100;
     }
+    void test()
+    {
+        cout << "A";
+    }
+    vector<
 };
 class B : public Base
 {
@@ -74,11 +81,16 @@ public:
 
 int main()
 {
- 
-    const A* a = new A;
-    const A& c = *a;
-    c.a = 0;
-    cout << c.a;
+    unique_ptr<A> a(new A);
+    unique_ptr<A> b(a);
+    a->test();
+    b->test();
+    /*char a = 't';
+    string s(&a);
+    s.clear();
+    cout << a;*/
+    //unique_ptr<string> b(new string(_a));
+
     /*const int& _a = 1;
     const char* ch = new char[6] {'t', 'e', 0, 's', 't', 0};
     string a = string(ch);
