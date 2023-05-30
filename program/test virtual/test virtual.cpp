@@ -2,6 +2,10 @@
 //
 
 #include <iostream>
+#include <memory>
+#include <vector>
+#include <list>
+#include <map>
 
 using namespace std;
 class A;
@@ -17,12 +21,18 @@ protected:
 public:
     ~Base() { cout << "del base"; }
 public:
-    Base(Type _t) 
+    Base(Type _t, int a) 
     { 
         type = _t;
+        cout << a << endl;
     }
-    virtual void append(Base* base) = 0;
+    virtual Base* append(Base* base)const { return nullptr; };
     Type get_type() { return type; }
+protected:
+     int test(int a) 
+    { 
+        return a; 
+    }
 };
 class A : public Base
 {
@@ -38,8 +48,8 @@ public:
             b = 200;
         }
     } s;
-    A() : Base(TypeA) {}
-    void append(Base* base) 
+    A() : Base(TypeA, mul(5)) {}
+    A* append(A* base) const
     { 
         if (base->get_type() != TypeA)
         {
@@ -48,31 +58,78 @@ public:
         auto _s = ((A*)base)->s;
         cout << _s.a << ' ' << _s.b;
     }
-    void append(B* base)
+    void append(B* base)const
     {
         int c = 0;
         c = 2;
+    }
+    int mul(int b)
+    {
+        return b * 100;
+    }
+    void test()
+    {
+        cout << "A";
     }
 };
 class B : public Base
 {
 public:
-    B() : Base(TypeB) {}
-    void append(Base* base) { append(); }
-    void append() { cout << "B::append()\n"; }
+    B() : Base(TypeB, 10) {}
+    B* append(B* base)const { cout << "B::append()\n"; }
+    void append() const { cout << "B::append()\n"; }
 };
 
 int main()
 {
-    Base * a = new A();
-    B* b = new B();
-    Base* _b = (Base*)b;
-    a->append(b);
-    _b->append(a);
-    b->append();
-    delete a;
-    delete b;
+    string s = "fuc";
+    string s2 = "fuc2";
+    int y = 1;
+    int y2 = 2;
+    map<string*, int*> l = { {&s, &y}, {&s2, &y2} };
+    map<string*, int*>& x = l;
 
+    map<string*, int*>* _l = &x;
+    int* a = l[&s];
+    for (auto it = l.begin(); it != l.end(); )
+    {
+        l.erase(it++);
+    }
+    cout << a;
+
+    /*char a = 't';
+    string s(&a);
+    s.clear();
+    cout << a;*/
+    //unique_ptr<string> b(new string(_a));
+
+    /*const int& _a = 1;
+    const char* ch = new char[6] {'t', 'e', 0, 's', 't', 0};
+    string a = string(ch);
+    a[2] = '\0';
+    char* c = new char[a.length() + 10] {0};
+    for (int i = 0; i < a.length(); i++)
+    {
+        c[i] = a[i];
+    }
+    const char* const p = c;
+    a.clear();
+    cout << *p;
+    delete[] p;
+    cout << p;*/
+    //Base * a = new A();
+    //B* b = new B();
+    //Base* _b = (Base*)b;
+    //const Base  & __b = *b;
+    //auto c = nullptr;
+    //bool test = a == c;
+    //a->append(b);
+    //_b->append(a);
+    //b->append();
+    //__b.append(a);
+    //delete a;
+    ////delete b;
+    //delete &__b;
 }
 
 // 运行程序: Ctrl + F5 或调试 >“开始执行(不调试)”菜单
