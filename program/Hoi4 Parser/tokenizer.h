@@ -1,33 +1,32 @@
-#ifndef  _TOKENIZE_H
-#define _TOKENIZE_H
+#ifndef _TOKENIZER_H
+#define _TOKENIZER_H
 
+#include <list>
 #include <sstream>
-#include <vector>
 #include <fstream>
 #include <unordered_map>
-#include "parsetree.h"
-#include "token.h"
+#include "parse_tree.h"
+#include "token_types.h"
 
 struct CompareChar;
 
-class Tokenize
+class Tokenizer
 {
 public:
 	static const CompareChar delimiter, blank, endline, marker;
-	static const char  note, quote;
+	static const char  note, quote, escape;
 private:
 	size_t line;
 	size_t column;
 	ParseTree* tree;
 	Element* elm;
-	const ParseTree* _tr;
 	std::stringstream token;
 	std::ifstream fin;
-	std::unordered_map<std::string, Token*> map;
+	tok_map tokenmap;
 public:
-	Tokenize(std::string filepath);
-	void map_cache();
+	Tokenizer(std::string filepath);
 private:
+	void map_cache();
 	bool compose();
 	char fget();
 private:
@@ -35,30 +34,31 @@ private:
 	{
 		None,
 		Build_quo,
+		Escape_quo,
 		Build_unquo,
 		Note
 	} state;
 };
 
-
 struct CompareChar
 {
-	std::vector<char> chs;
+private:
+	std::list<char> chs;
 public:
-	CompareChar(std::vector<char> chars)
+	CompareChar(std::list<char> chars)
 	{
 		chs = chars;
 	}
 	bool operator==(const char& ch) const
 	{
-		for (int i = 0; i < chs.size(); i++)
+		for (auto it : chs)
 		{
-			if (chs[i] != ch)
+			if (it == ch)
 			{
-				return false;
+				return true;
 			}
 		}
-		return true;
+		return false;
 	}
 	bool operator!=(const char& ch) const
 	{
@@ -74,4 +74,5 @@ public:
 	}
 };
 
-#endif // ! _TOKENIZE_H
+#endif // _TOKENIZER_H
+

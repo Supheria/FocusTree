@@ -4,6 +4,8 @@
 #include <iostream>
 #include <memory>
 #include <vector>
+#include <list>
+#include <map>
 
 using namespace std;
 class A;
@@ -35,7 +37,7 @@ protected:
 class A : public Base
 {
 public:
-    mutable int a = 1;
+    int a = 1;
     struct S
     {
         char a;
@@ -69,7 +71,6 @@ public:
     {
         cout << "A";
     }
-    vector<
 };
 class B : public Base
 {
@@ -81,10 +82,21 @@ public:
 
 int main()
 {
-    unique_ptr<A> a(new A);
-    unique_ptr<A> b(a);
-    a->test();
-    b->test();
+    string s = "fuc";
+    string s2 = "fuc2";
+    int y = 1;
+    int y2 = 2;
+    map<string*, int*> l = { {&s, &y}, {&s2, &y2} };
+    map<string*, int*>& x = l;
+
+    map<string*, int*>* _l = &x;
+    int* a = l[&s];
+    for (auto it = l.begin(); it != l.end(); )
+    {
+        l.erase(it++);
+    }
+    cout << a;
+
     /*char a = 't';
     string s(&a);
     s.clear();

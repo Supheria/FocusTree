@@ -34,39 +34,5 @@ private:
 		Off = 0b1 << 7
 	} step;
 };
-/*
-enum ParseSteps
-{
-	Key,
-	Op,
-	//
-	// value, tag
-	//
-	Val,
-	Tag_on,
-	Tag_val,
-	Tag_off,
-	//
-	// sub, array
-	//
-	Op_on,
-	Op_off,
-	//
-	// array
-	//
-	Arr_on,
-	Arr_off,
-	Arr_key,
-	Arr_op,
-	Arr_opon,
-	Arr_opval,
-	Arr_opoff,
-	//
-	// sub
-	//
-	Op_val,
-	Sub_op
-};
-*/
-#endif
 
+#endif

@@ -1,12 +1,12 @@
-#ifndef _EXCEPTION_H
-#define _EXCEPTION_H
+#ifndef _EXCEPTION_LOG_H
+#define _EXCEPTION_LOG_H
 
 #include <fstream>
 
 class ExceptionLog
 {
 private:
-	const char* logpath;
+	const std::string logpath;
 	std::ofstream fout;
 protected:
 	ExceptionLog();
@@ -17,14 +17,15 @@ class ErrorLog : public ExceptionLog
 {
 public:
 	ErrorLog();
-	void operator()(const char* filename, const char* message);
+	void operator()(const std::string filename, const std::string message);
 } extern ErrLog;
 
 class WarningLog : public ExceptionLog
 {
 public:
 	WarningLog();
-	void operator()(const char* filename, const char* message);
+	void operator()(const std::string filename, const std::string message);
 } extern WarnLog;
 
-#endif // !_EXCEPTION_H
+#endif // ! _EXCEPTION_LOG_H
+

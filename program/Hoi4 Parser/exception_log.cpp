@@ -1,5 +1,4 @@
-#include "exception.h"
-
+#include "exception_log.h"
 #include <sstream>
 
 ErrorLog ErrLog = ErrorLog();
@@ -25,7 +24,7 @@ ErrorLog::ErrorLog()
 {
 }
 
-void ErrorLog::operator()(const char* filename, const char* message)
+void ErrorLog::operator()(const std::string filename, const std::string message)
 {
 	stringstream ss;
 	// format error log
@@ -36,7 +35,7 @@ WarningLog::WarningLog()
 {
 }
 
-void WarningLog::operator()(const char* filename, const char* message)
+void WarningLog::operator()(const std::string filename, const std::string message)
 {
 	stringstream ss;
 	// format warning log

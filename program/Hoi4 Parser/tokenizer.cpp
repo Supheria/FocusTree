@@ -1,21 +1,19 @@
-#include "tokenize.h"
-#include "element.h"
+#include "tokenizer.h"
 
-const CompareChar Tokenize::delimiter({ '\t', ' ', '\n', '\r', '#', '=', '>', '<', '}', '{', '"', (char)-1 });
-const CompareChar Tokenize::blank({ '\t', ' ', '\n', '\r' });
-const CompareChar Tokenize::endline({ '\n', '\r', (char)-1 });
-const CompareChar Tokenize::marker({ '=', '>', '<', '}', '{' });
-const char Tokenize::note = '#';
-const char Tokenize::quote = '"';
+const CompareChar Tokenizer::delimiter({ '\t', ' ', '\n', '\r', '#', '=', '>', '<', '}', '{', '"', (char)-1 });
+const CompareChar Tokenizer::blank({ '\t', ' ', '\n', '\r' });
+const CompareChar Tokenizer::endline({ '\n', '\r', (char)-1 });
+const CompareChar Tokenizer::marker({ '=', '>', '<', '}', '{' });
+const char Tokenizer::note = '#';
+const char Tokenizer::quote = '"';
+const char Tokenizer::escape = '\\';
 
 using namespace std;
 
-
-Tokenize::Tokenize(std::string filepath) :
-	line(0),
+Tokenizer::Tokenizer(std::string filepath) :
+    line(0),
     column(0),
     tree(nullptr),
-    _tr(tree),
     elm(nullptr),
     state(None)
 {
@@ -24,20 +22,24 @@ Tokenize::Tokenize(std::string filepath) :
     //
     // remove BOM
     //
-    if (fget() != 0xEF || fget() != 0xBB || fget() != 0xBF) // fin.get() will return -1 if meet EOF
-    { 
+    if (fget() != (char)0xEF || fget() != (char)0xBB || fget() != (char)0xBF) // fin.get() will return -1 if meet EOF
+    {
         fin.seekg(0, fin.beg);
         column = 0;
     }
+    //
+    // parsing
+    //
     tree = new ParseTree();
     while (true)
     {
         if (compose())
         {
             auto _tree = tree->parse(elm);  // tree->parse() will return its sub pointer if call tree->sub->parse()
-                                            // and will return its from pointer when parse process finish
-                                            // main tree's from pointer is nullptr
-            if (_tree == nullptr) 
+            // and will return its from pointer when parse process finish
+            // main tree's from pointer is nullptr
+            delete elm; elm = nullptr;
+            if (_tree == nullptr)
             {
                 map_cache();
                 delete tree;
@@ -50,45 +52,64 @@ Tokenize::Tokenize(std::string filepath) :
     fin.close();
 }
 
-void Tokenize::map_cache()
+void Tokenizer::map_cache()
 {
-    auto _t = tree->get(); // parse process failed will get nullptr
+    Token* _t = tree->get(); // parse process failed will get nullptr
     if (_t == nullptr) { return; }
-    if (map.count(_t->get()))
+    const string* key = &(_t->token().volumn());
+    if (tokenmap.count(key)) // has the key
     {
-        map[_t->get()]->combine(_t);
+        tokenmap[key]->mix(_t);
     }
-    else
-    {
-        map[_t->get()] = _t;
-    }
+    else { tokenmap[key] = _t; }
 }
 
-bool Tokenize::compose()
+bool Tokenizer::compose()
 {
     char ch = fin.peek(); // some delimiters will bring to next loop that won't use fin.get()
     switch (state)
     {
     case Build_quo:
-        if (ch == quote)
+        if (ch == escape)
+        {
+            token << fget();
+            state = Escape_quo;
+            return false;
+        }
+        else if (ch == quote)
         {
             token << fget(); // keep the quote mark
-            elm = new eToken(token.str(), line, column); // will delete within process of tree->parse(_e)
+            elm = new Element(token.str(), line, column); // will delete within process of tree->parse(_e)
             state = None;
             return true;
         }
         else if (ch == endline)
         {
-            elm = new eToken(new string(token.str()), new size_t(line), column);
+            token << quote;
+            elm = new Element(token.str(), line, column);
             state = None;
             return true;
         }
         token << fget();
         return false;
+    case Escape_quo:
+        if (ch == endline)
+        {
+            token << quote << quote;
+            elm = new Element(token.str(), line, column);
+            state = None;
+            return true;
+        }
+        else
+        {
+            token << fget();
+            state = Build_quo;
+            return false;
+        }
     case Build_unquo:
         if (ch == delimiter)
         {
-            elm = new eToken(new string(token.str()), new size_t(line), column);
+            elm = new Element(token.str(), line, column);
             state = None;
             return true;
         }
@@ -102,6 +123,7 @@ bool Tokenize::compose()
         if (ch == quote)
         {
             token.clear();
+            token.str("");
             token << fget(); // keep the quote mark
             state = Build_quo;
         }
@@ -112,7 +134,7 @@ bool Tokenize::compose()
         }
         else if (ch == marker)
         {
-            elm = new Marker(new char(fget()), new size_t(line), new size_t(column)); // same as eToken above ^
+            elm = new Element(fget(), line, column); // same as eToken above ^
             return true;
         }
         else if (ch == blank)
@@ -126,6 +148,7 @@ bool Tokenize::compose()
         else
         {
             token.clear();
+            token.str("");
             token << fget();
             state = Build_unquo;
         }
@@ -133,7 +156,7 @@ bool Tokenize::compose()
     }
 }
 
-char Tokenize::fget()
+char Tokenizer::fget()
 {
     column++;
     return fin.get();

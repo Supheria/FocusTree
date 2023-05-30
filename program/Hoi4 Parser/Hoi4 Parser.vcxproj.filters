@@ -14,59 +14,53 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="头文件\syntax block">
-      <UniqueIdentifier>{30db2dcd-d0ce-4e64-807e-0f3eb95135c3}</UniqueIdentifier>
+      <UniqueIdentifier>{78083675-762b-45cc-9bfd-816f0a91d2fa}</UniqueIdentifier>
     </Filter>
     <Filter Include="源文件\syntax block">
-      <UniqueIdentifier>{18478967-acbd-4a08-b7cb-4d4cefa6ec51}</UniqueIdentifier>
+      <UniqueIdentifier>{799f177b-03ec-4f1e-9e18-2b81af255f1d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Program.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Utf8Reader.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="tokenize.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="parsetree.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="key.cpp">
-      <Filter>源文件\syntax block</Filter>
-    </ClCompile>
-    <ClCompile Include="token.cpp">
-      <Filter>源文件\syntax block</Filter>
-    </ClCompile>
-    <ClCompile Include="exception.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="element.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Utf8Reader.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="tokenize.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="parsetree.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="key.h">
+    <ClInclude Include="element.h">
       <Filter>头文件\syntax block</Filter>
+    </ClInclude>
+    <ClInclude Include="exception_log.h">
+      <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="token.h">
       <Filter>头文件\syntax block</Filter>
     </ClInclude>
-    <ClInclude Include="exception.h">
+    <ClInclude Include="token_types.h">
+      <Filter>头文件\syntax block</Filter>
+    </ClInclude>
+    <ClInclude Include="volume.h">
+      <Filter>头文件\syntax block</Filter>
+    </ClInclude>
+    <ClInclude Include="tokenizer.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="element.h">
+    <ClInclude Include="parse_tree.h">
       <Filter>头文件</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="exception_log.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="token.cpp">
+      <Filter>源文件\syntax block</Filter>
+    </ClCompile>
+    <ClCompile Include="token_types.cpp">
+      <Filter>源文件\syntax block</Filter>
+    </ClCompile>
+    <ClCompile Include="program.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="tokenizer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="parse_tree.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
