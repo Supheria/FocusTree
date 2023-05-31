@@ -6,33 +6,45 @@
 
 class ParseTree
 {
-	const std::string* key; // set to nullptr when pass to build
-	const char* op; // set to nullptr when pass to build
-	Token* build;
+public:
+	static const char  openb, closb, equal, gter, less, eof;
+private:
+	// Token will delete key and set it to nullptr when pass to it
+						 // if will have sub-tree,
+						 // need to set from_key to key->get() before key pass a to new Token
+	mutable Volume* key; 
+	mutable Volume* op; // Token delete op and set it to nullptr when pass to it
+	mutable Volume* value; // same as above ^
+	mutable Token* build;
 	bool sarr; // use struct-array
-	ParseTree* sub;
-	ParseTree* from;
-	size_t level;
+	const ParseTree* from; // nullptr means to main-Tree or say root-Tree
+	const std::string* from_key;
+	mutable ParseTree* curr_sub;
+	const size_t level;
+	mutable bool fine;
 public:
 	ParseTree();
 	// for sub-tree
-	ParseTree(const std::string* _key, size_t _level);
+	ParseTree(const ParseTree* _from, Volume* _key, const std::string* _from_key, size_t _level);
 	~ParseTree();
-	ParseTree* parse(const Element* _e);
-	void fail_to_build(const Element* _e);
-	Token* get();
+	const ParseTree* parse(Element** p_e) const;
+	void fail_to_build(Element** const p_e) const;
+	/// if is building or fail to built will return nullptr
+	Token* get() const;
 private:
-	enum ParseSteps
+	// last step is on
+	enum ParseSteps : size_t
 	{
-		Key = 0b1,
-		Op = 0b1 << 1,
-		Val = 0b1 << 2,
-		Tag = 0b1 << 3,
-		Arr = 0b1 << 4,
-		Sub = 0b1 << 5,
-		On = 0b1 << 6,
-		Off = 0b1 << 7
-	} step;
+		NONE = 0,
+		KEY = 0b1,
+		OP = 0b1 << 1,
+		VAL = 0b1 << 2,
+		TAG = 0b1 << 3,
+		ARR = 0b1 << 4,
+		SUB = 0b1 << 5,
+		ON = 0b1 << 6,
+		OFF = 0b1 << 7
+	} mutable step; 
 };
 
 #endif

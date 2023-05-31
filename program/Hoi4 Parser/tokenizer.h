@@ -18,7 +18,7 @@ public:
 private:
 	size_t line;
 	size_t column;
-	ParseTree* tree;
+	const ParseTree* tree;
 	Element* elm;
 	std::stringstream token;
 	std::ifstream fin;

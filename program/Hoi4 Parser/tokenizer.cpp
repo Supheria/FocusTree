@@ -35,20 +35,25 @@ Tokenizer::Tokenizer(std::string filepath) :
     {
         if (compose())
         {
-            auto _tree = tree->parse(elm);  // tree->parse() will return its sub pointer if call tree->sub->parse()
-            // and will return its from pointer when parse process finish
-            // main tree's from pointer is nullptr
-            delete elm; elm = nullptr;
-            if (_tree == nullptr)
+            auto _tree = tree->parse(&elm);  // tree->parse() will return its sub pointer if call tree->sub->parse()
+                                            // and will return its from pointer when parse process finish
+                                            // main tree's from pointer is nullptr
+                                            // if parse failed, any tree will return its from pointer
+            if (_tree == nullptr) // main-tree finish, go to next main-tree
             {
                 map_cache();
                 delete tree;
                 tree = new ParseTree();
             }
             else { tree = _tree; }
+            if (elm != nullptr) // tree built successfully (has gone to "return" node), elm didn't be used, should pass to next tree
+            {
+
+            }
         }
         if (fin.eof()) { break; }
     }
+    delete tree;
     fin.close();
 }
 
@@ -79,7 +84,9 @@ bool Tokenizer::compose()
         else if (ch == quote)
         {
             token << fget(); // keep the quote mark
-            elm = new Element(token.str(), line, column); // will delete within process of tree->parse(_e)
+            elm = new Element(token.str(), line, column);   // will delete within process of tree->parse(...) when 
+                                                            // not send to any Token,
+                                                            // or will delete in Token::_vol_(...)
             state = None;
             return true;
         }

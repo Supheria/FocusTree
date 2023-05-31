@@ -18,7 +18,7 @@ class ValueKey : public Token
 	Volume* op;
 	Volume* val;
 public:
-	ValueKey(const Element* _key, const Element* _val, const Element* _op, const std::string* _fr, const size_t& _lv);
+	ValueKey(Volume** const p_key, Volume** const p_val, Volume** const p_op, const std::string* _fr, const size_t& _lv);
 	const Volume& operat();
 	const Volume& value();
 	// will delete _t
@@ -34,13 +34,13 @@ class Tag : public Token
 	Volume* tg;
 	tag_val val;
 public:
-	Tag(const Element* _key, const Element* _tag, const std::string* _fr, const size_t& _lv);
+	Tag(Volume** const p_key, Volume** const p_tag, const std::string* _fr, const size_t& _lv);
 	const Volume& tag();
 	const tag_val& value();
 	// will delete _t
 	void mix(Token* _t);
 	// will push_back and own _vol
-	void append(const Volume* _vol);
+	void append(Volume** const p_vol);
 private:
 	void del_val();
 	void del_extend();
@@ -53,14 +53,14 @@ class Array : public Token
 	arr_val val;
 	bool addnew;
 public:
-	Array(const Element* _key, const bool sarr, const std::string* _fr, const size_t& _lv);
+	Array(Volume** p_key, const bool sarr, const std::string* _fr, const size_t& _lv);
 	const arr_val& value();
 	// set to a new array beginning, after next append will auto set to false
 	void set_new();
 	// will delete _t
 	void mix(Token* _t);
 	// will push_back and own _vol
-	void append(const Volume* _vol);
+	void append(Volume** const p_vol);
 private:
 	void del_extend();
 };
@@ -71,7 +71,7 @@ class Scope : public Token
 {
  	tok_map prop;
 public:
-	Scope(const Element* _key, const std::string* _fr, const size_t& _lv);
+	Scope(Volume** p_key, const std::string* _fr, const size_t& _lv);
 	const tok_map& property();
 	// will delete _t
 	void mix(Token* _t);

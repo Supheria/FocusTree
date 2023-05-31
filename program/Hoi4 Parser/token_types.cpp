@@ -6,7 +6,7 @@ extern WarningLog WarnLog;
 
 using namespace std;
 
-const string FileName = "key.cpp";
+const string FileName = "token_types";
 const string NLL_VAL = "NULL_VALUE";
 const string NLL_KEY = "NULL_KEY";
 const string NLL_OP = "NULL_OPERATOR";
@@ -18,10 +18,10 @@ const string NLL_TAG = "NULL_TAG";
 //
 //
 //
-ValueKey::ValueKey(const Element* _key, const Element* _val, const Element* _op, const std::string* _fr, const size_t& _lv)
-	: Token(VAL_KEY, _e_vol(_key, NLL_KEY), _fr, _lv),
-	op(_e_vol(_op, NLL_OP)),
-	val(_e_vol(_val, NLL_VAL))
+ValueKey::ValueKey(Volume** const p_key, Volume** const p_val, Volume** const p_op, const std::string* _fr, const size_t& _lv)
+	: Token(VAL_KEY, _vol_(p_key, NLL_KEY), _fr, _lv),
+	op(_vol_(p_op, NLL_OP)),
+	val(_vol_(p_val, NLL_VAL))
 {
 }
 
@@ -77,9 +77,9 @@ void ValueKey::del_extend()
 //
 //
 //
-Tag::Tag(const Element* _key, const Element* _tag, const std::string* _fr, const size_t& _lv)
-	: Token(TAG, _e_vol(_key, NLL_KEY), _fr, _lv),
-	tg(_e_vol(_tag, NLL_TAG))
+Tag::Tag(Volume** const p_key, Volume** const p_tag, const std::string* _fr, const size_t& _lv)
+	: Token(TAG, _vol_(p_key, NLL_KEY), _fr, _lv),
+	tg(_vol_(p_tag, NLL_TAG))
 {
 }
 
@@ -124,13 +124,14 @@ void Tag::mix(Token* _t)
 	delete _t;
 }
 
-void Tag::append(const Volume* _vol)
+void Tag::append(Volume** const p_vol)
 {
-	if (_vol == nullptr) { return; }
+	if ((*p_vol) == nullptr) { return; }
 
-	val.push_back(new Volume(_vol));
+	val.push_back(new Volume((*p_vol)));
 
-	delete _vol;
+	delete (*p_vol);
+	(*p_vol) = nullptr;
 }
 
 void Tag::del_val()
@@ -155,8 +156,8 @@ void Tag::del_extend()
 //
 //
 //
-Array::Array(const Element* _key, const bool sarr, const std::string* _fr, const size_t& _lv)
-	:Token(sarr ? S_ARRAY : VAL_ARRAY, _e_vol(_key, NLL_KEY), _fr, _lv),
+Array::Array(Volume** p_key, const bool sarr, const std::string* _fr, const size_t& _lv)
+	:Token(sarr ? S_ARRAY : VAL_ARRAY, _vol_(p_key, NLL_KEY), _fr, _lv),
 	addnew(false)
 {
 }
@@ -206,21 +207,22 @@ void Array::mix(Token* _t)
 	delete _t;
 }
 
-void Array::append(const Volume* _vol)
+void Array::append(Volume** const p_vol)
 {
-	if (_vol == nullptr) { return; }
+	if ((*p_vol) == nullptr) { return; }
 	if (addnew)
 	{
-		list<const Volume*> arr = { new Volume(_vol) };
+		list<const Volume*> arr = { new Volume((*p_vol)) };
 		val.push_back(arr);
 		addnew = false;
 	}
 	else
 	{
-		val.back().push_back(new Volume(_vol));
+		val.back().push_back(new Volume((*p_vol)));
 	}
 
-	delete _vol;
+	delete (*p_vol);
+	(*p_vol) = nullptr;
 }
 
 void Array::del_extend()
@@ -244,8 +246,8 @@ void Array::del_extend()
 //
 //
 //
-Scope::Scope(const Element* _key, const std::string* _fr, const size_t& _lv)
-	: Token(SCOPE, _e_vol(_key, NLL_KEY), _fr, _lv)
+Scope::Scope(Volume** p_key, const std::string* _fr, const size_t& _lv)
+	: Token(SCOPE, _vol_(p_key, NLL_KEY), _fr, _lv)
 {
 }
 

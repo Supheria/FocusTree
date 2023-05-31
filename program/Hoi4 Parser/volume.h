@@ -2,6 +2,7 @@
 #define _VOLUME_H
 
 #include <string>
+#include "element.h"
 
 // === principle of value-passing between Volume pointers ===
 // if want to pass the value from a Volume pointer to another,
@@ -17,18 +18,30 @@ private:
 	const std::string* const vol;
 	mutable bool lose_vol;
 public:
-	Volume(const std::string* _vol) :
-		vol(_vol),
+	// will call _e->get() that transfers ownership, 
+	// and will DELETE _e 
+	Volume(Element** const p_e) :
+		vol((*p_e)->get()),
+		lose_vol(false)
+	{
+		delete (*p_e);
+		(*p_e) = nullptr;
+	}
+	// get the ownership of _vol
+	Volume(const std::string* _v) :
+		vol(_v),
 		lose_vol(false)
 	{
 	}
-	// will call _vol.get() that transfers ownership
+	// will call _vol.get() that transfers ownership,
+	// and WON'T delete _vol
 	Volume(const Volume& _vol) :
 		vol(_vol.get()),
 		lose_vol(false)
 	{
 	}
-	// will call _vol->get() that transfers ownership
+	// will call _vol->get() that transfers ownership,
+	// and WON'T delete _vol
 	Volume(const Volume* _vol) :
 		vol(_vol->get()),
 		lose_vol(false)

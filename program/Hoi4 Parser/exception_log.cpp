@@ -24,7 +24,7 @@ ErrorLog::ErrorLog()
 {
 }
 
-void ErrorLog::operator()(const std::string filename, const std::string message)
+void ErrorLog::operator()(const std::string fname_no_ex, const std::string message)
 {
 	stringstream ss;
 	// format error log
@@ -35,7 +35,7 @@ WarningLog::WarningLog()
 {
 }
 
-void WarningLog::operator()(const std::string filename, const std::string message)
+void WarningLog::operator()(const std::string fname_no_ex, const std::string message)
 {
 	stringstream ss;
 	// format warning log

@@ -46,19 +46,21 @@ bool Token::operator>(const Token* _sub)
 	return token().volumn() == _sub->from() && _sub->level() == level() + 1;
 }
 
-Volume* Token::_e_vol(const Element* _e, const std::string& null_vol)
+Volume* Token::_vol_(Volume** const p_vol, const std::string& null_vol)
 {
-	const string* _val = nullptr;
-	if (_e != nullptr)
+	const string* _v = nullptr;
+	if ((*p_vol) != nullptr)
 	{
-		_val = _e->get();
-		delete _e;
+		_v = (*p_vol)->get();
 	}
-	if (_val == nullptr)
+	else
 	{
-		_val = new string(null_vol);
+		_v = new string(null_vol);
 	}
-	Volume* val = new Volume(_val);
+	Volume* val = new Volume(_v);
+
+	delete (*p_vol);
+	(*p_vol) = nullptr;
 	return val;
 }
 
