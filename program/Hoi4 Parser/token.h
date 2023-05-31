@@ -19,17 +19,14 @@ public:
 private:
 	const T tp;
 	const pVolume tok;
-	const pcValue fr;
-	mutable size_t lv;
+	mutable size_t lv; // 0 mean to main-Token or say root-Token
 public:
 	// inherited class should not pass nullptr of _tok, use _vol_() to get a Value from an Element
-	Token(const T& _t, const pVolume _tok, pcValue _fr, const size_t& _lv);
+	Token(const T& _t, const pVolume _tok, const size_t& _lv);
 	~Token();
 	const T& type() const;
-	// use this->token().get() to get specific string-value of tok
+	// use token().get() to get specific string-value of tok
 	const Volume& token() const;
-	// return nullptr means to main-Token or say root-Token
-	const Value& from() const;
 	const size_t& level() const;
 public:
 	bool operator==(const pToken _t);

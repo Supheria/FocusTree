@@ -26,9 +26,13 @@ private:
 public:
 	Tokenizer(std::string filepath);
 private:
-	void map_cache();
+	void cache_map();
 	bool compose();
 	char fget();
+	// need to test whether current tree has return to root,
+					// otherwise need to del all tree remained
+					// include main-tree
+	void del_tree(); 
 private:
 	enum
 	{

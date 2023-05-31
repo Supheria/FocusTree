@@ -1,7 +1,7 @@
 #include "tokenizer.h"
 
 const CompareChar Tokenizer::delimiter({ '\t', ' ', '\n', '\r', '#', '=', '>', '<', '}', '{', '"', (char)-1 });
-const CompareChar Tokenizer::blank({ '\t', ' ', '\n', '\r' });
+const CompareChar Tokenizer::blank({ '\t', ' ', '\n', '\r', (char)-1 });
 const CompareChar Tokenizer::endline({ '\n', '\r', (char)-1 });
 const CompareChar Tokenizer::marker({ '=', '>', '<', '}', '{' });
 const char Tokenizer::note = '#';
@@ -31,7 +31,7 @@ Tokenizer::Tokenizer(std::string filepath) :
     // parsing
     //
     tree = new ParseTree();
-    while (true)
+    do
     {
         if (compose())
         {
@@ -41,25 +41,20 @@ Tokenizer::Tokenizer(std::string filepath) :
                                             // if parse failed, any tree will return its from pointer
             if (_tree == nullptr) // main-tree finish, go to next main-tree
             {
-                map_cache();
+                cache_map();
                 delete tree;
                 tree = new ParseTree();
             }
             else { tree = _tree; }
-            if (elm != nullptr) // tree built successfully (has gone to "return" node), elm didn't be used, should pass to next tree
-            {
-
-            }
         }
-        if (fin.eof()) { break; }
-    }
-    delete tree;
+    } while (!fin.eof());
+    del_tree();
     fin.close();
 }
 
-void Tokenizer::map_cache()
+void Tokenizer::cache_map()
 {
-    pToken _t = tree->get(); // parse process failed will get nullptr
+    pToken _t = tree->get(); // parse process unfinished or failed will get nullptr
     if (_t == nullptr) { return; }
     pcValue key = &(_t->token().volumn());
     if (tokenmap.count(key)) // has the key
@@ -71,7 +66,12 @@ void Tokenizer::map_cache()
 
 bool Tokenizer::compose()
 {
-    char ch = fin.peek(); // some delimiters will bring to next loop that won't use fin.get()
+    // if tree built successfully (has gone to "return" node), 
+                                        // elm didn't be used, should pass to next tree
+    if (elm != nullptr) { return true; }
+    // some delimiters will bring to next loop 
+                        // that won't use fin.get() to loop one more time to update state
+    char ch = fin.peek(); 
     switch (state)
     {
     case Build_quo:
@@ -167,4 +167,16 @@ char Tokenizer::fget()
 {
     column++;
     return fin.get();
+}
+
+void Tokenizer::del_tree()
+{
+    while (tree->get_from() != nullptr)
+    {
+        const ParseTree* _tree = tree->get_from();
+        delete tree;
+        tree = _tree;
+    }
+    delete tree;
+    tree = nullptr;
 }

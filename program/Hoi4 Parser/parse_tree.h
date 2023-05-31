@@ -7,7 +7,7 @@
 class ParseTree
 {
 public:
-	static const char  openb, closb, equal, gter, less, eof;
+	static const char  openb, closb, equal, gter, less;
 private:
 	// Token will delete key and set it to nullptr when pass to it
 						 // if will have sub-tree,
@@ -17,20 +17,22 @@ private:
 	mutable pVolume value; // same as above ^
 	mutable pToken build;
 	bool sarr; // use struct-array
-	const ParseTree* from; // nullptr means to main-Tree or say root-Tree
-	pcValue from_key;
+	const ParseTree* const from; // nullptr means to main-Tree or say root-Tree
 	mutable ParseTree* curr_sub;
 	const size_t level;
 	mutable bool fine;
+	mutable bool lose_built;
 public:
 	ParseTree();
 	// for sub-tree
-	ParseTree(const ParseTree* _from, pVolume _key, pcValue _from_key, size_t _level);
+	ParseTree(const ParseTree* _from, pVolume _key, size_t _level);
 	~ParseTree();
 	const ParseTree* parse(pElement* p_e) const;
-	void fail_to_build(pElement* const p_e) const;
-	/// if is building or fail to built will return nullptr
-	Token* get() const;
+	// if is building or fail to built will return nullptr,
+						// otherwise will transfer ownership of build that won't 
+						// delete the pToken in ~ParseTree()
+	pToken get() const;
+	const ParseTree* get_from() const;
 private:
 	// last step is on
 	enum ParseSteps : size_t

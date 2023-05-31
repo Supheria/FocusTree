@@ -8,7 +8,6 @@ const char ParseTree::closb = '}';
 const char ParseTree::equal = '=';
 const char ParseTree::gter = '>';
 const char ParseTree::less = '<';
-const char ParseTree::eof = (char)-1;
 
 extern ErrorLog ErrLog;
 extern WarningLog WarnLog;
@@ -28,37 +27,39 @@ ParseTree::ParseTree() :
 	value(nullptr),
 	build(nullptr),
 	from(nullptr),
-	from_key(nullptr),
 	curr_sub(nullptr),
 	sarr(false),
 	step(NONE),
 	level(0),
-	fine(false)
+	fine(false),
+	lose_built(false)
 {
 }
 
 // call for sub-tree
-ParseTree::ParseTree(const ParseTree* _from, pVolume _key, pcValue _from_key, const size_t _level) :
+ParseTree::ParseTree(const ParseTree* _from, pVolume _key, const size_t _level) :
 	key(_key),
 	op(nullptr),
 	value(nullptr),
 	build(nullptr),
 	from(_from),
-	from_key(_from_key),
 	curr_sub(nullptr),
 	sarr(false),
 	step(KEY),
 	level(_level),
-	fine(false)
+	fine(false),
+	lose_built(false)
 {
 }
 
 ParseTree::~ParseTree()
 {
-	// if (key != nullptr) { delete key; } // key and op are cache for build, so do not delete here but use fail_to_build() when failed
-	// if (op != nullptr) { delete op; }
-	// if (build != nullptr) { delete build; } // this shouldn't be deleted here since the memory may use for token map elsewhere
-	// if (from != nullptr) { delete from; } // do not delete here, it will delete by tokenizer
+	delete key;
+	delete op;
+	delete value;
+	if (!lose_built) { delete build; }
+	// delete curr_sub; // do not delete here, it will delete in step SUB, or by tokenizer when parse interrupted in sub-tree
+	// delete from; // do not delete here, it will delete by tokenizer or from's from
 }
 
 const ParseTree* ParseTree::parse(pElement* const p_e) const
@@ -76,7 +77,8 @@ const ParseTree* ParseTree::parse(pElement* const p_e) const
 			break;
 		default:
 			UNKNOWN_ERROR;
-			fail_to_build(p_e);
+			delete (*p_e);
+			(*p_e) = nullptr;
 			return from;
 		}
 	}
@@ -109,7 +111,8 @@ const ParseTree* ParseTree::parse(pElement* const p_e) const
 				break;
 			default:
 				UNKNOWN_ERROR;
-				fail_to_build(p_e);
+				delete (*p_e);
+				(*p_e) = nullptr;
 				return from;
 			}
 		}
@@ -143,7 +146,8 @@ const ParseTree* ParseTree::parse(pElement* const p_e) const
 				break;
 			default:
 				UNEXPECTED_OPERATOR;
-				fail_to_build(p_e);
+				delete (*p_e);
+				(*p_e) = nullptr;
 				return from;
 			}
 			break;
@@ -157,7 +161,7 @@ const ParseTree* ParseTree::parse(pElement* const p_e) const
 			else
 			{
 				fine = true;
-				build = new ValueKey(&key, &value, &op, from_key, level);
+				build = new ValueKey(&key, &value, &op, level);
 				return from;
 			}
 			break;
@@ -173,9 +177,9 @@ const ParseTree* ParseTree::parse(pElement* const p_e) const
 			case equal:
 			case gter:
 			case less:
-			case eof:
 				UNEXPECTED_KEY;
-				fail_to_build(p_e);
+				delete (*p_e);
+				(*p_e) = nullptr;
 				return from;
 			default:
 				key = new Volume(p_e);
@@ -189,23 +193,20 @@ const ParseTree* ParseTree::parse(pElement* const p_e) const
 	return this;
 }
 
-void ParseTree::fail_to_build(pElement* const p_e) const
+pToken ParseTree::get() const
 {
-	//_e->del(); // make sure there is no value-pass of _e before calling fail_to_build
-	delete (*p_e);
-	(*p_e) = nullptr; // setting to null means to the Element has been used
-
-	delete build; // only if parse failed will delete the memory 
-	// and set the pointer give back to token map a nullptr,
-	// also will call build->~Token() then delete build->key
-// they will be passed to build or not when fail_to_build
-	// set to nullptr when they pass to build
-	delete key;
-	delete op;
-	delete value;
+	if (fine)
+	{
+		lose_built = true;
+		return build;
+	}
+	else
+	{
+		return nullptr;
+	}
 }
 
-Token* ParseTree::get() const
+const ParseTree* ParseTree::get_from() const
 {
-	return fine ? build : nullptr;
+	return from;
 }

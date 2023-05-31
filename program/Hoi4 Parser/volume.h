@@ -22,7 +22,7 @@ private:
 	mutable bool lose_val;
 public:
 	// will call _e->get() that transfers ownership, 
-	// and will DELETE _e 
+	// and will DELETE p_e and set it to nullptr 
 	Volume(pElement* const p_e) :
 		val((*p_e)->get()),
 		lose_val(false)

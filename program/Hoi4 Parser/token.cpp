@@ -2,10 +2,9 @@
 
 using namespace std;
 
-Token::Token(const T& _t, const pVolume _tok, pcValue _fr, const size_t& _lv) :
+Token::Token(const T& _t, const pVolume _tok, const size_t& _lv) :
 	tp(_t),
 	tok(_tok),
-	fr(_fr),
 	lv(_lv)
 {
 }
@@ -26,11 +25,6 @@ const Volume& Token::token() const
 	return *tok;
 }
 
-const Value& Token::from() const
-{
-	return *fr;
-}
-
 const size_t& Token::level() const
 {
 	return lv;
@@ -44,9 +38,11 @@ bool Token::operator==(const pToken _t)
 pVolume Token::_vol_(pVolume* const p_vol, const Value& null_val)
 {
 	pcValue val = nullptr;
-	if ((*p_vol) != nullptr)
+	if (p_vol != nullptr && (*p_vol) != nullptr)
 	{
 		val = (*p_vol)->get();
+		delete (*p_vol);
+		(*p_vol) = nullptr;
 	}
 	else
 	{
@@ -54,8 +50,6 @@ pVolume Token::_vol_(pVolume* const p_vol, const Value& null_val)
 	}
 	Volume* vol = new Volume(val);
 
-	delete (*p_vol);
-	(*p_vol) = nullptr;
 	return vol;
 }
 

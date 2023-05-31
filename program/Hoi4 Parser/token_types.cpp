@@ -18,8 +18,8 @@ const Value NLL_TAG = "NULL_TAG";
 //
 //
 //
-ValueKey::ValueKey(pVolume* const p_key, pVolume* const p_val, pVolume* const p_op, pcValue _fr, const size_t& _lv)
-	: Token(VAL_KEY, _vol_(p_key, NLL_KEY), _fr, _lv),
+ValueKey::ValueKey(pVolume* const p_key, pVolume* const p_val, pVolume* const p_op, const size_t& _lv)
+	: Token(VAL_KEY, _vol_(p_key, NLL_KEY), _lv),
 	op(_vol_(p_op, NLL_OP)),
 	val(_vol_(p_val, NLL_VAL))
 {
@@ -77,8 +77,8 @@ void ValueKey::del_extend()
 //
 //
 //
-Tag::Tag(pVolume* const p_key, pVolume* const p_tag, pcValue _fr, const size_t& _lv)
-	: Token(TAG, _vol_(p_key, NLL_KEY), _fr, _lv),
+Tag::Tag(pVolume* const p_key, pVolume* const p_tag, const size_t& _lv)
+	: Token(TAG, _vol_(p_key, NLL_KEY), _lv),
 	tg(_vol_(p_tag, NLL_TAG))
 {
 }
@@ -124,14 +124,11 @@ void Tag::mix(pToken _t)
 	delete _t;
 }
 
-void Tag::append(pVolume* const p_vol)
+void Tag::append(pElement* const p_e)
 {
-	if ((*p_vol) == nullptr) { return; }
+	if (p_e == nullptr || (*p_e) == nullptr) { return; }
 
-	val.push_back(new Volume((*p_vol)));
-
-	delete (*p_vol);
-	(*p_vol) = nullptr;
+	val.push_back(new Volume((p_e)));
 }
 
 void Tag::del_val()
@@ -156,8 +153,8 @@ void Tag::del_extend()
 //
 //
 //
-Array::Array(pVolume* p_key, const bool sarr, pcValue _fr, const size_t& _lv)
-	:Token(sarr ? S_ARRAY : VAL_ARRAY, _vol_(p_key, NLL_KEY), _fr, _lv),
+Array::Array(pVolume* p_key, const bool sarr, const size_t& _lv)
+	:Token(sarr ? S_ARRAY : VAL_ARRAY, _vol_(p_key, NLL_KEY), _lv),
 	addnew(false)
 {
 }
@@ -207,22 +204,19 @@ void Array::mix(pToken _t)
 	delete _t;
 }
 
-void Array::append(pVolume* const p_vol)
+void Array::append(pElement* const p_e)
 {
-	if ((*p_vol) == nullptr) { return; }
+	if (p_e == nullptr || (*p_e) == nullptr) { return; }
 	if (addnew)
 	{
-		list<pVolume> arr = { new Volume((*p_vol)) };
+		list<pVolume> arr = { new Volume((p_e)) };
 		val.push_back(arr);
 		addnew = false;
 	}
 	else
 	{
-		val.back().push_back(new Volume((*p_vol)));
+		val.back().push_back(new Volume((p_e)));
 	}
-
-	delete (*p_vol);
-	(*p_vol) = nullptr;
 }
 
 void Array::del_extend()
@@ -246,8 +240,8 @@ void Array::del_extend()
 //
 //
 //
-Scope::Scope(pVolume* p_key, pcValue _fr, const size_t& _lv)
-	: Token(SCOPE, _vol_(p_key, NLL_KEY), _fr, _lv)
+Scope::Scope(pVolume* p_key, const size_t& _lv)
+	: Token(SCOPE, _vol_(p_key, NLL_KEY), _lv)
 {
 }
 
@@ -293,16 +287,9 @@ void Scope::mix(pToken _t)
 void Scope::append(pToken _t)
 {
 	if (_t == nullptr) { return; }
-	//
-	// appendage
-	//
 	if (_t->level() != level() + 1)
 	{
 		ErrLog(FileName, "level mismatched of appending in Scope");
-	}
-	else if (_t->from() != token().volumn())
-	{
-		ErrLog(FileName, "from-key-name mismatched of appending in Scope");
 	}
 	else
 	{
