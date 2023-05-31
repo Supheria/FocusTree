@@ -15,68 +15,68 @@
 
 class ValueKey : public Token
 {
-	Volume* op;
-	Volume* val;
+	pVolume op;
+	pVolume val;
 public:
-	ValueKey(const Element* _key, const Element* _val, const Element* _op, const std::string* _fr, const size_t& _lv);
+	ValueKey(pVolume* const p_key, pVolume* const p_val, pVolume* const p_op, pcValue _fr, const size_t& _lv);
 	const Volume& operat();
 	const Volume& value();
 	// will delete _t
-	void mix(Token* _t);
+	void mix(pToken _t);
 private:
 	void del_extend();
 };
 
 
-typedef std::list<const Volume*> tag_val;
+typedef std::list<pVolume> tag_val;
 class Tag : public Token
 {
-	Volume* tg;
+	pVolume tg;
 	tag_val val;
 public:
-	Tag(const Element* _key, const Element* _tag, const std::string* _fr, const size_t& _lv);
+	Tag(pVolume* const p_key, pVolume* const p_tag, pcValue _fr, const size_t& _lv);
 	const Volume& tag();
 	const tag_val& value();
 	// will delete _t
-	void mix(Token* _t);
+	void mix(pToken _t);
 	// will push_back and own _vol
-	void append(const Volume* _vol);
+	void append(pVolume* const p_vol);
 private:
 	void del_val();
 	void del_extend();
 };
 
 
-typedef std::list<std::list<const Volume*>> arr_val;
+typedef std::list<std::list<pVolume>> arr_val;
 class Array : public Token
 {
 	arr_val val;
 	bool addnew;
 public:
-	Array(const Element* _key, const bool sarr, const std::string* _fr, const size_t& _lv);
+	Array(pVolume* p_key, const bool sarr, pcValue _fr, const size_t& _lv);
 	const arr_val& value();
 	// set to a new array beginning, after next append will auto set to false
 	void set_new();
 	// will delete _t
-	void mix(Token* _t);
+	void mix(pToken _t);
 	// will push_back and own _vol
-	void append(const Volume* _vol);
+	void append(pVolume* const p_vol);
 private:
 	void del_extend();
 };
 
 
-typedef std::unordered_map<const std::string*, Token*> tok_map;
+typedef std::unordered_map<pcValue, pToken> tok_map;
 class Scope : public Token
 {
  	tok_map prop;
 public:
-	Scope(const Element* _key, const std::string* _fr, const size_t& _lv);
+	Scope(pVolume* p_key, pcValue _fr, const size_t& _lv);
 	const tok_map& property();
 	// will delete _t
-	void mix(Token* _t);
+	void mix(pToken _t);
 	// if failed will delete, else add to map won't delete
-	void append(Token* _t);
+	void append(pToken _t);
 private:
 	void del_extend();
 };

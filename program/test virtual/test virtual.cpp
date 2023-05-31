@@ -80,23 +80,75 @@ public:
     void append() const { cout << "B::append()\n"; }
 };
 
+enum Steps
+{
+    KEY = 0b1,
+    OP = 0b1 << 1,
+    VAL = 0b1 << 2,
+    TAG = 0b1 << 3,
+    ARR = 0b1 << 4,
+    SUB = 0b1 << 5,
+    ON = 0b1 << 6,
+    OFF = 0b1 << 7
+};
+
+void test(Steps step)
+{
+    cout << step << ": ";
+    if (step & TAG)
+    {
+        cout << "tag";
+        if ((step ^ TAG) & KEY)
+        {
+            cout << ", key";
+        }
+        if ((step ^ TAG) & TAG)
+        {
+            cout << "wrong";
+        }
+        cout << endl;
+    }
+    else if (step & ARR)
+    {
+        cout << "arr";
+        cout << endl;
+    }
+    else if (step & SUB)
+    {
+        cout << "sub";
+        cout << endl;
+    }
+    else
+    {
+        cout << "other";
+        cout << endl;
+    }
+}
+
 int main()
 {
-    string s = "fuc";
-    string s2 = "fuc2";
-    int y = 1;
-    int y2 = 2;
-    map<string*, int*> l = { {&s, &y}, {&s2, &y2} };
-    map<string*, int*>& x = l;
+    char a = 't';
+    const char* _a = new char(a);
+    const char** const p_a = &_a;
+    delete (*p_a);
+    (*p_a) = nullptr;
+    int b = 0;
 
-    map<string*, int*>* _l = &x;
-    int* a = l[&s];
-    for (auto it = l.begin(); it != l.end(); )
-    {
-        l.erase(it++);
-    }
-    cout << a;
+    /*test(Steps(TAG | KEY));
+    test(Steps(TAG | OP));
+    test(Steps(TAG | VAL));
 
+    test(Steps(ARR | KEY));
+    test(Steps(ARR | OP));
+    test(Steps(ARR | VAL));
+
+    test(Steps(SUB | KEY));
+    test(Steps(SUB | OP));
+    test(Steps(SUB | VAL));
+
+    test(Steps(KEY));
+    test(Steps(OP));
+    test(Steps(VAL));*/
     /*char a = 't';
     string s(&a);
     s.clear();
