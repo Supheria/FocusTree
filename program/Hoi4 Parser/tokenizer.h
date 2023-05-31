@@ -14,12 +14,12 @@ class Tokenizer
 {
 public:
 	static const CompareChar delimiter, blank, endline, marker;
-	static const char  note, quote, escape;
+	static const char note, quote, escape;
 private:
 	size_t line;
 	size_t column;
 	const ParseTree* tree;
-	Element* elm;
+	pElement elm;
 	std::stringstream token;
 	std::ifstream fin;
 	tok_map tokenmap;

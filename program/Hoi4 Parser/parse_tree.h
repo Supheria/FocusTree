@@ -12,23 +12,23 @@ private:
 	// Token will delete key and set it to nullptr when pass to it
 						 // if will have sub-tree,
 						 // need to set from_key to key->get() before key pass a to new Token
-	mutable Volume* key; 
-	mutable Volume* op; // Token delete op and set it to nullptr when pass to it
-	mutable Volume* value; // same as above ^
-	mutable Token* build;
+	mutable pVolume key;
+	mutable pVolume op; // Token delete op and set it to nullptr when pass to it
+	mutable pVolume value; // same as above ^
+	mutable pToken build;
 	bool sarr; // use struct-array
 	const ParseTree* from; // nullptr means to main-Tree or say root-Tree
-	const std::string* from_key;
+	pcValue from_key;
 	mutable ParseTree* curr_sub;
 	const size_t level;
 	mutable bool fine;
 public:
 	ParseTree();
 	// for sub-tree
-	ParseTree(const ParseTree* _from, Volume* _key, const std::string* _from_key, size_t _level);
+	ParseTree(const ParseTree* _from, pVolume _key, pcValue _from_key, size_t _level);
 	~ParseTree();
-	const ParseTree* parse(Element** p_e) const;
-	void fail_to_build(Element** const p_e) const;
+	const ParseTree* parse(pElement* p_e) const;
+	void fail_to_build(pElement* const p_e) const;
 	/// if is building or fail to built will return nullptr
 	Token* get() const;
 private:

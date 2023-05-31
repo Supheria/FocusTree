@@ -38,7 +38,7 @@ ParseTree::ParseTree() :
 }
 
 // call for sub-tree
-ParseTree::ParseTree(const ParseTree* _from, Volume* _key, const string* _from_key, const size_t _level) :
+ParseTree::ParseTree(const ParseTree* _from, pVolume _key, pcValue _from_key, const size_t _level) :
 	key(_key),
 	op(nullptr),
 	value(nullptr),
@@ -61,7 +61,7 @@ ParseTree::~ParseTree()
 	// if (from != nullptr) { delete from; } // do not delete here, it will delete by tokenizer
 }
 
-const ParseTree* ParseTree::parse(Element** const p_e) const
+const ParseTree* ParseTree::parse(pElement* const p_e) const
 {
 	const char& ch = (*p_e)->head();
 	if (step & TAG)
@@ -189,7 +189,7 @@ const ParseTree* ParseTree::parse(Element** const p_e) const
 	return this;
 }
 
-void ParseTree::fail_to_build(Element** const p_e) const
+void ParseTree::fail_to_build(pElement* const p_e) const
 {
 	//_e->del(); // make sure there is no value-pass of _e before calling fail_to_build
 	delete (*p_e);

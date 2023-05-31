@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Token::Token(const T& _t, const Volume* _tok, const string* _fr, const size_t& _lv) :
+Token::Token(const T& _t, const pVolume _tok, pcValue _fr, const size_t& _lv) :
 	tp(_t),
 	tok(_tok),
 	fr(_fr),
@@ -26,7 +26,7 @@ const Volume& Token::token() const
 	return *tok;
 }
 
-const string& Token::from() const
+const Value& Token::from() const
 {
 	return *fr;
 }
@@ -36,32 +36,27 @@ const size_t& Token::level() const
 	return lv;
 }
 
-bool Token::operator==(const Token* _t)
+bool Token::operator==(const pToken _t)
 {
 	return type() == _t->type() && token() == _t->token() && level() == _t->level();
 }
 
-bool Token::operator>(const Token* _sub)
+pVolume Token::_vol_(pVolume* const p_vol, const Value& null_val)
 {
-	return token().volumn() == _sub->from() && _sub->level() == level() + 1;
-}
-
-Volume* Token::_vol_(Volume** const p_vol, const std::string& null_vol)
-{
-	const string* _v = nullptr;
+	pcValue val = nullptr;
 	if ((*p_vol) != nullptr)
 	{
-		_v = (*p_vol)->get();
+		val = (*p_vol)->get();
 	}
 	else
 	{
-		_v = new string(null_vol);
+		val = new Value(null_val);
 	}
-	Volume* val = new Volume(_v);
+	Volume* vol = new Volume(val);
 
 	delete (*p_vol);
 	(*p_vol) = nullptr;
-	return val;
+	return vol;
 }
 
 // this pure virtual function need to be called in ~Token(),

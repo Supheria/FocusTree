@@ -6,11 +6,11 @@ extern WarningLog WarnLog;
 
 using namespace std;
 
-const string FileName = "token_types";
-const string NLL_VAL = "NULL_VALUE";
-const string NLL_KEY = "NULL_KEY";
-const string NLL_OP = "NULL_OPERATOR";
-const string NLL_TAG = "NULL_TAG";
+const Value FileName = "token_types";
+const Value NLL_VAL = "NULL_VALUE";
+const Value NLL_KEY = "NULL_KEY";
+const Value NLL_OP = "NULL_OPERATOR";
+const Value NLL_TAG = "NULL_TAG";
 //
 //
 //
@@ -18,7 +18,7 @@ const string NLL_TAG = "NULL_TAG";
 //
 //
 //
-ValueKey::ValueKey(Volume** const p_key, Volume** const p_val, Volume** const p_op, const std::string* _fr, const size_t& _lv)
+ValueKey::ValueKey(pVolume* const p_key, pVolume* const p_val, pVolume* const p_op, pcValue _fr, const size_t& _lv)
 	: Token(VAL_KEY, _vol_(p_key, NLL_KEY), _fr, _lv),
 	op(_vol_(p_op, NLL_OP)),
 	val(_vol_(p_val, NLL_VAL))
@@ -35,7 +35,7 @@ const Volume& ValueKey::value()
 	return *val;
 }
 
-void ValueKey::mix(Token* _t)
+void ValueKey::mix(pToken _t)
 {
 	if (_t == nullptr) { return; }
 	//
@@ -77,7 +77,7 @@ void ValueKey::del_extend()
 //
 //
 //
-Tag::Tag(Volume** const p_key, Volume** const p_tag, const std::string* _fr, const size_t& _lv)
+Tag::Tag(pVolume* const p_key, pVolume* const p_tag, pcValue _fr, const size_t& _lv)
 	: Token(TAG, _vol_(p_key, NLL_KEY), _fr, _lv),
 	tg(_vol_(p_tag, NLL_TAG))
 {
@@ -93,7 +93,7 @@ const tag_val& Tag::value()
 	return val;
 }
 
-void Tag::mix(Token* _t)
+void Tag::mix(pToken _t)
 {
 	if (_t == nullptr) { return; }
 	//
@@ -124,7 +124,7 @@ void Tag::mix(Token* _t)
 	delete _t;
 }
 
-void Tag::append(Volume** const p_vol)
+void Tag::append(pVolume* const p_vol)
 {
 	if ((*p_vol) == nullptr) { return; }
 
@@ -156,7 +156,7 @@ void Tag::del_extend()
 //
 //
 //
-Array::Array(Volume** p_key, const bool sarr, const std::string* _fr, const size_t& _lv)
+Array::Array(pVolume* p_key, const bool sarr, pcValue _fr, const size_t& _lv)
 	:Token(sarr ? S_ARRAY : VAL_ARRAY, _vol_(p_key, NLL_KEY), _fr, _lv),
 	addnew(false)
 {
@@ -172,7 +172,7 @@ void Array::set_new()
 	addnew = true;
 }
 
-void Array::mix(Token* _t)
+void Array::mix(pToken _t)
 {
 	if (_t == nullptr) { return; }
 	//
@@ -192,10 +192,10 @@ void Array::mix(Token* _t)
 	}
 	else
 	{
-		for (list<const Volume*> _arr : val)
+		for (list<pVolume> _ar : val)
 		{
-			list<const Volume*> arr;
-			for (auto it : _arr)
+			list<pVolume> arr;
+			for (auto it : _ar)
 			{
 				arr.push_back(new Volume(it));
 			}
@@ -207,12 +207,12 @@ void Array::mix(Token* _t)
 	delete _t;
 }
 
-void Array::append(Volume** const p_vol)
+void Array::append(pVolume* const p_vol)
 {
 	if ((*p_vol) == nullptr) { return; }
 	if (addnew)
 	{
-		list<const Volume*> arr = { new Volume((*p_vol)) };
+		list<pVolume> arr = { new Volume((*p_vol)) };
 		val.push_back(arr);
 		addnew = false;
 	}
@@ -246,7 +246,7 @@ void Array::del_extend()
 //
 //
 //
-Scope::Scope(Volume** p_key, const std::string* _fr, const size_t& _lv)
+Scope::Scope(pVolume* p_key, pcValue _fr, const size_t& _lv)
 	: Token(SCOPE, _vol_(p_key, NLL_KEY), _fr, _lv)
 {
 }
@@ -256,7 +256,7 @@ const tok_map& Scope::property()
 	return prop;
 }
 
-void Scope::mix(Token* _t)
+void Scope::mix(pToken _t)
 {
 	if (_t == nullptr) { return; }
 	if (token() != _t->token())
@@ -273,11 +273,10 @@ void Scope::mix(Token* _t)
 	}
 	else
 	{
-		
 		auto it = ((Scope*)_t)->property().begin();
 		while (it != prop.end())
 		{
-			const string* key = &(it->second->token().volumn());
+			pcValue key = &(it->second->token().volumn());
 			if (prop.count(key)) // has the key
 			{
 				prop[key]->mix(it->second);
@@ -291,7 +290,7 @@ void Scope::mix(Token* _t)
 	delete _t;
 }
 
-void Scope::append(Token* _t)
+void Scope::append(pToken _t)
 {
 	if (_t == nullptr) { return; }
 	//
@@ -307,7 +306,7 @@ void Scope::append(Token* _t)
 	}
 	else
 	{
-		const string* key = &(_t->token().volumn());
+		pcValue key = &(_t->token().volumn());
 		if (prop.count(key)) // has the key
 		{
 			prop[key]->mix(_t);

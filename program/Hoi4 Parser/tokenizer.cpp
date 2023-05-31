@@ -59,9 +59,9 @@ Tokenizer::Tokenizer(std::string filepath) :
 
 void Tokenizer::map_cache()
 {
-    Token* _t = tree->get(); // parse process failed will get nullptr
+    pToken _t = tree->get(); // parse process failed will get nullptr
     if (_t == nullptr) { return; }
-    const string* key = &(_t->token().volumn());
+    pcValue key = &(_t->token().volumn());
     if (tokenmap.count(key)) // has the key
     {
         tokenmap[key]->mix(_t);
