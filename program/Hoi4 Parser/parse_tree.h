@@ -34,7 +34,8 @@ public:
 	pToken get() const;
 	const ParseTree* get_from() const;
 private:
-	// last step is on
+	void dispose(pElement* p_e) const;
+private:
 	enum ParseSteps : size_t
 	{
 		NONE = 0,

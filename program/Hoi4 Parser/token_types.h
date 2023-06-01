@@ -47,24 +47,39 @@ private:
 };
 
 
-typedef std::list<std::list<pVolume>> arr_val;
-class Array : public Token
+typedef std::list<std::list<pVolume>> arr_v;
+class ValueArray : public Token
 {
-	arr_val val;
-	bool addnew;
+	arr_v val;
 public:
-	Array(pVolume* p_key, const bool sarr, const size_t& _lv);
-	const arr_val& value();
-	// set to a new array beginning, after next append will auto set to false
-	void set_new();
+	ValueArray(pVolume* p_key, const size_t& _lv);
+	const arr_v& value();
 	// will delete _t
 	void mix(pToken _t);
 	// will push_back and own _vol
 	void append(pElement* const p_e);
+	// push_back in to a new array
+	void append_new(pElement* const p_e);
 private:
 	void del_extend();
 };
 
+typedef std::list<std::list<pToken>> arr_t;
+class TagArray : public Token
+{
+	arr_t val;
+public:
+	TagArray(pVolume* p_key, const size_t& _lv);
+	const arr_t& Value();
+	// will delete _t
+	void mix(pToken _t);
+	// will push_back and own _vol
+	void append(pElement* const p_e);
+	// push_back in to a new array
+	void append_new(pElement* const p_e);
+private:
+	void del_extend();
+};
 
 typedef std::unordered_map<pcValue, pToken> tok_map;
 class Scope : public Token

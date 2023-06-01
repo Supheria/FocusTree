@@ -6,7 +6,7 @@ extern WarningLog WarnLog;
 
 using namespace std;
 
-const Value FileName = "token_types";
+const string FileName = "token_types";
 const Value NLL_VAL = "NULL_VALUE";
 const Value NLL_KEY = "NULL_KEY";
 const Value NLL_OP = "NULL_OPERATOR";
@@ -149,27 +149,21 @@ void Tag::del_extend()
 //
 //
 //
-// Array
+// ValueArray
 //
 //
 //
-Array::Array(pVolume* p_key, const bool sarr, const size_t& _lv)
-	:Token(sarr ? S_ARRAY : VAL_ARRAY, _vol_(p_key, NLL_KEY), _lv),
-	addnew(false)
+ValueArray::ValueArray(pVolume* p_key, const size_t& _lv)
+	:Token(VAL_ARRAY, _vol_(p_key, NLL_KEY), _lv)
 {
 }
 
-const arr_val& Array::value()
+const arr_v& ValueArray::value()
 {
 	return val;
 }
 
-void Array::set_new()
-{
-	addnew = true;
-}
-
-void Array::mix(pToken _t)
+void ValueArray::mix(pToken _t)
 {
 	if (_t == nullptr) { return; }
 	//
@@ -177,15 +171,15 @@ void Array::mix(pToken _t)
 	//
 	if (token() != _t->token())
 	{
-		ErrLog(FileName, "key-name mismatched of combination in Array");
+		ErrLog(FileName, "key-name mismatched of combination in ValueArray");
 	}
 	else if (type() != _t->type())
 	{
-		ErrLog(FileName, "type mismatched of combination in Array");
+		ErrLog(FileName, "type mismatched of combination in ValueArray");
 	}
 	else if (level() != _t->level())
 	{
-		ErrLog(FileName, "level mismatched of combination in Array");
+		ErrLog(FileName, "level mismatched of combination in ValueArray");
 	}
 	else
 	{
@@ -198,28 +192,26 @@ void Array::mix(pToken _t)
 			}
 			val.push_back(arr);
 		}
-		WarnLog(FileName, "combination in Array");
+		WarnLog(FileName, "combination in ValueArray");
 	}
 
 	delete _t;
 }
 
-void Array::append(pElement* const p_e)
+void ValueArray::append(pElement* const p_e)
 {
 	if (p_e == nullptr || (*p_e) == nullptr) { return; }
-	if (addnew)
-	{
-		list<pVolume> arr = { new Volume((p_e)) };
-		val.push_back(arr);
-		addnew = false;
-	}
-	else
-	{
-		val.back().push_back(new Volume((p_e)));
-	}
+	val.back().push_back(new Volume((p_e)));
 }
 
-void Array::del_extend()
+void ValueArray::append_new(pElement* const p_e)
+{
+	if (p_e == nullptr || (*p_e) == nullptr) { return; }
+	list<pVolume> arr = { new Volume((p_e)) };
+	val.push_back(arr);
+}
+
+void ValueArray::del_extend()
 {
 	auto arr = val.begin();
 	while (arr != val.end())

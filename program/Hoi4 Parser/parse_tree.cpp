@@ -19,6 +19,7 @@ const string FileName = "parse_tree";
 #define UNKNOWN_ERROR ErrLog(FileName, format( "unknown error at line({}), column({})", (*p_e)->line(), (*p_e)->column()))
 #define UNEXPECTED_KEY ErrLog(FileName, format( "unexpected key at line({}), column({})", (*p_e)->line(), (*p_e)->column()))
 #define UNEXPECTED_OPERATOR ErrLog(FileName, format( "unexpected operator at line({}), column({})", (*p_e)->line(), (*p_e)->column()))
+#define UNEXPECTED_VALUE ErrLog(FileName, format( "unexpected value at line({}), column({})", (*p_e)->line(), (*p_e)->column()))
 
 
 ParseTree::ParseTree() :
@@ -65,21 +66,28 @@ ParseTree::~ParseTree()
 const ParseTree* ParseTree::parse(pElement* const p_e) const
 {
 	const char& ch = (*p_e)->head();
+	//
+	// 3
+	//
 	if (step & TAG)
 	{
-		switch (step ^ TAG)
+		switch (ch)
 		{
-		case ON: // 3
-			break;
-		case VAL: // 4
-			break;
-		case OFF: // 5
-			break;
-		default:
-			UNKNOWN_ERROR;
-			delete (*p_e);
-			(*p_e) = nullptr;
+		case openb:
+		case equal:
+		case gter:
+		case less:
+			UNEXPECTED_VALUE;
+			dispose(p_e);
 			return from;
+		case closb:
+			fine = true;
+			dispose(p_e);
+			return from;
+		default:
+			((Tag*)build)->append(p_e);
+			step = ParseSteps(TAG);
+			return this;
 		}
 	}
 	else if (step & ARR)
@@ -87,32 +95,74 @@ const ParseTree* ParseTree::parse(pElement* const p_e) const
 		step = ParseSteps(step ^ ARR);
 		if (step & OP)
 		{
-			switch (step ^ OP)
+			step = ParseSteps(step ^ OP);
+			//
+			// 6
+			//
+			if (step & ON)
 			{
-			case ON: // 6
-				break;
-			case VAL: // 7
-				break;
-			case OFF: // 8
-				break;
-			default: // 9 - Arr | Op
-				break;
+				switch (ch)
+				{
+				case openb:
+				case equal:
+				case gter:
+				case less:
+					UNEXPECTED_VALUE;
+					dispose(p_e);
+					return from;
+				case closb:
+					step = ParseSteps(ARR | OP | OFF);
+					dispose(p_e);
+					return this;
+				default:
+					((Array*)build)->append(p_e);
+					break;
+				}
+			}
+			//
+			// 7
+			//
+			else if (step & VAL)
+			{
+
+			}
+			//
+			// 8
+			//
+			else if (step & OFF)
+			{
+
+			}
+			//
+			// 9 - Arr | Op
+			//
+			else
+			{
+
 			}
 		}
 		else
 		{
 			switch (step)
 			{
-			case ON: // 10
+				//
+				// 10
+				//
+			case ON:
 				break;
-			case OFF: // 11
+				//
+				// 11
+				//
+			case OFF:
 				break;
-			case KEY: // 12
+				//
+				// 12
+				//
+			case KEY:
 				break;
 			default:
 				UNKNOWN_ERROR;
-				delete (*p_e);
-				(*p_e) = nullptr;
+				dispose(p_e);
 				return from;
 			}
 		}
@@ -121,76 +171,96 @@ const ParseTree* ParseTree::parse(pElement* const p_e) const
 	{
 		switch (step ^ OP)
 		{
-		case ON: // 13
+			//
+			// 13
+			//
+		case ON:
 			break;
-		case OFF: // 14
+			//
+			// 14
+			//
+		case OFF:
 			break;
-		case VAL: // 15
+			//
+			// 15
+			//
+		case VAL:
 			break;
-		default: // 16 - OP
+			//
+			// 16 - OP
+			//
+		default:
 			break;
 		}
 	}
+	//
+	// 1
+	//
+	else if (step & KEY)
+	{
+		switch (ch)
+		{
+		case equal:
+		case gter:
+		case less:
+			op = new Volume(p_e);
+			step = OP;
+			return this;
+		default:
+			UNEXPECTED_OPERATOR;
+			dispose(p_e);
+			return from;
+		}
+	}
+	//
+	// 2
+	//
+	else if (step & VAL)
+	{
+		switch (ch)
+		{
+		case openb:
+			build = new Tag(&key, &value, level);
+			step = ParseSteps(TAG);
+			dispose(p_e);
+			return this;
+		default:
+			fine = true;
+			build = new ValueKey(&key, &value, &op, level);
+			// dispose(p_e); // leave *p_e to next tree
+			return from;
+		}
+	}
+	//
+	// 16
+	//
+	else if (step & SUB)
+	{
+		// need to delete curr_sub
+		// this step means sub parsed already
+		return this;
+	} 
+	//
+	// 0 - None
+	//
 	else
 	{
-		switch (step)
+		switch (ch)
 		{
-		case KEY: // 1
-			switch (ch)
-			{
-			case equal:
-			case gter:
-			case less:
-				op = new Volume(p_e);
-				step = OP;
-				break;
-			default:
-				UNEXPECTED_OPERATOR;
-				delete (*p_e);
-				(*p_e) = nullptr;
-				return from;
-			}
-			break;
-		case VAL: // 2
-			if (ch == openb)
-			{
-				delete (*p_e);
-				(*p_e) = nullptr;
-				step = ParseSteps(TAG | ON);
-			}
-			else
-			{
-				fine = true;
-				build = new ValueKey(&key, &value, &op, level);
-				return from;
-			}
-			break;
-		case SUB: // 16
-			// need to delete curr_sub
-			// this step means sub parsed already
-			break;
-		default: // 0 - None
-			switch (ch)
-			{
-			case openb:
-			case closb:
-			case equal:
-			case gter:
-			case less:
-				UNEXPECTED_KEY;
-				delete (*p_e);
-				(*p_e) = nullptr;
-				return from;
-			default:
-				key = new Volume(p_e);
-				step = KEY;
-				break;
-			}
-			break;
+		case openb:
+		case closb:
+		case equal:
+		case gter:
+		case less:
+			UNEXPECTED_KEY;
+			dispose(p_e);
+			return from;
+		default:
+			key = new Volume(p_e);
+			step = KEY;
+			return this;
 		}
 	}
-
-	return this;
 }
 
 pToken ParseTree::get() const
@@ -209,4 +279,10 @@ pToken ParseTree::get() const
 const ParseTree* ParseTree::get_from() const
 {
 	return from;
+}
+
+void ParseTree::dispose(pElement* p_e) const
+{
+	delete (*p_e);
+	(*p_e) = nullptr;
 }

@@ -13,7 +13,7 @@ public:
 		VAL_KEY,
 		TAG,
 		VAL_ARRAY,
-		S_ARRAY,
+		TAG_ARRAY,
 		SCOPE
 	};
 private:
