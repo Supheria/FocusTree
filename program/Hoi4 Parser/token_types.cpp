@@ -228,6 +228,59 @@ void ValueArray::del_extend()
 //
 //
 //
+// TagArray
+//
+//
+//
+TagArray::TagArray(pVolume* p_key, const size_t& _lv)
+	: Token(TAG_ARRAY, _vol_(p_key, NLL_KEY), _lv)
+{
+}
+
+const arr_t& TagArray::Value()
+{
+	return val;
+}
+
+void TagArray::mix(pToken _t)
+{
+	if (_t == nullptr) { return; }
+	//
+	// combination
+	//
+	if (token() != _t->token())
+	{
+		ErrLog(FileName, "key-name mismatched of combination in ValueArray");
+	}
+	else if (type() != _t->type())
+	{
+		ErrLog(FileName, "type mismatched of combination in ValueArray");
+	}
+	else if (level() != _t->level())
+	{
+		ErrLog(FileName, "level mismatched of combination in ValueArray");
+	}
+	else
+	{
+		for (pair<pVolume, list<pV _ar : val)
+		{
+			list<pVolume> arr;
+			for (auto it : _ar)
+			{
+				arr.push_back(new Volume(it));
+			}
+			val.push_back(arr);
+		}
+		WarnLog(FileName, "combination in ValueArray");
+	}
+
+	delete _t;
+}
+
+
+//
+//
+//
 // Scope
 //
 //

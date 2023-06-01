@@ -64,7 +64,7 @@ private:
 	void del_extend();
 };
 
-typedef std::list<std::list<pToken>> arr_t;
+typedef std::unordered_map<pVolume, std::list<pVolume>> arr_t;
 class TagArray : public Token
 {
 	arr_t val;
@@ -73,8 +73,10 @@ public:
 	const arr_t& Value();
 	// will delete _t
 	void mix(pToken _t);
-	// will push_back and own _vol
+	// will push_back into tag
 	void append(pElement* const p_e);
+	// push_back as a tag
+	void append_tag(pElement* const p_e);
 	// push_back in to a new array
 	void append_new(pElement* const p_e);
 private:
