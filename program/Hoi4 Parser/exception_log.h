@@ -2,6 +2,7 @@
 #define _EXCEPTION_LOG_H
 
 #include <fstream>
+#include <format>
 
 class ExceptionLog
 {
@@ -19,7 +20,7 @@ public:
 	ErrorLog();
 	// file name without extension
 	void operator()(const std::string fname_no_ex, const std::string message);
-} extern ErrLog;
+} extern Errlog;
 
 class WarningLog : public ExceptionLog
 {
@@ -27,7 +28,7 @@ public:
 	WarningLog();
 	// file name without extension
 	void operator()(const std::string fname_no_ex, const std::string message);
-} extern WarnLog;
+} extern Warnlog;
 
 #endif // ! _EXCEPTION_LOG_H
 

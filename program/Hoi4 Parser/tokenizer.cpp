@@ -1,4 +1,5 @@
 #include "tokenizer.h"
+#include "exception_log.h"
 
 const CompareChar Tokenizer::delimiter({ '\t', ' ', '\n', '\r', '#', '=', '>', '<', '}', '{', '"', (char)-1 });
 const CompareChar Tokenizer::blank({ '\t', ' ', '\n', '\r', (char)-1 });
@@ -8,10 +9,14 @@ const char Tokenizer::note = '#';
 const char Tokenizer::quote = '"';
 const char Tokenizer::escape = '\\';
 
+extern WarningLog Warnlog;
+
 using namespace std;
 
+const string FileName = "tokenizer";
+
 Tokenizer::Tokenizer(std::string filepath) :
-    line(0),
+    line(1),
     column(0),
     tree(nullptr),
     elm(nullptr),
@@ -41,7 +46,7 @@ Tokenizer::Tokenizer(std::string filepath) :
                                             // if parse failed, any tree will return its from pointer
             if (_tree == nullptr) // main-tree finish, go to next main-tree
             {
-                cache_map();
+                cache_list();
                 delete tree;
                 tree = new ParseTree();
             }
@@ -52,16 +57,17 @@ Tokenizer::Tokenizer(std::string filepath) :
     fin.close();
 }
 
-void Tokenizer::cache_map()
+// to combine maybe the same key Tokens in tokenmap
+const token_list& Tokenizer::get()
 {
-    pToken _t = tree->get(); // parse process unfinished or failed will get nullptr
+    return tokens;
+}
+
+void Tokenizer::cache_list()
+{
+    pToken _t = tree->once_get(); // parse process unfinished or failed will get nullptr
     if (_t == nullptr) { return; }
-    pcValue key = &(_t->token().volumn());
-    if (tokenmap.count(key)) // has the key
-    {
-        tokenmap[key]->mix(_t);
-    }
-    else { tokenmap[key] = _t; }
+    tokens.push_back(_t);
 }
 
 bool Tokenizer::compose()
@@ -171,12 +177,22 @@ char Tokenizer::fget()
 
 void Tokenizer::del_tree()
 {
-    while (tree->get_from() != nullptr)
+    if (tree->get_from() != nullptr)
     {
+        Warnlog(FileName, format("interruption at line({}), column({})", line, column));
+        tree->get_from()->append(tree->once_get());
         const ParseTree* _tree = tree->get_from();
         delete tree;
         tree = _tree;
+        while (tree->get_from() != nullptr)
+        {
+            tree->get_from()->append(tree->once_get());
+            const ParseTree* _tree = tree->get_from();
+            delete tree;
+            tree = _tree;
+        }
     }
+    cache_list(); // 
     delete tree;
     tree = nullptr;
 }

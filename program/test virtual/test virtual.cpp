@@ -19,7 +19,7 @@ protected:
         TypeB
     } type;
 public:
-    ~Base() { cout << "del base"; }
+    virtual ~Base() { cout << "del base\n"; }
 public:
     Base(Type _t, int a) 
     { 
@@ -37,6 +37,7 @@ protected:
 class A : public Base
 {
 public:
+    ~A() { cout << "del A\n"; }
     int a = 1;
     struct S
     {
@@ -75,6 +76,7 @@ public:
 class B : public Base
 {
 public:
+    ~B() { cout << "del B\n"; }
     B() : Base(TypeB, 10) {}
     B* append(B* base)const { cout << "B::append()\n"; }
     void append() const { cout << "B::append()\n"; }
@@ -125,14 +127,27 @@ void test(Steps step)
     }
 }
 
+typedef list<list<string>> T;
 int main()
 {
-    char a = 't';
+    Base* a = new A();
+    Base* b = new B();
+    delete a;
+    delete b;
+    cout << 0;
+    /*T ls;
+    list<string>* a = new list<string>;
+    ls.push_back(*a);
+    a->push_back("one");
+    delete a;
+    ls.~list();
+    a->push_back("test");*/
+    /*char a = 't';
     const char* _a = new char(a);
     const char** const p_a = &_a;
     delete (*p_a);
     (*p_a) = nullptr;
-    int b = 0;
+    int b = 0;*/
 
     /*test(Steps(TAG | KEY));
     test(Steps(TAG | OP));

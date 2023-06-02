@@ -20,6 +20,13 @@ struct Volume
 private:
 	pcValue const val;
 	mutable bool lose_val;
+private:
+	// abandon to use
+	Volume(const Volume& _vol) :
+		val(nullptr),
+		lose_val(false)
+	{
+	}
 public:
 	// will call _e->get() that transfers ownership, 
 	// and will DELETE p_e and set it to nullptr 
@@ -30,49 +37,53 @@ public:
 		delete (*p_e);
 		(*p_e) = nullptr;
 	}
+	Volume(const Value& _v) :
+		val(new std::string(_v)),
+		lose_val(false)
+	{
+	}
 	// get the ownership of _vol
 	Volume(pcValue _v) :
 		val(_v),
 		lose_val(false)
 	{
 	}
-	// will call _vol.get() that transfers ownership,
-	// and WON'T delete _vol
-	Volume(const Volume& _vol) :
-		val(_vol.get()),
-		lose_val(false)
-	{
-	}
 	// will call _vol->get() that transfers ownership,
-	// and WON'T delete _vol
-	Volume(const pVolume _vol) :
-		val(_vol->get()),
+	// and will DELETE p_vol and set it to nullptr 
+	Volume(pVolume* const p_vol) :
+		val((*p_vol)->get()),
 		lose_val(false)
 	{
+		delete (*p_vol);
+		(*p_vol) = nullptr;
 	}
 	~Volume()
 	{
 		if (!lose_val) { delete val; }
 	}
-	const Value& volumn() const
+	const Value& value() const
 	{
 		return *val;
 	}
 	//
-	// if called for any time, ownership of pointer to vol will lose, and ~Value() won't delete vol
+	// if called for any time, ownership of pointer to vol will lose, and ~Value() won't delete vol 
 	//
 	pcValue get() const
 	{
 		lose_val = true;
 		return val;
 	}
+	const char& head()
+	{
+		return (*val)[0];
+	}
 	friend bool operator==(const Volume& lhs, const Volume& rhs)
 	{
-		return lhs.volumn() == rhs.volumn();
+		return lhs.value() == rhs.value();
 	}
 	friend bool operator!=(const Volume& lhs, const Volume& rhs)
 	{
-		return lhs.volumn() != rhs.volumn();
+		return lhs.value() != rhs.value();
 	}
 };
 

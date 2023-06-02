@@ -1,8 +1,8 @@
 #include "exception_log.h"
 #include <sstream>
 
-ErrorLog ErrLog = ErrorLog();
-WarningLog WarnLog = WarningLog();
+ErrorLog Errlog = ErrorLog();
+WarningLog Warnlog = WarningLog();
 
 using namespace std;
 

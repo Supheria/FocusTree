@@ -22,11 +22,12 @@ private:
 	pElement elm;
 	std::stringstream token;
 	std::ifstream fin;
-	tok_map tokenmap;
+	token_list tokens;
 public:
 	Tokenizer(std::string filepath);
+	const token_list& get();
 private:
-	void cache_map();
+	void cache_list();
 	bool compose();
 	char fget();
 	// need to test whether current tree has return to root,

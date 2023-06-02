@@ -1,1 +1,72 @@
-mo 
+focus = { #wah
+		id = AST_additional_militia_training
+		icon = GFX_goal_generic_allies_build_infantry#wh
+		x = 2
+		y = 0
+
+		cost = 10
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+
+		}
+		
+		bypass = {
+
+		}
+test
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = yes
+		search_filters = { FOCUS_FILTER_RESEARCH  asd}
+
+		completion_reward = {
+			army_experience = 25
+			add_doctrine_cost_reduction = {
+				name = AST_additional_militia_training
+				cost_reduction = 0.5
+				uses = 1
+				category = land_doctrine
+			}
+		}
+	}
+
+	focus = {
+		id = AST_royal_australian_artillery
+		icon = GFX_goal_generic_army_artillery2
+		prerequisite = { focus = AST_additional_militia_training }
+		x = -1
+		y = 1
+		relative_position_id = AST_additional_militia_training
+
+		cost = 10
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+
+		}
+		
+		bypass = {
+
+		}
+
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = yes
+		search_filters = { FOCUS_FILTER_RESEARCH }
+
+		completion_reward = {
+			add_tech_bonus = {
+				name = AST_royal_australian_artillery
+				bonus = 1.0
+				uses = 1
+				category = artillery
+			}
+		}
+	}

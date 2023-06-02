@@ -11,7 +11,7 @@ private:
 	const size_t ln;
 	const size_t col;
 	mutable bool lose_val;
-	pcValue val;
+	pcValue const val;
 public:
 	// for marker
 	Element(const char& marker, const size_t& line, const size_t& column) :
