@@ -9,9 +9,9 @@ Token::Token(const T& _t, pVolume _tok, const size_t& _lv) :
 {
 }
 // this pure virtual function need to be called in deconstruction,
-							// so it should have implementation.
-							// pure virtual func is just a kind of declaration,
-							// no limitations on implementation.
+				// so it should have implementation.
+				// pure virtual func is just a kind of declaration,
+				// no limitations on implementation.
 Token::~Token()
 {
 	delete tok;
@@ -39,25 +39,18 @@ const size_t& Token::level() const
 	return lv;
 }
 
-bool Token::operator==(const pToken _t)
-{
-	return type() == _t->type() && token() == _t->token() && level() == _t->level();
-}
-
 pVolume Token::_vol_(pVolume* const p_vol, const Value& null_val)
 {
-	pcValue val = nullptr;
 	if (p_vol != nullptr && (*p_vol) != nullptr)
 	{
-		val = (*p_vol)->get();
+		pcValue val = (*p_vol)->get();
 		delete (*p_vol);
 		(*p_vol) = nullptr;
+		return new Volume(val);
 	}
 	else
 	{
-		val = new Value(null_val);
+		pcValue val = new Value(null_val);
+		return new Volume(val);
 	}
-	pVolume vol = new Volume(val);
-
-	return vol;
 }

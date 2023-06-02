@@ -4,13 +4,13 @@
 #include <string>
 #include "element.h"
 
-typedef std::string Value;
-
 // === principle of value-passing between Volume pointers ===
 // if want to pass the value from a Volume pointer to another,
 // use Volume::get() to pass its value to a new dynamic Volumn pointer, 
 // such as
 //	pNewVol = new Volume(pOld->get()) ¡Ì
+// 
+// or pass a pointer to pVolume so that delete and set pVolume to nullptr instantly,
 // 
 // other than simply pass a Volumn pointer.
 //	pNewVol = pOld ¡Á
@@ -21,15 +21,15 @@ private:
 	pcValue const val;
 	mutable bool lose_val;
 private:
-	// abandon to use
+	// forbid to use
 	Volume(const Volume& _vol) :
 		val(nullptr),
 		lose_val(false)
 	{
 	}
 public:
-	// will call _e->get() that transfers ownership, 
-	// and will DELETE p_e and set it to nullptr 
+	// will call (*p_e)->get() that transfers ownership of value, 
+	// and will DELETE (*p_e) and set it to nullptr 
 	Volume(pElement* const p_e) :
 		val((*p_e)->get()),
 		lose_val(false)
@@ -37,19 +37,20 @@ public:
 		delete (*p_e);
 		(*p_e) = nullptr;
 	}
+	// use Value to create a new pcValue
 	Volume(const Value& _v) :
 		val(new std::string(_v)),
 		lose_val(false)
 	{
 	}
-	// get the ownership of _vol
+	// get the ownership of value
 	Volume(pcValue _v) :
 		val(_v),
 		lose_val(false)
 	{
 	}
-	// will call _vol->get() that transfers ownership,
-	// and will DELETE p_vol and set it to nullptr 
+	// will call (*p_vol)->get() that transfers ownership of value,
+	// and will DELETE (*p_vol) and set it to nullptr 
 	Volume(pVolume* const p_vol) :
 		val((*p_vol)->get()),
 		lose_val(false)
@@ -66,7 +67,7 @@ public:
 		return *val;
 	}
 	//
-	// if called for any time, ownership of pointer to vol will lose, and ~Value() won't delete vol 
+	// if called for any time, ownership of value will lose, that ~Value() won't delete it 
 	//
 	pcValue get() const
 	{

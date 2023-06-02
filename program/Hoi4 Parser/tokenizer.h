@@ -16,6 +16,7 @@ public:
 	static const CompareChar delimiter, blank, endline, marker;
 	static const char note, quote, escape;
 private:
+	std::string path;
 	size_t line;
 	size_t column;
 	const ParseTree* tree;
@@ -25,8 +26,12 @@ private:
 	token_list tokens;
 public:
 	Tokenizer(std::string filepath);
+	~Tokenizer();
+	// for t in get(), use t->token()->get() to tansfer the ownership of value, 
+							// and so for other pVolume -s of t
 	const token_list& get();
 private:
+	void parse();
 	void cache_list();
 	bool compose();
 	char fget();

@@ -16,13 +16,32 @@ using namespace std;
 const string FileName = "tokenizer";
 
 Tokenizer::Tokenizer(std::string filepath) :
+    path(filepath),
     line(1),
     column(0),
     tree(nullptr),
     elm(nullptr),
     state(None)
 {
-    fin.open(filepath, ios::binary);
+}
+
+Tokenizer::~Tokenizer()
+{
+    for (auto t : tokens)
+    {
+        delete t;
+    }
+}
+
+const token_list& Tokenizer::get()
+{
+    parse();
+    return tokens;
+}
+
+void Tokenizer::parse()
+{
+    fin.open(path, ios::binary);
     if (!fin.is_open() || fin.eof()) { return; }
     //
     // remove BOM
@@ -41,9 +60,9 @@ Tokenizer::Tokenizer(std::string filepath) :
         if (compose())
         {
             auto _tree = tree->parse(&elm);  // tree->parse() will return its sub pointer if call tree->sub->parse()
-                                            // and will return its from pointer when parse process finish
-                                            // main tree's from pointer is nullptr
-                                            // if parse failed, any tree will return its from pointer
+            // and will return its from pointer when parse process finish
+            // main tree's from pointer is nullptr
+            // if parse failed, any tree will return its from pointer
             if (_tree == nullptr) // main-tree finish, go to next main-tree
             {
                 cache_list();
@@ -55,12 +74,6 @@ Tokenizer::Tokenizer(std::string filepath) :
     } while (!fin.eof());
     del_tree();
     fin.close();
-}
-
-// to combine maybe the same key Tokens in tokenmap
-const token_list& Tokenizer::get()
-{
-    return tokens;
 }
 
 void Tokenizer::cache_list()

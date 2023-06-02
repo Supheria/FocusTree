@@ -57,27 +57,12 @@ void Tag::append(pElement* const p_e)
 //
 //
 //
-// Array
-//
-//
-//
-Array::Array(const T& _t, pVolume* p_key, const size_t& _lv)
-	: Token(_t, _vol_(p_key, NLL_KEY), _lv)
-{
-}
-
-Array::~Array()
-{
-}
-//
-//
-//
 // ValueArray
 //
 //
 //
 ValueArray::ValueArray(pVolume* p_key, const size_t& _lv)
-	: Array(VAL_ARRAY, p_key, _lv)
+	: Token(VAL_ARRAY, _vol_(p_key, NLL_KEY), _lv)
 {
 }
 
@@ -97,16 +82,16 @@ const arr_v& ValueArray::value()
 	return val;
 }
 
-void ValueArray::append(pElement* const p_e)
+void ValueArray::append(pVolume* const p_vol)
 {
-	if (p_e == nullptr || (*p_e) == nullptr) { return; }
-	val.back().push_back(new Volume((p_e)));
+	if (p_vol == nullptr || (*p_vol) == nullptr) { return; }
+	val.back().push_back(new Volume((p_vol)));
 }
 
-void ValueArray::append_new(pElement* const p_e)
+void ValueArray::append_new(pVolume* const p_vol)
 {
-	if (p_e == nullptr || (*p_e) == nullptr) { return; }
-	volume_list vlst = { new Volume((p_e)) };
+	if (p_vol == nullptr || (*p_vol) == nullptr) { return; }
+	volume_list vlst = { new Volume((p_vol)) };
 	val.push_back(vlst);
 }
 //
@@ -117,7 +102,7 @@ void ValueArray::append_new(pElement* const p_e)
 //
 //
 TagArray::TagArray(pVolume* p_key, const size_t& _lv)
-	: Array(TAG_ARRAY, p_key, _lv)
+	: Token(TAG_ARRAY, _vol_(p_key, NLL_KEY), _lv)
 {
 }
 
@@ -141,28 +126,27 @@ const arr_t& TagArray::value()
 	return val;
 }
 
-void TagArray::append(pElement* const p_e)
+void TagArray::append(pVolume* const p_vol)
 {
-	if (p_e == nullptr || (*p_e) == nullptr) { return; }
-	val.back().back().second.push_back(new Volume(p_e));
+	if (p_vol == nullptr || (*p_vol) == nullptr) { return; }
+	val.back().back().second.push_back(new Volume(p_vol));
 }
 
-void TagArray::append_tag(pElement* const p_e)
+void TagArray::append_tag(pVolume* const p_vol)
 {
-	if (p_e == nullptr || (*p_e) == nullptr) { return; }
+	if (p_vol == nullptr || (*p_vol) == nullptr) { return; }
 	tag_val tv;
-	tag_pair tpr = { new Volume(p_e), tv };
+	tag_pair tpr = { new Volume(p_vol), tv };
 	val.back().push_back(tpr);
-	val.back().back().second.push_back(new Volume(p_e));
 }
 
-void TagArray::append_new(pElement* const p_e)
+void TagArray::append_new(pVolume* const p_vol)
 {
+	if (p_vol == nullptr || (*p_vol) == nullptr) { return; }
 	tag_val tv;
-	tag_pair tpr = { new Volume(p_e), tv };
+	tag_pair tpr = { new Volume(p_vol), tv };
 	tag_pair_list tplst = { tpr };
 	val.push_back(tplst);
-	val.back().back().second.push_back(new Volume(p_e));
 }
 //
 //

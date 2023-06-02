@@ -19,9 +19,35 @@ void print_token(const token_list& _s)
 	}
 }
 
+void get_val(const token_list& _s, list<pcValue>& test)
+{
+	for (auto t : _s)
+	{
+		switch (t->type())
+		{
+		case Token::TAG_ARRAY:
+			for (tag_pair_list lst : ((TagArray*)t)->value())
+			{
+				for (tag_pair tpr : lst)
+				{
+					for (pVolume v : tpr.second)
+					{
+						cout << *(v->get());
+					}
+				}
+			}
+			break;
+		default:
+			break;
+		}
+	}
+}
 int main()
 {
 	Tokenizer parser("test.txt");
 	const token_list& tokens = parser.get();
 	print_token(tokens);
+	list<pcValue> test;
+	get_val(tokens, test);
+	//parser.~Tokenizer();
 }

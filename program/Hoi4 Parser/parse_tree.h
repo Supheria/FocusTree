@@ -15,32 +15,34 @@ private:
 	mutable pVolume key;
 	mutable pVolume op; // Token delete op and set it to nullptr when pass to it
 	mutable pVolume value; // same as above ^
-	mutable pVolume arr_key; // same as above ^
+	mutable pVolume arr; // same as above ^
 	mutable pToken build;
-	bool sarr; // use struct-array
 	const ParseTree* const from; // nullptr means to main-Tree or say root-Tree
 	mutable ParseTree* curr_sub;
 	const size_t level;
-	mutable bool fine;
 	mutable bool lose_built;
 public:
 	ParseTree();
 	// for sub-tree
 	ParseTree(const ParseTree* _from, pVolume _key, pVolume _op, const size_t& _level);
 	~ParseTree();
-	const ParseTree* parse(pElement* p_e) const;
 	// for tokenizer to use
-						// only can get build on time,
-						// when get will transfer ownership of build that won't 
-						// delete the pToken in ~ParseTree()
-	pToken once_get() const; 
+						// can only get build on time,
+						// when get will transfer ownership of build that 
+						// won't delete in ~ParseTree()
+	pToken once_get() const;
 	// for tokenizer to use, test whether parse process has interrupted
 	const ParseTree* get_from() const;
-	// for sub-tree to use, for root-tree should use get()
-								// if sub-tree has done, will append its build and lose ownership,
-								// otherwise won't pass anything
+	// for sub-tree to use, if for root-tree should use once_get()
+								// if sub-tree has done, 
+								// will append its build to from-tree and lose ownership
 	void append(pToken _t) const;
+	const ParseTree* parse(pElement* const p_e) const;
 private:
+	const ParseTree* par_sub(pElement* const p_e) const;
+	const ParseTree* par_arr(pElement* const p_e) const;
+	const ParseTree* par_tag_arr(pElement* const p_e) const;
+	const ParseTree* par_val_arr(pElement* const p_e) const;
 	void dispose(pElement* p_e) const;
 	void done() const;
 private:
@@ -52,11 +54,9 @@ private:
 		VAL = 0b1 << 2,
 		TAG = 0b1 << 3,
 		ARR = 0b1 << 4,
-		VAL_ARR = 0b1 << 5,
-		TAG_ARR = 0b1 << 6,
-		SUB = 0b1 << 7,
-		ON = 0b1 << 8,
-		OFF = 0b1 << 9
+		SUB = 0b1 << 5,
+		ON = 0b1 << 6,
+		OFF = 0b1 << 7
 	} mutable step; 
 };
 
