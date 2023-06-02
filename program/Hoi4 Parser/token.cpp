@@ -17,7 +17,7 @@ Token::~Token()
 	delete tok;
 }
 
-Token::Token(pVolume* const p_tok, const size_t& _lv) :
+Token::Token(pElement* const p_tok, const size_t& _lv) :
 	tp(TOKEN),
 	tok(_vol_(p_tok, "NULL_VALUE")),
 	lv(_lv)
@@ -39,18 +39,14 @@ const size_t& Token::level() const
 	return lv;
 }
 
-pVolume Token::_vol_(pVolume* const p_vol, const Value& null_val)
+pVolume Token::_vol_(pElement* const p_e, const Value& null_val)
 {
-	if (p_vol != nullptr && (*p_vol) != nullptr)
+	if (p_e != nullptr && (*p_e) != nullptr)
 	{
-		pcValue val = (*p_vol)->get();
-		delete (*p_vol);
-		(*p_vol) = nullptr;
-		return new Volume(val);
+		return new Volume(p_e);
 	}
 	else
 	{
-		pcValue val = new Value(null_val);
-		return new Volume(val);
+		return new Volume(null_val);
 	}
 }

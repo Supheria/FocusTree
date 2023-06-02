@@ -24,10 +24,10 @@ protected:
 	// inherited class should not pass nullptr of _tok, use _vol_() to get a Value from an Element
 	Token(const T& _t, pVolume _tok, const size_t& _lv);
 	// return a new Volume, and delete p_vol
-	static pVolume _vol_(pVolume* const p_vol, const Value& null_val);
+	static pVolume _vol_(pElement* const p_e, const Value& null_val);
 public:
 	// to create a pure token, will delete (*p_key) and set it to nullptr
-	Token(pVolume* const p_tok, const size_t& _lv);
+	Token(pElement* const p_tok, const size_t& _lv);
 	const T& type() const;
 	// use token().get() to transfer ownership of value of tok
 	const Volume& token() const;

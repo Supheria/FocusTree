@@ -12,10 +12,10 @@ private:
 	// Token will delete key and set it to nullptr when pass to it
 						 // if will have sub-tree,
 						 // need to set from_key to key->get() before key pass a to new Token
-	mutable pVolume key;
-	mutable pVolume op; // Token delete op and set it to nullptr when pass to it
-	mutable pVolume value; // same as above ^
-	mutable pVolume arr; // same as above ^
+	mutable pElement key;
+	mutable pElement op; // Token delete op and set it to nullptr when pass to it
+	mutable pElement value; // same as above ^
+	mutable pElement arr; // same as above ^
 	mutable pToken build;
 	const ParseTree* const from; // nullptr means to main-Tree or say root-Tree
 	mutable ParseTree* curr_sub;
@@ -24,7 +24,7 @@ private:
 public:
 	ParseTree();
 	// for sub-tree
-	ParseTree(const ParseTree* _from, pVolume _key, pVolume _op, const size_t& _level);
+	ParseTree(const ParseTree* _from, pElement _key, pElement _op, const size_t& _level);
 	~ParseTree();
 	// for tokenizer to use
 						// can only get build on time,

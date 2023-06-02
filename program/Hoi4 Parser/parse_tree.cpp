@@ -36,7 +36,7 @@ ParseTree::ParseTree() :
 }
 
 // call for sub-tree
-ParseTree::ParseTree(const ParseTree* _from, pVolume _key, pVolume _op, const size_t& _level) :
+ParseTree::ParseTree(const ParseTree* _from, pElement _key, pElement _op, const size_t& _level) :
 	key(_key),
 	op(_op),
 	value(nullptr),
@@ -120,7 +120,7 @@ const ParseTree* ParseTree::parse(pElement* const p_e) const
 				return this;
 			default:
 				step = ParseSteps(SUB | KEY);
-				value = new Volume(p_e);
+				value = *p_e; *p_e = nullptr;
 				build = new Scope(&key, level);
 				return this;
 			}
@@ -154,7 +154,7 @@ const ParseTree* ParseTree::parse(pElement* const p_e) const
 				}
 			default:
 				step = ParseSteps(VAL);
-				value = new Volume(p_e);
+				value = *p_e; *p_e = nullptr;
 				build = new Tag(&key, &op, &value, level);
 				return this;
 			}
@@ -171,7 +171,7 @@ const ParseTree* ParseTree::parse(pElement* const p_e) const
 		case gter:
 		case less:
 			step = OP;
-			op = new Volume(p_e);
+			op = *p_e; *p_e = nullptr;
 			return this;
 		default:
 			UNEXPECTED_OPERATOR;
@@ -237,7 +237,7 @@ const ParseTree* ParseTree::parse(pElement* const p_e) const
 			return from;
 		default:
 			step = KEY;
-			key = new Volume(p_e);
+			key = *p_e; *p_e = nullptr;
 			return this;
 		}
 	}
@@ -266,12 +266,12 @@ const ParseTree* ParseTree::par_sub(pElement* const p_e) const
 		case gter:
 		case less:
 			step = SUB;
-			curr_sub = new ParseTree(this, new Volume(&value), new Volume(p_e), level + 1);
+			curr_sub = new ParseTree(this, new Element(&value), new Element(p_e), level + 1);
 			return curr_sub;
 		default:
 			// step = ParseSteps(SUB | KEY);
 			((Scope*)build)->append(new Token(&value, level + 1));
-			value = new Volume(p_e);
+			value = *p_e; *p_e = nullptr;
 			return this;
 		}
 	}
@@ -294,7 +294,7 @@ const ParseTree* ParseTree::par_sub(pElement* const p_e) const
 		default:
 			delete curr_sub;
 			step = ParseSteps(SUB | KEY);
-			value = new Volume(p_e);
+			value = *p_e; *p_e = nullptr;
 			return this;
 		}
 	}
@@ -366,7 +366,7 @@ const ParseTree* ParseTree::par_arr(pElement* const p_e) const
 			step = ParseSteps(ARR | VAL);
 			build = new ValueArray(&key, level);
 			((ValueArray*)build)->append_new(&arr);
-			arr = new Volume(p_e);
+			arr = *p_e; *p_e = nullptr;
 			((ValueArray*)build)->append(&arr);
 			return this;
 		}
@@ -391,7 +391,7 @@ const ParseTree* ParseTree::par_arr(pElement* const p_e) const
 			return this;
 		default:
 			step = ParseSteps(ARR | KEY);
-			arr = new Volume(p_e);
+			arr = *p_e; *p_e = nullptr;
 			return this;
 		}
 	}
@@ -441,7 +441,7 @@ const ParseTree* ParseTree::par_val_arr(pElement* const p_e) const
 			return this;
 		default:
 			step = ParseSteps(ARR | VAL | KEY);
-			arr = new Volume(p_e);
+			arr = *p_e; *p_e = nullptr;
 			((ValueArray*)build)->append_new(&arr);
 			return this;
 		}
@@ -466,7 +466,7 @@ const ParseTree* ParseTree::par_val_arr(pElement* const p_e) const
 			return this;
 		default:
 			step = ParseSteps(ARR | VAL);
-			arr = new Volume(p_e);
+			arr = *p_e; *p_e = nullptr;
 			((ValueArray*)build)->append(&arr);
 			return this;
 		}
@@ -491,7 +491,7 @@ const ParseTree* ParseTree::par_val_arr(pElement* const p_e) const
 			return this;
 		default:
 			// step = ParseSteps(ARR | VAL);
-			arr = new Volume(p_e);
+			arr = *p_e; *p_e = nullptr;
 			((ValueArray*)build)->append(&arr);
 			return this;
 		}
@@ -524,7 +524,7 @@ const ParseTree* ParseTree::par_tag_arr(pElement* const p_e) const
 				return this;
 			default:
 				step = ParseSteps(ARR | TAG | KEY);
-				arr = new Volume(p_e);
+				arr = *p_e; *p_e = nullptr;
 				((TagArray*)build)->append_tag(&arr);
 				return this;
 			}
@@ -549,7 +549,7 @@ const ParseTree* ParseTree::par_tag_arr(pElement* const p_e) const
 				return this;
 			default:
 				// step = ParseSteps(ARR | TAG | VAL);
-				arr = new Volume(p_e);
+				arr = *p_e; *p_e = nullptr;
 				((TagArray*)build)->append(&arr);
 				return this;
 			}
@@ -596,7 +596,7 @@ const ParseTree* ParseTree::par_tag_arr(pElement* const p_e) const
 			return this;
 		default:
 			step = ParseSteps(ARR | TAG | KEY);
-			arr = new Volume(p_e);
+			arr = *p_e; *p_e = nullptr;
 			((TagArray*)build)->append_new(&arr);
 			return this;
 		}

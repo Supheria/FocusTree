@@ -6,7 +6,8 @@
 typedef std::string Value;
 typedef const std::string* pcValue;
 
-typedef struct Element
+typedef struct Element* pElement;
+struct Element
 {
 private:
 	const size_t ln;
@@ -30,6 +31,17 @@ public:
 		col(end_column - token.length()),
 		val(new std::string(token)) // same as above ^
 	{
+	}
+	// will call (*p_e)->get() that transfers ownership of value, 
+	// and will DELETE (*p_e) and set it to nullptr 
+	Element(pElement* p_e) :
+		lose_val(false),
+		ln((*p_e)->line()),
+		col((*p_e)->column()),
+		val((*p_e)->get()) // same as above ^
+	{
+		delete (*p_e);
+		(*p_e) = nullptr;
 	}
 	~Element()
 	{
@@ -58,7 +70,7 @@ public:
 		lose_val = true;
 		return val;
 	}
-} *pElement;
+};
 
 #endif // !_ELEMENT_H
 

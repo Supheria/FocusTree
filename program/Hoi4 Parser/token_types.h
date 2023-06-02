@@ -23,7 +23,7 @@ class Tag : public Token
 	tag_val val;
 public:
 	// will delete (*p_key) and set it to nullptr, and so for other pVolume* -s
-	Tag(pVolume* const p_key, pVolume* const p_op, pVolume* const p_tag, const size_t& _lv);
+	Tag(pElement* const p_key, pElement* const p_op, pElement* const p_tag, const size_t& _lv);
 	~Tag();
 	// use operat().get() to transfer ownership of value of op, so for others
 	const Volume& operat();
@@ -39,13 +39,13 @@ class ValueArray : public Token
 	arr_v val;
 public:
 	// will delete (*p_key) and set it to nullptr, and so for other pVolume* -s
-	ValueArray(pVolume* p_key, const size_t& _lv);
+	ValueArray(pElement* const p_key, const size_t& _lv);
 	~ValueArray();
 	const arr_v& value();
 	// will push_back and own _vol
-	void append(pVolume* const p_vol);
+	void append(pElement* const p_vol);
 	// push_back in to a new array
-	void append_new(pVolume* const p_vol);
+	void append_new(pElement* const p_vol);
 };
 
 typedef std::pair<pVolume, tag_val> tag_pair;
@@ -56,15 +56,15 @@ class TagArray : public Token
 	arr_t val;
 public:
 	// will delete (*p_key) and set it to nullptr, and so for other pVolume* -s
-	TagArray(pVolume* p_key, const size_t& _lv);
+	TagArray(pElement* const p_key, const size_t& _lv);
 	~TagArray();
 	const arr_t& value();
 	// will push_back into tag
-	void append(pVolume* const p_vol);
+	void append(pElement* const p_vol);
 	// push_back as a tag
-	void append_tag(pVolume* const p_vol);
+	void append_tag(pElement* const p_vol);
 	// push_back in to a new array
-	void append_new(pVolume* const p_vol);
+	void append_new(pElement* const p_vol);
 };
 
 
@@ -74,7 +74,7 @@ typedef class Scope : public Token
 	token_list prop;
 public:
 	// will delete (*p_key) and set it to nullptr, and so for other pVolume* -s
-	Scope(pVolume* p_key, const size_t& _lv);
+	Scope(pElement* const p_key, const size_t& _lv);
 	~Scope();
 	const token_list& property();
 	// if failed will delete, else add to map won't delete

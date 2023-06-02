@@ -1,5 +1,6 @@
 #include "tokenizer.h"
 #include <iostream>
+#include <time.h>
 
 using namespace std;
 
@@ -45,9 +46,13 @@ void get_val(const token_list& _s, list<pcValue>& test)
 int main()
 {
 	Tokenizer parser("test.txt");
+	clock_t start, end;
+	start = clock();
 	const token_list& tokens = parser.get();
-	print_token(tokens);
+	end = clock();
+	cout << "time = " << double(end - start) / CLOCKS_PER_SEC << "s" << endl;
+	//print_token(tokens);
 	list<pcValue> test;
-	get_val(tokens, test);
+	//get_val(tokens, test);
 	//parser.~Tokenizer();
 }

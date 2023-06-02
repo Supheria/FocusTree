@@ -17,7 +17,7 @@ const Value NLL_TAG = "NULL_TAG";
 //
 //
 //
-Tag::Tag(pVolume* const p_key, pVolume* const p_op, pVolume* const p_tag, const size_t& _lv)
+Tag::Tag(pElement* const p_key, pElement* const p_op, pElement* const p_tag, const size_t& _lv)
 	: Token(TAG, _vol_(p_key, NLL_KEY), _lv),
 	op(_vol_(p_op, NLL_OP)),
 	tg(_vol_(p_tag, NLL_TAG))
@@ -61,7 +61,7 @@ void Tag::append(pElement* const p_e)
 //
 //
 //
-ValueArray::ValueArray(pVolume* p_key, const size_t& _lv)
+ValueArray::ValueArray(pElement* const p_key, const size_t& _lv)
 	: Token(VAL_ARRAY, _vol_(p_key, NLL_KEY), _lv)
 {
 }
@@ -82,13 +82,13 @@ const arr_v& ValueArray::value()
 	return val;
 }
 
-void ValueArray::append(pVolume* const p_vol)
+void ValueArray::append(pElement* const p_vol)
 {
 	if (p_vol == nullptr || (*p_vol) == nullptr) { return; }
 	val.back().push_back(new Volume((p_vol)));
 }
 
-void ValueArray::append_new(pVolume* const p_vol)
+void ValueArray::append_new(pElement* const p_vol)
 {
 	if (p_vol == nullptr || (*p_vol) == nullptr) { return; }
 	volume_list vlst = { new Volume((p_vol)) };
@@ -101,7 +101,7 @@ void ValueArray::append_new(pVolume* const p_vol)
 //
 //
 //
-TagArray::TagArray(pVolume* p_key, const size_t& _lv)
+TagArray::TagArray(pElement* const p_key, const size_t& _lv)
 	: Token(TAG_ARRAY, _vol_(p_key, NLL_KEY), _lv)
 {
 }
@@ -126,13 +126,13 @@ const arr_t& TagArray::value()
 	return val;
 }
 
-void TagArray::append(pVolume* const p_vol)
+void TagArray::append(pElement* const p_vol)
 {
 	if (p_vol == nullptr || (*p_vol) == nullptr) { return; }
 	val.back().back().second.push_back(new Volume(p_vol));
 }
 
-void TagArray::append_tag(pVolume* const p_vol)
+void TagArray::append_tag(pElement* const p_vol)
 {
 	if (p_vol == nullptr || (*p_vol) == nullptr) { return; }
 	tag_val tv;
@@ -140,7 +140,7 @@ void TagArray::append_tag(pVolume* const p_vol)
 	val.back().push_back(tpr);
 }
 
-void TagArray::append_new(pVolume* const p_vol)
+void TagArray::append_new(pElement* const p_vol)
 {
 	if (p_vol == nullptr || (*p_vol) == nullptr) { return; }
 	tag_val tv;
@@ -155,7 +155,7 @@ void TagArray::append_new(pVolume* const p_vol)
 //
 //
 //
-Scope::Scope(pVolume* p_key, const size_t& _lv)
+Scope::Scope(pElement* const p_key, const size_t& _lv)
 	: Token(SCOPE, _vol_(p_key, NLL_KEY), _lv)
 {
 }
