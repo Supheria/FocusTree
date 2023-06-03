@@ -17,31 +17,25 @@ const Value NLL_TAG = "NULL_TAG";
 //
 //
 //
-Tag::Tag(pElement* const p_key, pElement* const p_op, pElement* const p_tag, const size_t& _lv)
-	: Token(TAG, _vol_(p_key, NLL_KEY), _lv),
-	op(_vol_(p_op, NLL_OP)),
-	tg(_vol_(p_tag, NLL_TAG))
+Tag::Tag(pcValue _key, pcValue _op, pcValue _tag, const size_t& _lv)
+	: Token(TAG, _vol_(_key, NLL_KEY), _lv),
+	op(_vol_(_op, NLL_OP)),
+	tg(_vol_(_tag, NLL_TAG))
 {
 }
 
 Tag::~Tag()
 {
-	delete op;
-	delete tg;
-	for (auto v : val)
-	{
-		delete v;
-	}
 }
 
 const Volume& Tag::operat()
 {
-	return *op;
+	return op;
 }
 
 const Volume& Tag::tag()
 {
-	return *tg;
+	return tg;
 }
 
 const tag_val& Tag::value()
@@ -49,10 +43,10 @@ const tag_val& Tag::value()
 	return val;
 }
 
-void Tag::append(pElement* const p_e)
+void Tag::append(pcValue _e)
 {
-	if (p_e == nullptr || (*p_e) == nullptr) { return; }
-	val.push_back(new Volume((p_e)));
+	if (_e == nullptr ) { return; }
+	val.push_back(Volume(_e));
 }
 //
 //
@@ -61,20 +55,13 @@ void Tag::append(pElement* const p_e)
 //
 //
 //
-ValueArray::ValueArray(pElement* const p_key, const size_t& _lv)
-	: Token(VAL_ARRAY, _vol_(p_key, NLL_KEY), _lv)
+ValueArray::ValueArray(pcValue _key, const size_t& _lv)
+	: Token(VAL_ARRAY, _vol_(_key, NLL_KEY), _lv)
 {
 }
 
 ValueArray::~ValueArray()
 {
-	for (volume_list vlst : val)
-	{
-		for (auto v : vlst)
-		{
-			delete v;
-		}
-	}
 }
 
 const arr_v& ValueArray::value()
@@ -82,17 +69,17 @@ const arr_v& ValueArray::value()
 	return val;
 }
 
-void ValueArray::append(pElement* const p_vol)
+void ValueArray::append(pcValue _vol)
 {
-	if (p_vol == nullptr || (*p_vol) == nullptr) { return; }
-	val.back().push_back(new Volume((p_vol)));
+	if (_vol == nullptr) { return; }
+	val.back().push_back(Volume(_vol));
 }
 
-void ValueArray::append_new(pElement* const p_vol)
+void ValueArray::append_new(pcValue _vol)
 {
-	if (p_vol == nullptr || (*p_vol) == nullptr) { return; }
-	volume_list vlst = { new Volume((p_vol)) };
-	val.push_back(vlst);
+	if (_vol == nullptr) { return; }
+	val.push_back(volume_list());
+	val.back().push_back(Volume(_vol));
 }
 //
 //
@@ -101,24 +88,13 @@ void ValueArray::append_new(pElement* const p_vol)
 //
 //
 //
-TagArray::TagArray(pElement* const p_key, const size_t& _lv)
-	: Token(TAG_ARRAY, _vol_(p_key, NLL_KEY), _lv)
+TagArray::TagArray(pcValue _key, const size_t& _lv)
+	: Token(TAG_ARRAY, _vol_(_key, NLL_KEY), _lv)
 {
 }
 
 TagArray::~TagArray()
 {
-	for (tag_pair_list tplst : val)
-	{
-		for (tag_pair tpr : tplst)
-		{
-			delete tpr.first;
-			for (auto v : tpr.second)
-			{
-				delete v;
-			}
-		}
-	}
 }
 
 const arr_t& TagArray::value()
@@ -126,27 +102,23 @@ const arr_t& TagArray::value()
 	return val;
 }
 
-void TagArray::append(pElement* const p_vol)
+void TagArray::append(pcValue _vol)
 {
-	if (p_vol == nullptr || (*p_vol) == nullptr) { return; }
-	val.back().back().second.push_back(new Volume(p_vol));
+	if (_vol == nullptr) { return; }
+	val.back().back().second.push_back(Volume(_vol));
 }
 
-void TagArray::append_tag(pElement* const p_vol)
+void TagArray::append_tag(pcValue _vol)
 {
-	if (p_vol == nullptr || (*p_vol) == nullptr) { return; }
-	tag_val tv;
-	tag_pair tpr = { new Volume(p_vol), tv };
-	val.back().push_back(tpr);
+	if (_vol == nullptr) { return; }
+	val.back().push_back(tag_pair(Volume(_vol), tag_val()));
 }
 
-void TagArray::append_new(pElement* const p_vol)
+void TagArray::append_new(pcValue _vol)
 {
-	if (p_vol == nullptr || (*p_vol) == nullptr) { return; }
-	tag_val tv;
-	tag_pair tpr = { new Volume(p_vol), tv };
-	tag_pair_list tplst = { tpr };
-	val.push_back(tplst);
+	if (_vol == nullptr) { return; }
+	val.push_back(tag_pair_list());
+	val.back().push_back(tag_pair(Volume(_vol), tag_val()));
 }
 //
 //
@@ -155,8 +127,8 @@ void TagArray::append_new(pElement* const p_vol)
 //
 //
 //
-Scope::Scope(pElement* const p_key, const size_t& _lv)
-	: Token(SCOPE, _vol_(p_key, NLL_KEY), _lv)
+Scope::Scope(pcValue _key, const size_t& _lv)
+	: Token(SCOPE, _vol_(_key, NLL_KEY), _lv)
 {
 }
 
@@ -183,7 +155,6 @@ void Scope::append(pToken _t)
 	else
 	{
 		prop.push_back(_t);
-
 		return; // do not delete _t
 	}
 

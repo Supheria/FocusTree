@@ -17,12 +17,14 @@ public:
 	static const char note, quote, escape;
 private:
 	std::string path;
+	char* buffer;
+	size_t buflen;
+	size_t bufpos;
 	size_t line;
 	size_t column;
 	const ParseTree* tree;
-	pElement elm;
+	Element elm;
 	std::stringstream token;
-	std::ifstream fin;
 	token_list tokens;
 public:
 	Tokenizer(std::string filepath);
@@ -31,9 +33,10 @@ public:
 							// and so for other pVolume -s of t
 	const token_list& get();
 private:
+	void read_buf();
 	void parse();
 	void cache_list();
-	bool compose();
+	bool compose(char& ch);
 	char fget();
 	// need to test whether current tree has return to root,
 					// otherwise need to del all tree remained

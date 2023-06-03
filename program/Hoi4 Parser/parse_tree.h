@@ -3,7 +3,9 @@
 
 #include "element.h"
 #include "token.h"
+#include <memory>
 
+typedef std::unique_ptr<const std::string> pcval_u;
 class ParseTree
 {
 public:
@@ -12,10 +14,10 @@ private:
 	// Token will delete key and set it to nullptr when pass to it
 						 // if will have sub-tree,
 						 // need to set from_key to key->get() before key pass a to new Token
-	mutable pElement key;
-	mutable pElement op; // Token delete op and set it to nullptr when pass to it
-	mutable pElement value; // same as above ^
-	mutable pElement arr; // same as above ^
+	mutable pcval_u key;
+	mutable pcval_u op; // Token delete op and set it to nullptr when pass to it
+	mutable pcval_u value; // same as above ^
+	mutable pcval_u arr; // same as above ^
 	mutable pToken build;
 	const ParseTree* const from; // nullptr means to main-Tree or say root-Tree
 	mutable ParseTree* curr_sub;
@@ -24,7 +26,7 @@ private:
 public:
 	ParseTree();
 	// for sub-tree
-	ParseTree(const ParseTree* _from, pElement _key, pElement _op, const size_t& _level);
+	ParseTree(const ParseTree* _from, pcValue _key, pcValue _op, const size_t& _level);
 	~ParseTree();
 	// for tokenizer to use
 						// can only get build on time,
@@ -33,20 +35,21 @@ public:
 	pToken once_get() const;
 	// for tokenizer to use, test whether parse process has interrupted
 	const ParseTree* get_from() const;
-	// for sub-tree to use, if for root-tree should use once_get()
-								// if sub-tree has done, 
-								// will append its build to from-tree and lose ownership
+	// append sub-tree's build to this->(Scope*)build
 	void append(pToken _t) const;
-	const ParseTree* parse(pElement* const p_e) const;
+	// will return pointer to sub-tree if next step will be SUB
+									// and will return its from pointer when parse process finish
+									// main tree's from pointer is nullptr
+									// if parse failed, any tree will return its from pointer
+	const ParseTree* parse(Element& _e) const;
 private:
-	const ParseTree* par_sub(pElement* const p_e) const;
-	const ParseTree* par_arr(pElement* const p_e) const;
-	const ParseTree* par_tag_arr(pElement* const p_e) const;
-	const ParseTree* par_val_arr(pElement* const p_e) const;
-	void dispose(pElement* p_e) const;
+	const ParseTree* par_sub(Element& _e) const;
+	const ParseTree* par_arr(Element& _e) const;
+	const ParseTree* par_tag_arr(Element& _e) const;
+	const ParseTree* par_val_arr(Element& _e) const;
 	void done() const;
 private:
-	enum ParseSteps : size_t
+	enum Steps : size_t
 	{
 		NONE = 0,
 		KEY = 0b1,

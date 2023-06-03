@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Token::Token(const T& _t, pVolume _tok, const size_t& _lv) :
+Token::Token(const T& _t, pcValue _tok, const size_t& _lv) :
 	tp(_t),
 	tok(_tok),
 	lv(_lv)
@@ -14,12 +14,11 @@ Token::Token(const T& _t, pVolume _tok, const size_t& _lv) :
 				// no limitations on implementation.
 Token::~Token()
 {
-	delete tok;
 }
 
-Token::Token(pElement* const p_tok, const size_t& _lv) :
+Token::Token(pcValue _tok, const size_t& _lv) :
 	tp(TOKEN),
-	tok(_vol_(p_tok, "NULL_VALUE")),
+	tok(_vol_(_tok, "NULL_VALUE")),
 	lv(_lv)
 {
 }
@@ -31,7 +30,7 @@ const Token::T& Token::type() const
 
 const Volume& Token::token() const
 {
-	return *tok;
+	return tok;
 }
 
 const size_t& Token::level() const
@@ -39,14 +38,14 @@ const size_t& Token::level() const
 	return lv;
 }
 
-pVolume Token::_vol_(pElement* const p_e, const Value& null_val)
+pcValue Token::_vol_(pcValue _v, const Value& null_val)
 {
-	if (p_e != nullptr && (*p_e) != nullptr)
+	if (_v != nullptr)
 	{
-		return new Volume(p_e);
+		return (_v);
 	}
 	else
 	{
-		return new Volume(null_val);
+		return new std::string(null_val);
 	}
 }

@@ -14,12 +14,13 @@ using namespace std;
 
 
 const string FileName = "parse_tree";
-#define UNKNOWN_ERROR Errlog(FileName, format( "unknown error at line({}), column({})", (*p_e)->line(), (*p_e)->column()))
-#define UNEXPECTED_KEY Errlog(FileName, format( "unexpected key at line({}), column({})", (*p_e)->line(), (*p_e)->column()))
-#define UNEXPECTED_OPERATOR Errlog(FileName, format( "unexpected operator at line({}), column({})", (*p_e)->line(), (*p_e)->column()))
-#define UNEXPECTED_VALUE Errlog(FileName, format( "unexpected value at line({}), column({})", (*p_e)->line(), (*p_e)->column()))
-#define UNEXPECTED_ARRAY_TYPE Errlog(FileName, format( "unexpected array type at line({}), column({})", (*p_e)->line(), (*p_e)->column()))
-#define ERROR_SYNTAX_ARRAY Errlog(FileName, format( "wrong array syntax at line({}), column({})", (*p_e)->line(), (*p_e)->column()))
+#define UNKNOWN_ERROR Errlog(FileName, format( "unknown error at line({}), column({})", _e.line(), _e.column()))
+#define UNEXPECTED_KEY Errlog(FileName, format( "unexpected key at line({}), column({})", _e.line(), _e.column()))
+#define UNEXPECTED_OPERATOR Errlog(FileName, format( "unexpected operator at line({}), column({})", _e.line(), _e.column()))
+#define UNEXPECTED_VALUE Errlog(FileName, format( "unexpected value at line({}), column({})", _e.line(), _e.column()))
+#define UNEXPECTED_ARRAY_TYPE Errlog(FileName, format( "unexpected array type at line({}), column({})", _e.line(), _e.column()))
+#define ERROR_SYNTAX_ARRAY Errlog(FileName, format( "wrong array syntax at line({}), column({})", _e.line(), _e.column()))
+
 
 ParseTree::ParseTree() :
 	key(nullptr),
@@ -36,7 +37,7 @@ ParseTree::ParseTree() :
 }
 
 // call for sub-tree
-ParseTree::ParseTree(const ParseTree* _from, pElement _key, pElement _op, const size_t& _level) :
+ParseTree::ParseTree(const ParseTree* _from, pcValue _key, pcValue _op, const size_t& _level) :
 	key(_key),
 	op(_op),
 	value(nullptr),
@@ -52,10 +53,6 @@ ParseTree::ParseTree(const ParseTree* _from, pElement _key, pElement _op, const 
 
 ParseTree::~ParseTree()
 {
-	delete key;
-	delete op;
-	delete value;
-	delete arr;
 	if (!lose_built) { delete build; }
 	// delete curr_sub; // do not delete here, it will delete in step SUB, or by tokenizer when parse interrupted in sub-tree
 	// delete from; // do not delete here, it will delete by tokenizer or from's from
@@ -84,16 +81,16 @@ void ParseTree::append(pToken _t) const
 	((Scope*)build)->append(_t);
 }
 
-const ParseTree* ParseTree::parse(pElement* const p_e) const
+const ParseTree* ParseTree::parse(Element& _e) const
 {
-	const char& ch = (*p_e)->head();
+	const char& ch = _e.head();
 	if (step & SUB)
 	{
-		return par_sub(p_e);
+		return par_sub(_e);
 	}
 	else if (step & ARR)
 	{
-		return par_arr(p_e);
+		return par_arr(_e);
 	}
 	else if (step & OP)
 	{
@@ -108,20 +105,20 @@ const ParseTree* ParseTree::parse(pElement* const p_e) const
 			case gter:
 			case less:
 				UNEXPECTED_VALUE;
-				dispose(p_e);
+				_e.get();
 				return from;
 			case closb:
-				dispose(p_e);
+				_e.get();
 				done();
 				return from;
 			case openb:
-				step = ParseSteps(ARR);
-				dispose(p_e);
+				step = Steps(ARR);
+				_e.get();
 				return this;
 			default:
-				step = ParseSteps(SUB | KEY);
-				value = *p_e; *p_e = nullptr;
-				build = new Scope(&key, level);
+				step = Steps(SUB | KEY);
+				value = pcval_u(_e.get());
+				build = new Scope(key.release(), level);
 				return this;
 			}
 		}
@@ -137,25 +134,25 @@ const ParseTree* ParseTree::parse(pElement* const p_e) const
 			case gter:
 			case less:
 				UNEXPECTED_VALUE;
-				dispose(p_e);
+				_e.get();
 				return from;
 			case openb:
-				if (op->head() != equal)
+				if ((*op)[0] != equal)
 				{
 					UNEXPECTED_OPERATOR;
-					dispose(p_e);
+					_e.get();
 					return from;
 				}
 				else
 				{
-					step = ParseSteps(OP | ON);
-					dispose(p_e);
+					step = Steps(OP | ON);
+					_e.get();
 					return this;
 				}
 			default:
-				step = ParseSteps(VAL);
-				value = *p_e; *p_e = nullptr;
-				build = new Tag(&key, &op, &value, level);
+				step = Steps(VAL);
+				value = pcval_u(_e.get());
+				build = new Tag(key.release(), op.release(), value.release(), level);
 				return this;
 			}
 		}
@@ -171,11 +168,11 @@ const ParseTree* ParseTree::parse(pElement* const p_e) const
 		case gter:
 		case less:
 			step = OP;
-			op = *p_e; *p_e = nullptr;
+			op = pcval_u(_e.get());
 			return this;
 		default:
 			UNEXPECTED_OPERATOR;
-			dispose(p_e);
+			_e.get();
 			return from;
 		}
 	}
@@ -188,11 +185,11 @@ const ParseTree* ParseTree::parse(pElement* const p_e) const
 		{
 		case openb:
 			step = TAG;
-			dispose(p_e);
+			_e.get();
 			return this;
 		default:
 			done();
-			// dispose(p_e); // leave *p_e to next tree
+			// _e.get(); // leave *_e to next tree
 			return from;
 		}
 	}
@@ -208,15 +205,15 @@ const ParseTree* ParseTree::parse(pElement* const p_e) const
 		case gter:
 		case less:
 			UNEXPECTED_VALUE;
-			dispose(p_e);
+			_e.get();
 			return from;
 		case closb:
-			dispose(p_e);
+			_e.get();
 			done();
 			return from;
 		default:
 			step = TAG;
-			((Tag*)build)->append(p_e);
+			((Tag*)build)->append(_e.get());
 			return this;
 		}
 	}
@@ -233,19 +230,19 @@ const ParseTree* ParseTree::parse(pElement* const p_e) const
 		case gter:
 		case less:
 			UNEXPECTED_KEY;
-			dispose(p_e);
+			_e.get();
 			return from;
 		default:
 			step = KEY;
-			key = *p_e; *p_e = nullptr;
+			key = pcval_u(_e.get());
 			return this;
 		}
 	}
 }
 
-const ParseTree* ParseTree::par_sub(pElement* const p_e) const
+const ParseTree* ParseTree::par_sub(Element& _e) const
 {
-	const char& ch = (*p_e)->head();
+	const char& ch = _e.head();
 	//
 	// 6
 	//
@@ -255,23 +252,23 @@ const ParseTree* ParseTree::par_sub(pElement* const p_e) const
 		{
 		case openb:
 			UNEXPECTED_VALUE;
-			dispose(p_e);
+			_e.get();
 			return from;
 		case closb:
-			((Scope*)build)->append(new Token(&value, level + 1));
-			dispose(p_e);
+			((Scope*)build)->append(new Token(value.release(), level + 1));
+			_e.get();
 			done();
 			return from;
 		case equal:
 		case gter:
 		case less:
 			step = SUB;
-			curr_sub = new ParseTree(this, new Element(&value), new Element(p_e), level + 1);
+			curr_sub = new ParseTree(this, value.release(), _e.get(), level + 1);
 			return curr_sub;
 		default:
-			// step = ParseSteps(SUB | KEY);
-			((Scope*)build)->append(new Token(&value, level + 1));
-			value = *p_e; *p_e = nullptr;
+			// step = Steps(SUB | KEY);
+			((Scope*)build)->append(new Token(value.release(), level + 1));
+			value = pcval_u(_e.get());
 			return this;
 		}
 	}
@@ -288,30 +285,30 @@ const ParseTree* ParseTree::par_sub(pElement* const p_e) const
 		case gter:
 		case less:
 			delete curr_sub;
-			dispose(p_e);
+			_e.get();
 			done();
 			return from;
 		default:
 			delete curr_sub;
-			step = ParseSteps(SUB | KEY);
-			value = *p_e; *p_e = nullptr;
+			step = Steps(SUB | KEY);
+			value = pcval_u(_e.get());
 			return this;
 		}
 	}
 
 }
 
-const ParseTree* ParseTree::par_arr(pElement* const p_e) const
+const ParseTree* ParseTree::par_arr(Element& _e) const
 {
-	const char& ch = (*p_e)->head();
+	const char& ch = _e.head();
 	if (step & TAG)
 	{
-		return par_tag_arr(p_e);
+		return par_tag_arr(_e);
 	}
 	else if (step & VAL)
 	{
 		// 11 - 14
-		return par_val_arr(p_e);
+		return par_val_arr(_e);
 	}
 	//
 	// 9
@@ -322,15 +319,15 @@ const ParseTree* ParseTree::par_arr(pElement* const p_e) const
 		{
 		case openb:
 			step = ARR;
-			dispose(p_e);
+			_e.get();
 			return this;
 		case closb:
-			dispose(p_e);
+			_e.get();
 			done();
 			return from;
 		default:
 			ERROR_SYNTAX_ARRAY;
-			dispose(p_e);
+			_e.get();
 			return from;
 		}
 	}
@@ -343,31 +340,31 @@ const ParseTree* ParseTree::par_arr(pElement* const p_e) const
 		{
 		case openb:
 			UNEXPECTED_VALUE;
-			dispose(p_e);
+			_e.get();
 			return from;
 		case gter:
 		case less:
 			UNEXPECTED_OPERATOR;
-			dispose(p_e);
+			_e.get();
 			return from;
 		case equal:
-			step = ParseSteps(ARR | TAG);
-			build = new TagArray(&key, level);
-			((TagArray*)build)->append_new(&arr);
-			dispose(p_e);
+			step = Steps(ARR | TAG);
+			build = new TagArray(key.release(), level);
+			((TagArray*)build)->append_new(arr.release());
+			_e.get();
 			return this;
 		case closb:
-			step = ParseSteps(ARR | VAL | OFF);
-			build = new ValueArray(&key, level);
-			((ValueArray*)build)->append_new(&arr);
-			dispose(p_e);
+			step = Steps(ARR | VAL | OFF);
+			build = new ValueArray(key.release(), level);
+			((ValueArray*)build)->append_new(arr.release());
+			_e.get();
 			return this;
 		default:
-			step = ParseSteps(ARR | VAL);
-			build = new ValueArray(&key, level);
-			((ValueArray*)build)->append_new(&arr);
-			arr = *p_e; *p_e = nullptr;
-			((ValueArray*)build)->append(&arr);
+			step = Steps(ARR | VAL);
+			build = new ValueArray(key.release(), level);
+			((ValueArray*)build)->append_new(arr.release());
+			arr = pcval_u(_e.get());
+			((ValueArray*)build)->append(arr.release());
 			return this;
 		}
 	}
@@ -383,23 +380,23 @@ const ParseTree* ParseTree::par_arr(pElement* const p_e) const
 		case gter:
 		case less:
 			UNEXPECTED_VALUE;
-			dispose(p_e);
+			_e.get();
 			return from;
 		case closb:
-			step = ParseSteps(ARR | OFF);
-			dispose(p_e);
+			step = Steps(ARR | OFF);
+			_e.get();
 			return this;
 		default:
-			step = ParseSteps(ARR | KEY);
-			arr = *p_e; *p_e = nullptr;
+			step = Steps(ARR | KEY);
+			arr = pcval_u(_e.get());
 			return this;
 		}
 	}
 }
 
-const ParseTree* ParseTree::par_val_arr(pElement* const p_e) const
+const ParseTree* ParseTree::par_val_arr(Element& _e) const
 {
-	const char& ch = (*p_e)->head();
+	const char& ch = _e.head();
 	//
 	// 12
 	//
@@ -408,16 +405,16 @@ const ParseTree* ParseTree::par_val_arr(pElement* const p_e) const
 		switch (ch)
 		{
 		case openb:
-			step = ParseSteps(ARR | VAL | ON);
-			dispose(p_e);
+			step = Steps(ARR | VAL | ON);
+			_e.get();
 			return this;
 		case closb:
-			dispose(p_e);
+			_e.get();
 			done();
 			return from;
 		default:
 			ERROR_SYNTAX_ARRAY;
-			dispose(p_e);
+			_e.get();
 			return from;
 		}
 	}
@@ -433,16 +430,16 @@ const ParseTree* ParseTree::par_val_arr(pElement* const p_e) const
 		case gter:
 		case less:
 			UNEXPECTED_VALUE;
-			dispose(p_e);
+			_e.get();
 			return from;
 		case closb:
-			step = ParseSteps(ARR | VAL | OFF);
-			dispose(p_e);
+			step = Steps(ARR | VAL | OFF);
+			_e.get();
 			return this;
 		default:
-			step = ParseSteps(ARR | VAL | KEY);
-			arr = *p_e; *p_e = nullptr;
-			((ValueArray*)build)->append_new(&arr);
+			step = Steps(ARR | VAL | KEY);
+			arr = pcval_u(_e.get());
+			((ValueArray*)build)->append_new(arr.release());
 			return this;
 		}
 	}
@@ -458,16 +455,16 @@ const ParseTree* ParseTree::par_val_arr(pElement* const p_e) const
 		case gter:
 		case less:
 			UNEXPECTED_ARRAY_TYPE;
-			dispose(p_e);
+			_e.get();
 			return from;
 		case closb:
-			step = ParseSteps(ARR | VAL | OFF);
-			dispose(p_e);
+			step = Steps(ARR | VAL | OFF);
+			_e.get();
 			return this;
 		default:
-			step = ParseSteps(ARR | VAL);
-			arr = *p_e; *p_e = nullptr;
-			((ValueArray*)build)->append(&arr);
+			step = Steps(ARR | VAL);
+			arr = pcval_u(_e.get());
+			((ValueArray*)build)->append(arr.release());
 			return this;
 		}
 	}
@@ -483,25 +480,25 @@ const ParseTree* ParseTree::par_val_arr(pElement* const p_e) const
 		case gter:
 		case less:
 			UNEXPECTED_VALUE;
-			dispose(p_e);
+			_e.get();
 			return from;
 		case closb:
-			step = ParseSteps(ARR | VAL | OFF);
-			dispose(p_e);
+			step = Steps(ARR | VAL | OFF);
+			_e.get();
 			return this;
 		default:
-			// step = ParseSteps(ARR | VAL);
-			arr = *p_e; *p_e = nullptr;
-			((ValueArray*)build)->append(&arr);
+			// step = Steps(ARR | VAL);
+			arr = pcval_u(_e.get());
+			((ValueArray*)build)->append(arr.release());
 			return this;
 		}
 	}
 }
 
-const ParseTree* ParseTree::par_tag_arr(pElement* const p_e) const
+const ParseTree* ParseTree::par_tag_arr(Element& _e) const
 {
 
-	const char& ch = (*p_e)->head();
+	const char& ch = _e.head();
 	if (step & VAL)
 	{
 		//
@@ -516,16 +513,16 @@ const ParseTree* ParseTree::par_tag_arr(pElement* const p_e) const
 			case gter:
 			case less:
 				UNEXPECTED_KEY;
-				dispose(p_e);
+				_e.get();
 				return from;
 			case closb:
-				step = ParseSteps(ARR | TAG | OFF); //19
-				dispose(p_e);
+				step = Steps(ARR | TAG | OFF); //19
+				_e.get();
 				return this;
 			default:
-				step = ParseSteps(ARR | TAG | KEY);
-				arr = *p_e; *p_e = nullptr;
-				((TagArray*)build)->append_tag(&arr);
+				step = Steps(ARR | TAG | KEY);
+				arr = pcval_u(_e.get());
+				((TagArray*)build)->append_tag(arr.release());
 				return this;
 			}
 		}
@@ -541,16 +538,16 @@ const ParseTree* ParseTree::par_tag_arr(pElement* const p_e) const
 			case gter:
 			case less:
 				UNEXPECTED_VALUE;
-				dispose(p_e);
+				_e.get();
 				return from;
 			case closb:
-				step = ParseSteps(ARR | TAG | VAL | OFF);
-				dispose(p_e);
+				step = Steps(ARR | TAG | VAL | OFF);
+				_e.get();
 				return this;
 			default:
-				// step = ParseSteps(ARR | TAG | VAL);
-				arr = *p_e; *p_e = nullptr;
-				((TagArray*)build)->append(&arr);
+				// step = Steps(ARR | TAG | VAL);
+				arr = pcval_u(_e.get());
+				((TagArray*)build)->append(arr.release());
 				return this;
 			}
 		}
@@ -563,16 +560,16 @@ const ParseTree* ParseTree::par_tag_arr(pElement* const p_e) const
 		switch (ch)
 		{
 		case openb:
-			step = ParseSteps(ARR | TAG | ON);
-			dispose(p_e);
+			step = Steps(ARR | TAG | ON);
+			_e.get();
 			return this;
 		case closb:
-			dispose(p_e);
+			_e.get();
 			done();
 			return from;
 		default:
 			ERROR_SYNTAX_ARRAY;
-			dispose(p_e);
+			_e.get();
 			return from;
 		}
 	}
@@ -588,16 +585,16 @@ const ParseTree* ParseTree::par_tag_arr(pElement* const p_e) const
 		case gter:
 		case less:
 			UNEXPECTED_KEY;
-			dispose(p_e);
+			_e.get();
 			return from;
 		case closb:
-			step = ParseSteps(ARR | TAG | OFF);
-			dispose(p_e);
+			step = Steps(ARR | TAG | OFF);
+			_e.get();
 			return this;
 		default:
-			step = ParseSteps(ARR | TAG | KEY);
-			arr = *p_e; *p_e = nullptr;
-			((TagArray*)build)->append_new(&arr);
+			step = Steps(ARR | TAG | KEY);
+			arr = pcval_u(_e.get());
+			((TagArray*)build)->append_new(arr.release());
 			return this;
 		}
 	}
@@ -609,17 +606,17 @@ const ParseTree* ParseTree::par_tag_arr(pElement* const p_e) const
 		switch (ch)
 		{
 		case equal:
-			step = ParseSteps(ARR | TAG);
-			dispose(p_e);
+			step = Steps(ARR | TAG);
+			_e.get();
 			return this;
 		case gter:
 		case less:
 			UNEXPECTED_OPERATOR;
-			dispose(p_e);
+			_e.get();
 			return from;
 		default:
 			UNEXPECTED_ARRAY_TYPE;
-			dispose(p_e);
+			_e.get();
 			return from;
 		}
 	}
@@ -631,21 +628,15 @@ const ParseTree* ParseTree::par_tag_arr(pElement* const p_e) const
 		switch (ch)
 		{
 		case openb:
-			step = ParseSteps(ARR | TAG | VAL);
-			dispose(p_e);
+			step = Steps(ARR | TAG | VAL);
+			_e.get();
 			return this;
 		default:
 			UNEXPECTED_ARRAY_TYPE;
-			dispose(p_e);
+			_e.get();
 			return from;
 		}
 	}
-}
-
-void ParseTree::dispose(pElement* p_e) const
-{
-	delete (*p_e);
-	(*p_e) = nullptr;
 }
 
 void ParseTree::done() const

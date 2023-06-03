@@ -31,9 +31,9 @@ void get_val(const token_list& _s, list<pcValue>& test)
 			{
 				for (tag_pair tpr : lst)
 				{
-					for (pVolume v : tpr.second)
+					for (Volume v : tpr.second)
 					{
-						cout << *(v->get());
+						cout << *(v.get());
 					}
 				}
 			}
@@ -51,8 +51,8 @@ int main()
 	const token_list& tokens = parser.get();
 	end = clock();
 	cout << "time = " << double(end - start) / CLOCKS_PER_SEC << "s" << endl;
-	//print_token(tokens);
+	print_token(tokens);
 	list<pcValue> test;
-	//get_val(tokens, test);
+	get_val(tokens, test);
 	//parser.~Tokenizer();
 }

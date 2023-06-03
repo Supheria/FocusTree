@@ -1,14 +1,15 @@
 #include "tokenizer.h"
 #include "exception_log.h"
 
-const CompareChar Tokenizer::delimiter({ '\t', ' ', '\n', '\r', '#', '=', '>', '<', '}', '{', '"', (char)-1 });
-const CompareChar Tokenizer::blank({ '\t', ' ', '\n', '\r', (char)-1 });
-const CompareChar Tokenizer::endline({ '\n', '\r', (char)-1 });
+const CompareChar Tokenizer::delimiter({ '\t', ' ', '\n', '\r', '#', '=', '>', '<', '}', '{', '"', '\0'});
+const CompareChar Tokenizer::blank({ '\t', ' ', '\n', '\r', '\0' });
+const CompareChar Tokenizer::endline({ '\n', '\r', '\0' });
 const CompareChar Tokenizer::marker({ '=', '>', '<', '}', '{' });
 const char Tokenizer::note = '#';
 const char Tokenizer::quote = '"';
 const char Tokenizer::escape = '\\';
 
+extern ErrorLog Errlog;
 extern WarningLog Warnlog;
 
 using namespace std;
@@ -17,10 +18,12 @@ const string FileName = "tokenizer";
 
 Tokenizer::Tokenizer(std::string filepath) :
     path(filepath),
+    buffer(nullptr),
+    buflen(0),
+    bufpos(0),
     line(1),
     column(0),
     tree(nullptr),
-    elm(nullptr),
     state(None)
 {
 }
@@ -39,30 +42,42 @@ const token_list& Tokenizer::get()
     return tokens;
 }
 
+void Tokenizer::read_buf()
+{
+    if (buffer != nullptr) 
+    { 
+        delete buffer; 
+        buffer = nullptr;
+        buflen = 0;
+        bufpos = 0;
+    }
+    ifstream fin;
+    fin.open(path, ios::binary);
+    if (!fin.is_open())
+    {
+        Errlog(FileName, format("could not open file: {}", path));
+        return;
+    }
+    column = fin.get() == 0xEF && fin.get() == 0xBB && fin.get() == 0xBF ? 3 : 0; // remove BOM
+    filebuf* fbuf = fin.rdbuf();
+    buflen = (size_t)fbuf->pubseekoff(0, ios::end, ios::in) - column;
+    buffer = new char[buflen];
+    fbuf->pubseekpos(column, ios::in);
+    fbuf->sgetn(buffer, buflen);
+    fin.close();
+    buffer[buflen] = '\0';
+}
+
 void Tokenizer::parse()
 {
-    fin.open(path, ios::binary);
-    if (!fin.is_open() || fin.eof()) { return; }
-    //
-    // remove BOM
-    //
-    if (fget() != (char)0xEF || fget() != (char)0xBB || fget() != (char)0xBF) // fin.get() will return -1 if meet EOF
-    {
-        fin.seekg(0, fin.beg);
-        column = 0;
-    }
-    //
-    // parsing
-    //
+    read_buf();
     tree = new ParseTree();
-    do
+    while (bufpos <= buflen)
     {
-        if (compose())
+        if (compose(buffer[bufpos]))
         {
-            auto _tree = tree->parse(&elm);  // tree->parse() will return its sub pointer if call tree->sub->parse()
-            // and will return its from pointer when parse process finish
-            // main tree's from pointer is nullptr
-            // if parse failed, any tree will return its from pointer
+            //elm.get();
+            auto _tree = tree->parse(elm);  
             if (_tree == nullptr) // main-tree finish, go to next main-tree
             {
                 cache_list();
@@ -71,9 +86,8 @@ void Tokenizer::parse()
             }
             else { tree = _tree; }
         }
-    } while (!fin.eof());
+    }
     del_tree();
-    fin.close();
 }
 
 void Tokenizer::cache_list()
@@ -83,14 +97,14 @@ void Tokenizer::cache_list()
     tokens.push_back(_t);
 }
 
-bool Tokenizer::compose()
+bool Tokenizer::compose(char& ch)
 {
     // if tree built successfully (has gone to "return" node), 
                                         // elm didn't be used, should pass to next tree
-    if (elm != nullptr) { return true; }
+    if (elm) { return true; }
     // some delimiters will bring to next loop 
                         // that won't use fin.get() to loop one more time to update state
-    char ch = fin.peek(); 
+    /*char ch = fin.peek(); */
     switch (state)
     {
     case Build_quo:
@@ -103,7 +117,7 @@ bool Tokenizer::compose()
         else if (ch == quote)
         {
             token << fget(); // keep the quote mark
-            elm = new Element(token.str(), line, column);   // will delete within process of tree->parse(...) when 
+            elm(token.str(), line, column);   // will delete within process of tree->parse(...) when 
                                                             // not send to any Token,
                                                             // or will delete in Token::_vol_(...)
             state = None;
@@ -112,7 +126,7 @@ bool Tokenizer::compose()
         else if (ch == endline)
         {
             token << quote;
-            elm = new Element(token.str(), line, column);
+            elm(token.str(), line, column);
             state = None;
             return true;
         }
@@ -122,7 +136,7 @@ bool Tokenizer::compose()
         if (ch == endline)
         {
             token << quote << quote;
-            elm = new Element(token.str(), line, column);
+            elm(token.str(), line, column);
             state = None;
             return true;
         }
@@ -135,7 +149,7 @@ bool Tokenizer::compose()
     case Build_unquo:
         if (ch == delimiter)
         {
-            elm = new Element(token.str(), line, column);
+            elm(token.str(), line, column);
             state = None;
             return true;
         }
@@ -160,7 +174,7 @@ bool Tokenizer::compose()
         }
         else if (ch == marker)
         {
-            elm = new Element(fget(), line, column); // same as eToken above ^
+            elm(fget(), line, column); // same as eToken above ^
             return true;
         }
         else if (ch == blank)
@@ -185,8 +199,17 @@ bool Tokenizer::compose()
 char Tokenizer::fget()
 {
     column++;
-    return fin.get();
+    char c = buffer[bufpos];
+    bufpos++;
+    return c;
+
 }
+
+//char Tokenizer::fget()
+//{
+//    column++;
+//    return fin.get();
+//}
 
 void Tokenizer::del_tree()
 {
