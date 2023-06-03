@@ -6,6 +6,8 @@
 #include <memory>
 
 typedef std::unique_ptr<const std::string> pcval_u;
+
+typedef class ParseTree* pTree;
 class ParseTree
 {
 public:
@@ -19,14 +21,14 @@ private:
 	mutable pcval_u value; // same as above ^
 	mutable pcval_u arr; // same as above ^
 	mutable pToken build;
-	const ParseTree* const from; // nullptr means to main-Tree or say root-Tree
-	mutable ParseTree* curr_sub;
+	const pTree from; // nullptr means to main-Tree or say root-Tree
+	mutable pTree curr_sub;
 	const size_t level;
 	mutable bool lose_built;
 public:
 	ParseTree();
 	// for sub-tree
-	ParseTree(const ParseTree* _from, pcValue _key, pcValue _op, const size_t& _level);
+	ParseTree(const pTree _from, pcValue _key, pcValue _op, const size_t& _level);
 	~ParseTree();
 	// for tokenizer to use
 						// can only get build on time,
@@ -34,19 +36,19 @@ public:
 						// won't delete in ~ParseTree()
 	pToken once_get() const;
 	// for tokenizer to use, test whether parse process has interrupted
-	const ParseTree* get_from() const;
+	const pTree get_from() const;
 	// append sub-tree's build to this->(Scope*)build
 	void append(pToken _t) const;
 	// will return pointer to sub-tree if next step will be SUB
 									// and will return its from pointer when parse process finish
 									// main tree's from pointer is nullptr
 									// if parse failed, any tree will return its from pointer
-	const ParseTree* parse(Element& _e) const;
+	const pTree parse(Element& _e) const;
 private:
-	const ParseTree* par_sub(Element& _e) const;
-	const ParseTree* par_arr(Element& _e) const;
-	const ParseTree* par_tag_arr(Element& _e) const;
-	const ParseTree* par_val_arr(Element& _e) const;
+	const pTree par_sub(Element& _e) const;
+	const pTree par_arr(Element& _e) const;
+	const pTree par_tag_arr(Element& _e) const;
+	const pTree par_val_arr(Element& _e) const;
 	void done() const;
 private:
 	enum Steps : size_t

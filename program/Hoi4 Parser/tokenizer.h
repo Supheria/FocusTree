@@ -22,7 +22,7 @@ private:
 	size_t bufpos;
 	size_t line;
 	size_t column;
-	const ParseTree* tree;
+	pTree tree;
 	Element elm;
 	std::stringstream token;
 	token_list tokens;

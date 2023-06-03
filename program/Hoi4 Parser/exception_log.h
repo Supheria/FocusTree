@@ -12,6 +12,7 @@ private:
 protected:
 	ExceptionLog();
 	void append(std::string msg);
+	static std::string get_time();
 };
 
 class ErrorLog : public ExceptionLog

@@ -46,8 +46,7 @@ void Tokenizer::read_buf()
 {
     if (buffer != nullptr) 
     { 
-        delete buffer; 
-        buffer = nullptr;
+        delete buffer;
         buflen = 0;
         bufpos = 0;
     }
@@ -56,13 +55,14 @@ void Tokenizer::read_buf()
     if (!fin.is_open())
     {
         Errlog(FileName, format("could not open file: {}", path));
+        buffer = new char[1] {'\0'};
         return;
     }
-    column = fin.get() == 0xEF && fin.get() == 0xBB && fin.get() == 0xBF ? 3 : 0; // remove BOM
+    size_t starter = fin.get() == 0xEF && fin.get() == 0xBB && fin.get() == 0xBF ? 3 : 0; // remove BOM
     filebuf* fbuf = fin.rdbuf();
-    buflen = (size_t)fbuf->pubseekoff(0, ios::end, ios::in) - column;
+    buflen = (size_t)fbuf->pubseekoff(0, ios::end, ios::in) - starter;
     buffer = new char[buflen];
-    fbuf->pubseekpos(column, ios::in);
+    fbuf->pubseekpos(starter, ios::in);
     fbuf->sgetn(buffer, buflen);
     fin.close();
     buffer[buflen] = '\0';
@@ -92,7 +92,7 @@ void Tokenizer::parse()
 
 void Tokenizer::cache_list()
 {
-    pToken _t = tree->once_get(); // parse process unfinished or failed will get nullptr
+    pToken _t = tree->once_get();
     if (_t == nullptr) { return; }
     tokens.push_back(_t);
 }
@@ -179,11 +179,16 @@ bool Tokenizer::compose(char& ch)
         }
         else if (ch == blank)
         {
-            if (fget() == '\n')
+            if (ch == '\n')
             {
                 line++;
                 column = 0;
             }
+            else if (ch == '\t')
+            {
+                column += 3;
+            }
+            fget();
         }
         else
         {
@@ -198,18 +203,12 @@ bool Tokenizer::compose(char& ch)
 
 char Tokenizer::fget()
 {
-    column++;
     char c = buffer[bufpos];
     bufpos++;
+    column++;
     return c;
 
 }
-
-//char Tokenizer::fget()
-//{
-//    column++;
-//    return fin.get();
-//}
 
 void Tokenizer::del_tree()
 {
@@ -217,18 +216,20 @@ void Tokenizer::del_tree()
     {
         Warnlog(FileName, format("interruption at line({}), column({})", line, column));
         tree->get_from()->append(tree->once_get());
-        const ParseTree* _tree = tree->get_from();
+        pTree _tree = tree->get_from();
         delete tree;
         tree = _tree;
         while (tree->get_from() != nullptr)
         {
             tree->get_from()->append(tree->once_get());
-            const ParseTree* _tree = tree->get_from();
+            _tree = tree->get_from();
             delete tree;
             tree = _tree;
         }
     }
-    cache_list(); // 
+    // since tree->once_get() only can get its build once
+                // here try to cache one more time for interruption case
+    cache_list();
     delete tree;
     tree = nullptr;
 }

@@ -16,7 +16,7 @@ class Tag;
 
 typedef std::list<Volume> volume_list;
 typedef volume_list tag_val;
-class Tag : public Token
+typedef class Tag : public Token
 {
 	Volume op;
 	Volume tg;
@@ -31,10 +31,10 @@ public:
 	const tag_val& value();
 	// will push_back and own _vol
 	void append(pcValue p_e);
-};
+} *pTag;
 
 typedef std::list<volume_list> arr_v;
-class ValueArray : public Token
+typedef class ValueArray : public Token
 {
 	arr_v val;
 public:
@@ -46,12 +46,12 @@ public:
 	void append(pcValue _vol);
 	// push_back in to a new array
 	void append_new(pcValue _vol);
-};
+} *pValArr;
 
 typedef std::pair<Volume, tag_val> tag_pair;
 typedef std::list<tag_pair> tag_pair_list;
 typedef std::list<tag_pair_list> arr_t;
-class TagArray : public Token
+typedef class TagArray : public Token
 {
 	arr_t val;
 public:
@@ -65,7 +65,7 @@ public:
 	void append_tag(pcValue _vol);
 	// push_back in to a new array
 	void append_new(pcValue _vol);
-};
+} *pTagArr;
 
 
 typedef std::list<pToken> token_list;

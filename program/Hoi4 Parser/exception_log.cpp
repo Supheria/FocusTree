@@ -1,10 +1,12 @@
 #include "exception_log.h"
-#include <sstream>
+#include <format>
+#include <chrono>
 
 ErrorLog Errlog = ErrorLog();
 WarningLog Warnlog = WarningLog();
 
 using namespace std;
+using namespace chrono;
 
 ExceptionLog::ExceptionLog() :
 	logpath("parse.log")
@@ -20,15 +22,24 @@ void ExceptionLog::append(std::string msg)
 	fout.close();
 }
 
+std::string ExceptionLog::get_time()
+{
+	typedef system_clock cl;
+	stringstream ss;
+	time_t t = cl::to_time_t(cl::now());
+	tm now;
+	localtime_s(&now, &t);
+	ss << put_time(&now, "%H:%M:%S");
+	return ss.str();
+}
+
 ErrorLog::ErrorLog()
 {
 }
 
 void ErrorLog::operator()(const std::string fname_no_ex, const std::string message)
 {
-	stringstream ss;
-	// format error log
-	append(ss.str());
+	append(format("[{}.cpp[{}]] error: {}", fname_no_ex, get_time(), message));
 }
 
 WarningLog::WarningLog()
@@ -37,7 +48,5 @@ WarningLog::WarningLog()
 
 void WarningLog::operator()(const std::string fname_no_ex, const std::string message)
 {
-	stringstream ss;
-	// format warning log
-	append(ss.str());
+	append(format("[{}.cpp[{}]] warning: {}", fname_no_ex, get_time(), message));
 }
