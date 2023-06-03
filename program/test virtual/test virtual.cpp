@@ -75,6 +75,7 @@ public:
 };
 class B : public Base
 {
+    A a;
 public:
     ~B() { cout << "del B\n"; }
     B() : Base(TypeB, 10) {}
@@ -130,11 +131,17 @@ void test(Steps step)
 typedef list<list<string>> T;
 int main()
 {
-    Base* a = new A();
+    B* b = new B;
+    delete b;
+    ////string s = "test";
+    //unique_ptr<string> a(new string("test"));
+    //auto b = move(a);
+
+    /*Base* a = new A();
     Base* b = new B();
     delete a;
     delete b;
-    cout << 0;
+    cout << 0;*/
     /*T ls;
     list<string>* a = new list<string>;
     ls.push_back(*a);

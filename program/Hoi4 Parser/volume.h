@@ -4,86 +4,79 @@
 #include <string>
 #include "element.h"
 
-typedef std::string Value;
-
 // === principle of value-passing between Volume pointers ===
 // if want to pass the value from a Volume pointer to another,
 // use Volume::get() to pass its value to a new dynamic Volumn pointer, 
 // such as
 //	pNewVol = new Volume(pOld->get()) ¡Ì
 // 
+// or pass a pointer to pVolume so that delete and set pVolume to nullptr instantly,
+// 
 // other than simply pass a Volumn pointer.
 //	pNewVol = pOld ¡Á
-typedef struct Volume* pVolume;
 struct Volume
 {
 private:
-	pcValue const val;
-	mutable bool lose_val;
-private:
-	// abandon to use
-	Volume(const Volume& _vol) :
-		val(nullptr),
-		lose_val(false)
-	{
-	}
+	const pcValue val;
+	mutable bool own_val;
 public:
-	// will call _e->get() that transfers ownership, 
-	// and will DELETE p_e and set it to nullptr 
-	Volume(pElement* const p_e) :
-		val((*p_e)->get()),
-		lose_val(false)
+	// will call (*p_e)->get() that transfers ownership of value, 
+	// and will DELETE (*p_e) and set it to nullptr 
+	Volume(Element& _e) :
+		val(_e.get()),
+		own_val(true)
 	{
-		delete (*p_e);
-		(*p_e) = nullptr;
 	}
-	Volume(const Value& _v) :
+	// use Value to create a new pcValue
+	Volume(Value& _v) :
 		val(new std::string(_v)),
-		lose_val(false)
+		own_val(true)
 	{
 	}
-	// get the ownership of _vol
+	// get the ownership of value
 	Volume(pcValue _v) :
 		val(_v),
-		lose_val(false)
+		own_val(true)
 	{
 	}
-	// will call _vol->get() that transfers ownership,
-	// and will DELETE p_vol and set it to nullptr 
-	Volume(pVolume* const p_vol) :
-		val((*p_vol)->get()),
-		lose_val(false)
+	// will call (*p_vol)->get() that transfers ownership of value,
+	// and will DELETE (*p_vol) and set it to nullptr 
+	Volume(const Volume& _vol) :
+		val(_vol.get()),
+		own_val(true)
 	{
-		delete (*p_vol);
-		(*p_vol) = nullptr;
 	}
 	~Volume()
 	{
-		if (!lose_val) { delete val; }
+		if (own_val) { delete val; }
 	}
 	const Value& value() const
 	{
 		return *val;
 	}
 	//
-	// if called for any time, ownership of pointer to vol will lose, and ~Value() won't delete vol 
+	// if called for any time, ownership of value will lose, that ~Value() won't delete it 
 	//
 	pcValue get() const
 	{
-		lose_val = true;
+		own_val = false;
 		return val;
 	}
-	const char& head()
+	const char& head() const
 	{
 		return (*val)[0];
 	}
-	friend bool operator==(const Volume& lhs, const Volume& rhs)
+	friend bool operator==(Volume& lhs, Volume& rhs)
 	{
 		return lhs.value() == rhs.value();
 	}
-	friend bool operator!=(const Volume& lhs, const Volume& rhs)
+	friend bool operator!=(Volume& lhs,  Volume& rhs)
 	{
 		return lhs.value() != rhs.value();
+	}
+	operator bool()
+	{
+		return own_val;
 	}
 };
 

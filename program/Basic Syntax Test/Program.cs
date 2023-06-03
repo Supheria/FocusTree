@@ -1,15 +1,17 @@
 ﻿
-//#define test_single_file
+#define test_single_file
 
 using Hoi4ReaderWriter;
 using System.Diagnostics;
+using System.Text;
 
 #if test_single_file
-var fileName = @"C:\Program Files\steam\steamapps\common\Hearts of Iron IV\interface\tutorialscreen.gui";
+var fileName = @"C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV\common\national_focus\bulgaria.txt";
 var fs = new FileStream(fileName, FileMode.Open);
 Hoi4Reader reader = new(fs);
 FileStream file = new(@"output.txt", FileMode.Create);
 StreamWriter writer = new(file);
+
 try
 {
     while (reader.Read())

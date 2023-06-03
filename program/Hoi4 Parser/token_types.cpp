@@ -17,31 +17,25 @@ const Value NLL_TAG = "NULL_TAG";
 //
 //
 //
-Tag::Tag(pVolume* const p_key, pVolume* const p_op, pVolume* const p_tag, const size_t& _lv)
-	: Token(TAG, _vol_(p_key, NLL_KEY), _lv),
-	op(_vol_(p_op, NLL_OP)),
-	tg(_vol_(p_tag, NLL_TAG))
+Tag::Tag(pcValue _key, pcValue _op, pcValue _tag, const size_t& _lv)
+	: Token(TAG, _vol_(_key, NLL_KEY), _lv),
+	op(_vol_(_op, NLL_OP)),
+	tg(_vol_(_tag, NLL_TAG))
 {
 }
 
 Tag::~Tag()
 {
-	delete op;
-	delete tg;
-	for (auto v : val)
-	{
-		delete v;
-	}
 }
 
 const Volume& Tag::operat()
 {
-	return *op;
+	return op;
 }
 
 const Volume& Tag::tag()
 {
-	return *tg;
+	return tg;
 }
 
 const tag_val& Tag::value()
@@ -49,25 +43,10 @@ const tag_val& Tag::value()
 	return val;
 }
 
-void Tag::append(pElement* const p_e)
+void Tag::append(pcValue _e)
 {
-	if (p_e == nullptr || (*p_e) == nullptr) { return; }
-	val.push_back(new Volume((p_e)));
-}
-//
-//
-//
-// Array
-//
-//
-//
-Array::Array(const T& _t, pVolume* p_key, const size_t& _lv)
-	: Token(_t, _vol_(p_key, NLL_KEY), _lv)
-{
-}
-
-Array::~Array()
-{
+	if (_e == nullptr ) { return; }
+	val.push_back(Volume(_e));
 }
 //
 //
@@ -76,20 +55,13 @@ Array::~Array()
 //
 //
 //
-ValueArray::ValueArray(pVolume* p_key, const size_t& _lv)
-	: Array(VAL_ARRAY, p_key, _lv)
+ValueArray::ValueArray(pcValue _key, const size_t& _lv)
+	: Token(VAL_ARRAY, _vol_(_key, NLL_KEY), _lv)
 {
 }
 
 ValueArray::~ValueArray()
 {
-	for (volume_list vlst : val)
-	{
-		for (auto v : vlst)
-		{
-			delete v;
-		}
-	}
 }
 
 const arr_v& ValueArray::value()
@@ -97,17 +69,17 @@ const arr_v& ValueArray::value()
 	return val;
 }
 
-void ValueArray::append(pElement* const p_e)
+void ValueArray::append(pcValue _vol)
 {
-	if (p_e == nullptr || (*p_e) == nullptr) { return; }
-	val.back().push_back(new Volume((p_e)));
+	if (_vol == nullptr) { return; }
+	val.back().push_back(Volume(_vol));
 }
 
-void ValueArray::append_new(pElement* const p_e)
+void ValueArray::append_new(pcValue _vol)
 {
-	if (p_e == nullptr || (*p_e) == nullptr) { return; }
-	volume_list vlst = { new Volume((p_e)) };
-	val.push_back(vlst);
+	if (_vol == nullptr) { return; }
+	val.push_back(volume_list());
+	val.back().push_back(Volume(_vol));
 }
 //
 //
@@ -116,24 +88,13 @@ void ValueArray::append_new(pElement* const p_e)
 //
 //
 //
-TagArray::TagArray(pVolume* p_key, const size_t& _lv)
-	: Array(TAG_ARRAY, p_key, _lv)
+TagArray::TagArray(pcValue _key, const size_t& _lv)
+	: Token(TAG_ARRAY, _vol_(_key, NLL_KEY), _lv)
 {
 }
 
 TagArray::~TagArray()
 {
-	for (tag_pair_list tplst : val)
-	{
-		for (tag_pair tpr : tplst)
-		{
-			delete tpr.first;
-			for (auto v : tpr.second)
-			{
-				delete v;
-			}
-		}
-	}
 }
 
 const arr_t& TagArray::value()
@@ -141,28 +102,23 @@ const arr_t& TagArray::value()
 	return val;
 }
 
-void TagArray::append(pElement* const p_e)
+void TagArray::append(pcValue _vol)
 {
-	if (p_e == nullptr || (*p_e) == nullptr) { return; }
-	val.back().back().second.push_back(new Volume(p_e));
+	if (_vol == nullptr) { return; }
+	val.back().back().second.push_back(Volume(_vol));
 }
 
-void TagArray::append_tag(pElement* const p_e)
+void TagArray::append_tag(pcValue _vol)
 {
-	if (p_e == nullptr || (*p_e) == nullptr) { return; }
-	tag_val tv;
-	tag_pair tpr = { new Volume(p_e), tv };
-	val.back().push_back(tpr);
-	val.back().back().second.push_back(new Volume(p_e));
+	if (_vol == nullptr) { return; }
+	val.back().push_back(tag_pair(Volume(_vol), tag_val()));
 }
 
-void TagArray::append_new(pElement* const p_e)
+void TagArray::append_new(pcValue _vol)
 {
-	tag_val tv;
-	tag_pair tpr = { new Volume(p_e), tv };
-	tag_pair_list tplst = { tpr };
-	val.push_back(tplst);
-	val.back().back().second.push_back(new Volume(p_e));
+	if (_vol == nullptr) { return; }
+	val.push_back(tag_pair_list());
+	val.back().push_back(tag_pair(Volume(_vol), tag_val()));
 }
 //
 //
@@ -171,8 +127,8 @@ void TagArray::append_new(pElement* const p_e)
 //
 //
 //
-Scope::Scope(pVolume* p_key, const size_t& _lv)
-	: Token(SCOPE, _vol_(p_key, NLL_KEY), _lv)
+Scope::Scope(pcValue _key, const size_t& _lv)
+	: Token(SCOPE, _vol_(_key, NLL_KEY), _lv)
 {
 }
 
@@ -199,7 +155,6 @@ void Scope::append(pToken _t)
 	else
 	{
 		prop.push_back(_t);
-
 		return; // do not delete _t
 	}
 
