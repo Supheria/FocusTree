@@ -42,9 +42,6 @@
     <ClInclude Include="token_types.h">
       <Filter>头文件\syntax block</Filter>
     </ClInclude>
-    <ClInclude Include="volume.h">
-      <Filter>头文件\syntax block</Filter>
-    </ClInclude>
     <ClInclude Include="parse_tree.h">
       <Filter>头文件\parser</Filter>
     </ClInclude>

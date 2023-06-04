@@ -18,40 +18,40 @@ namespace hoi4
 			// Token will delete key and set it to nullptr when pass to it
 								 // if will have sub-tree,
 								 // need to set from_key to key->get() before key pass a to new Token
-			mutable pcval_u key;
-			mutable pcval_u op; // Token delete op and set it to nullptr when pass to it
-			mutable pcval_u value; // same as above ^
-			mutable pcval_u arr; // same as above ^
-			mutable pToken build;
-			const pTree from; // nullptr means to main-Tree or say root-Tree
-			mutable pTree curr_sub;
-			const size_t level;
-			mutable bool lose_built;
+			pcval_u key;
+			pcval_u op; // Token delete op and set it to nullptr when pass to it
+			pcval_u value; // same as above ^
+			pcval_u arr; // same as above ^
+			pToken build;
+			pTree from; // nullptr means to main-Tree or say root-Tree
+			pTree curr_sub;
+			size_t level;
+			bool lose_built;
 		public:
 			ParseTree();
 			// for sub-tree
-			ParseTree(const pTree _from, pcval_u _key, pcval_u _op, const size_t& _level);
+			ParseTree(const pTree _from, Value _key, Value _op, const size_t& _level);
 			~ParseTree();
 			// for tokenizer to use
 								// can only get build on time,
 								// when get will transfer ownership of build that 
 								// won't delete in ~ParseTree()
-			pToken once_get() const;
+			pToken once_get();
 			// for tokenizer to use, test whether parse process has interrupted
-			const pTree get_from() const;
+			const pTree get_from();
 			// append sub-tree's build to this->(Scope*)build
-			void append(pToken _t) const;
+			void append(pToken _t);
 			// will return pointer to sub-tree if next step will be SUB
 											// and will return its from pointer when parse process finish
 											// main tree's from pointer is nullptr
 											// if parse failed, any tree will return its from pointer
-			const pTree parse(Element& _e) const;
+			const pTree parse(Element& _e);
 		private:
-			const pTree par_sub(Element& _e) const;
-			const pTree par_arr(Element& _e) const;
-			const pTree par_tag_arr(Element& _e) const;
-			const pTree par_val_arr(Element& _e) const;
-			void done() const;
+			const pTree par_sub(Element& _e);
+			const pTree par_arr(Element& _e);
+			const pTree par_tag_arr(Element& _e);
+			const pTree par_val_arr(Element& _e);
+			void done();
 		private:
 			enum Steps : size_t
 			{

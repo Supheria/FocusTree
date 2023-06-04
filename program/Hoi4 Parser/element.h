@@ -7,7 +7,9 @@ namespace hoi4
 {
 	namespace parser
 	{
-		// remember pcval_u should always be a new char[]
+		// remember Value should always be a new char[]
+		typedef const char* Value;
+
 		typedef std::unique_ptr<const char[]> pcval_u;
 
 		//typedef struct Element* pElement;
@@ -32,7 +34,7 @@ namespace hoi4
 				own_val(true),
 				ln(_e.line()),
 				col(_e.column()),
-				val(_e.get()) // same as above ^
+				val(_e.value().release()) // same as above ^
 			{
 			}
 			~Element()
@@ -50,11 +52,11 @@ namespace hoi4
 				col = column;
 
 			}
-			void operator()(pcval_u str, size_t strlen, const size_t& line, const size_t& end_column)
+			void operator()(Value str, size_t strlen, const size_t& line, const size_t& end_column)
 			{
 				ln = line;
-				if (own_val) { delete val; }
-				else { own_val = true; }
+				//if (own_val) { delete val; }
+				//else { own_val = true; }
 				char* buf = new char[strlen + 1];
 				for (size_t i = 0; i < strlen; i++)
 				{
@@ -79,14 +81,14 @@ namespace hoi4
 				return val[0];
 			}
 			// if called for any time, ownership of pointer to val will lose, and ~Element() won't delete[] val
-			pcval_u get()
+			pcval_u& value()
 			{
-				own_val = false;
+				//own_val = false;
 				return val;
 			}
 			operator bool()
 			{
-				return own_val;
+				return val != nullptr;
 			}
 		};
 	}

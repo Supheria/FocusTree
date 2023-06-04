@@ -9,7 +9,7 @@ using namespace hoi4;
 
 ExLog Logger;
 
-fstream flog;
+ofstream flog;
 
 inline std::string get_time()
 {
@@ -25,8 +25,6 @@ inline std::string get_time()
 ExceptionLog::ExceptionLog() :
 	path("ex.log")
 {
-	flog.open(path, ios::ate);
-	flog.close();
 }
 
 void ExceptionLog::operator()(const char* fname_no_ex, const char* message, ExT type)

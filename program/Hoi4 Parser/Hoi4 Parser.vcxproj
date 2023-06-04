@@ -143,7 +143,6 @@
     <ClInclude Include="token.h" />
     <ClInclude Include="tokenizer.h" />
     <ClInclude Include="token_types.h" />
-    <ClInclude Include="volume.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\PUBLiC\HEAdER\exception_log.cpp" />

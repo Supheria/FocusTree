@@ -22,8 +22,14 @@ using namespace hoi4::parser;
 //{
 //	Bridgepath = brgpath;
 //}
+//
+//DLL_EXPORT void print_list()
+//{
+//	print_list(Tokens);
+//}
 
-//void print_list(const token_list& _s);
+
+#ifdef DLL_EXPORT
 
 DLL_EXPORT void parse(const char* filepath, token_list& tokens)
 {
@@ -36,26 +42,33 @@ DLL_EXPORT void reset_log()
 {
 	Logger.reset();
 }
-//
-//void print_list(const token_list& _s)
-//{
-//	ofstream fout;
-//	fout.open(("out.txt"));
-//	for (auto t : _s)
-//	{
-//		for (int i = 0; i < t->level(); i++)
-//		{
-//			fout << '\t';
-//		}
-//		fout << t->token().value() << ": tp" << t->type() << endl;
-//		if (t->type() == Token::SCOPE)
-//		{
-//			print_list(((pScope)t)->property());
-//		}
-//	}
-//}
-//
-//DLL_EXPORT void print_list()
-//{
-//	print_list(Tokens);
-//}
+
+#else
+
+void print_list(const token_list& _s);
+
+int main()
+{
+	Logger.reset();
+	token_list tokens;
+	Tokenizer tk("test.txt", tokens);
+	print_list(tokens);
+}
+
+ofstream fout("out.txt");
+void print_list(const token_list& _s)
+{
+	for (auto t : _s)
+	{
+		for (int i = 0; i < t->level(); i++)
+		{
+			fout << '\t';
+		}
+		fout << t->token().get() << ": tp" << t->type() << endl;
+		if (t->type() == Token::SCOPE)
+		{
+			print_list(((pScope)t)->property());
+		}
+	}
+}
+#endif // ! DLL_EXPORT

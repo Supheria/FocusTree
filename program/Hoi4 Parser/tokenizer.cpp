@@ -94,12 +94,11 @@ void Tokenizer::cache_list()
 
 bool Tokenizer::compose(char& ch)
 {
-    // if tree built successfully (has gone to "return" node), 
-                                        // elm didn't be used, should pass to next tree
+    // while elm has been used its value will to be nullptr
+                            // if elm didn't be used should pass it to next tree
     if (elm) { return true; }
     // some delimiters will bring to next loop 
-                        // that won't use fin.get() to loop one more time to update state
-    /*char ch = fin.peek(); */
+                        // that won't use fget() to loop one more time to update state
     switch (state)
     {
     case Build_quo:
