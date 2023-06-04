@@ -1,5 +1,9 @@
 #include "tokenizer.h"
 #include "exception_log.h"
+#include <format>
+
+using namespace std;
+using namespace hoi4::parser;
 
 const CompareChar Tokenizer::delimiter({ '\t', ' ', '\n', '\r', '#', '=', '>', '<', '}', '{', '"', '\0'});
 const CompareChar Tokenizer::blank({ '\t', ' ', '\n', '\r', '\0' });
@@ -9,14 +13,10 @@ const char Tokenizer::note = '#';
 const char Tokenizer::quote = '"';
 const char Tokenizer::escape = '\\';
 
-extern ErrorLog Errlog;
-extern WarningLog Warnlog;
+extern hoi4::ExLog Logger;
+const char* fn_tkn = "tokenizer";
 
-using namespace std;
-
-const string FileName = "tokenizer";
-
-Tokenizer::Tokenizer(std::string filepath) :
+Tokenizer::Tokenizer(const char* filepath, token_list& tokens) :
     path(filepath),
     buffer(nullptr),
     buflen(0),
@@ -24,8 +24,26 @@ Tokenizer::Tokenizer(std::string filepath) :
     line(1),
     column(0),
     tree(nullptr),
-    state(None)
+    state(None),
+    tokens(tokens)
 {
+    read_buf();
+    tree = new ParseTree();
+    while (bufpos <= buflen)
+    {
+        if (compose(buffer[bufpos]))
+        {
+            auto _tree = tree->parse(elm);
+            if (_tree == nullptr) // main-tree finish, go to next main-tree
+            {
+                cache_list();
+                delete tree;
+                tree = new ParseTree();
+            }
+            else { tree = _tree; }
+        }
+    }
+    del_tree();
 }
 
 Tokenizer::~Tokenizer()
@@ -38,7 +56,6 @@ Tokenizer::~Tokenizer()
 
 const token_list& Tokenizer::get()
 {
-    parse();
     return tokens;
 }
 
@@ -54,7 +71,7 @@ void Tokenizer::read_buf()
     fin.open(path, ios::binary);
     if (!fin.is_open())
     {
-        Errlog(FileName, format("could not open file: {}", path));
+        Logger(fn_tkn, format("could not open file: {}", path).c_str(), ExLog::ERR);
         buffer = new char[1] {'\0'};
         return;
     }
@@ -66,28 +83,6 @@ void Tokenizer::read_buf()
     fbuf->sgetn(buffer, buflen);
     fin.close();
     buffer[buflen] = '\0';
-}
-
-void Tokenizer::parse()
-{
-    read_buf();
-    tree = new ParseTree();
-    while (bufpos <= buflen)
-    {
-        if (compose(buffer[bufpos]))
-        {
-            //elm.get();
-            auto _tree = tree->parse(elm);  
-            if (_tree == nullptr) // main-tree finish, go to next main-tree
-            {
-                cache_list();
-                delete tree;
-                tree = new ParseTree();
-            }
-            else { tree = _tree; }
-        }
-    }
-    del_tree();
 }
 
 void Tokenizer::cache_list()
@@ -117,7 +112,7 @@ bool Tokenizer::compose(char& ch)
         else if (ch == quote)
         {
             token << fget(); // keep the quote mark
-            elm(token.str(), line, column);   // will delete within process of tree->parse(...) when 
+            elm(token.str().c_str(), token.str().length(), line, column);   // will delete within process of tree->parse(...) when 
                                                             // not send to any Token,
                                                             // or will delete in Token::_vol_(...)
             state = None;
@@ -126,7 +121,7 @@ bool Tokenizer::compose(char& ch)
         else if (ch == endline)
         {
             token << quote;
-            elm(token.str(), line, column);
+            elm(token.str().c_str(), token.str().length(), line, column);
             state = None;
             return true;
         }
@@ -136,7 +131,7 @@ bool Tokenizer::compose(char& ch)
         if (ch == endline)
         {
             token << quote << quote;
-            elm(token.str(), line, column);
+            elm(token.str().c_str(), token.str().length(), line, column);
             state = None;
             return true;
         }
@@ -149,7 +144,7 @@ bool Tokenizer::compose(char& ch)
     case Build_unquo:
         if (ch == delimiter)
         {
-            elm(token.str(), line, column);
+            elm(token.str().c_str(), token.str().length(), line, column);
             state = None;
             return true;
         }
@@ -214,7 +209,7 @@ void Tokenizer::del_tree()
 {
     if (tree->get_from() != nullptr)
     {
-        Warnlog(FileName, format("interruption at line({}), column({})", line, column));
+        Logger(fn_tkn, format("interruption at line({}), column({})", line, column).c_str(), ExLog::WRN);
         tree->get_from()->append(tree->once_get());
         pTree _tree = tree->get_from();
         delete tree;

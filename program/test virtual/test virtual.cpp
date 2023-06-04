@@ -6,6 +6,7 @@
 #include <vector>
 #include <list>
 #include <map>
+#include <fstream>
 
 using namespace std;
 class A;
@@ -131,8 +132,24 @@ void test(Steps step)
 typedef list<list<string>> T;
 int main()
 {
-    B* b = new B;
-    delete b;
+    ofstream f;
+    f.close();
+    const char* null_val = "test";
+    size_t strlen = 64;
+    char* buf = new char[strlen];
+    for (size_t i = 0; i < strlen; i++)
+    {
+        buf[i] = null_val[i];
+    }
+    cout << buf;
+   /* string test = "test";
+    auto c = test.c_str();
+    char b = c[6];
+    int a = test.length();
+    cout << a;*/
+
+   /* B* b = new B;
+    delete b;*/
     ////string s = "test";
     //unique_ptr<string> a(new string("test"));
     //auto b = move(a);

@@ -1,6 +1,10 @@
 #include "parse_tree.h"
 #include "token_types.h"
 #include "exception_log.h"
+#include <format>
+
+using namespace std;
+using namespace hoi4::parser;
 
 const char ParseTree::openb = '{';
 const char ParseTree::closb = '}';
@@ -8,18 +12,14 @@ const char ParseTree::equal = '=';
 const char ParseTree::gter = '>';
 const char ParseTree::less = '<';
 
-extern ErrorLog Errlog;
-
-using namespace std;
-
-
-const string FileName = "parse_tree";
-#define UNKNOWN_ERROR Errlog(FileName, format( "unknown error at line({}), column({})", _e.line(), _e.column()))
-#define UNEXPECTED_KEY Errlog(FileName, format( "unexpected key at line({}), column({})", _e.line(), _e.column()))
-#define UNEXPECTED_OPERATOR Errlog(FileName, format( "unexpected operator at line({}), column({})", _e.line(), _e.column()))
-#define UNEXPECTED_VALUE Errlog(FileName, format( "unexpected value at line({}), column({})", _e.line(), _e.column()))
-#define UNEXPECTED_ARRAY_TYPE Errlog(FileName, format( "unexpected array type at line({}), column({})", _e.line(), _e.column()))
-#define ERROR_SYNTAX_ARRAY Errlog(FileName, format( "wrong array syntax at line({}), column({})", _e.line(), _e.column()))
+extern hoi4::ExLog Logger;
+const char* fn_tree = "parse_tree";
+#define UNKNOWN_ERROR Logger(fn_tree, format( "unknown error at line({}), column({})", _e.line(), _e.column()).c_str(), ExLog::ERR)
+#define UNEXPECTED_KEY Logger(fn_tree, format( "unexpected key at line({}), column({})", _e.line(), _e.column()).c_str(), ExLog::ERR)
+#define UNEXPECTED_OPERATOR Logger(fn_tree, format( "unexpected operator at line({}), column({})", _e.line(), _e.column()).c_str(), ExLog::ERR)
+#define UNEXPECTED_VALUE Logger(fn_tree, format( "unexpected value at line({}), column({})", _e.line(), _e.column()).c_str(), ExLog::ERR)
+#define UNEXPECTED_ARRAY_TYPE Logger(fn_tree, format( "unexpected array type at line({}), column({})", _e.line(), _e.column()).c_str(), ExLog::ERR)
+#define ERROR_SYNTAX_ARRAY Logger(fn_tree, format( "wrong array syntax at line({}), column({})", _e.line(), _e.column()).c_str(), ExLog::ERR)
 
 
 ParseTree::ParseTree() :
@@ -37,7 +37,7 @@ ParseTree::ParseTree() :
 }
 
 // call for sub-tree
-ParseTree::ParseTree(const pTree _from, pcValue _key, pcValue _op, const size_t& _level) :
+ParseTree::ParseTree(const pTree _from, pcval_u _key, pcval_u _op, const size_t& _level) :
 	key(_key),
 	op(_op),
 	value(nullptr),
@@ -137,7 +137,7 @@ const pTree ParseTree::parse(Element& _e) const
 				_e.get();
 				return from;
 			case openb:
-				if ((*op)[0] != equal)
+				if (op[0] != equal)
 				{
 					UNEXPECTED_OPERATOR;
 					_e.get();

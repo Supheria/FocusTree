@@ -20,7 +20,7 @@ void print_token(const token_list& _s)
 	}
 }
 
-void get_val(const token_list& _s, list<pcValue>& test)
+void get_val(const token_list& _s, list<Value>& test)
 {
 	for (auto t : _s)
 	{
@@ -45,14 +45,15 @@ void get_val(const token_list& _s, list<pcValue>& test)
 }
 int main()
 {
-	Tokenizer parser("test.txt");
 	clock_t start, end;
 	start = clock();
-	const token_list& tokens = parser.get();
+	token_list tokens;
+	Tokenizer parser("test.txt", tokens);
+	//const  = parser.get();
 	end = clock();
 	cout << "time = " << double(end - start) / CLOCKS_PER_SEC << "s" << endl;
-	print_token(tokens);
-	list<pcValue> test;
+	//print_token(tokens);
+	list<Value> test;
 	get_val(tokens, test);
 	//parser.~Tokenizer();
 }

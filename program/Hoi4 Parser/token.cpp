@@ -1,8 +1,10 @@
 #include "token.h"
 
 using namespace std;
+using namespace hoi4::parser;
 
-Token::Token(const T& _t, pcValue _tok, const size_t& _lv) :
+
+Token::Token(const TokT& _t, pcval_u _tok, const size_t& _lv) :
 	tp(_t),
 	tok(_tok),
 	lv(_lv)
@@ -16,14 +18,14 @@ Token::~Token()
 {
 }
 
-Token::Token(pcValue _tok, const size_t& _lv) :
+Token::Token(pcval_u _tok, const size_t& _lv) :
 	tp(TOKEN),
 	tok(_vol_(_tok, "NULL_VALUE")),
 	lv(_lv)
 {
 }
 
-const Token::T& Token::type() const
+const Token::TokT& Token::type() const
 {
 	return tp;
 }
@@ -38,7 +40,7 @@ const size_t& Token::level() const
 	return lv;
 }
 
-pcValue Token::_vol_(pcValue _v, const Value& null_val)
+pcval_u Token::_vol_(pcval_u _v, const pcval_u& null_val)
 {
 	if (_v != nullptr)
 	{
@@ -46,6 +48,12 @@ pcValue Token::_vol_(pcValue _v, const Value& null_val)
 	}
 	else
 	{
-		return new std::string(null_val);
+		size_t strlen = 64;
+		char* buf = new char[strlen]{ 0 };
+		for (size_t i = 0; i < strlen; i++)
+		{
+			buf[i] = null_val[i];
+		}
+		return buf;
 	}
 }
