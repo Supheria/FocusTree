@@ -7,7 +7,7 @@ using namespace std;
 using namespace chrono;
 using namespace hoi4;
 
-ExLog Logger;
+ExceptionLog Logger;
 
 ofstream flog;
 

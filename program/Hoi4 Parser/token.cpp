@@ -3,7 +3,6 @@
 using namespace std;
 using namespace hoi4::parser;
 
-
 Token::Token(const TokT& _t, Value _tok, const size_t& _lv) :
 	tp(_t),
 	tok(_tok),

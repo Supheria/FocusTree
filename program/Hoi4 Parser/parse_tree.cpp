@@ -1,6 +1,6 @@
 #include "parse_tree.h"
 #include "token_types.h"
-#include "exception_log.h"
+#include "dll_in.h"
 #include <format>
 
 using namespace std;
@@ -12,14 +12,14 @@ const char ParseTree::equal = '=';
 const char ParseTree::gter = '>';
 const char ParseTree::less = '<';
 
-extern hoi4::ExLog Logger;
+// extern hoi4::ExceptionLog Logger;
 const char* fn_tree = "parse_tree";
-#define UNKNOWN_ERROR Logger(fn_tree, format( "unknown error at line({}), column({})", _e.line(), _e.column()).c_str(), ExLog::ERR)
-#define UNEXPECTED_KEY Logger(fn_tree, format( "unexpected key at line({}), column({})", _e.line(), _e.column()).c_str(), ExLog::ERR)
-#define UNEXPECTED_OPERATOR Logger(fn_tree, format( "unexpected operator at line({}), column({})", _e.line(), _e.column()).c_str(), ExLog::ERR)
-#define UNEXPECTED_VALUE Logger(fn_tree, format( "unexpected value at line({}), column({})", _e.line(), _e.column()).c_str(), ExLog::ERR)
-#define UNEXPECTED_ARRAY_TYPE Logger(fn_tree, format( "unexpected array type at line({}), column({})", _e.line(), _e.column()).c_str(), ExLog::ERR)
-#define ERROR_SYNTAX_ARRAY Logger(fn_tree, format( "wrong array syntax at line({}), column({})", _e.line(), _e.column()).c_str(), ExLog::ERR)
+#define UNKNOWN_ERROR Logger(fn_tree, format( "unknown error at line({}), column({})", _e.line(), _e.column()).c_str(), ExceptionLog::ERR)
+#define UNEXPECTED_KEY Logger(fn_tree, format( "unexpected key at line({}), column({})", _e.line(), _e.column()).c_str(), ExceptionLog::ERR)
+#define UNEXPECTED_OPERATOR Logger(fn_tree, format( "unexpected operator at line({}), column({})", _e.line(), _e.column()).c_str(), ExceptionLog::ERR)
+#define UNEXPECTED_VALUE Logger(fn_tree, format( "unexpected value at line({}), column({})", _e.line(), _e.column()).c_str(), ExceptionLog::ERR)
+#define UNEXPECTED_ARRAY_TYPE Logger(fn_tree, format( "unexpected array type at line({}), column({})", _e.line(), _e.column()).c_str(), ExceptionLog::ERR)
+#define ERROR_SYNTAX_ARRAY Logger(fn_tree, format( "wrong array syntax at line({}), column({})", _e.line(), _e.column()).c_str(), ExceptionLog::ERR)
 
 
 ParseTree::ParseTree() :

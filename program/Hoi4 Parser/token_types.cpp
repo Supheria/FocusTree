@@ -1,10 +1,8 @@
 #include "token_types.h"
-#include "exception_log.h"
+#include "dll_in.h"
 
 using namespace std;
 using namespace hoi4::parser;
-
-extern hoi4::ExLog Logger;
 
 const char* fn_tt = "token_types";
 const Value NLL_KEY = "NULL_KEY";
@@ -150,7 +148,7 @@ void Scope::append(pToken _t)
 	if (_t == nullptr) { return; }
 	if (_t->level() != level() + 1)
 	{
-		Logger(fn_tt, "level mismatched of appending in Scope", ExLog::ERR);
+		Logger(fn_tt, "level mismatched of appending in Scope", ExceptionLog::ERR);
 		delete _t;
 	}
 	else

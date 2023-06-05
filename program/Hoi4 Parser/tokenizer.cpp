@@ -1,5 +1,5 @@
 #include "tokenizer.h"
-#include "exception_log.h"
+#include "dll_in.h"
 #include <format>
 
 using namespace std;
@@ -13,7 +13,6 @@ const char Tokenizer::note = '#';
 const char Tokenizer::quote = '"';
 const char Tokenizer::escape = '\\';
 
-extern hoi4::ExLog Logger;
 const char* fn_tkn = "tokenizer";
 
 Tokenizer::Tokenizer(const char* filepath, token_list& tokens) :
@@ -71,7 +70,7 @@ void Tokenizer::read_buf()
     fin.open(path, ios::binary);
     if (!fin.is_open())
     {
-        Logger(fn_tkn, format("could not open file: {}", path).c_str(), ExLog::ERR);
+        Logger(fn_tkn, format("could not open file: {}", path).c_str(), ExceptionLog::ERR);
         buffer = new char[1] {'\0'};
         return;
     }
@@ -208,7 +207,7 @@ void Tokenizer::del_tree()
 {
     if (tree->get_from() != nullptr)
     {
-        Logger(fn_tkn, format("interruption at line({}), column({})", line, column).c_str(), ExLog::WRN);
+        Logger(fn_tkn, format("interruption at line({}), column({})", line, column).c_str(), ExceptionLog::WRN);
         tree->get_from()->append(tree->once_get());
         pTree _tree = tree->get_from();
         delete tree;

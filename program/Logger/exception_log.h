@@ -3,7 +3,7 @@
 
 namespace hoi4
 {
-	typedef class ExceptionLog
+	extern "C" class __declspec(dllexport)  ExceptionLog
 	{
 	public:
 		enum ExT
@@ -18,12 +18,16 @@ namespace hoi4
 		ExceptionLog();
 		void operator()(const char* fname_no_ex, const char* message, ExT type);
 		void reset();
-	} ExLog;
+	};
 }
-
-extern hoi4::ExLog Logger;
 
 #endif // ! _EXCEPTION_LOG_H
 
 
+#ifdef IMPORT_LOGGER
+#define LOG_DLL extern "C" __declspec(dllimport)
+#else
+#define LOG_DLL extern "C" __declspec(dllexport)
+#endif
 
+LOG_DLL hoi4::ExceptionLog Logger;

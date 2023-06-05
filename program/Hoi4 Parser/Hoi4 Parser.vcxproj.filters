@@ -25,12 +25,6 @@
     <Filter Include="头文件\parser">
       <UniqueIdentifier>{99ca1140-d337-4a1c-a2fa-2ce4dd17f42b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="头文件\public">
-      <UniqueIdentifier>{3dd17a5d-18da-4099-9763-777758671573}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\public">
-      <UniqueIdentifier>{e13736b7-cfec-42b8-8cab-c1e631986b4b}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="element.h">
@@ -48,8 +42,11 @@
     <ClInclude Include="tokenizer.h">
       <Filter>头文件\parser</Filter>
     </ClInclude>
-    <ClInclude Include="..\PUBLiC\HEAdER\exception_log.h">
-      <Filter>头文件\public</Filter>
+    <ClInclude Include="dll_in.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="dll_out.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -59,17 +56,14 @@
     <ClCompile Include="token_types.cpp">
       <Filter>源文件\syntax block</Filter>
     </ClCompile>
-    <ClCompile Include="dll export.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="parse_tree.cpp">
       <Filter>源文件\parser</Filter>
     </ClCompile>
     <ClCompile Include="tokenizer.cpp">
       <Filter>源文件\parser</Filter>
     </ClCompile>
-    <ClCompile Include="..\PUBLiC\HEAdER\exception_log.cpp">
-      <Filter>源文件\public</Filter>
+    <ClCompile Include="program.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
