@@ -3,9 +3,9 @@
 using namespace std;
 using namespace hoi4::parser;
 
-Token::Token(const TokT& _t, Value _tok, const size_t& _lv) :
+Token::Token(const token_types& _t, Value _key, const size_t& _lv) :
 	tp(_t),
-	tok(_tok),
+	tok(_key),
 	lv(_lv)
 {
 }
@@ -24,7 +24,7 @@ Token::Token(pcval_u& _tok, const size_t& _lv) :
 {
 }
 
-const Token::TokT& Token::type() const
+const Token::token_types& Token::type() const
 {
 	return tp;
 }
@@ -47,12 +47,6 @@ Value Token::_vol_(pcval_u& _v, const Value null_val)
 	}
 	else
 	{
-		size_t strlen = 64;
-		char* buf = new char[strlen]{ 0 };
-		for (size_t i = 0; i < strlen; i++)
-		{
-			buf[i] = null_val[i];
-		}
-		return buf;
+		return null_val;
 	}
 }

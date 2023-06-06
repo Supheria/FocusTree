@@ -1,8 +1,0 @@
-[parse_tree.cpp[22:38:52]] error: unexpected array type at line(2), column(46)
-[parse_tree.cpp[22:38:52]] error: unexpected operator at line(2), column(54)
-[parse_tree.cpp[22:38:52]] error: unexpected key at line(2), column(90)
-[parse_tree.cpp[22:38:52]] error: unexpected key at line(3), column(6)
-[parse_tree.cpp[22:38:52]] error: unexpected key at line(3), column(101)
-[parse_tree.cpp[22:38:52]] error: unexpected key at line(4), column(6)
-[parse_tree.cpp[22:38:52]] error: unexpected key at line(4), column(101)
-[parse_tree.cpp[22:38:52]] error: unexpected key at line(5), column(2)

@@ -5,7 +5,6 @@
 
 using namespace std;
 using namespace chrono;
-using namespace hoi4;
 
 ExceptionLog Logger;
 
@@ -27,31 +26,27 @@ ExceptionLog::ExceptionLog() :
 {
 }
 
-void ExceptionLog::operator()(const char* fname_no_ex, const char* message, ExT type)
+void ExceptionLog::append(const char* fname_no_ex, const char* message, ExT type)
 {
+	flog.open(path, ios::app);
+	if (!flog.is_open()) { return; }
+
+	string msg;
 	switch (type)
 	{
 	case ERR:
-		append(format("[{}.cpp[{}]] error: {}", fname_no_ex, get_time(), message).c_str());
+		msg = format("[{}.cpp[{}]] error: {}", fname_no_ex, get_time(), message).c_str();
 		break;
 	case WRN:
-		append(format("[{}.cpp[{}]] warning: {}", fname_no_ex, get_time(), message).c_str());
+		msg = format("[{}.cpp[{}]] warning: {}", fname_no_ex, get_time(), message).c_str();
 		break;
 	}
+	flog << msg << endl;
+	flog.close();
 }
 
 void ExceptionLog::reset()
 {
 	flog.open(path, ios::ate);
 	flog.close();
-}
-
-void ExceptionLog::append(const char* msg)
-{
-	flog.open(path, ios::app);
-	if (flog.is_open())
-	{
-		flog << msg << endl;
-		flog.close();
-	}
 }

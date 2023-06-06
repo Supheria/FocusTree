@@ -1,27 +1,24 @@
-#ifndef _TOKENIZER_H
-#define _TOKENIZER_H
+#ifndef _HOI4_PARSER_TOKENIZER_H_
+#define _HOI4_PARSER_TOKENIZER_H_
 
-#include <list>
-#include <sstream>
-#include <fstream>
-#include <unordered_map>
 #include "parse_tree.h"
 #include "token_types.h"
+#include <sstream>
 
 namespace hoi4
 {
 	namespace parser
 	{
-		struct CompareChar;
 
 		class Tokenizer
 		{
+		private:
+			struct CompareChar;
 		public:
 			static const CompareChar delimiter, blank, endline, marker;
 			static const char note, quote, escape;
 		private:
-			std::string path;
-			char* buffer;
+			std::unique_ptr<char[]> buffer;
 			size_t buflen;
 			size_t bufpos;
 			size_t line;
@@ -32,12 +29,8 @@ namespace hoi4
 			token_list& tokens;
 		public:
 			Tokenizer(const char* filepath, token_list& tokens);
-			~Tokenizer();
-			// for t in get(), use t->token()->get() to tansfer the ownership of value, 
-									// and so for other pVolume -s of t
-			const token_list& get();
 		private:
-			void read_buf();
+			void read_buf(const char* path);
 			void cache_list();
 			bool compose(char& ch);
 			char fget();
@@ -54,43 +47,43 @@ namespace hoi4
 				Build_unquo,
 				Note
 			} state;
-		};
-
-		struct CompareChar
-		{
 		private:
-			std::list<char> chs;
-		public:
-			CompareChar(std::list<char> chars)
+			struct CompareChar
 			{
-				chs = chars;
-			}
-			bool operator==(const char& ch) const
-			{
-				for (auto it : chs)
+			private:
+				std::list<char> chs;
+			public:
+				CompareChar(std::list<char> chars)
 				{
-					if (it == ch)
-					{
-						return true;
-					}
+					chs = chars;
 				}
-				return false;
-			}
-			bool operator!=(const char& ch) const
-			{
-				return !(*this == ch);
-			}
-			friend bool operator==(const char& ch, const CompareChar& cc)
-			{
-				return cc == ch;
-			}
-			friend bool operator!=(const char& ch, const CompareChar& cc)
-			{
-				return cc != ch;
-			}
+				bool operator==(const char& ch) const
+				{
+					for (auto it : chs)
+					{
+						if (it == ch)
+						{
+							return true;
+						}
+					}
+					return false;
+				}
+				bool operator!=(const char& ch) const
+				{
+					return !(*this == ch);
+				}
+				friend bool operator==(const char& ch, const CompareChar& cc)
+				{
+					return cc == ch;
+				}
+				friend bool operator!=(const char& ch, const CompareChar& cc)
+				{
+					return cc != ch;
+				}
+			};
 		};
 	}
 }
 
-#endif // _TOKENIZER_H
+#endif // _HOI4_PARSER_TOKENIZER_H_
 

@@ -1,5 +1,5 @@
 #include "token_types.h"
-#include "dll_in.h"
+#include "use_ex_log.h"
 
 using namespace std;
 using namespace hoi4::parser;
@@ -132,10 +132,6 @@ Scope::Scope(pcval_u& _key, const size_t& _lv)
 
 Scope::~Scope()
 {
-	for (auto t : prop)
-	{
-		delete t;
-	}
 }
 
 const token_list& Scope::property()
@@ -148,12 +144,12 @@ void Scope::append(pToken _t)
 	if (_t == nullptr) { return; }
 	if (_t->level() != level() + 1)
 	{
-		Logger(fn_tt, "level mismatched of appending in Scope", ExceptionLog::ERR);
+		ex_log()->append(fn_tt, "level mismatched of appending in Scope", ExLog::ERR);
 		delete _t;
 	}
 	else
 	{
-		prop.push_back(_t);
+		prop.push_back(ptok_u(_t));
 		// do not delete _t
 	}
 }

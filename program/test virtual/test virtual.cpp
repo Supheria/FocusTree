@@ -132,7 +132,16 @@ void test(Steps step)
 typedef list<list<string>> T;
 int main()
 {
-    ofstream f;
+    const char* a = "test";
+    auto b = a;
+    /*unique_ptr<string> test(new string("test"));
+    auto  a = test.get();
+    auto b = test.get();
+    auto c = test.release();
+    auto d = test.release();
+    auto f = test.release();*/
+
+    /*ofstream f;
     f.close();
     const char* null_val = "test";
     size_t strlen = 64;
@@ -141,7 +150,8 @@ int main()
     {
         buf[i] = null_val[i];
     }
-    cout << buf;
+    cout << buf;*/
+
    /* string test = "test";
     auto c = test.c_str();
     char b = c[6];
