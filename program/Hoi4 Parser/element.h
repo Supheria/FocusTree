@@ -1,9 +1,10 @@
 #ifndef _HOI4_PARSER_ELEMENT_H_
 #define _HOI4_PARSER_ELEMENT_H_
 
-#include "ex_log_api.h"
+#include "par_api.h"
 
-//typedef struct Element* pElement;
+using namespace hoi4::parser;
+
 struct Element
 {
 private:
@@ -19,8 +20,8 @@ public:
 		val(nullptr)
 	{
 	}
-	// will call (*p_e)->get() that transfers ownership of value, 
-	// and will DELETE (*p_e) and set it to nullptr 
+	// will call (*_val)->get() that transfers ownership of value, 
+	// and will DELETE (*_val) and set it to nullptr 
 	Element(Element& _e) :
 		own_val(true),
 		ln(_e.line()),

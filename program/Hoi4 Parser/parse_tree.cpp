@@ -61,7 +61,7 @@ const pTree ParseTree::get_from()
 
 void ParseTree::append(pToken _t)
 {
-	pScope(build.get())->append(_t);
+	((Scope*)(build.get()))->append(_t);
 }
 
 const pTree ParseTree::parse(Element& _e)
@@ -135,7 +135,7 @@ const pTree ParseTree::parse(Element& _e)
 			default:
 				step = Steps(VAL);
 				value.reset(_e.value().release());
-				build.reset(new Tag(key, op, value, level));
+				build.reset(new Tagged(key, op, value, level));
 				return pTree(this);
 			}
 		}
@@ -196,7 +196,7 @@ const pTree ParseTree::parse(Element& _e)
 			return from;
 		default:
 			step = TAG;
-			pTag(build.get())->append(_e.value());
+			((Tagged*)(build.get()))->append(_e.value());
 			return pTree(this);
 		}
 	}
@@ -238,7 +238,7 @@ const pTree ParseTree::par_sub(Element& _e)
 			_e.value().reset();
 			return from;
 		case closb:
-			pScope(build.get())->append(new Token(value, level + 1));
+			((Scope*)(build.get()))->append(new Token(value, level + 1));
 			_e.value().reset();
 			done();
 			return from;
@@ -250,7 +250,7 @@ const pTree ParseTree::par_sub(Element& _e)
 			return curr_sub;
 		default:
 			// step = Steps(SUB | KEY);
-			pScope(build.get())->append(new Token(value, level + 1));
+			((Scope*)(build.get()))->append(new Token(value, level + 1));
 			value.reset(_e.value().release());
 			return pTree(this);
 		}
@@ -333,21 +333,21 @@ const pTree ParseTree::par_arr(Element& _e)
 		case equal:
 			step = Steps(ARR | TAG);
 			build.reset(new TagArray(key, level));
-			pTagArr(build.get())->append_new(arr);
+			((TagArray*)(build.get()))->append_new(arr);
 			_e.value().reset();
 			return pTree(this);
 		case closb:
 			step = Steps(ARR | VAL | OFF);
 			build.reset(new ValueArray(key, level));
-			pValArr(build.get())->append_new(arr);
+			((ValueArray*)(build.get()))->append_new(arr);
 			_e.value().reset();
 			return pTree(this);
 		default:
 			step = Steps(ARR | VAL);
 			build.reset(new ValueArray(key, level));
-			pValArr(build.get())->append_new(arr);
+			((ValueArray*)(build.get()))->append_new(arr);
 			arr.reset(_e.value().release());
-			pValArr(build.get())->append(arr);
+			((ValueArray*)(build.get()))->append(arr);
 			return pTree(this);
 		}
 	}
@@ -422,7 +422,7 @@ const pTree ParseTree::par_val_arr(Element& _e)
 		default:
 			step = Steps(ARR | VAL | KEY);
 			arr.reset(_e.value().release());
-			pValArr(build.get())->append_new(arr);
+			((ValueArray*)(build.get()))->append_new(arr);
 			return pTree(this);
 		}
 	}
@@ -447,7 +447,7 @@ const pTree ParseTree::par_val_arr(Element& _e)
 		default:
 			step = Steps(ARR | VAL);
 			arr.reset(_e.value().release());
-			pValArr(build.get())->append(arr);
+			((ValueArray*)(build.get()))->append(arr);
 			return pTree(this);
 		}
 	}
@@ -472,7 +472,7 @@ const pTree ParseTree::par_val_arr(Element& _e)
 		default:
 			// step = Steps(ARR | VAL);
 			arr.reset(_e.value().release());
-			pValArr(build.get())->append(arr);
+			((ValueArray*)(build.get()))->append(arr);
 			return pTree(this);
 		}
 	}
@@ -505,7 +505,7 @@ const pTree ParseTree::par_tag_arr(Element& _e)
 			default:
 				step = Steps(ARR | TAG | KEY);
 				arr.reset(_e.value().release());
-				pTagArr(build.get())->append_tag(arr);
+				((TagArray*)(build.get()))->append_tag(arr);
 				return pTree(this);
 			}
 		}
@@ -530,7 +530,7 @@ const pTree ParseTree::par_tag_arr(Element& _e)
 			default:
 				// step = Steps(ARR | TAG | VAL);
 				arr.reset(_e.value().release());
-				pTagArr(build.get())->append(arr);
+				((TagArray*)(build.get()))->append(arr);
 				return pTree(this);
 			}
 		}
@@ -577,7 +577,7 @@ const pTree ParseTree::par_tag_arr(Element& _e)
 		default:
 			step = Steps(ARR | TAG | KEY);
 			arr.reset(_e.value().release());
-			pTagArr(build.get())->append_new(arr);
+			((TagArray*)(build.get()))->append_new(arr);
 			return pTree(this);
 		}
 	}

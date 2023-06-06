@@ -40,7 +40,7 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
@@ -146,14 +146,12 @@
     <ClInclude Include="use_ex_log.h" />
     <ClInclude Include="element.h" />
     <ClInclude Include="parse_tree.h" />
-    <ClInclude Include="token.h" />
     <ClInclude Include="tokenizer.h" />
     <ClInclude Include="token_types.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="parse_tree.cpp" />
     <ClCompile Include="program.cpp" />
-    <ClCompile Include="token.cpp" />
     <ClCompile Include="tokenizer.cpp" />
     <ClCompile Include="token_types.cpp" />
   </ItemGroup>

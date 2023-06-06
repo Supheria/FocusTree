@@ -11,24 +11,74 @@ namespace hoi4
 		typedef const char* Value;
 		typedef std::unique_ptr<const char[]> pcval_u;
 
-		typedef class Token* pToken;
-		typedef std::unique_ptr<Token> ptok_u;
-		struct IToken
+		enum token_types
 		{
-		public:
-			enum token_types
-			{
-				TOKEN,
-				TAG,
-				VAL_ARRAY,
-				TAG_ARRAY,
-				SCOPE
-			};
-		public:
-			virtual const token_types& type() const = 0;
-			virtual pcval_u& token() = 0;
-			virtual const size_t& level() const = 0;
+			TOKEN,
+			TAGGED,
+			VAL_ARRAY,
+			TAG_ARRAY,
+			SCOPE
 		};
+
+
+		typedef struct Tok
+		{
+			virtual pcval_u& name() = 0;
+			virtual const token_types& type() const = 0;
+			// 0 mean to main-Token or say root-Token
+			virtual const size_t& level() const = 0;
+		} *pToken;
+
+		typedef std::unique_ptr<Tok> ptok_u;
+
+
+		typedef std::list<pcval_u> value_list;
+		typedef value_list tagged_val;
+		typedef struct Tgg : Tok
+		{
+			virtual pcval_u& name() = 0;
+			virtual const token_types& type() const = 0;
+			// 0 mean to main-Token or say root-Token
+			virtual const size_t& level() const = 0;
+			virtual pcval_u& operat() = 0;
+			virtual pcval_u& tag() = 0;
+			virtual tagged_val& value() = 0;
+		} *pTagged;
+
+
+		typedef std::list<value_list> arr_v;
+		typedef struct VAr : Tok
+		{
+			virtual pcval_u& name() = 0;
+			virtual const token_types& type() const = 0;
+			// 0 mean to main-Token or say root-Token
+			virtual const size_t& level() const = 0;
+			virtual arr_v& value() = 0;
+		} *pValArr;
+
+
+		typedef std::pair<pcval_u, tagged_val> tag_pair;
+		typedef std::list<tag_pair> tag_pair_list;
+		typedef std::list<tag_pair_list> arr_t;
+		typedef struct TAr : Tok
+		{
+			virtual pcval_u& name() = 0;
+			virtual const token_types& type() const = 0;
+			// 0 mean to main-Token or say root-Token
+			virtual const size_t& level() const = 0;
+			virtual arr_t& value() = 0;
+		} *pTagArr;
+
+
+		typedef std::list<ptok_u> token_list;
+		typedef struct Sco : Tok
+		{
+			virtual pcval_u& name() = 0;
+			virtual const token_types& type() const = 0;
+			// 0 mean to main-Token or say root-Token
+			virtual const size_t& level() const = 0;
+			virtual token_list& property() = 0;
+		} *pScope;
 	}
 }
 

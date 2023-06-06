@@ -32,8 +32,8 @@ void print_list(const token_list& _s)
 		{
 			fout << '\t';
 		}
-		fout << t->token().get() << ": tp" << t->type() << endl;
-		if (t->type() == Token::SCOPE)
+		fout << t->name().get() << ": tp" << t->type() << endl;
+		if (t->type() == SCOPE)
 		{
 			print_list((pScope(t.get()))->property());
 		}

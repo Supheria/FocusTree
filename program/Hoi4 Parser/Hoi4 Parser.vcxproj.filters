@@ -33,9 +33,6 @@
     <ClInclude Include="element.h">
       <Filter>头文件\syntax block</Filter>
     </ClInclude>
-    <ClInclude Include="token.h">
-      <Filter>头文件\syntax block</Filter>
-    </ClInclude>
     <ClInclude Include="token_types.h">
       <Filter>头文件\syntax block</Filter>
     </ClInclude>
@@ -53,9 +50,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="token.cpp">
-      <Filter>源文件\syntax block</Filter>
-    </ClCompile>
     <ClCompile Include="token_types.cpp">
       <Filter>源文件\syntax block</Filter>
     </ClCompile>

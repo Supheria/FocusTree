@@ -2,9 +2,9 @@
 #include "use_ex_log.h"
 #include <format>
 #include <fstream>
+#include <sstream>
 
 using namespace std;
-using namespace hoi4::parser;
 
 const Tokenizer::CompareChar Tokenizer::delimiter({ '\t', ' ', '\n', '\r', '#', '=', '>', '<', '}', '{', '"', '\0'});
 const Tokenizer::CompareChar Tokenizer::blank({ '\t', ' ', '\n', '\r', '\0' });
@@ -15,6 +15,8 @@ const char Tokenizer::quote = '"';
 const char Tokenizer::escape = '\\';
 
 const char* fn_tkn = "tokenizer";
+
+stringstream token;
 
 Tokenizer::Tokenizer(const char* filepath, token_list& tokens) :
     buffer(nullptr),
@@ -95,7 +97,7 @@ bool Tokenizer::compose(char& ch)
             token << fget(); // keep the quote mark
             elm(token.str().c_str(), token.str().length(), line, column);   // will delete within process of tree->parse(...) when 
                                                             // not send to any Token,
-                                                            // or will delete in Token::_vol_(...)
+                                                            // or will delete in Token::_val_(...)
             state = None;
             return true;
         }

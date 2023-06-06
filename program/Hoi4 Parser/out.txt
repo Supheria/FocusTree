@@ -1,4 +1,0 @@
-colors: tp4
-	第一: tp0
-	第二: tp0
-	其三: tp0
