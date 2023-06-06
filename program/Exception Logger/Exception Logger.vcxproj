@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{c72d61fb-32ca-4124-8fa1-e9a42f95bbc9}</ProjectGuid>
-    <RootNamespace>Logger</RootNamespace>
+    <ProjectGuid>{824d9f2b-9479-432f-9425-a55c87a17b7e}</ProjectGuid>
+    <RootNamespace>ExceptionLogger</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -71,10 +71,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)public\bin\</OutDir>
+    <OutDir>$(SolutionDir)bin\debug</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)public\bin\</OutDir>
+    <OutDir>$(SolutionDir)bin\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -136,9 +136,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="exception_log.h" />
+    <ClInclude Include="ex_log_api.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="exception_log.cpp" />
+    <ClCompile Include="ex_log_api.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

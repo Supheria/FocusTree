@@ -25,12 +25,12 @@
     <Filter Include="头文件\parser">
       <UniqueIdentifier>{99ca1140-d337-4a1c-a2fa-2ce4dd17f42b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\use api">
+      <UniqueIdentifier>{86b233ef-ea03-4261-8fce-b237bcdb11d3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="element.h">
-      <Filter>头文件\syntax block</Filter>
-    </ClInclude>
-    <ClInclude Include="token.h">
       <Filter>头文件\syntax block</Filter>
     </ClInclude>
     <ClInclude Include="token_types.h">
@@ -42,17 +42,14 @@
     <ClInclude Include="tokenizer.h">
       <Filter>头文件\parser</Filter>
     </ClInclude>
-    <ClInclude Include="dll_in.h">
+    <ClInclude Include="par_api.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="dll_out.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="use_ex_log.h">
+      <Filter>头文件\use api</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="token.cpp">
-      <Filter>源文件\syntax block</Filter>
-    </ClCompile>
     <ClCompile Include="token_types.cpp">
       <Filter>源文件\syntax block</Filter>
     </ClCompile>

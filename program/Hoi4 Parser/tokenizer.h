@@ -1,96 +1,80 @@
-#ifndef _TOKENIZER_H
-#define _TOKENIZER_H
+#ifndef _HOI4_PARSER_TOKENIZER_H_
+#define _HOI4_PARSER_TOKENIZER_H_
 
-#include <list>
-#include <sstream>
-#include <fstream>
-#include <unordered_map>
 #include "parse_tree.h"
 #include "token_types.h"
 
-namespace hoi4
+class Tokenizer
 {
-	namespace parser
+private:
+	struct CompareChar;
+public:
+	static const CompareChar delimiter, blank, endline, marker;
+	static const char note, quote, escape;
+private:
+	std::unique_ptr<char[]> buffer;
+	size_t buflen;
+	size_t bufpos;
+	size_t line;
+	size_t column;
+	pTree tree;
+	Element elm;
+	token_list& tokens;
+public:
+	Tokenizer(const char* filepath, token_list& tokens);
+private:
+	void read_buf(const char* path);
+	void cache_list();
+	bool compose(char& ch);
+	char fget();
+	// need to test whether current tree has return to root,
+					// otherwise need to del all tree remained
+					// include main-tree
+	void del_tree();
+private:
+	enum
 	{
-		struct CompareChar;
-
-		class Tokenizer
+		None,
+		Build_quo,
+		Escape_quo,
+		Build_unquo,
+		Note
+	} state;
+private:
+	struct CompareChar
+	{
+	private:
+		std::list<char> chs;
+	public:
+		CompareChar(std::list<char> chars)
 		{
-		public:
-			static const CompareChar delimiter, blank, endline, marker;
-			static const char note, quote, escape;
-		private:
-			std::string path;
-			char* buffer;
-			size_t buflen;
-			size_t bufpos;
-			size_t line;
-			size_t column;
-			pTree tree;
-			Element elm;
-			std::stringstream token;
-			token_list& tokens;
-		public:
-			Tokenizer(const char* filepath, token_list& tokens);
-			~Tokenizer();
-			// for t in get(), use t->token()->get() to tansfer the ownership of value, 
-									// and so for other pVolume -s of t
-			const token_list& get();
-		private:
-			void read_buf();
-			void cache_list();
-			bool compose(char& ch);
-			char fget();
-			// need to test whether current tree has return to root,
-							// otherwise need to del all tree remained
-							// include main-tree
-			void del_tree();
-		private:
-			enum
-			{
-				None,
-				Build_quo,
-				Escape_quo,
-				Build_unquo,
-				Note
-			} state;
-		};
-
-		struct CompareChar
+			chs = chars;
+		}
+		bool operator==(const char& ch) const
 		{
-		private:
-			std::list<char> chs;
-		public:
-			CompareChar(std::list<char> chars)
+			for (auto it : chs)
 			{
-				chs = chars;
-			}
-			bool operator==(const char& ch) const
-			{
-				for (auto it : chs)
+				if (it == ch)
 				{
-					if (it == ch)
-					{
-						return true;
-					}
+					return true;
 				}
-				return false;
 			}
-			bool operator!=(const char& ch) const
-			{
-				return !(*this == ch);
-			}
-			friend bool operator==(const char& ch, const CompareChar& cc)
-			{
-				return cc == ch;
-			}
-			friend bool operator!=(const char& ch, const CompareChar& cc)
-			{
-				return cc != ch;
-			}
-		};
-	}
-}
+			return false;
+		}
+		bool operator!=(const char& ch) const
+		{
+			return !(*this == ch);
+		}
+		friend bool operator==(const char& ch, const CompareChar& cc)
+		{
+			return cc == ch;
+		}
+		friend bool operator!=(const char& ch, const CompareChar& cc)
+		{
+			return cc != ch;
+		}
+	};
+};
 
-#endif // _TOKENIZER_H
+#endif // _HOI4_PARSER_TOKENIZER_H_
 

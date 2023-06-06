@@ -7,6 +7,7 @@
 #include <list>
 #include <map>
 #include <fstream>
+#include <unordered_map>
 
 using namespace std;
 class A;
@@ -128,11 +129,64 @@ void test(Steps step)
         cout << endl;
     }
 }
+struct Cmp
 
-typedef list<list<string>> T;
+{
+
+    bool operator()(const char* str1, const char* str2)const
+
+    {
+
+        return strcmp(str1, str2) == 0;
+
+    }
+
+}; struct Hash_Func
+
+{
+
+    //BKDR hash algorithm，有关字符串hash函数，可以去找找资料看看
+
+    int operator()(const char* str)const
+
+    {
+
+        int seed = 131;//31  131 1313 13131131313 etc//
+
+        int hash = 0;
+
+        while (*str)
+
+        {
+
+            hash = (hash * seed) + (*str);
+
+            str++;
+
+        }
+
+
+
+        return hash & (0x7FFFFFFF);
+
+    }
+
+};
+typedef unordered_map<const char*, int, Hash_Func, Cmp> name_set;
 int main()
 {
-    ofstream f;
+    name_set a;
+    a["test"] = 1;
+    a["test"] = 2;
+    a["tet"] = 3;
+    /*unique_ptr<string> test(new string("test"));
+    auto  a = test.get();
+    auto b = test.get();
+    auto c = test.release();
+    auto d = test.release();
+    auto f = test.release();*/
+
+    /*ofstream f;
     f.close();
     const char* null_val = "test";
     size_t strlen = 64;
@@ -141,7 +195,8 @@ int main()
     {
         buf[i] = null_val[i];
     }
-    cout << buf;
+    cout << buf;*/
+
    /* string test = "test";
     auto c = test.c_str();
     char b = c[6];

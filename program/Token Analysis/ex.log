@@ -1,0 +1,8 @@
+[tokenizer.cpp[00:42:53]] error: could not open file: test.txt
+[tokenizer.cpp[00:58:36]] error: could not open file: test.txt
+[tokenizer.cpp[01:00:15]] error: could not open file: test.txt
+[tokenizer.cpp[01:00:43]] error: could not open file: test.txt
+[tokenizer.cpp[01:15:06]] error: could not open file: test.txt
+[tokenizer.cpp[01:15:17]] error: could not open file: test.txt
+[tokenizer.cpp[01:23:40]] error: could not open file: test.txt
+[tokenizer.cpp[01:24:28]] error: could not open file: test.txt

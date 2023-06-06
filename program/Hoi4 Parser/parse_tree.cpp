@@ -1,6 +1,6 @@
 #include "parse_tree.h"
 #include "token_types.h"
-#include "dll_in.h"
+#include "use_ex_log.h"
 #include <format>
 
 using namespace std;
@@ -12,14 +12,14 @@ const char ParseTree::equal = '=';
 const char ParseTree::gter = '>';
 const char ParseTree::less = '<';
 
-// extern hoi4::ExceptionLog Logger;
+// extern hoi4::ExLog ex_log()->append;
 const char* fn_tree = "parse_tree";
-#define UNKNOWN_ERROR Logger(fn_tree, format( "unknown error at line({}), column({})", _e.line(), _e.column()).c_str(), ExceptionLog::ERR)
-#define UNEXPECTED_KEY Logger(fn_tree, format( "unexpected key at line({}), column({})", _e.line(), _e.column()).c_str(), ExceptionLog::ERR)
-#define UNEXPECTED_OPERATOR Logger(fn_tree, format( "unexpected operator at line({}), column({})", _e.line(), _e.column()).c_str(), ExceptionLog::ERR)
-#define UNEXPECTED_VALUE Logger(fn_tree, format( "unexpected value at line({}), column({})", _e.line(), _e.column()).c_str(), ExceptionLog::ERR)
-#define UNEXPECTED_ARRAY_TYPE Logger(fn_tree, format( "unexpected array type at line({}), column({})", _e.line(), _e.column()).c_str(), ExceptionLog::ERR)
-#define ERROR_SYNTAX_ARRAY Logger(fn_tree, format( "wrong array syntax at line({}), column({})", _e.line(), _e.column()).c_str(), ExceptionLog::ERR)
+#define UNKNOWN_ERROR ex_log()->append(fn_tree, format( "unknown error at line({}), column({})", _e.line(), _e.column()).c_str(), ExLog::ERR)
+#define UNEXPECTED_KEY ex_log()->append(fn_tree, format( "unexpected key at line({}), column({})", _e.line(), _e.column()).c_str(), ExLog::ERR)
+#define UNEXPECTED_OPERATOR ex_log()->append(fn_tree, format( "unexpected operator at line({}), column({})", _e.line(), _e.column()).c_str(), ExLog::ERR)
+#define UNEXPECTED_VALUE ex_log()->append(fn_tree, format( "unexpected value at line({}), column({})", _e.line(), _e.column()).c_str(), ExLog::ERR)
+#define UNEXPECTED_ARRAY_TYPE ex_log()->append(fn_tree, format( "unexpected array type at line({}), column({})", _e.line(), _e.column()).c_str(), ExLog::ERR)
+#define ERROR_SYNTAX_ARRAY ex_log()->append(fn_tree, format( "wrong array syntax at line({}), column({})", _e.line(), _e.column()).c_str(), ExLog::ERR)
 
 
 ParseTree::ParseTree() :
@@ -31,8 +31,7 @@ ParseTree::ParseTree() :
 	from(nullptr),
 	curr_sub(nullptr),
 	step(NONE),
-	level(0),
-	lose_built(false)
+	level(0)
 {
 }
 
@@ -46,29 +45,13 @@ ParseTree::ParseTree(const pTree _from, Value _key, Value _op, const size_t& _le
 	from(_from),
 	curr_sub(nullptr),
 	step(OP),
-	level(_level),
-	lose_built(false)
+	level(_level)
 {
-}
-
-ParseTree::~ParseTree()
-{
-	if (!lose_built) { delete build; }
-	// delete curr_sub; // do not delete here, it will delete in step SUB, or by tokenizer when parse interrupted in sub-tree
-	// delete from; // do not delete here, it will delete by tokenizer or from's from
 }
 
 pToken ParseTree::once_get()
 {
-	if (!lose_built)
-	{
-		lose_built = true;
-		return build;
-	}
-	else
-	{
-		return nullptr;
-	}
+	return build.release();
 }
 
 const pTree ParseTree::get_from()
@@ -78,7 +61,7 @@ const pTree ParseTree::get_from()
 
 void ParseTree::append(pToken _t)
 {
-	pScope(build)->append(_t);
+	((Scope*)(build.get()))->append(_t);
 }
 
 const pTree ParseTree::parse(Element& _e)
@@ -117,8 +100,8 @@ const pTree ParseTree::parse(Element& _e)
 				return pTree(this);
 			default:
 				step = Steps(SUB | KEY);
-				value = pcval_u(_e.value().release());
-				build = new Scope(key, level);
+				value.reset(_e.value().release());
+				build.reset(new Scope(key, level));
 				return pTree(this);
 			}
 		}
@@ -151,8 +134,8 @@ const pTree ParseTree::parse(Element& _e)
 				}
 			default:
 				step = Steps(VAL);
-				value = pcval_u(_e.value().release());
-				build = new Tag(key, op, value, level);
+				value.reset(_e.value().release());
+				build.reset(new Tagged(key, op, value, level));
 				return pTree(this);
 			}
 		}
@@ -168,7 +151,7 @@ const pTree ParseTree::parse(Element& _e)
 		case gter:
 		case less:
 			step = OP;
-			op = pcval_u(_e.value().release());
+			op.reset(_e.value().release());
 			return pTree(this);
 		default:
 			UNEXPECTED_OPERATOR;
@@ -189,7 +172,7 @@ const pTree ParseTree::parse(Element& _e)
 			return pTree(this);
 		default:
 			done();
-			// _e.value().reset(); // leave *_e to next tree
+			// _e.value().reset(); // leave _e to next tree
 			return from;
 		}
 	}
@@ -213,7 +196,7 @@ const pTree ParseTree::parse(Element& _e)
 			return from;
 		default:
 			step = TAG;
-			pTag(build)->append(_e.value());
+			((Tagged*)(build.get()))->append(_e.value());
 			return pTree(this);
 		}
 	}
@@ -234,7 +217,7 @@ const pTree ParseTree::parse(Element& _e)
 			return from;
 		default:
 			step = KEY;
-			key = pcval_u(_e.value().release());
+			key.reset(_e.value().release());
 			return pTree(this);
 		}
 	}
@@ -255,7 +238,7 @@ const pTree ParseTree::par_sub(Element& _e)
 			_e.value().reset();
 			return from;
 		case closb:
-			pScope(build)->append(new Token(value, level + 1));
+			((Scope*)(build.get()))->append(new Token(value, level + 1));
 			_e.value().reset();
 			done();
 			return from;
@@ -267,8 +250,8 @@ const pTree ParseTree::par_sub(Element& _e)
 			return curr_sub;
 		default:
 			// step = Steps(SUB | KEY);
-			pScope(build)->append(new Token(value, level + 1));
-			value = pcval_u(_e.value().release());
+			((Scope*)(build.get()))->append(new Token(value, level + 1));
+			value.reset(_e.value().release());
 			return pTree(this);
 		}
 	}
@@ -291,7 +274,7 @@ const pTree ParseTree::par_sub(Element& _e)
 		default:
 			delete curr_sub;
 			step = Steps(SUB | KEY);
-			value = pcval_u(_e.value().release());
+			value.reset(_e.value().release());
 			return pTree(this);
 		}
 	}
@@ -349,22 +332,22 @@ const pTree ParseTree::par_arr(Element& _e)
 			return from;
 		case equal:
 			step = Steps(ARR | TAG);
-			build = new TagArray(key, level);
-			pTagArr(build)->append_new(arr);
+			build.reset(new TagArray(key, level));
+			((TagArray*)(build.get()))->append_new(arr);
 			_e.value().reset();
 			return pTree(this);
 		case closb:
 			step = Steps(ARR | VAL | OFF);
-			build = new ValueArray(key, level);
-			pValArr(build)->append_new(arr);
+			build.reset(new ValueArray(key, level));
+			((ValueArray*)(build.get()))->append_new(arr);
 			_e.value().reset();
 			return pTree(this);
 		default:
 			step = Steps(ARR | VAL);
-			build = new ValueArray(key, level);
-			pValArr(build)->append_new(arr);
-			arr = pcval_u(_e.value().release());
-			pValArr(build)->append(arr);
+			build.reset(new ValueArray(key, level));
+			((ValueArray*)(build.get()))->append_new(arr);
+			arr.reset(_e.value().release());
+			((ValueArray*)(build.get()))->append(arr);
 			return pTree(this);
 		}
 	}
@@ -388,7 +371,7 @@ const pTree ParseTree::par_arr(Element& _e)
 			return pTree(this);
 		default:
 			step = Steps(ARR | KEY);
-			arr = pcval_u(_e.value().release());
+			arr.reset(_e.value().release());
 			return pTree(this);
 		}
 	}
@@ -438,8 +421,8 @@ const pTree ParseTree::par_val_arr(Element& _e)
 			return pTree(this);
 		default:
 			step = Steps(ARR | VAL | KEY);
-			arr = pcval_u(_e.value().release());
-			pValArr(build)->append_new(arr);
+			arr.reset(_e.value().release());
+			((ValueArray*)(build.get()))->append_new(arr);
 			return pTree(this);
 		}
 	}
@@ -463,8 +446,8 @@ const pTree ParseTree::par_val_arr(Element& _e)
 			return pTree(this);
 		default:
 			step = Steps(ARR | VAL);
-			arr = pcval_u(_e.value().release());
-			pValArr(build)->append(arr);
+			arr.reset(_e.value().release());
+			((ValueArray*)(build.get()))->append(arr);
 			return pTree(this);
 		}
 	}
@@ -488,8 +471,8 @@ const pTree ParseTree::par_val_arr(Element& _e)
 			return pTree(this);
 		default:
 			// step = Steps(ARR | VAL);
-			arr = pcval_u(_e.value().release());
-			pValArr(build)->append(arr);
+			arr.reset(_e.value().release());
+			((ValueArray*)(build.get()))->append(arr);
 			return pTree(this);
 		}
 	}
@@ -521,8 +504,8 @@ const pTree ParseTree::par_tag_arr(Element& _e)
 				return pTree(this);
 			default:
 				step = Steps(ARR | TAG | KEY);
-				arr = pcval_u(_e.value().release());
-				pTagArr(build)->append_tag(arr);
+				arr.reset(_e.value().release());
+				((TagArray*)(build.get()))->append_tag(arr);
 				return pTree(this);
 			}
 		}
@@ -546,8 +529,8 @@ const pTree ParseTree::par_tag_arr(Element& _e)
 				return pTree(this);
 			default:
 				// step = Steps(ARR | TAG | VAL);
-				arr = pcval_u(_e.value().release());
-				pTagArr(build)->append(arr);
+				arr.reset(_e.value().release());
+				((TagArray*)(build.get()))->append(arr);
 				return pTree(this);
 			}
 		}
@@ -593,8 +576,8 @@ const pTree ParseTree::par_tag_arr(Element& _e)
 			return pTree(this);
 		default:
 			step = Steps(ARR | TAG | KEY);
-			arr = pcval_u(_e.value().release());
-			pTagArr(build)->append_new(arr);
+			arr.reset(_e.value().release());
+			((TagArray*)(build.get()))->append_new(arr);
 			return pTree(this);
 		}
 	}
@@ -643,7 +626,6 @@ void ParseTree::done()
 {
 	if (from != nullptr)
 	{
-		from->append(build);
-		lose_built = true;
+		from->append(build.release());
 	}
 }
