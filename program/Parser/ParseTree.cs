@@ -48,6 +48,7 @@ namespace Parser
             Level = level;
             Key = key;
             Operator = operat;
+            Step = Steps.Operator;
         }
 
         public TokenAPI OnceGet()
@@ -189,7 +190,7 @@ namespace Parser
                     case Greater:
                     case Less:
                         Step = Steps.Sub;
-                        return new ParseTree(this, Level + 1, Key, element.GetValue());
+                        return new ParseTree(this, Level + 1, Value, element.GetValue());
                     default:
                         ((Scope)Builder).Append(new Token(Value, Level + 1));
                         Value = element.GetValue();
@@ -213,7 +214,7 @@ namespace Parser
                         return From;
                     default:
                         Step = Steps.Sub | Steps.Key;
-                        element.GetValue();
+                        Value = element.GetValue();
                         return this;
                 }
             }

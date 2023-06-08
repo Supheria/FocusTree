@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,11 +34,12 @@ namespace Parser
         ParseTree Tree { get; set; } = null;
         Element Composed { get; set; } = null;
         StringBuilder Composing { get; set; } = new();
-        List<TokenAPI> tokens { get; set; } = new();
+        List<TokenAPI> Tokens { get; set; } = new();
 
 
-        public Tokenizer(string FilePath, List<TokenAPI> Tokens)
+        public Tokenizer(string FilePath, List<TokenAPI> tokens)
         {
+            Tokens = tokens;
             ReadBuffer(FilePath);
             Tree = new ParseTree();
             while (BufferPosition < Buffer.Length)
@@ -57,19 +59,27 @@ namespace Parser
         }
         private void ReadBuffer(string FilePath)
         {
+            if (!File.Exists(FilePath)) 
+            {
+                Exceptions.Exception($"could not open file: {FilePath}");
+                return;
+            }
             using var file = new FileStream(FilePath, FileMode.Open, FileAccess.Read);
             if (file.ReadByte() == 0xEF && file.ReadByte() == 0xBB && file.ReadByte() == 0xBF)
             {
-                file.Read(Buffer, 3, (int)file.Length - 3);
+                Buffer = new byte[file.Length - 3];
+                file.Read(Buffer, 3, Buffer.Length);
             }
             else
             {
-                file.Read(Buffer);
+                file.Seek(0, SeekOrigin.Begin);
+                Buffer = new byte[file.Length];
+                file.Read(Buffer, 0, Buffer.Length);
             }
         }
         private bool Compose(char ch)
         {
-            if (Composed.OwnValue == true) { return true; }
+            if (Composed != null && Composed.OwnValue == true) { return true; }
             switch(State)
             {
                 case States.Quotation:
@@ -169,7 +179,7 @@ namespace Parser
         {
             var token = Tree.OnceGet();
             if (token == null) { return; }
-            tokens.Add(token);
+            Tokens.Add(token);
         }
         private char GetChar()
         {
