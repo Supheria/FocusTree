@@ -170,6 +170,7 @@ arr_t& TagArray::value()
 {
 	return val;
 }
+
 TagArray::TagArray(pcval_u& _name, const size_t& _level) :
 	na(_val_(_name, NLL_NAME)),
 	tp(TAG_ARRAY),
