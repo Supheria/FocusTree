@@ -14,6 +14,7 @@ namespace Parser
         const char Greater = '>';
         const char Less = '<';
 
+        [Flags]
         enum Steps
         {
             None = 0,
@@ -270,19 +271,19 @@ namespace Parser
                     case Equal:
                         Step = Steps.Array | Steps.Tag;
                         Builder = new TagArray(Key, Level);
-                        ((TagArray)Builder).Append_new(Array);
+                        ((TagArray)Builder).AppendNew(Array);
                         element.GetValue();
                         return this;
                     case CloseBrace:
                         Step = Steps.Array | Steps.Value | Steps.Off;
                         Builder = new ValueArray(Key, Level);
-                        ((ValueArray)Builder).Append_new(Array);
+                        ((ValueArray)Builder).AppendNew(Array);
                         element.GetValue();
                         return this;
                     default:
                         Step = Steps.Array | Steps.Value;
                         Builder = new ValueArray(Key, Level);
-                        ((ValueArray)Builder).Append_new(Array);
+                        ((ValueArray)Builder).AppendNew(Array);
                         ((ValueArray)Builder).Append(element.GetValue());
                         return this;
                 }
@@ -315,102 +316,6 @@ namespace Parser
         public ParseTree Parse_Tag_Array(Element element)
         {
             char ch = element.Head();
-            //
-            // 12
-            //
-            if ((Step & Steps.Off) > 0)
-            {
-                switch (ch)
-                {
-                    case OpenBrace:
-                        Step = Steps.Array | Steps.Value | Steps.On;
-                        element.GetValue();
-                        return this;
-                    case CloseBrace:
-                        element.GetValue();
-                        Done();
-                        return From;
-                    default:
-                        Exceptions.UnexpectedArraySyntax(element);
-                        element.GetValue();
-                        return From;
-                }
-            }
-            //
-            // 13
-            //
-            else if ((Step & Steps.On) > 0)
-            {
-                switch(ch)
-                {
-                    case OpenBrace:
-                    case Equal:
-                    case Greater:
-                    case Less:
-                        Exceptions.UnexpectedValue(element);
-                        element.GetValue(); 
-                        return From;
-                    case CloseBrace:
-                        Step = Steps.Array | Steps.Value | Steps.Off;
-                        element.GetValue();
-                        return this;
-                    default:
-                        Step = Steps.Array | Steps.Value | Steps.Key;
-                        ((ValueArray)Builder).Append_new(element.GetValue());
-                        return this;
-                }
-            }
-            //
-            // 14
-            //
-            else if ((Step & Steps.Key) > 0)
-            {
-                switch (ch)
-                {
-                    case OpenBrace:
-                    case Equal:
-                    case Greater:
-                    case Less:
-                        Exceptions.UnexpectedArrayType(element);
-                        element.GetValue(); 
-                        return From;
-                    case CloseBrace:
-                        Step = Steps.Array | Steps.Value | Steps.Off;
-                        element.GetValue();
-                        return this;
-                    default:
-                        Step = Steps.Array | Steps.Value;
-                        ((ValueArray)Builder).Append(element.GetValue());
-                        return this;
-                }
-            }
-            //
-            // 11 - Array | Value
-            //
-            else
-            {
-                switch(ch)
-                {
-                    case OpenBrace:
-                    case Equal:
-                    case Greater:
-                    case Less:
-                        Exceptions.UnexpectedValue(element);
-                        element.GetValue();
-                        return From;
-                    case CloseBrace:
-                        Step = Steps.Array | Steps.Value | Steps.Off;
-                        element.GetValue();
-                        return this;
-                    default:
-                        ((ValueArray)Builder).Append(element.GetValue());
-                        return this;
-                }
-            }
-        }
-        public ParseTree Parse_Value_Array(Element element)
-        {
-            char ch = element.Head();
             if ((Step & Steps.Value) > 0)
             {
                 //
@@ -433,7 +338,7 @@ namespace Parser
                             return this;
                         default:
                             Step = Steps.Array | Steps.Tag | Steps.Key;
-                            ((TagArray)Builder).Append(element.GetValue());
+                            ((TagArray)Builder).AppendTag(element.GetValue());
                             return this;
                     }
                 }
@@ -503,7 +408,7 @@ namespace Parser
                         return this;
                     default:
                         Step = Steps.Array | Steps.Tag | Steps.Key;
-                        ((TagArray)Builder).Append_new(element.GetValue());
+                        ((TagArray)Builder).AppendNew(element.GetValue());
                         return this;
                 }
             }
@@ -544,6 +449,102 @@ namespace Parser
                         Exceptions.UnexpectedArrayType(element);
                         element.GetValue();
                         return From;
+                }
+            }
+        }
+        public ParseTree Parse_Value_Array(Element element)
+        {
+            char ch = element.Head();
+            //
+            // 12
+            //
+            if ((Step & Steps.Off) > 0)
+            {
+                switch (ch)
+                {
+                    case OpenBrace:
+                        Step = Steps.Array | Steps.Value | Steps.On;
+                        element.GetValue();
+                        return this;
+                    case CloseBrace:
+                        element.GetValue();
+                        Done();
+                        return From;
+                    default:
+                        Exceptions.UnexpectedArraySyntax(element);
+                        element.GetValue();
+                        return From;
+                }
+            }
+            //
+            // 13
+            //
+            else if ((Step & Steps.On) > 0)
+            {
+                switch (ch)
+                {
+                    case OpenBrace:
+                    case Equal:
+                    case Greater:
+                    case Less:
+                        Exceptions.UnexpectedValue(element);
+                        element.GetValue();
+                        return From;
+                    case CloseBrace:
+                        Step = Steps.Array | Steps.Value | Steps.Off;
+                        element.GetValue();
+                        return this;
+                    default:
+                        Step = Steps.Array | Steps.Value | Steps.Key;
+                        ((ValueArray)Builder).AppendNew(element.GetValue());
+                        return this;
+                }
+            }
+            //
+            // 14
+            //
+            else if ((Step & Steps.Key) > 0)
+            {
+                switch (ch)
+                {
+                    case OpenBrace:
+                    case Equal:
+                    case Greater:
+                    case Less:
+                        Exceptions.UnexpectedArrayType(element);
+                        element.GetValue();
+                        return From;
+                    case CloseBrace:
+                        Step = Steps.Array | Steps.Value | Steps.Off;
+                        element.GetValue();
+                        return this;
+                    default:
+                        Step = Steps.Array | Steps.Value;
+                        ((ValueArray)Builder).Append(element.GetValue());
+                        return this;
+                }
+            }
+            //
+            // 11 - Array | Value
+            //
+            else
+            {
+                switch (ch)
+                {
+                    case OpenBrace:
+                    case Equal:
+                    case Greater:
+                    case Less:
+                        Exceptions.UnexpectedValue(element);
+                        element.GetValue();
+                        return From;
+                    case CloseBrace:
+                        Step = Steps.Array | Steps.Value | Steps.Off;
+                        element.GetValue();
+                        return this;
+                    default:
+                        ((ValueArray)Builder).Append(element.GetValue());
+                        return this;
                 }
             }
         }

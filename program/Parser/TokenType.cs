@@ -59,7 +59,7 @@ namespace Parser
         {
             Value.LastOrDefault()?.Add(value);
         }
-        public void Append_new(string value)
+        public void AppendNew(string value)
         {
             Value.Add(new() { value });
         }
@@ -82,11 +82,11 @@ namespace Parser
         {
             Value.LastOrDefault()?.LastOrDefault().Value.Add(value);
         }
-        public void Append_tag(string value)
+        public void AppendTag(string value)
         {
             Value.LastOrDefault()?.Add(new(value, new()));
         }
-        public void Append_new(string value)
+        public void AppendNew(string value)
         {
             Value.Add(new() { new(value, new()) });
         }
