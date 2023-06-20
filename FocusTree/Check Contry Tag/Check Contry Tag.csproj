@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>Find_Contry_Three_Letter</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Root_Dir_Ini">
+      <HintPath>..\Root Dir Ini\bin\Debug\net6.0\Root_Dir_Ini.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

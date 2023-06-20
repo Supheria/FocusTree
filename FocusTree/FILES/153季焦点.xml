@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FocusGraph>
+  <State Name="153季焦点">
+    <Nodes>
+      <Node ID="1" Name="153季焦点" Star="false" Duration="0" Descript="" Ps.="（注：随着事件发展自动完成）">
+        <RawEffects>
+          <Effect>这项国策目前没有实际影响。但随着世界局势的变化可能会发生改变。</Effect>
+        </RawEffects>
+        <Requires />
+      </Node>
+      <Node ID="2" Name="扩展生产" Star="false" Duration="60" Descript="" Ps.="">
+        <RawEffects>
+          <Effect>1x70%研究加成：生产类，建造类和资源获取类。</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>1</Require>
+        </Requires>
+      </Node>
+      <Node ID="3" Name="主城扩建" Star="true" Duration="60" Descript="" Ps.="">
+        <RawEffects>
+          <Effect>（首都）添加3个建筑位。</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>2</Require>
+        </Requires>
+      </Node>
+      <Node ID="4" Name="扩建民用工厂" Star="false" Duration="60" Descript="" Ps.="">
+        <RawEffects>
+          <Effect>（state）：添加3个建筑位，添加3民用工厂。</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>3</Require>
+        </Requires>
+      </Node>
+      <Node ID="5" Name="民用工厂建造改良" Star="true" Duration="60" Descript="" Ps.="">
+        <RawEffects>
+          <Effect>获得民用工厂建造改良，其效果为（军转民花费：-20%，民用工厂建造速度：+15%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>4</Require>
+        </Requires>
+      </Node>
+      <Node ID="6" Name="广泛扩建" Star="true" Duration="60" Descript="" Ps.="">
+        <RawEffects>
+          <Effect>所有拥有的地区：添加1个建筑位。</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>2</Require>
+        </Requires>
+      </Node>
+      <Node ID="7" Name="扩建军用工厂" Star="false" Duration="60" Descript="" Ps.="">
+        <RawEffects>
+          <Effect>（state）：添加3个建筑位，添加3军用工厂。</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>6</Require>
+        </Requires>
+      </Node>
+      <Node ID="8" Name="军用工厂建造改良" Star="true" Duration="60" Descript="" Ps.="">
+        <RawEffects>
+          <Effect>获得军用工厂建造改良，其效果为（民转军花费：-20%，军用工厂建造速度：+15%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>7</Require>
+        </Requires>
+      </Node>
+      <Node ID="9" Name="资源工厂改良" Star="true" Duration="60" Descript="" Ps.="（注：民用工厂建造改良或军用工厂建造改良）">
+        <RawEffects>
+          <Effect>金属炼制厂的资源产出：+10%，灵气提取厂的资源产出：+12，火药厂的资源产出：+8，妖石精炼厂的资源产出：+6，2x70%研究加成：金属资源，灵气资源，火药资源，妖石资源和石油资源。</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>8</Require>
+        </Requires>
+      </Node>
+      <Node ID="10" Name="生产目标" Star="false" Duration="60" Descript="" Ps.="">
+        <RawEffects>
+          <Effect>1x80%研究加成：生产类。</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>2</Require>
+        </Requires>
+      </Node>
+      <Node ID="11" Name="设备混合" Star="true" Duration="60" Descript="" Ps.="">
+        <RawEffects>
+          <Effect>获得设备混合，其效果为（生产效率上限：+15%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>10</Require>
+        </Requires>
+      </Node>
+      <Node ID="12" Name="设备分离" Star="true" Duration="60" Descript="" Ps.="">
+        <RawEffects>
+          <Effect>获得设备分离，其效果为（生产效率增长：+25%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>10</Require>
+        </Requires>
+      </Node>
+      <Node ID="13" Name="结构再优化" Star="false" Duration="60" Descript="" Ps.="（注：设备混合或设备分离）">
+        <RawEffects>
+          <Effect>1x80%研究加成：生产结构类。</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>12</Require>
+        </Requires>
+      </Node>
+      <Node ID="14" Name="资源探测优化" Star="true" Duration="60" Descript="" Ps.="">
+        <RawEffects>
+          <Effect>获得资源探测优化，其效果为（战略资源获取率：+25%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>13</Require>
+        </Requires>
+      </Node>
+      <Node ID="15" Name="工业理论" Star="false" Duration="60" Descript="" Ps.="（注：资源工厂改良或资源探测优化）">
+        <RawEffects>
+          <Effect>获得工业理论，其效果为（生产效率保持：+33%，生产效率上限：+5%，生产效率增长：+15%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>14</Require>
+        </Requires>
+      </Node>
+      <Node ID="16" Name="科技创新" Star="false" Duration="70" Descript="" Ps.="">
+        <RawEffects>
+          <Effect>1x80%研究加成：数学类，1x80%研究加成：无线电。</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>1</Require>
+        </Requires>
+      </Node>
+      <Node ID="17" Name="研究生产" Star="true" Duration="70" Descript="" Ps.="">
+        <RawEffects>
+          <Effect>获得投入研究于生产，其效果为（生产类研究速度：+4%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>16</Require>
+        </Requires>
+      </Node>
+      <Node ID="18" Name="研究建造" Star="true" Duration="70" Descript="" Ps.="">
+        <RawEffects>
+          <Effect>获得投入研究于建造，其效果为（建造类研究速度：+4%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>16</Require>
+        </Requires>
+      </Node>
+      <Node ID="19" Name="工业创新" Star="false" Duration="70" Descript="" Ps.="（注：研究生产或研究建造）">
+        <RawEffects>
+          <Effect>减少1.5的超前惩罚并获得100%研究加成。对下3次研究生产类，建造类和资源获取类科技时有效。</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>18</Require>
+        </Requires>
+      </Node>
+      <Node ID="20" Name="研究步兵武器" Star="true" Duration="70" Descript="" Ps.="">
+        <RawEffects>
+          <Effect>获得投入研究于步兵武器，其效果为（基础武器类研究速度：+4%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>16</Require>
+        </Requires>
+      </Node>
+      <Node ID="21" Name="研究火炮" Star="true" Duration="70" Descript="" Ps.="">
+        <RawEffects>
+          <Effect>获得投入研究于火炮，，其效果为（火炮类研究速度：+4%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>16</Require>
+        </Requires>
+      </Node>
+      <Node ID="22" Name="武器革新" Star="false" Duration="70" Descript="" Ps.="（注：研究步兵武器或研究火炮）">
+        <RawEffects>
+          <Effect>减少1.5的超前惩罚并获得100%研究加成。对下3次研究步兵和火炮类科技时有效。</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>21</Require>
+        </Requires>
+      </Node>
+      <Node ID="23" Name="研究资源开发" Star="false" Duration="70" Descript="" Ps.="">
+        <RawEffects>
+          <Effect>获得投入研究于资源，其效果为（资源获取类研究速度：+4%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>16</Require>
+        </Requires>
+      </Node>
+      <Node ID="24" Name="科技成果" Star="false" Duration="70" Descript="" Ps.="（注：需要全部：工业创新，研究资源开发，武器革新）">
+        <RawEffects>
+          <Effect>获得1个科研槽。</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>23</Require>
+        </Requires>
+      </Node>
+      <Node ID="25" Name="军事革命" Star="false" Duration="70" Descript="" Ps.="">
+        <RawEffects>
+          <Effect>陆军经验：+30。</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>1</Require>
+        </Requires>
+      </Node>
+      <Node ID="26" Name="步兵武器" Star="false" Duration="70" Descript="" Ps.="">
+        <RawEffects>
+          <Effect>1x80%研究加成：基础武器。</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>25</Require>
+        </Requires>
+      </Node>
+      <Node ID="27" Name="火炮" Star="false" Duration="70" Descript="" Ps.="">
+        <RawEffects>
+          <Effect>1x80%研究加成：火炮类。</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>25</Require>
+        </Requires>
+      </Node>
+      <Node ID="28" Name="武器改良" Star="false" Duration="70" Descript="" Ps.="（注：需要全部：步兵武器，火炮）">
+        <RawEffects>
+          <Effect>获得步兵武器改良，其效果为（步枪：对人员杀伤：+10%，灵力单元：+对人员杀伤：+10%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>27</Require>
+        </Requires>
+      </Node>
+      <Node ID="29" Name="火炮改装" Star="false" Duration="70" Descript="" Ps.="">
+        <RawEffects>
+          <Effect>2x80%研究加成：魔导师小队和和追击炮小队装备。</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>28</Require>
+        </Requires>
+      </Node>
+      <Node ID="30" Name="加强训练" Star="false" Duration="70" Descript="" Ps.="">
+        <RawEffects>
+          <Effect>获得加强训练，其效果为（部队组织度：+10%，训练事件：+5%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>28</Require>
+        </Requires>
+      </Node>
+      <Node ID="31" Name="陆战理论" Star="false" Duration="70" Descript="" Ps.="">
+        <RawEffects>
+          <Effect>1x40%花费降低：陆军学说。</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>25</Require>
+        </Requires>
+      </Node>
+      <Node ID="32" Name="支援武器" Star="false" Duration="70" Descript="" Ps.="">
+        <RawEffects>
+          <Effect>1x80%研究加成：支援科技。</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>25</Require>
+        </Requires>
+      </Node>
+      <Node ID="33" Name="新式武器" Star="false" Duration="70" Descript="" Ps.="（注：需要全部：陆战理论，支援武器）">
+        <RawEffects>
+          <Effect>1x60%研究加成：精英妖怪小队和战斗巫女小队装备。</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>32</Require>
+        </Requires>
+      </Node>
+      <Node ID="34" Name="空军装备" Star="false" Duration="70" Descript="" Ps.="">
+        <RawEffects>
+          <Effect>1x60%研究加成：空军类。</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>33</Require>
+        </Requires>
+      </Node>
+      <Node ID="35" Name="训练大妖怪" Star="false" Duration="70" Descript="" Ps.="">
+        <RawEffects>
+          <Effect>2x70%研究加成：大妖怪小队和机甲小队装备。</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>33</Require>
+        </Requires>
+      </Node>
+      <Node ID="36" Name="加大征兵" Star="false" Duration="70" Descript="" Ps.="（注：需要全部：火炮改装，加强训练，空军装备，训练大妖怪）">
+        <RawEffects>
+          <Effect>获得加大征兵，其效果为（动员速度：-5%，适役人口修正：25%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>35</Require>
+        </Requires>
+      </Node>
+      <Node ID="37" Name="幻想乡的危机" Star="false" Duration="70" Descript="" Ps.="">
+        <RawEffects>
+          <Effect>政治点数：+100。</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>1</Require>
+        </Requires>
+      </Node>
+      <Node ID="38" Name="宽松占领" Star="true" Duration="70" Descript="" Ps.="">
+        <RawEffects>
+          <Effect>获得宽松占领，其效果为（非核心人力：-0.1%，顺从度增长速度：+15%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>37</Require>
+        </Requires>
+      </Node>
+      <Node ID="39" Name="同化新区域" Star="true" Duration="70" Descript="" Ps.="">
+        <RawEffects>
+          <Effect>获得同化新区域，其效果为（建造核心花费：-20%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>38</Require>
+        </Requires>
+      </Node>
+      <Node ID="40" Name="榨取占领区" Star="true" Duration="70" Descript="" Ps.="">
+        <RawEffects>
+          <Effect>获得榨取占领区，其效果为（非核心人力：+0.1%，抵抗增长速度：+50%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>37</Require>
+        </Requires>
+      </Node>
+      <Node ID="41" Name="掠夺占领区" Star="true" Duration="70" Descript="" Ps.="">
+        <RawEffects>
+          <Effect>获得掠夺占领区，其效果为（掠夺降低厌战效果：+25%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>40</Require>
+        </Requires>
+      </Node>
+      <Node ID="42" Name="外敌宣传" Star="false" Duration="70" Descript="" Ps.="">
+        <RawEffects>
+          <Effect>增加基础战争支持度：+15%。</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>37</Require>
+        </Requires>
+      </Node>
+      <Node ID="43" Name="内部巩固" Star="false" Duration="70" Descript="" Ps.="">
+        <RawEffects>
+          <Effect>增加基础稳定度：+15%。</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>37</Require>
+        </Requires>
+      </Node>
+      <Node ID="44" Name="民众激昂" Star="true" Duration="70" Descript="" Ps.="（注：需要全部：外敌宣传，内部巩固）">
+        <RawEffects>
+          <Effect>获得民众激昂，其效果为（降低厌战花费：-25%）</Effect>
+        </RawEffects>
+        <Requires>
+          <Require>43</Require>
+        </Requires>
+      </Node>
+    </Nodes>
+  </State>
+</FocusGraph>
