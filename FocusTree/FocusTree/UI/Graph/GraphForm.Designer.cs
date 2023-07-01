@@ -41,7 +41,6 @@ namespace FocusTree.UI
             GraphFrom_Menu_file = new ToolStripMenuItem();
             GraphFrom_Menu_file_new = new ToolStripMenuItem();
             GraphFrom_Menu_file_open = new ToolStripMenuItem();
-            GraphFrom_Menu_file_openCsv = new ToolStripMenuItem();
             GraphFrom_Menu_file_save = new ToolStripMenuItem();
             GraphFrom_Menu_file_saveas = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
@@ -51,6 +50,7 @@ namespace FocusTree.UI
             GraphFrom_Menu_file_backup_seperator = new ToolStripSeparator();
             GraphFrom_Menu_file_backup_clear = new ToolStripMenuItem();
             GraphFrom_Menu_file_backup_unpack = new ToolStripMenuItem();
+            GraphFrom_Menu_file_reopen = new ToolStripMenuItem();
             GraphFrom_Menu_edit = new ToolStripMenuItem();
             GraphFrom_Menu_edit_undo = new ToolStripMenuItem();
             GraphFrom_Menu_edit_redo = new ToolStripMenuItem();
@@ -71,6 +71,9 @@ namespace FocusTree.UI
             GraphFrom_Menu_setting = new ToolStripMenuItem();
             GraphFrom_Menu_setting_backImage = new ToolStripMenuItem();
             GraphFrom_Menu_setting_backImage_show = new ToolStripMenuItem();
+            GraphFrom_Menu_tool = new ToolStripMenuItem();
+            GraphFrom_Menu_tool_rawEffectFormatter = new ToolStripMenuItem();
+            GraphFrom_Menu_tool_testInfo = new ToolStripMenuItem();
             GraphFrom_StatusStrip.SuspendLayout();
             GraphFrom_Menu.SuspendLayout();
             SuspendLayout();
@@ -121,7 +124,7 @@ namespace FocusTree.UI
             // GraphFrom_Menu
             // 
             GraphFrom_Menu.ImageScalingSize = new Size(24, 24);
-            GraphFrom_Menu.Items.AddRange(new ToolStripItem[] { GraphFrom_Menu_file, GraphFrom_Menu_edit, GraphFrom_Menu_node, GraphFrom_Menu_graph, GraphFrom_Menu_loc, GraphFrom_Menu_window, GraphFrom_Menu_batch, GraphFrom_Menu_setting });
+            GraphFrom_Menu.Items.AddRange(new ToolStripItem[] { GraphFrom_Menu_file, GraphFrom_Menu_edit, GraphFrom_Menu_node, GraphFrom_Menu_graph, GraphFrom_Menu_loc, GraphFrom_Menu_window, GraphFrom_Menu_batch, GraphFrom_Menu_setting, GraphFrom_Menu_tool });
             GraphFrom_Menu.Location = new Point(0, 0);
             GraphFrom_Menu.Name = "GraphFrom_Menu";
             GraphFrom_Menu.Padding = new Padding(9, 3, 0, 3);
@@ -131,7 +134,7 @@ namespace FocusTree.UI
             // 
             // GraphFrom_Menu_file
             // 
-            GraphFrom_Menu_file.DropDownItems.AddRange(new ToolStripItem[] { GraphFrom_Menu_file_new, GraphFrom_Menu_file_open, GraphFrom_Menu_file_openCsv, GraphFrom_Menu_file_save, GraphFrom_Menu_file_saveas, toolStripSeparator1, GraphFrom_Menu_file_backup });
+            GraphFrom_Menu_file.DropDownItems.AddRange(new ToolStripItem[] { GraphFrom_Menu_file_new, GraphFrom_Menu_file_open, GraphFrom_Menu_file_save, GraphFrom_Menu_file_saveas, toolStripSeparator1, GraphFrom_Menu_file_backup, GraphFrom_Menu_file_reopen });
             GraphFrom_Menu_file.Name = "GraphFrom_Menu_file";
             GraphFrom_Menu_file.Size = new Size(62, 28);
             GraphFrom_Menu_file.Text = "文件";
@@ -139,47 +142,40 @@ namespace FocusTree.UI
             // GraphFrom_Menu_file_new
             // 
             GraphFrom_Menu_file_new.Name = "GraphFrom_Menu_file_new";
-            GraphFrom_Menu_file_new.Size = new Size(270, 34);
+            GraphFrom_Menu_file_new.Size = new Size(182, 34);
             GraphFrom_Menu_file_new.Text = "新建";
             // 
             // GraphFrom_Menu_file_open
             // 
             GraphFrom_Menu_file_open.Name = "GraphFrom_Menu_file_open";
-            GraphFrom_Menu_file_open.Size = new Size(270, 34);
+            GraphFrom_Menu_file_open.Size = new Size(182, 34);
             GraphFrom_Menu_file_open.Text = "打开";
             GraphFrom_Menu_file_open.Click += GraphFrom_Menu_file_open_Click;
-            // 
-            // GraphFrom_Menu_file_openCsv
-            // 
-            GraphFrom_Menu_file_openCsv.Name = "GraphFrom_Menu_file_openCsv";
-            GraphFrom_Menu_file_openCsv.Size = new Size(270, 34);
-            GraphFrom_Menu_file_openCsv.Text = "打开 scv";
-            GraphFrom_Menu_file_openCsv.Click += GraphFrom_Menu_file_openCsv_Click;
             // 
             // GraphFrom_Menu_file_save
             // 
             GraphFrom_Menu_file_save.Name = "GraphFrom_Menu_file_save";
-            GraphFrom_Menu_file_save.Size = new Size(270, 34);
+            GraphFrom_Menu_file_save.Size = new Size(182, 34);
             GraphFrom_Menu_file_save.Text = "保存";
             GraphFrom_Menu_file_save.Click += GraphFrom_Menu_file_save_Click;
             // 
             // GraphFrom_Menu_file_saveas
             // 
             GraphFrom_Menu_file_saveas.Name = "GraphFrom_Menu_file_saveas";
-            GraphFrom_Menu_file_saveas.Size = new Size(270, 34);
+            GraphFrom_Menu_file_saveas.Size = new Size(182, 34);
             GraphFrom_Menu_file_saveas.Text = "另存为";
             GraphFrom_Menu_file_saveas.Click += GraphFrom_Menu_file_saveas_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(267, 6);
+            toolStripSeparator1.Size = new Size(179, 6);
             // 
             // GraphFrom_Menu_file_backup
             // 
             GraphFrom_Menu_file_backup.DropDownItems.AddRange(new ToolStripItem[] { GraphFrom_Menu_file_backup_open, GraphFrom_Menu_file_backup_delete, GraphFrom_Menu_file_backup_seperator, GraphFrom_Menu_file_backup_clear, GraphFrom_Menu_file_backup_unpack });
             GraphFrom_Menu_file_backup.Name = "GraphFrom_Menu_file_backup";
-            GraphFrom_Menu_file_backup.Size = new Size(270, 34);
+            GraphFrom_Menu_file_backup.Size = new Size(182, 34);
             GraphFrom_Menu_file_backup.Text = "备份";
             GraphFrom_Menu_file_backup.DropDownOpening += GraphFrom_Menu_file_backup_DropDownOpening;
             GraphFrom_Menu_file_backup.DropDownOpened += GraphFrom_Menu_file_backup_DropDownOpened;
@@ -215,6 +211,13 @@ namespace FocusTree.UI
             GraphFrom_Menu_file_backup_unpack.Size = new Size(200, 34);
             GraphFrom_Menu_file_backup_unpack.Text = "解包";
             GraphFrom_Menu_file_backup_unpack.Click += GraphFrom_Menu_file_backup_unpack_Click;
+            // 
+            // GraphFrom_Menu_file_reopen
+            // 
+            GraphFrom_Menu_file_reopen.Name = "GraphFrom_Menu_file_reopen";
+            GraphFrom_Menu_file_reopen.Size = new Size(182, 34);
+            GraphFrom_Menu_file_reopen.Text = "重新读取";
+            GraphFrom_Menu_file_reopen.Click += GraphFrom_Menu_file_reopen_Click;
             // 
             // GraphFrom_Menu_edit
             // 
@@ -360,6 +363,27 @@ namespace FocusTree.UI
             GraphFrom_Menu_setting_backImage_show.Text = "显示";
             GraphFrom_Menu_setting_backImage_show.Click += GraphFrom_Menu_setting_backImage_show_Click;
             // 
+            // GraphFrom_Menu_tool
+            // 
+            GraphFrom_Menu_tool.DropDownItems.AddRange(new ToolStripItem[] { GraphFrom_Menu_tool_rawEffectFormatter, GraphFrom_Menu_tool_testInfo });
+            GraphFrom_Menu_tool.Name = "GraphFrom_Menu_tool";
+            GraphFrom_Menu_tool.Size = new Size(62, 28);
+            GraphFrom_Menu_tool.Text = "工具";
+            // 
+            // GraphFrom_Menu_tool_rawEffectFormatter
+            // 
+            GraphFrom_Menu_tool_rawEffectFormatter.Name = "GraphFrom_Menu_tool_rawEffectFormatter";
+            GraphFrom_Menu_tool_rawEffectFormatter.Size = new Size(362, 34);
+            GraphFrom_Menu_tool_rawEffectFormatter.Text = "原始效果语句格式化测试对话框";
+            GraphFrom_Menu_tool_rawEffectFormatter.Click += GraphFrom_Menu_tool_rawEffectFormatter_Click;
+            // 
+            // GraphFrom_Menu_tool_testInfo
+            // 
+            GraphFrom_Menu_tool_testInfo.Name = "GraphFrom_Menu_tool_testInfo";
+            GraphFrom_Menu_tool_testInfo.Size = new Size(362, 34);
+            GraphFrom_Menu_tool_testInfo.Text = "测试信息输出对话框";
+            GraphFrom_Menu_tool_testInfo.Click += GraphFrom_Menu_tool_testInfo_Click;
+            // 
             // GraphForm
             // 
             AutoScaleDimensions = new SizeF(11F, 24F);
@@ -422,6 +446,9 @@ namespace FocusTree.UI
         private ToolStripMenuItem GraphFrom_Menu_setting;
         private ToolStripMenuItem GraphFrom_Menu_setting_backImage;
         private ToolStripMenuItem GraphFrom_Menu_setting_backImage_show;
-        private ToolStripMenuItem GraphFrom_Menu_file_openCsv;
+        private ToolStripMenuItem GraphFrom_Menu_file_reopen;
+        private ToolStripMenuItem GraphFrom_Menu_tool;
+        private ToolStripMenuItem GraphFrom_Menu_tool_rawEffectFormatter;
+        private ToolStripMenuItem GraphFrom_Menu_tool_testInfo;
     }
 }

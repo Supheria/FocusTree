@@ -3,6 +3,7 @@ using FocusTree.Data.Focus;
 using FocusTree.Graph;
 using FocusTree.IO;
 using FocusTree.IO.FileManage;
+using FocusTree.UI.test;
 using System.Diagnostics;
 using System.IO.Compression;
 
@@ -54,33 +55,13 @@ namespace FocusTree.UI
                     return;
                 }
             }
-            GraphFrom_Openfile.Filter = "xml文件|*.xml";
+            GraphFrom_Openfile.Filter = "xml文件|*.xml|csv文件|*.csv";
             if (GraphFrom_Openfile.ShowDialog() == DialogResult.Cancel)
             {
                 return;
             }
             GraphFrom_Openfile.InitialDirectory = Path.GetDirectoryName(GraphFrom_Openfile.FileName);
             GraphBox.Load(GraphFrom_Openfile.FileName);
-            Display.ResetDisplay();
-            UpdateText();
-        }
-
-        private void GraphFrom_Menu_file_openCsv_Click(object sender, EventArgs e)
-        {
-            if (GraphBox.Edited == true)
-            {
-                if (MessageBox.Show("要放弃当前的更改吗？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No)
-                {
-                    return;
-                }
-            }
-            GraphFrom_Openfile.Filter = "csv文件|*.csv";
-            if (GraphFrom_Openfile.ShowDialog() == DialogResult.Cancel)
-            {
-                return;
-            }
-            GraphFrom_Openfile.InitialDirectory = Path.GetDirectoryName(GraphFrom_Openfile.FileName);
-            GraphBox.LoadCsv(GraphFrom_Openfile.FileName);
             Display.ResetDisplay();
             UpdateText();
         }
@@ -471,5 +452,21 @@ namespace FocusTree.UI
         }
 
         #endregion
+
+        private void GraphFrom_Menu_file_reopen_Click(object sender, EventArgs e)
+        {
+            GraphBox.Reload();
+        }
+
+        private void GraphFrom_Menu_tool_rawEffectFormatter_Click(object sender, EventArgs e)
+        {
+            var test = new TestFormatter();
+            test.Show();
+        }
+
+        private void GraphFrom_Menu_tool_testInfo_Click(object sender, EventArgs e)
+        {
+            Program.TestInfo.Show();
+        }
     }
 }

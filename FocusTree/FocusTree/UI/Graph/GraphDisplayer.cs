@@ -85,7 +85,7 @@ namespace FocusTree.UI
         /// <summary>
         /// 格元放置边界
         /// </summary>
-        public Rectangle LatticeBound 
+        public Rectangle LatticeBound
         {
             get
             {

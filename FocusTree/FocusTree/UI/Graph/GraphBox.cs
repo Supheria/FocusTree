@@ -81,18 +81,13 @@ namespace FocusTree.UI
             ReadOnly = Graph != null && Graph.IsBackupFile(filePath);
             if (!ReadOnly) { FilePath = filePath; }
             FileCache.ClearCache(Graph);
-            Graph = XmlIO.LoadFromXml<FocusGraph>(filePath);
+            Graph = Path.GetExtension(filePath).ToLower() is ".csv"
+                ? Graph = CsvIO.LoadFromCsv(filePath)
+                : XmlIO.LoadFromXml<FocusGraph>(filePath);
             Graph.NewHistory();
+            Program.TestInfo.renew();
         }
 
-        public static void LoadCsv(string filePath)
-        {
-            ReadOnly = Graph != null && Graph.IsBackupFile(filePath);
-            if (!ReadOnly) { FilePath = filePath; }
-            FileCache.ClearCache(Graph);
-            Graph = CsvIO.LoadFromCsv(filePath);
-            Graph.NewHistory();
-        }
         /// <summary>
         /// 从封存文件路径重新加载元图（如果文件路径存在的话）
         /// </summary>
@@ -103,6 +98,7 @@ namespace FocusTree.UI
             FileCache.ClearCache(Graph);
             Graph = XmlIO.LoadFromXml<FocusGraph>(FilePath);
             Graph.NewHistory();
+            Program.TestInfo.renew();
         }
         /// <summary>
         /// 如果元图已修改，则备份源文件并保存到源文件
@@ -110,6 +106,11 @@ namespace FocusTree.UI
         public static void Save()
         {
             if (IsNull) { return; }
+            if (Path.GetExtension(FilePath).ToLower() is ".csv")
+            {
+                SaveToNew(Path.ChangeExtension(FilePath, ".xml"));
+                return;
+            }
             ReadOnly = false;
             FileBackup.Backup<FocusGraph>(FilePath);
             XmlIO.SaveToXml(Graph, FilePath);
@@ -132,6 +133,7 @@ namespace FocusTree.UI
             XmlIO.SaveToXml(Graph, filePath);
             Graph?.NewHistory();
             FilePath = filePath;
+            Program.TestInfo.renew();
         }
         /// <summary>
         /// 重做

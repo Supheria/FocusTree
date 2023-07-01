@@ -53,7 +53,7 @@ namespace FocusTree.Data.Focus
                 Ps = reader.GetAttribute("Ps.") ?? FData.Ps,
             };
             var pair = ArrayString.Reader(reader.GetAttribute("Point"));
-            if (pair is not { Length: 2 }) 
+            if (pair is not { Length: 2 })
                 FData.LatticedPoint = new(0, 0);
             else
                 FData.LatticedPoint = new(int.Parse(pair[0]), int.Parse(pair[1]));
@@ -67,10 +67,12 @@ namespace FocusTree.Data.Focus
 
                 switch (reader.Name)
                 {
+#if FORMAT_TEST
                     //==== 读取 Effects ====//
                     case "Effects":
                         ReadEffects(reader);
                         break;
+#endif
                     //==== 读取 Requires ====//
                     case "Requires":
                         ReadRequires(reader, FData.Requires);
@@ -90,13 +92,13 @@ namespace FocusTree.Data.Focus
         {
             foreach (var raw in rawEffects)
             {
-                Program.TestInfo.total++;
+                Program.TestInfo.Total++;
                 if (!FormatRawEffectSentence.Formatter(raw, out var formattedList))
                 {
 #if RAW_EFFECTS
-                    Program.TestInfo.erro++;
-                    Program.TestInfo.good = Program.TestInfo.total - Program.TestInfo.erro;
-                    Program.TestInfo.InfoText += $"{id}. {raw}\n";
+                    Program.TestInfo.Error++;
+                    Program.TestInfo.Good = Program.TestInfo.Total - Program.TestInfo.Error;
+                    Program.TestInfo.Append($"{id}. {raw}");
 #endif
                     continue;
                 }
@@ -122,12 +124,12 @@ namespace FocusTree.Data.Focus
                     case "Effects" when reader.NodeType == XmlNodeType.EndElement:
                         return;
                     case "Sentence":
-                    {
-                        Hoi4Sentence sentence = new();
-                        sentence.ReadXml(reader);
-                        _effects.Add(sentence);
-                        break;
-                    }
+                        {
+                            Hoi4Sentence sentence = new();
+                            sentence.ReadXml(reader);
+                            _effects.Add(sentence);
+                            break;
+                        }
                 }
             } while (reader.Read());
             throw new("[2304060212] 读取 Effects 时未能找到结束标签");
@@ -229,6 +231,6 @@ namespace FocusTree.Data.Focus
             writer.WriteEndElement();
         }
 
-        #endregion
+#endregion
     }
 }

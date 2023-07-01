@@ -1,4 +1,5 @@
-﻿using FocusTree.Data.Focus;
+﻿using System.Text;
+using FocusTree.Data.Focus;
 using FocusTree.IO;
 
 namespace FocusTree.UI.test
@@ -6,25 +7,12 @@ namespace FocusTree.UI.test
     public partial class TestInfo : Form
     {
         TestFormatter testFormatter = new();
-        public string InfoText
-        {
-            get
-            {
-                Info.Text = infoText;
-                return infoText;
-            }
-            set
-            {
-                infoText = value;
-                Info.Text = $"错误 {erro}/{total}, 差异 {differ}/{total}, 正确 {good}/{total}\n{infoText}";
-                Show();
-            }
-        }
-        string infoText = "";
-        public int total = 0;
-        public int erro = 0;
-        public int differ = 0;
-        public int good = 0;
+
+        HashSet<string> _infoText = new();
+        public int Total = 0;
+        public int Error = 0;
+        public int Differ = 0;
+        public int Good = 0;
         public TestInfo()
         {
             InitializeComponent();
@@ -38,25 +26,39 @@ namespace FocusTree.UI.test
             Closing += (sender, args) =>
             {
                 Hide();
-                infoText = "";
-                total = 0;
-                erro = 0;
-                differ = 0;
-                good = 0;
+                renew();
                 args.Cancel = true;
             };
             //TopMost = true;
             //testFormatter.Show();
         }
 
+        public void Append(string text)
+        {
+            _infoText.Add(text);
+            var sb = new StringBuilder().AppendLine($"错误 {Error}/{Total}, 差异 {Differ}/{Total}, 正确 {Good}/{Total}")
+                .AppendLine();
+            foreach (var info in _infoText)
+                sb.AppendLine(info);
+            Info.Text = sb.ToString();
+        }
+
         public void Initialize()
         {
-            infoText = "";
-            total = 0;
-            erro = 0;
-            differ = 0;
-            good = 0;
-            InfoText = string.Empty;
+            _infoText = new();
+            Total = 0;
+            Error = 0;
+            Differ = 0;
+            Good = 0;
+        }
+
+        public void renew()
+        {
+            _infoText = new();
+            Total = 0;
+            Error = 0;
+            Differ = 0;
+            Good = 0;
         }
 
         private void ToolStripMenuItemOpen_Click(object sender, EventArgs e)

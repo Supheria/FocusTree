@@ -138,11 +138,11 @@
             /// <summary>
             /// 研究
             /// </summary>
-            Reaserch = Camp << 1,
+            Research = Camp << 1,
             /// <summary>
             /// 等级
             /// </summary>
-            Grade = Reaserch << 1,
+            Grade = Research << 1,
             /// <summary>
             /// 部队
             /// </summary>
@@ -162,11 +162,15 @@
             /// <summary>
             /// Ai修正
             /// </summary>
-            AiModifyer = Region << 1,
+            AiModifier = Region << 1,
             /// <summary>
             /// 区域核心
             /// </summary>
-            RegionCore = AiModifyer << 1,
+            RegionCore = AiModifier << 1,
+            /// <summary>
+            /// 资源
+            /// </summary>
+            Resource = RegionCore << 1,
 
             #endregion
 
@@ -175,7 +179,7 @@
             /// <summary>
             /// 可以宣战
             /// </summary>
-            AbleToDeclareWar = Availability | RegionCore << 1,
+            AbleToDeclareWar = Availability | Resource << 1,
             /// <summary>
             /// 可以自动获取核心
             /// </summary>

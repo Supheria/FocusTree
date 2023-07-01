@@ -53,7 +53,7 @@ namespace FocusTree.Data.Focus
         /// <returns>是否添加成功</returns>
         public bool AddNode(FocusData focus)
         {
-            if (_focusCatalog.TryAdd(focus.Id, focus)) 
+            if (_focusCatalog.TryAdd(focus.Id, focus))
                 return true;
             MessageBox.Show("[2303031210]提示：无法添加节点 - 无法加入字典。");
             return false;
@@ -260,7 +260,7 @@ namespace FocusTree.Data.Focus
             var branches = GetBranches(GetRootNodes(), true, true);
             HashSet<int> visited = new();
             var newId = 1;
-            foreach (var id in from branch in branches from id in branch where !visited.Contains(id) select id) 
+            foreach (var id in from branch in branches from id in branch where !visited.Contains(id) select id)
             {
                 UpdateLinkNodesRequiresWithNewId(id, newId);
                 visited.Add(id);
@@ -357,7 +357,7 @@ namespace FocusTree.Data.Focus
                     Description = data.Description,
                     Ps = data.Ps,
                     BeginWithStar = data.BeginWithStar,
-                    RawEffects = new(){data.RawEffectsCohesion},
+                    RawEffects = new() { data.RawEffectsCohesion },
                     Requires = data.Requires,
                 };
             }
@@ -388,7 +388,7 @@ namespace FocusTree.Data.Focus
                 {
                     if (reader.Name == "Nodes" && reader.NodeType == XmlNodeType.EndElement)
                         break;
-                    if (reader.Name != "Node") 
+                    if (reader.Name != "Node")
                         continue;
                     FocusNode node = new();
                     try

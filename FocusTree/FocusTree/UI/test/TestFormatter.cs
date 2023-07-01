@@ -1,4 +1,5 @@
-﻿using FocusTree.Data.Hoi4Object;
+﻿using System.Text;
+using FocusTree.Data.Hoi4Object;
 
 namespace FocusTree.UI.test
 {
@@ -25,6 +26,8 @@ namespace FocusTree.UI.test
             Output.Top = Input.Bottom + padding * 2;
             Output.Width = Input.Width;
             Output.Height = Input.Height;
+            Output.ReadOnly = true;
+            Output.WordWrap = false;
         }
 
         private void TestFormatter_SizeChanged(object sender, EventArgs e)
@@ -34,10 +37,13 @@ namespace FocusTree.UI.test
 
         private void Input_TextChanged(object sender, EventArgs e)
         {
-            if (FormatRawEffectSentence.Formatter(Input.Text, out var formatted))
-            {
-                Output.Text = formatted.ToString();
-            }
+            Output.Text = "";
+            if (!FormatRawEffectSentence.Formatter(Input.Text, out var formatted))
+                return;
+            var sb = new StringBuilder();
+            foreach (var sentence in formatted)
+                sb.AppendLine(sentence.ToString());
+            Output.Text = sb.ToString();
         }
 
     }

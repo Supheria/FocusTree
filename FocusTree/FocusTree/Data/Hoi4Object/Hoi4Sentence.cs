@@ -1,4 +1,6 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Text;
+using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using System.Xml;
 using static FocusTree.Data.Hoi4Object.PublicSign;
 
@@ -46,10 +48,15 @@ namespace FocusTree.Data.Hoi4Object
         //    set { Main.Value = value; }
         //}
         public Types TriggerType { get => Main.TriggerType; set => Main.TriggerType = value; }
+
         /// <summary>
         /// 动作触发者
         /// </summary>
-        public List<string> Triggers { get => Main.Triggers.ToList(); set => value.ToArray(); }
+        public List<string> Triggers
+        {
+            get => Main.Triggers.ToList(); 
+            set => Main.Triggers = value.ToArray();
+        }
 
         #endregion
 
@@ -67,9 +74,9 @@ namespace FocusTree.Data.Hoi4Object
         /// <returns></returns>
         public Hoi4Sentence(
             Motions motion,
-            Types valueType,
+            Types? valueType,
             string value,
-            Types triggerType,
+            Types? triggerType,
             string[] triggers,
             List<Hoi4Sentence> subSentences
             )
@@ -77,9 +84,9 @@ namespace FocusTree.Data.Hoi4Object
             Main = new()
             {
                 Motion = motion,
-                ValueType = valueType,
+                ValueType = valueType ?? Types.None,
                 Value = value ?? string.Empty,
-                TriggerType = triggerType,
+                TriggerType = triggerType ?? Types.None,
                 Triggers = triggers ?? Array.Empty<string>()
             };
             SubSentences = subSentences ?? new();
@@ -136,9 +143,9 @@ namespace FocusTree.Data.Hoi4Object
 
             if (SubSentences.Count > 0)
             {
-                foreach (var subsentence in SubSentences)
+                foreach (var subSentence in SubSentences)
                 {
-                    subsentence.WriteXml(writer);
+                    subSentence.WriteXml(writer);
                 }
             }
 
@@ -194,10 +201,29 @@ namespace FocusTree.Data.Hoi4Object
         /// 转换为json字符串
         /// </summary>
         /// <returns></returns>
-        public new string ToString()
+        public override string ToString()
         {
-            throw new NotImplementedException();
+            var sb = new StringBuilder().AppendLine($"Motion=\"{Motion}\", Type=\"{WriteTypePair()}\", Value=\"{WriteValuePair()}\"");
+            foreach (var sub in SubSentences)
+            {
+                sb.AppendLine(sub.ToString(1));
+            }
+            return sb.ToString();
         }
+
+        public string ToString(int tabTime)
+        {
+            var sb = new StringBuilder();
+            for (var i  = 0; i < tabTime;  i++) 
+                sb.Append('\t');
+            sb.Append($"Motion=\"{Motion}\", Type=\"{WriteTypePair()}\", Value=\"{WriteValuePair()}\"");
+            foreach (var sub in SubSentences)
+            {
+                sb.Append($"\n{sub.ToString(tabTime + 1)}");
+            }
+            return sb.ToString();
+        }
+
         /// <summary>
         /// 用json字符串生成
         /// </summary>
