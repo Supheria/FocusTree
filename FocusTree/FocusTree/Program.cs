@@ -9,12 +9,13 @@ using FocusTree.UI.test;
 
 internal static class Program
 {
-    public static TestInfo testInfo = new TestInfo();
+    public static TestInfo TestInfo { get; } = new();
+
     /// <summary>
     /// 应用程序的主入口点。
     /// </summary>
     [STAThread]
-    static void Main()
+    private static void Main()
     {
 #if MAIN
         //testInfo.Show();

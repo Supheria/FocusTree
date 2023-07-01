@@ -247,7 +247,7 @@ namespace FocusTree.UI
             Background.Redraw(BackgroundCache);
             Lattice.Draw(BackgroundCache);
             OnRefresh.Invoke(BackgroundCache, 0);
-            var info = $"{focus.Name}, {focus.Duration}日\n{focus.Descript}";
+            var info = $"{focus.Name}, {focus.Duration}日\n{focus.Description}";
             DrawInfo(info);
             Parent.UpdateText("选择节点");
         }
@@ -383,7 +383,7 @@ namespace FocusTree.UI
                 return;
             }
             NodeInfoTip.BackColor = Color.FromArgb(0, Color.AliceBlue);
-            NodeInfoTip.Show($"{focus.Value.Name}\nID: {focus.Value.ID}", this, location.X + 10, location.Y);
+            NodeInfoTip.Show($"{focus.Value.Name}\nID: {focus.Value.Id}", this, location.X + 10, location.Y);
         }
 
         //---- OnMouseUp ----//

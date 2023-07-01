@@ -37,10 +37,10 @@ namespace FocusTree.UI.NodeToolDialogs
                 return;
             }
             var focus = Display.SelectedNode.Value;
-            Text = $"id: {focus.ID}";
+            Text = $"id: {focus.Id}";
             FocusName.Text = focus.Name;
             Duration.Text = $"{focus.Duration}";
-            Descript.Text = focus.Descript;
+            Descript.Text = focus.Description;
             Effects.Text = string.Join('\n', focus.RawEffects);
 
             AllowDrop = GraphBox.ReadOnly ? false : true;
@@ -197,7 +197,7 @@ namespace FocusTree.UI.NodeToolDialogs
             Requires.Height = FocusIcon.Bottom - Duration.Bottom - padding * 2;
 
             //
-            // Descript
+            // Description
             //
             Descript.Left = ClientRectangle.Left + padding;
             Descript.Top = FocusIcon.Bottom + padding;
@@ -315,7 +315,7 @@ namespace FocusTree.UI.NodeToolDialogs
             Requires.BackColor = backColor;
             Requires.ForeColor = foreColor;
             //
-            // Descript
+            // Description
             //
             Descript.Name = "Descript";
             Descript.Multiline = true;

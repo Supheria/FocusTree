@@ -84,6 +84,15 @@ namespace FocusTree.UI
             Graph = XmlIO.LoadFromXml<FocusGraph>(filePath);
             Graph.NewHistory();
         }
+
+        public static void LoadCsv(string filePath)
+        {
+            ReadOnly = Graph != null && Graph.IsBackupFile(filePath);
+            if (!ReadOnly) { FilePath = filePath; }
+            FileCache.ClearCache(Graph);
+            Graph = CsvIO.LoadFromCsv(filePath);
+            Graph.NewHistory();
+        }
         /// <summary>
         /// 从封存文件路径重新加载元图（如果文件路径存在的话）
         /// </summary>
@@ -145,12 +154,12 @@ namespace FocusTree.UI
         public static void SetFocus(FocusData focus)
         {
             if (Graph == null) { return; }
-            Graph[focus.ID] = focus;
+            Graph[focus.Id] = focus;
             Graph.EnqueueHistory();
         }
         public static void RemoveFocusNode(FocusData focus)
         {
-            Graph?.RemoveNode(focus.ID);
+            Graph?.RemoveNode(focus.Id);
             Graph?.EnqueueHistory();
         }
         /// <summary>

@@ -17,6 +17,7 @@ namespace FocusTree.UI.test
             {
                 infoText = value;
                 Info.Text = $"错误 {erro}/{total}, 差异 {differ}/{total}, 正确 {good}/{total}\n{infoText}";
+                Show();
             }
         }
         string infoText = "";
@@ -34,6 +35,16 @@ namespace FocusTree.UI.test
             Info.Dock = DockStyle.Fill;
             Info.WordWrap = false;
             Info.ZoomFactor = 2f;
+            Closing += (sender, args) =>
+            {
+                Hide();
+                infoText = "";
+                total = 0;
+                erro = 0;
+                differ = 0;
+                good = 0;
+                args.Cancel = true;
+            };
             //TopMost = true;
             //testFormatter.Show();
         }
@@ -60,8 +71,8 @@ namespace FocusTree.UI.test
                 Info.Text += "\n\n=====Successfull=====\n";
                 foreach (var focus in g.FocusList)
                 {
-                    Info.Text += focus.ID + ". ";
-                    foreach (var effect in g[focus.ID].RawEffects)
+                    Info.Text += focus.Id + ". ";
+                    foreach (var effect in g[focus.Id].RawEffects)
                     {
                         Info.Text += effect.ToString() + "\n";
                     }

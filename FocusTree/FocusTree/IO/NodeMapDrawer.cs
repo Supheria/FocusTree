@@ -152,7 +152,7 @@ namespace FocusTree.IO
         {
             var name = focus.Name;
             var duration = $"{focus.Duration}日";
-            var descript = focus.Descript;
+            var descript = focus.Description;
             var effects = string.Join("\n\n", focus.RawEffects);
             float padding = 10f;
 

@@ -77,13 +77,13 @@
 
         private void InitializeInReadonly()
         {
-            ToolStripMenuItem menuItem_checkout = new()
+            ToolStripMenuItem menuItemCheckout = new()
             {
                 Text = "查看国策"
             };
-            menuItem_checkout.Click += MenuItem_checkout_Click;
+            menuItemCheckout.Click += MenuItem_checkout_Click;
 
-            Items.Add(menuItem_checkout);
+            Items.Add(menuItemCheckout);
         }
         public new void Show(Point location)
         {
@@ -91,7 +91,7 @@
             if (Display.SelectedNode != null)
             {
                 var focus = Display.SelectedNode.Value;
-                info = $"{focus.Name}, {focus.Duration}日\n{focus.Descript}";
+                info = $"{focus.Name}, {focus.Duration}日\n{focus.Description}";
             }
             Display.DrawInfo(info);
             base.Show(location);

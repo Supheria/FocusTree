@@ -19,25 +19,29 @@ namespace FocusTree.Data.Focus
         /// <summary>
         /// 以 ID 作为 Key 的所有节点
         /// </summary>
-        Dictionary<int, FocusData> FocusCatalog;
+        private Dictionary<int, FocusData> _focusCatalog = new();
+
         /// <summary>
         /// 国策列表
         /// </summary>
-        public List<FocusData> FocusList { get { return FocusCatalog.Values.ToList(); } }
+        public List<FocusData> FocusList => _focusCatalog.Values.ToList();
+
         /// <summary>
         /// 通过国策 ID 获得国策（不应该滥用，仅用在 require id 获取国策时），或修改国策
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public FocusData this[int id] { get => FocusCatalog[id]; set => FocusCatalog[id] = value; }
+        public FocusData this[int id] { get => _focusCatalog[id]; set => _focusCatalog[id] = value; }
+
         /// <summary>
         /// 名称
         /// </summary>
         public string Name { get; private set; }
+
         /// <summary>
         /// 所有节点的子链接（使用前调用 CreateNodeLinks ）
         /// </summary>
-        Dictionary<int, List<int>> NodeLinks;
+        Dictionary<int, List<int>> _nodeLinks;
 
         #endregion
 
@@ -49,26 +53,25 @@ namespace FocusTree.Data.Focus
         /// <returns>是否添加成功</returns>
         public bool AddNode(FocusData focus)
         {
-            if (FocusCatalog.TryAdd(focus.ID, focus) == false)
-            {
-                MessageBox.Show("[2303031210]提示：无法添加节点 - 无法加入字典。");
-                return false;
-            }
-            return true;
+            if (_focusCatalog.TryAdd(focus.Id, focus)) 
+                return true;
+            MessageBox.Show("[2303031210]提示：无法添加节点 - 无法加入字典。");
+            return false;
         }
+
         /// <summary>
         /// 删除节点 O(2n+)，绘图时记得重新调用 GetFocusMap
         /// </summary>
         /// <returns>是否成功删除</returns>
         public bool RemoveNode(int id)
         {
-            if (FocusCatalog.ContainsKey(id) == false)
+            if (_focusCatalog.ContainsKey(id) == false)
             {
                 MessageBox.Show($"[2303031221]提示：无法移除节点 - FocusCatalog 未包含 ID = {id} 的节点。");
                 return false;
             }
             // 在所有的节点依赖组合中删除此节点
-            foreach (var focus in FocusCatalog.Values)
+            foreach (var focus in _focusCatalog.Values)
             {
                 foreach (var require in focus.Requires)
                 {
@@ -76,26 +79,10 @@ namespace FocusTree.Data.Focus
                 }
             }
             // 从节点表中删除此节点
-            FocusCatalog.Remove(id);
+            _focusCatalog.Remove(id);
             return true;
         }
-        /// <summary>
-        /// 编辑节点 O(1)，新数据的ID必须匹配
-        /// </summary>
-        /// <param name="id">节点ID</param>
-        /// <param name="newData">要替换的数据</param>
-        /// <returns>修改是否成功</returns>
-        //public bool EditNode(FocusData focus)
-        //{
-        //    var id = focus.ID;
-        //    if (FocusCatalog.ContainsKey(id) == false)
-        //    {
-        //        MessageBox.Show($"[2303031232]提示：无法编辑节点 - 新节点数据的 ID({id}) 不存在于 FocusCatalog。");
-        //        return false;
-        //    }
-        //    FocusCatalog[id] = focus;
-        //    return true;
-        //}
+
         /// <summary>
         /// 获取所有无任何依赖的节点（根节点）  O(n)
         /// </summary>
@@ -104,13 +91,8 @@ namespace FocusTree.Data.Focus
         public int[] GetRootNodes()
         {
             var result = new HashSet<int>();
-            foreach (var focus in FocusCatalog)
-            {
-                if (focus.Value.Requires.Sum(x => x.Count) == 0)
-                {
-                    result.Add(focus.Key);
-                }
-            }
+            foreach (var focus in _focusCatalog.Where(focus => focus.Value.Requires.Sum(x => x.Count) == 0))
+                result.Add(focus.Key);
             return result.ToArray();
         }
 
@@ -120,19 +102,12 @@ namespace FocusTree.Data.Focus
         private void CreateNodeLinks()
         {
             // 这里一定要清空，因为是刷新
-            NodeLinks = new();
-            foreach (var focus in FocusCatalog.Values)
+            _nodeLinks = new();
+            foreach (var focus in _focusCatalog.Values)
             {
-                foreach (var requires in focus.Requires)
-                {
-                    foreach (var id in requires)
-                    {
-                        if (NodeLinks.TryAdd(id, new() { focus.ID }) == false)
-                        {
-                            NodeLinks[id].Add(focus.ID);
-                        }
-                    }
-                }
+                foreach (var id in focus.Requires.SelectMany(requires =>
+                             requires.Where(id => !_nodeLinks.TryAdd(id, new() { focus.Id }))))
+                    _nodeLinks[id].Add(focus.Id);
             }
         }
 
@@ -155,10 +130,11 @@ namespace FocusTree.Data.Focus
             GetBranches(id, ref branches, ref steps, sort, reverse);
             return branches;
         }
+
         /// <summary>
         /// 获取若干个节点各自的所有分支
         /// </summary>
-        /// <param name="id">节点ID</param>
+        /// <param name="ids"></param>
         /// <param name="sort">是否按照节点ID排序</param>
         /// <param name="reverse">是否从根节点向末节点排序</param>
         /// <returns></returns>
@@ -176,47 +152,31 @@ namespace FocusTree.Data.Focus
         private void GetBranches(int currentId, ref List<int[]> branches, ref Stack<int> steps, bool sort, bool reverse)
         {
             steps.Push(currentId);
-            NodeLinks.TryGetValue(currentId, out var links);
+            _nodeLinks.TryGetValue(currentId, out var links);
             // 当前节点是末节点
             if (links == null)
-            {
-                if (reverse)
-                {
-                    branches.Add(steps.Reverse().ToArray());
-                }
-                else
-                {
-                    branches.Add(steps.ToArray());
-                }
-            }
+                branches.Add(reverse ? steps.Reverse().ToArray() : steps.ToArray());
             else
             {
                 var linkList = links.ToList();
-                if (sort == true)
+                if (sort)
                 {
                     linkList.Sort();
                 }
                 foreach (var id in linkList)
                 {
-                    if (steps.Contains(id))
-                    {
-                        // 已经走过这个节点，跳过，避免死循环
-                        continue;
-                    }
-                    else
-                    {
+                    if (!steps.Contains(id))
                         GetBranches(id, ref branches, ref steps, sort, reverse);
-                    }
                 }
             }
 
             steps.Pop();
         }
+
         /// <summary>
         /// 重置所有节点的元坐标
         /// 合并不同分支上的相同节点，并使节点在分支范围内尽量居中
         /// </summary>
-        /// <param name="resetAll">是否重置所有：无论元坐标有无值都重置</param>
         /// <returns></returns>
         public void ResetAllNodesLatticedPoint()
         {
@@ -225,9 +185,9 @@ namespace FocusTree.Data.Focus
             var width = branches.Count;
             var height = branches.Max(x => x.Length);
             Dictionary<int, int[]> nodeCoordinates = new();
-            for (int y = 0; y < height; y++)
+            for (var y = 0; y < height; y++)
             {
-                for (int x = 0; x < width; x++)
+                for (var x = 0; x < width; x++)
                 {
                     if (y >= branches[x].Length)
                     {
@@ -275,16 +235,16 @@ namespace FocusTree.Data.Focus
             }
             var blank = 0;
             var width = metaPoints.Max(x => x.Value.X);
-            for (int x = 0; x <= width; x++)
+            for (var x = 0; x <= width; x++)
             {
-                if (xMetaPoints.ContainsKey(x))
+                if (xMetaPoints.TryGetValue(x, out var metaPoint))
                 {
-                    foreach (var nodePoint in xMetaPoints[x])
+                    foreach (var nodePoint in metaPoint)
                     {
                         LatticedPoint point = new(nodePoint.Value.X - blank, nodePoint.Value.Y);
-                        var focus = FocusCatalog[nodePoint.Key];
+                        var focus = _focusCatalog[nodePoint.Key];
                         focus.LatticedPoint = point;
-                        FocusCatalog[nodePoint.Key] = focus;
+                        _focusCatalog[nodePoint.Key] = focus;
                     }
                 }
                 else { blank++; }
@@ -296,26 +256,20 @@ namespace FocusTree.Data.Focus
         public void ReorderNodeIds()
         {
             CreateNodeLinks();
-            Dictionary<int, FocusData> TempFocusCatalog = new();
+            Dictionary<int, FocusData> tempFocusCatalog = new();
             var branches = GetBranches(GetRootNodes(), true, true);
             HashSet<int> visited = new();
-            int newId = 1;
-            foreach (var branch in branches)
+            var newId = 1;
+            foreach (var id in from branch in branches from id in branch where !visited.Contains(id) select id) 
             {
-                foreach (var id in branch)
-                {
-                    if (!visited.Contains(id))
-                    {
-                        UpdateLinkNodesRequiresWithNewId(id, newId);
-                        visited.Add(id);
-                        var focus = FocusCatalog[id];
-                        focus.ID = newId;
-                        TempFocusCatalog.Add(newId, focus);
-                        newId++;
-                    }
-                }
+                UpdateLinkNodesRequiresWithNewId(id, newId);
+                visited.Add(id);
+                var focus = _focusCatalog[id];
+                focus.Id = newId;
+                tempFocusCatalog.Add(newId, focus);
+                newId++;
             }
-            FocusCatalog = TempFocusCatalog;
+            _focusCatalog = tempFocusCatalog;
         }
         /// <summary>
         /// 按新节点id更新原节点的所有子链接节点的依赖组
@@ -325,29 +279,22 @@ namespace FocusTree.Data.Focus
         /// <returns></returns>
         private void UpdateLinkNodesRequiresWithNewId(int id, int newId)
         {
-            if (NodeLinks.TryGetValue(id, out var links) == false) { return; }
+            if (_nodeLinks.TryGetValue(id, out var links) == false) { return; }
             foreach (var linkId in links)
             {
                 List<HashSet<int>> newRequires = new();
-                foreach (var require in FocusCatalog[linkId].Requires)
+                foreach (var require in _focusCatalog[linkId].Requires)
                 {
                     HashSet<int> newRequire = new();
                     foreach (var requireId in require)
                     {
-                        if (requireId == id)
-                        {
-                            newRequire.Add(newId);
-                        }
-                        else
-                        {
-                            newRequire.Add(requireId);
-                        }
+                        newRequire.Add(requireId == id ? newId : requireId);
                     }
                     newRequires.Add(newRequire);
                 }
-                var focus = FocusCatalog[linkId];
+                var focus = _focusCatalog[linkId];
                 focus.Requires = newRequires;
-                FocusCatalog[linkId] = focus;
+                _focusCatalog[linkId] = focus;
             }
         }
         /// <summary>
@@ -356,11 +303,10 @@ namespace FocusTree.Data.Focus
         /// <returns></returns>
         public Rectangle GetMetaRect()
         {
-            int left, top, right, bottom;
-            left = top = right = bottom = 0;
-            foreach (var focus in FocusCatalog.Values)
+            int top, right, bottom;
+            var left = top = right = bottom = 0;
+            foreach (var point in _focusCatalog.Values.Select(focus => focus.LatticedPoint))
             {
-                var point = focus.LatticedPoint;
                 if (point.Col < left) { left = point.Col; }
                 else if (point.Col > right) { right = point.Col; }
                 if (point.Row < top) { top = point.Row; }
@@ -368,36 +314,26 @@ namespace FocusTree.Data.Focus
             }
             return new(left, top, right - left + 1, bottom - top + 1);
         }
+
         /// <summary>
         /// 判断给定栅格化坐标是否存在于节点列表中
         /// </summary>
         /// <param name="latticedPoint"></param>
-        /// <param name="id">默认为-1</param>
+        /// <param name="focus"></param>
         /// <returns>如果有则返回true，id为节点id；否则返回false，id为-1</returns>
         public bool ContainLatticedPoint(LatticedPoint latticedPoint, out FocusData? focus)
         {
             focus = null;
-            foreach (var f in FocusCatalog.Values)
+            foreach (var f in _focusCatalog.Values.Where(f => latticedPoint == f.LatticedPoint))
             {
-                if (latticedPoint == f.LatticedPoint)
-                {
-                    focus = f;
-                    return true;
-                }
+                focus = f;
+                return true;
             }
             return false;
         }
-        public bool ContainLatticedPoint(LatticedPoint latticedPoint)
-        {
-            foreach (var f in FocusCatalog.Values)
-            {
-                if (latticedPoint == f.LatticedPoint)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
+
+        public bool ContainLatticedPoint(LatticedPoint latticedPoint) =>
+            _focusCatalog.Values.Any(f => latticedPoint == f.LatticedPoint);
 
         #endregion
 
@@ -407,6 +343,25 @@ namespace FocusTree.Data.Focus
         /// 用于序列化
         /// </summary>
         private FocusGraph() { }
+
+        public FocusGraph(string path, List<CsvFocusData> focusList)
+        {
+            Name = Path.GetFileNameWithoutExtension(path);
+            foreach (var data in focusList)
+            {
+                _focusCatalog[data.Id] = new()
+                {
+                    Id = data.Id,
+                    Name = data.Name,
+                    Duration = data.Duration,
+                    Description = data.Description,
+                    Ps = data.Ps,
+                    BeginWithStar = data.BeginWithStar,
+                    RawEffects = new(){data.RawEffectsCohesion},
+                    Requires = data.Requires,
+                };
+            }
+        }
         /// <summary>
         /// 序列化预留方法，默认返回 null
         /// </summary>
@@ -417,29 +372,35 @@ namespace FocusTree.Data.Focus
         }
         public void ReadXml(XmlReader reader)
         {
-            FocusCatalog = new();
+            _focusCatalog = new();
             do
             {
                 if (reader.Name == "State" && reader.NodeType == XmlNodeType.Element)
                 {
                     Name = reader.GetAttribute("Name");
                 }
-                if (reader.Name == "Nodes")
-                {
-                    if (reader.ReadToDescendant("Node") == false) { continue; }
-                    do
-                    {
-                        if (reader.Name == "Nodes" && reader.NodeType == XmlNodeType.EndElement) { break; }
-                        if (reader.Name == "Node")
-                        {
-                            FocusNode node = new();
-                            try { node.ReadXml(reader); }
-                            catch { continue; }
-                            FocusCatalog.Add(node.FData.ID, node.FData);
-                        }
-                    } while (reader.Read());
 
-                }
+                if (reader.Name != "Nodes")
+                    continue;
+                if (reader.ReadToDescendant("Node") == false)
+                    continue;
+                do
+                {
+                    if (reader.Name == "Nodes" && reader.NodeType == XmlNodeType.EndElement)
+                        break;
+                    if (reader.Name != "Node") 
+                        continue;
+                    FocusNode node = new();
+                    try
+                    {
+                        node.ReadXml(reader);
+                    }
+                    catch
+                    {
+                        continue;
+                    }
+                    _focusCatalog.Add(node.FData.Id, node.FData);
+                } while (reader.Read());
             } while (reader.Read());
         }
         public void WriteXml(XmlWriter writer)
@@ -452,7 +413,7 @@ namespace FocusTree.Data.Focus
 
             // <Nodes>
             writer.WriteStartElement("Nodes");
-            foreach (var focus in FocusCatalog.Values)
+            foreach (var focus in _focusCatalog.Values)
             {
                 FocusNode node = new(focus);
                 // <Node>
@@ -470,32 +431,23 @@ namespace FocusTree.Data.Focus
 
         #region ---- 文件管理 ----
 
-        public string FileManageDirName { get { return $"FG{GetHashString(Name)}"; } }
+        public string FileManageDirName => $"FG{GetHashString(Name)}";
+
         private static string GetHashString(string str)
         {
-            MD5 sha = MD5.Create();
-            byte[] hash = sha.ComputeHash(Encoding.UTF8.GetBytes(str));
-            string result = string.Empty;
-            foreach (var b in hash)
-            {
-                result += b.ToString();
-            }
-            return result;
+            var sha = MD5.Create();
+            var hash = sha.ComputeHash(Encoding.UTF8.GetBytes(str));
+            return hash.Aggregate(string.Empty, (current, b) => current + b);
         }
         public string GetHashString()
         {
             var cachePath = FileCache.GetCachePath(this, "hashtest");
             XmlIO.SaveToXml(this, cachePath);
-            FileStream data = new(cachePath, FileMode.Open);
-            MD5 sha = MD5.Create();
+            var data = new FileStream(cachePath, FileMode.Open);
+            var sha = MD5.Create();
             var hash = sha.ComputeHash(data);
             data.Close();
-            string result = string.Empty;
-            foreach (var b in hash)
-            {
-                result += b.ToString();
-            }
-            return result;
+            return hash.Aggregate(string.Empty, (current, b) => current + b);
         }
 
         #endregion
@@ -517,8 +469,8 @@ namespace FocusTree.Data.Focus
         }
         public void Deformat(FormattedData data)
         {
-            FocusCatalog = new();
-            FocusCatalog = XmlIO.LoadFromXml<FocusGraph>(FileCache.GetCachePath(this, data.Items[0])).FocusCatalog;
+            _focusCatalog = new();
+            _focusCatalog = XmlIO.LoadFromXml<FocusGraph>(FileCache.GetCachePath(this, data.Items[0]))._focusCatalog;
         }
 
         #endregion

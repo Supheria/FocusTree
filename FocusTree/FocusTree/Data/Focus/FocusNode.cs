@@ -1,4 +1,4 @@
-﻿//#define FORMAT_TEST
+﻿#define FORMAT_TEST
 #define RAW_EFFECTS
 using FocusTree.Data.Hoi4Object;
 using System.Xml;
@@ -10,10 +10,6 @@ namespace FocusTree.Data.Focus
     /// </summary>
     public class FocusNode
     {
-        #region ==== 节点信息 ====
-
-        #endregion
-
         #region ==== 国策信息 ====
 
         public FocusData FData;
@@ -22,10 +18,10 @@ namespace FocusTree.Data.Focus
         /// </summary>
         public List<string> Effects
         {
-            get { return effects.Select(x => x.ToString()).ToList(); }
-            set { value.ForEach(x => effects.Add(Hoi4Sentence.FromString(x))); }
+            get => _effects.Select(x => x.ToString()).ToList();
+            set => value.ForEach(x => _effects.Add(Hoi4Sentence.FromString(x)));
         }
-        public List<Hoi4Sentence> effects = new();
+        private readonly List<Hoi4Sentence> _effects = new();
 
 
         #endregion
@@ -47,18 +43,20 @@ namespace FocusTree.Data.Focus
         public void ReadXml(XmlReader reader)
         {
             Effects = new();
-            FData = new();
-
-            //==== 读取 FData ====//
-            FData.ID = int.Parse(reader.GetAttribute("ID") ?? throw new ArgumentException());
-            FData.Name = reader.GetAttribute("Name") ?? FData.Name;
-            FData.BeginWithStar = bool.Parse(reader.GetAttribute("Star") ?? "false");
-            FData.Duration = int.Parse(reader.GetAttribute("Duration") ?? "0");
-            FData.Descript = reader.GetAttribute("Descript") ?? FData.Descript;
-            FData.Ps = reader.GetAttribute("Ps.") ?? FData.Ps;
+            FData = new()
+            {
+                Id = int.Parse(reader.GetAttribute("ID") ?? throw new ArgumentException()),
+                Name = reader.GetAttribute("Name") ?? FData.Name,
+                BeginWithStar = bool.Parse(reader.GetAttribute("Star") ?? "false"),
+                Duration = int.Parse(reader.GetAttribute("Duration") ?? "0"),
+                Description = reader.GetAttribute("Description") ?? FData.Description,
+                Ps = reader.GetAttribute("Ps.") ?? FData.Ps,
+            };
             var pair = ArrayString.Reader(reader.GetAttribute("Point"));
-            if (pair == null || pair.Length != 2) { FData.LatticedPoint = new(0, 0); }
-            else { FData.LatticedPoint = new(int.Parse(pair[0]), int.Parse(pair[1])); }
+            if (pair is not { Length: 2 }) 
+                FData.LatticedPoint = new(0, 0);
+            else
+                FData.LatticedPoint = new(int.Parse(pair[0]), int.Parse(pair[1]));
 
             while (reader.Read())
             {
@@ -66,24 +64,25 @@ namespace FocusTree.Data.Focus
                 {
                     break;
                 }
-                //==== 读取 Effects ====//
-                if (reader.Name == "Effects")
+
+                switch (reader.Name)
                 {
-                    ReadEffects(reader);
-                }
-                //==== 读取 Requires ====//
-                if (reader.Name == "Requires")
-                {
-                    ReadRequires(reader, ref FData.Requires);
-                }
-                //==== 读取 RawEffects ====//
-                if (reader.Name == "RawEffects")
-                {
-                    ReadRawEffects(reader, ref FData.RawEffects);
+                    //==== 读取 Effects ====//
+                    case "Effects":
+                        ReadEffects(reader);
+                        break;
+                    //==== 读取 Requires ====//
+                    case "Requires":
+                        ReadRequires(reader, FData.Requires);
+                        break;
+                    //==== 读取 RawEffects ====//
+                    case "RawEffects":
+                        ReadRawEffects(reader, FData.RawEffects);
+                        break;
                 }
             }
 #if FORMAT_TEST
-            FormatRawEffects(FData.RawEffects, FData.ID);
+            FormatRawEffects(FData.RawEffects, FData.Id);
 #endif
         }
         [Obsolete("临时使用，作为转换语句格式的过渡")]
@@ -91,19 +90,19 @@ namespace FocusTree.Data.Focus
         {
             foreach (var raw in rawEffects)
             {
-                Program.testInfo.total++;
+                Program.TestInfo.total++;
                 if (!FormatRawEffectSentence.Formatter(raw, out var formattedList))
                 {
 #if RAW_EFFECTS
-                    Program.testInfo.erro++;
-                    Program.testInfo.good = Program.testInfo.total - Program.testInfo.erro;
-                    Program.testInfo.InfoText += $"{id}. {raw}\n";
+                    Program.TestInfo.erro++;
+                    Program.TestInfo.good = Program.TestInfo.total - Program.TestInfo.erro;
+                    Program.TestInfo.InfoText += $"{id}. {raw}\n";
 #endif
                     continue;
                 }
                 foreach (var formatted in formattedList)
                 {
-                    effects.Add(formatted);
+                    _effects.Add(formatted);
                 }
             }
         }
@@ -118,64 +117,79 @@ namespace FocusTree.Data.Focus
             if (reader.ReadToDescendant("Sentence") == false) { return; }
             do
             {
-                if (reader.Name == "Effects" && reader.NodeType == XmlNodeType.EndElement) { return; }
-                if (reader.Name == "Sentence")
+                switch (reader.Name)
                 {
-                    Hoi4Sentence sentence = new();
-                    sentence.ReadXml(reader);
-                    effects.Add(sentence);
+                    case "Effects" when reader.NodeType == XmlNodeType.EndElement:
+                        return;
+                    case "Sentence":
+                    {
+                        Hoi4Sentence sentence = new();
+                        sentence.ReadXml(reader);
+                        _effects.Add(sentence);
+                        break;
+                    }
                 }
             } while (reader.Read());
-            throw new Exception("[2304060212] 读取 Effects 时未能找到结束标签");
+            throw new("[2304060212] 读取 Effects 时未能找到结束标签");
         }
+
         /// <summary>
         /// 读取节点依赖
         /// </summary>
         /// <param name="reader"></param>
+        /// <param name="requires"></param>
         /// <exception cref="Exception"></exception>
-        private void ReadRequires(XmlReader reader, ref List<HashSet<int>> requires)
+        private static void ReadRequires(XmlReader reader, ICollection<HashSet<int>> requires)
         {
             if (reader.ReadToDescendant("Require") == false) { return; }
             do
             {
-                if (reader.Name == "Requires" && reader.NodeType == XmlNodeType.EndElement) { return; }
-                if (reader.Name == "Require" && reader.NodeType == XmlNodeType.Element)
+                switch (reader.Name)
                 {
-                    reader.Read();
-                    requires.Add(ArrayString.Reader(reader.Value).Select(x => int.Parse(x)).ToHashSet());
+                    case "Requires" when reader.NodeType == XmlNodeType.EndElement:
+                        return;
+                    case "Require" when reader.NodeType == XmlNodeType.Element:
+                        reader.Read();
+                        requires.Add(ArrayString.Reader(reader.Value).Select(int.Parse).ToHashSet());
+                        break;
                 }
             } while (reader.Read());
-            throw new Exception("[2302191020] 读取 Requires 时未能找到结束标签");
+            throw new("[2302191020] 读取 Requires 时未能找到结束标签");
         }
+
         /// <summary>
         /// 读取原始效果语句
         /// </summary>
         /// <param name="reader"></param>
+        /// <param name="rawEffects"></param>
         /// <exception cref="Exception"></exception>
-        private void ReadRawEffects(XmlReader reader, ref List<string> rawEffects)
+        private static void ReadRawEffects(XmlReader reader, ICollection<string> rawEffects)
         {
             if (reader.ReadToDescendant("Effect") == false) { return; }
             do
             {
-                if (reader.Name == "RawEffects" && reader.NodeType == XmlNodeType.EndElement) { return; }
-                if (reader.Name == "Effect" && reader.NodeType == XmlNodeType.Element)
+                switch (reader.Name)
                 {
-                    reader.Read();
-                    rawEffects.Add(reader.Value);
+                    case "RawEffects" when reader.NodeType == XmlNodeType.EndElement:
+                        return;
+                    case "Effect" when reader.NodeType == XmlNodeType.Element:
+                        reader.Read();
+                        rawEffects.Add(reader.Value);
+                        break;
                 }
             } while (reader.Read());
-            throw new Exception("[2304082217] 读取 RawEffects 时未能找到结束标签");
+            throw new("[2304082217] 读取 RawEffects 时未能找到结束标签");
         }
         public void WriteXml(XmlWriter writer)
         {
             // <Node>
             writer.WriteStartElement("Node");
 
-            writer.WriteAttributeString("ID", FData.ID.ToString());
+            writer.WriteAttributeString("ID", FData.Id.ToString());
             writer.WriteAttributeString("Name", FData.Name);
             writer.WriteAttributeString("Star", FData.BeginWithStar.ToString());
             writer.WriteAttributeString("Duration", FData.Duration.ToString());
-            writer.WriteAttributeString("Descript", FData.Descript);
+            writer.WriteAttributeString("Description", FData.Description);
             writer.WriteAttributeString("Ps.", FData.Ps);
             var point = FData.LatticedPoint;
             writer.WriteAttributeString("Point", ArrayString.Writer(new string[] { point.Col.ToString(), point.Row.ToString() }));
@@ -190,10 +204,10 @@ namespace FocusTree.Data.Focus
             writer.WriteEndElement();
 #endif
 #if FORMAT_TEST
-            FormatRawEffects(FData.RawEffects, FData.ID);
+            FormatRawEffects(FData.RawEffects, FData.Id);
             // <Effects>
             writer.WriteStartElement("Effects");
-            foreach (var sentence in effects)
+            foreach (var sentence in _effects)
             {
                 sentence.WriteXml(writer);
             }
@@ -202,14 +216,11 @@ namespace FocusTree.Data.Focus
 #endif
             // <Requires>
             writer.WriteStartElement("Requires");
-            foreach (var require in FData.Requires)
+            foreach (var require in FData.Requires.Where(require => require.ToArray().Length > 0))
             {
-                if (require.ToArray().Length > 0)
-                {
-                    // <Require>
-                    writer.WriteElementString("Require", ArrayString.Writer(require.Select(x => x.ToString()).ToArray()));
-                    // </Require>
-                }
+                // <Require>
+                writer.WriteElementString("Require", ArrayString.Writer(require.Select(x => x.ToString()).ToArray()));
+                // </Require>
             }
             // </Requires>
             writer.WriteEndElement();

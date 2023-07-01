@@ -64,11 +64,33 @@ namespace FocusTree.UI
             Display.ResetDisplay();
             UpdateText();
         }
+
+        private void GraphFrom_Menu_file_openCsv_Click(object sender, EventArgs e)
+        {
+            if (GraphBox.Edited == true)
+            {
+                if (MessageBox.Show("要放弃当前的更改吗？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No)
+                {
+                    return;
+                }
+            }
+            GraphFrom_Openfile.Filter = "csv文件|*.csv";
+            if (GraphFrom_Openfile.ShowDialog() == DialogResult.Cancel)
+            {
+                return;
+            }
+            GraphFrom_Openfile.InitialDirectory = Path.GetDirectoryName(GraphFrom_Openfile.FileName);
+            GraphBox.LoadCsv(GraphFrom_Openfile.FileName);
+            Display.ResetDisplay();
+            UpdateText();
+        }
+
         private void GraphFrom_Menu_file_save_Click(object sender, EventArgs e)
         {
             GraphBox.Save();
             UpdateText();
         }
+
         private void GraphFrom_Menu_file_saveas_Click(object sender, EventArgs e)
         {
             GraphFrom_Savefile.InitialDirectory = Path.GetDirectoryName(GraphBox.FilePath);
